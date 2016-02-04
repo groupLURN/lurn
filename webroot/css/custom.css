@@ -4,3 +4,10 @@ div.message.error {
     font-size: 20px;
     padding-left: 1%
 }
+
+div.message.success {
+    background-color: #23A7C3;
+    color: #FFF;
+    font-size: 20px;
+    padding-left: 1%
+}

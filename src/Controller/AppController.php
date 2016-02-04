@@ -52,7 +52,8 @@ class AppController extends Controller
                         'password' => 'password'
                     ]
                 ]],
-            'loginAction' => ['controller' => 'Users', 'action' => 'login']
+            'loginAction' => ['controller' => 'Users', 'action' => 'login'],
+            'loginRedirect' => '/Dashboard/'
         ]);
     }
 

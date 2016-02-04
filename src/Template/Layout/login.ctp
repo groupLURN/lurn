@@ -3,13 +3,13 @@
 // This uses the default favicon.ico icon.
 $this->Html->meta('icon', null, ['block' => true]);
 // Bootstrap core CSS
-$this->Html->css('bootstrap.css', ['block' => true]);
+$this->Html->css('bootstrap', ['block' => true]);
 // External CSS
-$this->Html->css('/font-awesome/css/font-awesome.css', ['block' => true]);
+$this->Html->css('/font-awesome/css/font-awesome', ['block' => true]);
 // Custom styles for this template.
-$this->Html->css('style.css', ['block' => true]);
-$this->Html->css('style-responsive.css', ['block' => true]);
-$this->Html->css('custom.css', ['block' => true]);
+$this->Html->css('style', ['block' => true]);
+$this->Html->css('style-responsive', ['block' => true]);
+$this->Html->css('custom', ['block' => true]);
 $this->Html->script('jquery', ['block' => true]);
 $this->Html->script('bootstrap.min', ['block' => true]);
 $this->Html->script('jquery.backstretch.min', ['block' => true]);

@@ -1,0 +1,6 @@
+div.message.error {
+    background-color: #C3232D;
+    color: #FFF;
+    font-size: 20px;
+    padding-left: 1%
+}

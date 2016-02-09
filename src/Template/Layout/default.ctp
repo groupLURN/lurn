@@ -217,7 +217,7 @@ $this->Html->script('zabuto_calendar', ['block' => true]);
                     <h5 class="centered">Marcel Newman</h5>
 
                     <li class="mt">
-                        <a class="active" href="index.html">
+                        <a class="active" href="/dashboard">
                             <i class="fa fa-dashboard"></i>
                             <span>Dashboard</span>
                         </a>

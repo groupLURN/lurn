@@ -18,6 +18,7 @@
                     <th><?= $this->Paginator->sort('name') ?></th>
                     <th><?= $this->Paginator->sort('contact_number') ?></th>
                     <th><?= $this->Paginator->sort('email') ?></th>
+                    <th><?= $this->Paginator->sort('address') ?></th>
                     <th></th>
                 </tr>
                 </thead>
@@ -27,6 +28,7 @@
                         <td><?= h($supplier->name) ?></td>
                         <td><?= h($supplier->contact_number) ?></td>
                         <td><?= h($supplier->email) ?></td>
+                        <td><?= h($supplier->address) ?></td>
                         <td class="actions">
                             <button class="btn btn-primary btn-xs">
                                 <i class="fa fa-pencil"></i>

@@ -8,8 +8,11 @@ use Cake\ORM\Entity;
  *
  * @property int $id
  * @property int $client_id
+ * @property \App\Model\Entity\Client $client
  * @property int $employee_id
+ * @property \App\Model\Entity\Employee $employee
  * @property int $user_type_id
+ * @property \App\Model\Entity\UserType $user_type
  * @property string $username
  * @property string $password
  * @property \Cake\I18n\Time $created

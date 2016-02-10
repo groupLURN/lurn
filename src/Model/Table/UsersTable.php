@@ -10,6 +10,9 @@ use Cake\Validation\Validator;
 /**
  * Users Model
  *
+ * @property \Cake\ORM\Association\BelongsTo $Clients
+ * @property \Cake\ORM\Association\BelongsTo $Employees
+ * @property \Cake\ORM\Association\BelongsTo $UserTypes
  */
 class UsersTable extends Table
 {
@@ -30,6 +33,16 @@ class UsersTable extends Table
 
         $this->addBehavior('Timestamp');
 
+        $this->belongsTo('Clients', [
+            'foreignKey' => 'client_id'
+        ]);
+        $this->belongsTo('Employees', [
+            'foreignKey' => 'employee_id'
+        ]);
+        $this->belongsTo('UserTypes', [
+            'foreignKey' => 'user_type_id',
+            'joinType' => 'INNER'
+        ]);
     }
 
     /**
@@ -53,11 +66,6 @@ class UsersTable extends Table
             ->requirePresence('password', 'create')
             ->notEmpty('password');
 
-        $validator
-            ->add('user_type', 'valid', ['rule' => 'numeric'])
-            ->requirePresence('user_type', 'create')
-            ->notEmpty('user_type');
-
         return $validator;
     }
 
@@ -71,6 +79,9 @@ class UsersTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->isUnique(['username']));
+        $rules->add($rules->existsIn(['client_id'], 'Clients'));
+        $rules->add($rules->existsIn(['employee_id'], 'Employees'));
+        $rules->add($rules->existsIn(['user_type_id'], 'UserTypes'));
         return $rules;
     }
 }

@@ -7,9 +7,11 @@ use Cake\ORM\Entity;
  * User Entity.
  *
  * @property int $id
+ * @property int $client_id
+ * @property int $employee_id
+ * @property int $user_type_id
  * @property string $username
  * @property string $password
- * @property int $user_type
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
  */

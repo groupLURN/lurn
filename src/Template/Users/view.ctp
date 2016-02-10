@@ -23,8 +23,16 @@
             <td><?= $this->Number->format($user->id) ?></td>
         </tr>
         <tr>
-            <th><?= __('User Type') ?></th>
-            <td><?= $this->Number->format($user->user_type) ?></td>
+            <th><?= __('Client Id') ?></th>
+            <td><?= $this->Number->format($user->client_id) ?></td>
+        </tr>
+        <tr>
+            <th><?= __('Employee Id') ?></th>
+            <td><?= $this->Number->format($user->employee_id) ?></td>
+        </tr>
+        <tr>
+            <th><?= __('User Type Id') ?></th>
+            <td><?= $this->Number->format($user->user_type_id) ?></td>
         </tr>
         <tr>
             <th><?= __('Created') ?></th>

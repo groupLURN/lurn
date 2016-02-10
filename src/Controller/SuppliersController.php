@@ -11,6 +11,14 @@ use App\Controller\AppController;
 class SuppliersController extends AppController
 {
 
+    public $paginate = [
+        'fields' => ['Suppliers.id', 'Suppliers.name', 'Suppliers.contact_number', 'Suppliers.email', 'Suppliers.address'],
+        'limit' => 25,
+        'order' => [
+            'Supplier.name' => 'asc'
+        ]
+    ];
+
     /**
      * Index method
      *
@@ -19,23 +27,6 @@ class SuppliersController extends AppController
     public function index()
     {
         $this->set('suppliers', $this->paginate($this->Suppliers));
-        $this->set('_serialize', ['suppliers']);
-    }
-
-    /**
-     * View method
-     *
-     * @param string|null $id Supplier id.
-     * @return void
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
-    public function view($id = null)
-    {
-        $supplier = $this->Suppliers->get($id, [
-            'contain' => []
-        ]);
-        $this->set('supplier', $supplier);
-        $this->set('_serialize', ['supplier']);
     }
 
     /**

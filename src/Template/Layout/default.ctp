@@ -307,7 +307,16 @@ $this->Html->script('zabuto_calendar', ['block' => true]);
         </aside>
         <!--sidebar end-->
 
-    <?= $this->fetch('content'); ?>
+        <!-- **********************************************************************************************************************************************************
+        MAIN CONTENT
+        *********************************************************************************************************************************************************** -->
+        <!--main content start-->
+        <section id="main-content">
+            <section class="wrapper">
+                <?= $this->fetch('content'); ?>
+            </section>
+        </section>
+
     <?= $this->fetch('script'); ?>
     <?= $this->fetch('script-inline'); ?>
 </body>

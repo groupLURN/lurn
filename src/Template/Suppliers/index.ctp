@@ -1,4 +1,4 @@
-
+<?= $this->Flash->render() ?>
 <div class="row mt">
     <div class="col-md-12">
         <button type="button" class="btn btn-theme">

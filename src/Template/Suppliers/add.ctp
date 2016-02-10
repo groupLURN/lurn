@@ -1,20 +1,41 @@
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('List Suppliers'), ['action' => 'index']) ?></li>
-    </ul>
-</nav>
-<div class="suppliers form large-9 medium-8 columns content">
+<?= $this->Flash->render() ?>
+<div class="row mt">
+    <div class="col-md-12">
     <?= $this->Form->create($supplier) ?>
     <fieldset>
-        <legend><?= __('Add Supplier') ?></legend>
+        <legend><h3><i class="fa fa-angle-right"></i> <?= __('Add Supplier') ?></h3></legend>
         <?php
-            echo $this->Form->input('name');
-            echo $this->Form->input('contact_number');
-            echo $this->Form->input('email');
-            echo $this->Form->input('address');
+            echo $this->Form->input('name', [
+                'class' => 'form-control',
+                'label' => [
+                    'class' => 'col-sm-2 control-label'
+                ]
+            ]);
+            echo $this->Form->input('contact_number', [
+                'class' => 'form-control',
+                'label' => [
+                    'class' => 'col-sm-2 control-label'
+                ]
+            ]);
+            echo $this->Form->input('email', [
+                'class' => 'form-control',
+                'label' => [
+                    'class' => 'col-sm-2 control-label'
+                ]
+            ]);
+            echo $this->Form->input('address', [
+                'class' => 'form-control',
+                'label' => [
+                    'class' => 'col-sm-2 control-label'
+                ]
+            ]);
         ?>
     </fieldset>
-    <?= $this->Form->button(__('Submit')) ?>
+
+    <?= $this->Form->button(__('Submit'), [
+        'class' => 'btn btn-primary btn-submit'
+    ]) ?>
     <?= $this->Form->end() ?>
+
+    </div>
 </div>

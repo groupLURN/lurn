@@ -29,3 +29,9 @@ a {
 .paginator {
     text-align: center;
 }
+
+form .error-message {
+    float: right;
+    padding-right: 15px;
+    color: red;
+}

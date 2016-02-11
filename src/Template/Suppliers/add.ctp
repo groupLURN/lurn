@@ -6,27 +6,24 @@
         <legend><h3><i class="fa fa-angle-right"></i> <?= __('Add Supplier') ?></h3></legend>
         <?php
             echo $this->Form->input('name', [
-                'class' => 'form-control',
-                'label' => [
-                    'class' => 'col-sm-2 control-label'
-                ]
+                'class' => 'form-control'
             ]);
             echo $this->Form->input('contact_number', [
                 'class' => 'form-control',
                 'label' => [
-                    'class' => 'col-sm-2 control-label'
+                    'class' => 'mt'
                 ]
             ]);
             echo $this->Form->input('email', [
                 'class' => 'form-control',
                 'label' => [
-                    'class' => 'col-sm-2 control-label'
+                    'class' => 'mt'
                 ]
             ]);
             echo $this->Form->input('address', [
                 'class' => 'form-control',
                 'label' => [
-                    'class' => 'col-sm-2 control-label'
+                    'class' => 'mt'
                 ]
             ]);
         ?>

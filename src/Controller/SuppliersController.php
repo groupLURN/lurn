@@ -26,7 +26,10 @@ class SuppliersController extends AppController
      */
     public function index()
     {
+        $this->paginate += $this->createFinders($this->request->query);
         $this->set('suppliers', $this->paginate($this->Suppliers));
+        $this->set($this->request->query);
+        $this->set('_serialize', ['suppliers']);
     }
 
     /**

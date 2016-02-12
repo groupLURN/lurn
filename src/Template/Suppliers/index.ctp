@@ -1,10 +1,30 @@
 <?= $this->Flash->render() ?>
 <div class="row mt">
-    <div class="col-md-12">
+    <div class="col-xs-12">
         <button type="button" class="btn btn-theme" onclick="$('a', $(this))[0].click();">
             <i class="fa fa-plus"></i>
             <?= $this->Html->link(__('New Supplier'), ['action' => 'add']) ?>
         </button>
+    </div>
+</div>
+<div class="row mt">
+    <div class="col-xs-12">
+        <div class="content-panel">
+            <?= $this->Form->create('Search', ['type' => 'GET']) ?>
+            <div class="row search-container">
+                <div class="col-md-10">
+                    <input type="text" name="name" class="form-control" placeholder="Search Supplier's Name"
+                           id="txt-search" <?= isset($name)? "value='" . $name . "'": ""; ?> >
+                </div>
+                <div class="col-md-2">
+                    <?= $this->Form->button(__('Search'), [
+                        'id' => 'btn-search',
+                        'class' => 'btn btn-primary'
+                    ]) ?>
+                </div>
+            </div>
+            <?= $this->Form->end(); ?>
+        </div>
     </div>
 </div>
 <div class="row mt">

@@ -76,4 +76,12 @@ class SuppliersTable extends Table
         $rules->add($rules->isUnique(['email']));
         return $rules;
     }
+
+    public function findByName(Query $query, array $options)
+    {
+        return $query->where(function($exp) use ($options){
+            return $exp->like('name', '%' . $options['name'] . '%');
+        });
+
+    }
 }

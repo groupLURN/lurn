@@ -27,6 +27,7 @@ $this->Html->script('gritter/js/jquery.gritter', ['block' => true]);
 $this->Html->script('gritter-conf', ['block' => true]);
 $this->Html->script('sparkline-chart', ['block' => true]);
 $this->Html->script('zabuto_calendar', ['block' => true]);
+$this->Html->script('custom', ['block' => true]);
 ?>
 
 <!DOCTYPE html>

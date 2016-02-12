@@ -20,6 +20,13 @@ a {
     padding-bottom: 50px;
 }
 
+.search-container {
+    padding-left: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    text-align: center;
+}
+
 .btn-submit {
     float: right;
     margin-right: 1.5%;

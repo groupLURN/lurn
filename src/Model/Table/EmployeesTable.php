@@ -2,6 +2,8 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Employee;
+use ArrayObject;
+use Cake\Event\Event;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -82,5 +84,14 @@ class EmployeesTable extends Table
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         $rules->add($rules->existsIn(['employee_type_id'], 'EmployeeTypes'));
         return $rules;
+    }
+
+    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
+    {
+        $data['employment_date'] += [
+            'hour' => "0",
+            'minute' => "0",
+            'meridian' => "am"
+        ];
     }
 }

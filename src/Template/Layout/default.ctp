@@ -22,6 +22,7 @@ $this->Html->script('jquery.dcjqaccordion.2.7', ['block' => true]);
 $this->Html->script('jquery.scrollTo.min', ['block' => true]);
 $this->Html->script('jquery.nicescroll', ['block' => true]);
 $this->Html->script('jquery.sparkline', ['block' => true]);
+$this->Html->script('jquery.datetimepicker', ['block' => true]);
 $this->Html->script('common-scripts', ['block' => true]);
 $this->Html->script('gritter/js/jquery.gritter', ['block' => true]);
 $this->Html->script('gritter-conf', ['block' => true]);

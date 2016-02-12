@@ -42,3 +42,7 @@ form .error-message {
     padding-right: 15px;
     color: red;
 }
+
+.margin-left {
+    margin-left: 15px;
+}

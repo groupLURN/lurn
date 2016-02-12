@@ -91,9 +91,15 @@ class AppController extends Controller
 
     public function createFinders(array $filters)
     {
+        $model = $this->loadModel($this->modelClass);
+
         $finder = [];
         foreach($filters as $filter => $query)
-            $finder['By' . Inflector::camelize($filter)] = [$filter => $query];
+        {
+            $findMethod = 'By' . Inflector::camelize($filter);
+            if(method_exists($model, 'Find' . $findMethod))
+                $finder[$findMethod] = [$filter => $query];
+        }
         return compact('finder');
     }
 }

@@ -16,6 +16,7 @@ namespace App\Controller;
 
 use Cake\Controller\Controller;
 use Cake\Event\Event;
+use Cake\Utility\Inflector;
 
 /**
  * Application Controller
@@ -69,5 +70,30 @@ class AppController extends Controller
         ) {
             $this->set('_serialize', true);
         }
+    }
+
+    public function paginate($object = null)
+    {
+        if(!empty($this->paginate['finder']) && is_array($this->paginate['finder']))
+        {
+            foreach($this->paginate['finder'] as $finder => $options)
+            {
+                if(!isset($query))
+                    $query = $object->find($finder, $options);
+                else
+                    $query = $query->find($finder, $options);
+            }
+            $object = $query;
+            unset($this->paginate['finder']);
+        }
+        return parent::paginate($object);
+    }
+
+    public function createFinders(array $filters)
+    {
+        $finder = [];
+        foreach($filters as $filter => $query)
+            $finder['By' . Inflector::camelize($filter)] = [$filter => $query];
+        return compact('finder');
     }
 }

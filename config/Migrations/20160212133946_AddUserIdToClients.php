@@ -19,6 +19,7 @@ class AddUserIdToClients extends AbstractMigration
             'null' => false,
             'after' => 'id'
         ]);
+        $table->addForeignKey('user_id', 'users');
         $table->update();
     }
 }

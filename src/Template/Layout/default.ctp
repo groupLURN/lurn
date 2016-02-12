@@ -236,6 +236,7 @@ $this->Html->script('custom', ['block' => true]);
                             <li><a href="/manpower">Manpower</a></li>
                             <li><a href="/materials">Materials</a></li>
                             <li><a href="/suppliers">Suppliers</a></li>
+                            <li><a href="/users">Users</a></li>
                         </ul>
                     </li>
 

@@ -12,15 +12,22 @@ class UsersTableTest extends TestCase
 {
 
     /**
+     * Test subject
+     *
+     * @var \App\Model\Table\UsersTable
+     */
+    public $Users;
+
+    /**
      * Fixtures
      *
      * @var array
      */
     public $fixtures = [
         'app.users',
+        'app.user_types',
         'app.clients',
-        'app.employees',
-        'app.user_types'
+        'app.employees'
     ];
 
     /**

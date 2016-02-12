@@ -2,12 +2,12 @@
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
         <li><?= $this->Html->link(__('New User'), ['action' => 'add']) ?></li>
+        <li><?= $this->Html->link(__('List User Types'), ['controller' => 'UserTypes', 'action' => 'index']) ?></li>
+        <li><?= $this->Html->link(__('New User Type'), ['controller' => 'UserTypes', 'action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Clients'), ['controller' => 'Clients', 'action' => 'index']) ?></li>
         <li><?= $this->Html->link(__('New Client'), ['controller' => 'Clients', 'action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Employees'), ['controller' => 'Employees', 'action' => 'index']) ?></li>
         <li><?= $this->Html->link(__('New Employee'), ['controller' => 'Employees', 'action' => 'add']) ?></li>
-        <li><?= $this->Html->link(__('List User Types'), ['controller' => 'UserTypes', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New User Type'), ['controller' => 'UserTypes', 'action' => 'add']) ?></li>
     </ul>
 </nav>
 <div class="users index large-9 medium-8 columns content">
@@ -16,12 +16,11 @@
         <thead>
             <tr>
                 <th><?= $this->Paginator->sort('id') ?></th>
-                <th><?= $this->Paginator->sort('client_id') ?></th>
-                <th><?= $this->Paginator->sort('employee_id') ?></th>
                 <th><?= $this->Paginator->sort('user_type_id') ?></th>
                 <th><?= $this->Paginator->sort('username') ?></th>
                 <th><?= $this->Paginator->sort('password') ?></th>
                 <th><?= $this->Paginator->sort('created') ?></th>
+                <th><?= $this->Paginator->sort('modified') ?></th>
                 <th class="actions"><?= __('Actions') ?></th>
             </tr>
         </thead>
@@ -29,12 +28,11 @@
             <?php foreach ($users as $user): ?>
             <tr>
                 <td><?= $this->Number->format($user->id) ?></td>
-                <td><?= $user->has('client') ? $this->Html->link($user->client->id, ['controller' => 'Clients', 'action' => 'view', $user->client->id]) : '' ?></td>
-                <td><?= $user->has('employee') ? $this->Html->link($user->employee->name, ['controller' => 'Employees', 'action' => 'view', $user->employee->id]) : '' ?></td>
                 <td><?= $user->has('user_type') ? $this->Html->link($user->user_type->name, ['controller' => 'UserTypes', 'action' => 'view', $user->user_type->id]) : '' ?></td>
                 <td><?= h($user->username) ?></td>
                 <td><?= h($user->password) ?></td>
                 <td><?= h($user->created) ?></td>
+                <td><?= h($user->modified) ?></td>
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['action' => 'view', $user->id]) ?>
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $user->id]) ?>

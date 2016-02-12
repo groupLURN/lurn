@@ -14,14 +14,16 @@ class UsersController extends AppController
     /**
      * Index method
      *
-     * @return void
+     * @return \Cake\Network\Response|null
      */
     public function index()
     {
         $this->paginate = [
-            'contain' => ['Clients', 'Employees', 'UserTypes']
+            'contain' => ['UserTypes']
         ];
-        $this->set('users', $this->paginate($this->Users));
+        $users = $this->paginate($this->Users);
+
+        $this->set(compact('users'));
         $this->set('_serialize', ['users']);
     }
 
@@ -29,14 +31,15 @@ class UsersController extends AppController
      * View method
      *
      * @param string|null $id User id.
-     * @return void
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     * @return \Cake\Network\Response|null
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function view($id = null)
     {
         $user = $this->Users->get($id, [
-            'contain' => ['Clients', 'Employees', 'UserTypes']
+            'contain' => ['UserTypes', 'Clients', 'Employees']
         ]);
+
         $this->set('user', $user);
         $this->set('_serialize', ['user']);
     }
@@ -44,7 +47,7 @@ class UsersController extends AppController
     /**
      * Add method
      *
-     * @return void Redirects on successful add, renders view otherwise.
+     * @return \Cake\Network\Response|void Redirects on successful add, renders view otherwise.
      */
     public function add()
     {
@@ -58,10 +61,8 @@ class UsersController extends AppController
                 $this->Flash->error(__('The user could not be saved. Please, try again.'));
             }
         }
-        $clients = $this->Users->Clients->find('list', ['limit' => 200]);
-        $employees = $this->Users->Employees->find('list', ['limit' => 200]);
         $userTypes = $this->Users->UserTypes->find('list', ['limit' => 200]);
-        $this->set(compact('user', 'clients', 'employees', 'userTypes'));
+        $this->set(compact('user', 'userTypes'));
         $this->set('_serialize', ['user']);
     }
 
@@ -69,7 +70,7 @@ class UsersController extends AppController
      * Edit method
      *
      * @param string|null $id User id.
-     * @return void Redirects on successful edit, renders view otherwise.
+     * @return \Cake\Network\Response|void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
     public function edit($id = null)
@@ -86,10 +87,8 @@ class UsersController extends AppController
                 $this->Flash->error(__('The user could not be saved. Please, try again.'));
             }
         }
-        $clients = $this->Users->Clients->find('list', ['limit' => 200]);
-        $employees = $this->Users->Employees->find('list', ['limit' => 200]);
         $userTypes = $this->Users->UserTypes->find('list', ['limit' => 200]);
-        $this->set(compact('user', 'clients', 'employees', 'userTypes'));
+        $this->set(compact('user', 'userTypes'));
         $this->set('_serialize', ['user']);
     }
 
@@ -98,7 +97,7 @@ class UsersController extends AppController
      *
      * @param string|null $id User id.
      * @return \Cake\Network\Response|null Redirects to index.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function delete($id = null)
     {
@@ -110,24 +109,5 @@ class UsersController extends AppController
             $this->Flash->error(__('The user could not be deleted. Please, try again.'));
         }
         return $this->redirect(['action' => 'index']);
-    }
-
-    public function login()
-    {
-        $this->viewBuilder()->layout('login');
-        if ($this->request->is('post')) {
-            $user = $this->Auth->identify();
-            if ($user) {
-                $this->Auth->setUser($user);
-                return $this->redirect('/Dashboard/');
-            }
-            $this->Flash->error('Your username or password is incorrect.');
-        }
-    }
-
-    public function logout()
-    {
-        $this->Flash->success('You are now logged out.');
-        return $this->redirect($this->Auth->logout());
     }
 }

@@ -1,7 +1,7 @@
 <?= $this->Flash->render() ?>
 <div class="row mt">
     <div class="col-md-12">
-        <button type="button" class="btn btn-theme">
+        <button type="button" class="btn btn-theme" onclick="$('a', $(this))[0].click();">
             <i class="fa fa-plus"></i>
             <?= $this->Html->link(__('New Supplier'), ['action' => 'add']) ?>
         </button>
@@ -30,11 +30,11 @@
                         <td><?= h($supplier->email) ?></td>
                         <td><?= h($supplier->address) ?></td>
                         <td class="actions">
-                            <button class="btn btn-primary btn-xs">
+                            <button class="btn btn-primary btn-xs" onclick="$('a', $(this))[0].click();">
                                 <i class="fa fa-pencil"></i>
                                 <?= $this->Html->link(__('Edit'), ['action' => 'edit', $supplier->id]) ?>
                             </button>
-                            <button class="btn btn-danger btn-xs">
+                            <button class="btn btn-danger btn-xs" onclick="$('a', $(this))[0].click();">
                                 <i class="fa fa-trash-o "></i>
                                 <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $supplier->id], ['confirm' => __('Are you sure you want to delete {0}?', $supplier->name)]) ?>
                             </button>

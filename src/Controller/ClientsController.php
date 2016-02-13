@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\ORM\TableRegistry;
 
 /**
  * Clients Controller
@@ -52,7 +53,14 @@ class ClientsController extends AppController
     public function add()
     {
         $client = $this->Clients->newEntity();
+        $client->user = TableRegistry::get('Users')->newEntity();
         if ($this->request->is('post')) {
+            $client->user = TableRegistry::get('Users')->patchEntity($client->user, [
+                'username' => $this->request->data['username'],
+                'password' => $this->request->data['password'],
+                'user_type_title' => 'Employee'
+            ]);
+
             $client = $this->Clients->patchEntity($client, $this->request->data);
             if ($this->Clients->save($client)) {
                 $this->Flash->success(__('The client has been saved.'));

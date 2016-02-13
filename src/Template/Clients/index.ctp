@@ -18,7 +18,7 @@
                         <div class="row mt">
                             <div class="col-md-10">
                                 <input type="text" name="company_name" class="form-control" placeholder="Search Client's Company Name"
-                                       id="txt-search" <?= isset($name)? "value='" . $name . "'": ""; ?> >
+                                       id="txt-search" <?= isset($company_name)? "value='" . $company_name . "'": ""; ?> >
                             </div>
                             <div class="col-md-2">
                                 <?= $this->Form->button(__('Search'), [

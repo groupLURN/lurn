@@ -1,10 +1,7 @@
 <?= $this->Flash->render() ?>
 <div class="row mt">
     <div class="col-xs-12">
-        <button type="button" class="btn btn-theme" onclick="$('a', $(this))[0].click();">
-            <i class="fa fa-plus"></i>
-            <?= $this->Html->link(__('New Employee'), ['action' => 'add']) ?>
-        </button>
+        <?= $this->newButton(__('New Employee'), ['action' => 'add']); ?>
     </div>
 </div>
 <div class="row mt">
@@ -50,18 +47,14 @@
                         <td><?= h($employee->employment_date) ?></td>
                         <td><?= h($employee->termination_date) ?></td>
                         <td class="actions">
-                            <button class="btn btn-info btn-xs" onclick="$('a', $(this))[0].click();">
-                                <i class="fa fa-bars"></i>
-                                <?= $this->Html->link(__('View'), ['action' => 'view', $employee->id]) ?>
-                            </button>
-                            <button class="btn btn-primary btn-xs" onclick="$('a', $(this))[0].click();">
-                                <i class="fa fa-pencil"></i>
-                                <?= $this->Html->link(__('Edit'), ['action' => 'edit', $employee->id]) ?>
-                            </button>
-                            <button class="btn btn-danger btn-xs" onclick="$('a', $(this))[0].click();">
-                                <i class="fa fa-trash-o "></i>
-                                <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $employee->id], ['confirm' => __('Are you sure you want to delete {0}?', $employee->name)]) ?>
-                            </button>
+                            <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $employee->id]); ?>
+                            <?= $this->dataTableEditButton(__('Edit'), ['action' => 'edit', $employee->id]); ?>
+                            <?= $this->dataTableDeleteButton(__('Delete'),
+                                ['action' => 'delete', $employee->id],
+                                __('Are you sure you want to delete {0}? This will also delete its user account.',
+                                    $employee->name)
+                            );
+                            ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>

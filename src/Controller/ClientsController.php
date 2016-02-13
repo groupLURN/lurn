@@ -114,8 +114,16 @@ class ClientsController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $client = $this->Clients->get($id);
-        if ($this->Clients->delete($client)) {
+        $client = $this->Clients->get($id, [
+            'contain' => ['Users']
+        ]);
+
+        $isSuccessful = $this->Clients->connection()->transactional(function() use ($client){
+            return $this->Clients->delete($client, ['atomic' => false]) &&
+            TableRegistry::get('Users')->delete($client->user, ['atomic' => false]);
+        });
+
+        if ($isSuccessful) {
             $this->Flash->success(__('The client has been deleted.'));
         } else {
             $this->Flash->error(__('The client could not be deleted. Please, try again.'));

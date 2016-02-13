@@ -1,16 +1,10 @@
-//$("#btn-search").on("click", function(e){
-//
-//    var $form = $(this).closest("form");
-//    var $txtSearch = $("#txt-search");
-//
-//    var action = $form.attr("action").split("?")[0];
-//    var queries = [];
-//
-//    if($txtSearch.length > 0 && $txtSearch.val().trim() !== "")
-//        queries.push($txtSearch.attr("name") + "=" + $txtSearch.val().trim().split(" ").join("+"));
-//
-//    if(queries.length > 0)
-//        action += "?" + queries.join("&");
-//
-//    $form.attr("action", action);
-//});
+$(".datetime-picker").datepicker().datepicker("option","dateFormat", "yy-mm-dd").datepicker("setDate", new Date());
+
+var date_from = '<?= isset($date_from)? $date_from: ""?>';
+if(date_from)
+    $('input.datetime-picker[name=date_from]').val(date_from);
+
+var date_to = '<?= isset($date_to)? $date_to: ""?>';
+if(date_to)
+    $('input.datetime-picker[name=date_to]').val(date_to);
+

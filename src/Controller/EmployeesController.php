@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\ORM\TableRegistry;
 
 /**
  * Employees Controller
@@ -52,8 +53,17 @@ class EmployeesController extends AppController
     public function add()
     {
         $employee = $this->Employees->newEntity();
+        $employee->user = TableRegistry::get('Users')->newEntity();
+
         if ($this->request->is('post')) {
+            $employee->user = TableRegistry::get('Users')->patchEntity($employee->user, [
+                'username' => $this->request->data['username'],
+                'password' => $this->request->data['password'],
+                'user_type_title' => 'Employee'
+            ]);
+
             $employee = $this->Employees->patchEntity($employee, $this->request->data);
+
             if ($this->Employees->save($employee)) {
                 $this->Flash->success(__('The employee has been saved.'));
                 return $this->redirect(['action' => 'index']);

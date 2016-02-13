@@ -5,7 +5,10 @@ use App\Model\Entity\User;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
+use ArrayObject;
+use Cake\Event\Event;
 
 /**
  * Users Model
@@ -81,5 +84,16 @@ class UsersTable extends Table
         $rules->add($rules->isUnique(['username']));
         $rules->add($rules->existsIn(['user_type_id'], 'UserTypes'));
         return $rules;
+    }
+
+    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
+    {
+        if(!isset($data['user_type_id'])){
+            $user = TableRegistry::get('user_types')->find()
+                ->select(['id'])
+                ->where(['title' => $data['user_type_title']])
+                ->firstOrFail();
+            $data['user_type_id'] = $user->id;
+        }
     }
 }

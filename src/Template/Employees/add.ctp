@@ -6,10 +6,6 @@
             <legend><h3><i class="fa fa-angle-right"></i> <?= __('Add Employee') ?></h3></legend>
             <?php
 
-            echo $this->Form->input('user_id', [
-                'options' => $users,
-                'class' => 'form-control'
-            ]);
             echo $this->Form->input('employee_type_id', [
                 'options' => $employeeTypes,
                 'class' => 'form-control',
@@ -65,6 +61,27 @@
                 'minute' => false,
                 'meridian' => false
             ]);
+            ?>
+
+            <legend class="mt"><h3><i class="fa fa-angle-right"></i> <?= __('New User Account') ?></h3></legend>
+            <?php
+
+            echo $this->Form->input('username', [
+                'class' => 'form-control',
+                'label' => [
+                    'class' => 'mt'
+                ],
+                'required' => true
+            ]);
+
+            echo $this->Form->input('password', [
+                'class' => 'form-control required',
+                'label' => [
+                    'class' => 'mt'
+                ],
+                'required' => true
+            ]);
+
             ?>
         </fieldset>
 

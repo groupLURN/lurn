@@ -2,6 +2,8 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 
 /**
  * Users Controller
@@ -39,6 +41,12 @@ class UsersController extends AppController
         $user = $this->Users->get($id, [
             'contain' => ['UserTypes', 'Clients', 'Employees']
         ]);
+
+        if($user->has('employees'))
+            $user->employees[0]->employee_type =
+                TableRegistry::get('Employees')->get($user->employees[0]->id, [
+                    'contain' => ['EmployeeTypes']
+                ])->employee_type;
 
         $this->set('user', $user);
         $this->set('_serialize', ['user']);

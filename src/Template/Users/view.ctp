@@ -1,3 +1,65 @@
+<div class="users view large-9 medium-8 columns content">
+    <h3><?= h($user->username) ?></h3>
+    <table class="vertical-table table table-striped">
+        <tr>
+            <th><?= __('User Type') ?></th>
+            <td><?= $user->has('user_type') ? h($user->user_type->title): '' ?></td>
+        </tr>
+        <tr>
+            <th><?= __('Username') ?></th>
+            <td><?= h($user->username) ?></td>
+        </tr>
+        <tr>
+            <th><?= __('Password') ?></th>
+            <td><?= h($user->password) ?></td>
+        </tr>
+    </table>
+
+<?php if($user->has('employees') && !empty($user->employees)) : ?>
+    <div class="users view large-9 medium-8 columns content">
+        <h3><?= __("Employee Information") ?></h3>
+        <table class="vertical-table table table-striped">
+            <tr>
+                <th><?= __('Employee Type') ?></th>
+                <td><?= h($user->employees[0]->employee_type->title) ?></td>
+            </tr>
+            <tr>
+                <th><?= __('Employment Date') ?></th>
+                <td><?= h($user->employees[0]->employment_date) ?></td>
+            </tr>
+            <tr>
+                <th><?= __('Termination Date') ?></th>
+                <td><?= h($user->employees[0]->termination_date) ?></td>
+            </tr>
+        </table>
+    </div>
+<?php endif; ?>
+
+<?php if ($user->has('clients') && !empty($user->clients)) : ?>
+    <div class="users view large-9 medium-8 columns content">
+        <h3><?= __("Client Information") ?></h3>
+        <table class="vertical-table table table-striped">
+            <tr>
+                <th><?= __('Key Person') ?></th>
+                <td><?= h($user->clients[0]->key_person) ?></td>
+            </tr>
+            <tr>
+                <th><?= __('Contact Number') ?></th>
+                <td><?= h($user->clients[0]->contact_number) ?></td>
+            </tr>
+            <tr>
+                <th><?= __('Email') ?></th>
+                <td><?= h($user->clients[0]->email) ?></td>
+            </tr>
+            <tr>
+                <th><?= __('Address') ?></th>
+                <td><?= $this->Text->autoParagraph(h($user->clients[0]->address)); ?></td>
+            </tr>
+        </table>
+    </div>
+<?php endif; ?>
+
+<!--
 <nav class="large-3 medium-4 columns" id="actions-sidebar">
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
@@ -114,3 +176,5 @@
         <?php endif; ?>
     </div>
 </div>
+
+-->

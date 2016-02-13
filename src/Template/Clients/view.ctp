@@ -20,7 +20,7 @@
     </table>
 </div>
 
-<div class="employees view large-9 medium-8 columns content">
+<div class="clients view large-9 medium-8 columns content">
     <h3><?= __("User Account") ?></h3>
     <table class="vertical-table table table-striped">
         <tr>

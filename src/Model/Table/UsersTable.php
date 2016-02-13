@@ -96,4 +96,9 @@ class UsersTable extends Table
             $data['user_type_id'] = $user->id;
         }
     }
+
+    public function findByUsername(Query $query, array $options)
+    {
+        return $query->where($query->newExpr()->like('username', '%' . $options['username'] . '%'));
+    }
 }

@@ -1,3 +1,35 @@
+<div class="clients view large-9 medium-8 columns content">
+    <h3><?= h($client->company_name) ?></h3>
+    <table class="vertical-table table table-striped">
+        <tr>
+            <th><?= __('Key Person') ?></th>
+            <td><?= h($client->key_person) ?></td>
+        </tr>
+        <tr>
+            <th><?= __('Contact Number') ?></th>
+            <td><?= h($client->contact_number) ?></td>
+        </tr>
+        <tr>
+            <th><?= __('Email') ?></th>
+            <td><?= h($client->email) ?></td>
+        </tr>
+        <tr>
+            <th><?= __('Address') ?></th>
+            <td><?= $this->Text->autoParagraph(h($client->address)); ?></td>
+        </tr>
+    </table>
+</div>
+
+<div class="employees view large-9 medium-8 columns content">
+    <h3><?= __("User Account") ?></h3>
+    <table class="vertical-table table table-striped">
+        <tr>
+            <th><?= __('Username') ?></th>
+            <td><?= $client->user->username ?></td>
+        </tr>
+    </table>
+</div>
+<!--
 <nav class="large-3 medium-4 columns" id="actions-sidebar">
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
@@ -50,3 +82,4 @@
         <?= $this->Text->autoParagraph(h($client->address)); ?>
     </div>
 </div>
+-->

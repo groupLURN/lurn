@@ -15,27 +15,51 @@
                 <tbody>
                 <tr>
                     <td style="padding-top: 15px; padding-left: 10px;">
-                        <input type="checkbox" name="is_date_filter_enabled" <?= isset($is_date_filter_enabled)? 'checked': ''?>
+                        <input type="checkbox" name="employment_date_checked" <?= isset($employment_date_checked)? 'checked': ''?>
                                onclick="$('input.datetime-picker:text', $(this).closest('tr')).prop('disabled', !$(this).is(':checked'));">
-                        <label for="date_from">Date From</label>
+                        <label>Employment Date</label>
                     </td>
                     <td>
-                        <?= $this->Form->input('date_from', [
+                        <?= $this->Form->input('employment_date_from', [
                             'class' => 'datetime-picker form-control',
-                            'style' => 'width: initial; display: initial;',
+                            'style' => 'display: initial;',
                             'label' => false,
-                            'disabled' => !isset($is_date_filter_enabled)
+                            'disabled' => !isset($employment_date_checked),
+                            'val' => isset($employment_date_from)? $employment_date_from: ''
                         ]); ?>
                     </td>
+                    <td colspan="2">
+                        <?= $this->Form->input('employment_date_to', [
+                            'class' => 'datetime-picker form-control',
+                            'style' => 'display: initial;',
+                            'label' => false,
+                            'disabled' => !isset($employment_date_checked),
+                            'val' => isset($employment_date_to)? $employment_date_to: ''
+                        ]); ?>
+                    </td>
+                </tr>
+                <tr>
                     <td style="padding-top: 15px; padding-left: 10px;">
-                        <label for="date_to">Date To</label>
+                        <input type="checkbox" name="termination_date_checked" <?= isset($termination_date_checked)? 'checked': ''?>
+                               onclick="$('input.datetime-picker:text', $(this).closest('tr')).prop('disabled', !$(this).is(':checked'));">
+                        <label>Termination Date</label>
                     </td>
                     <td>
-                        <?= $this->Form->input('date_to', [
+                        <?= $this->Form->input('termination_date_from', [
                             'class' => 'datetime-picker form-control',
-                            'style' => 'width: initial; display: initial;',
+                            'style' => 'display: initial;',
                             'label' => false,
-                            'disabled' => !isset($is_date_filter_enabled)
+                            'disabled' => !isset($termination_date_checked),
+                            'val' => isset($termination_date_from)? $termination_date_from: ''
+                        ]); ?>
+                    </td>
+                    <td colspan="2">
+                        <?= $this->Form->input('termination_date_to', [
+                            'class' => 'datetime-picker form-control',
+                            'style' => 'display: initial;',
+                            'label' => false,
+                            'disabled' => !isset($termination_date_checked),
+                            'val' => isset($termination_date_to)? $termination_date_to: ''
                         ]); ?>
                     </td>
                 </tr>

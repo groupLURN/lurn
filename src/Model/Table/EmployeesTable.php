@@ -110,13 +110,23 @@ class EmployeesTable extends Table
             return $query;
     }
 
-    public function findByDateFrom(Query $query, array $options)
+    public function findByEmploymentDateFrom(Query $query, array $options)
     {
-        return $query->where($query->newExpr()->gte('employment_date', $options['date_from'], 'datetime'));
+        return $query->where($query->newExpr()->gte('employment_date', $options['employment_date_from'], 'datetime'));
     }
 
-    public function findByDateTo(Query $query, array $options)
+    public function findByEmploymentDateTo(Query $query, array $options)
     {
-        return $query->where($query->newExpr()->lt('employment_date', $options['date_to'], 'datetime'));
+        return $query->where($query->newExpr()->lt('employment_date', $options['employment_date_to'], 'datetime'));
+    }
+
+    public function findByTerminationDateFrom(Query $query, array $options)
+    {
+        return $query->where($query->newExpr()->gte('termination_date', $options['termination_date_from'], 'datetime'));
+    }
+
+    public function findByTerminationDateTo(Query $query, array $options)
+    {
+        return $query->where($query->newExpr()->lt('termination_date', $options['termination_date_to'], 'datetime'));
     }
 }

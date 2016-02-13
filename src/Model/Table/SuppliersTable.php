@@ -82,6 +82,5 @@ class SuppliersTable extends Table
         return $query->where(function($exp) use ($options){
             return $exp->like('name', '%' . $options['name'] . '%');
         });
-
     }
 }

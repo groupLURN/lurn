@@ -94,4 +94,11 @@ class EmployeesTable extends Table
             'meridian' => "am"
         ];
     }
+
+    public function findByName(Query $query, array $options)
+    {
+        return $query->where(function($exp) use ($options){
+            return $exp->like('name', '%' . $options['name'] . '%');
+        });
+    }
 }

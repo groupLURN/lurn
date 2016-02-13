@@ -22,9 +22,12 @@ class EmployeesController extends AppController
         $this->paginate = [
             'contain' => ['Users', 'EmployeeTypes']
         ];
+
+        $this->paginate += $this->createFinders($this->request->query);
         $employees = $this->paginate($this->Employees);
 
         $this->set(compact('employees'));
+        $this->set($this->request->query);
         $this->set('_serialize', ['employees']);
     }
 

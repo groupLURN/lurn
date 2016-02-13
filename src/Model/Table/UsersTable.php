@@ -88,7 +88,7 @@ class UsersTable extends Table
 
     public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
     {
-        if(!isset($data['user_type_id'])){
+        if(!isset($data['user_type_id']) && isset($data['user_type_title'])){
             $user = TableRegistry::get('user_types')->find()
                 ->select(['id'])
                 ->where(['title' => $data['user_type_title']])

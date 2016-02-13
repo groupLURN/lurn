@@ -1,3 +1,37 @@
+<div class="users form large-9 medium-8 columns content">
+    <?= $this->Form->create($user) ?>
+    <fieldset>
+        <legend><?= __('Edit User') ?></legend>
+        <?php
+        echo $this->Form->input('user_type_id', [
+            'options' => $userTypes,
+            'disabled' => true,
+            'class' => 'form-control',
+            'label' => [
+                'class' => 'mt'
+            ]
+            ]);
+        echo $this->Form->input('username', [
+            'class' => 'form-control',
+            'label' => [
+                'class' => 'mt'
+            ]
+        ]);
+        echo $this->Form->input('password', [
+            'class' => 'form-control',
+            'label' => [
+                'class' => 'mt'
+            ]
+        ]);
+        ?>
+    </fieldset>
+    <?= $this->Form->button(__('Submit'), [
+        'class' => 'btn btn-primary btn-submit'
+    ]) ?>
+    <?= $this->Form->end() ?>
+</div>
+
+<!--
 <nav class="large-3 medium-4 columns" id="actions-sidebar">
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
@@ -29,3 +63,4 @@
     <?= $this->Form->button(__('Submit')) ?>
     <?= $this->Form->end() ?>
 </div>
+-->

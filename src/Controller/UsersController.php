@@ -84,7 +84,7 @@ class UsersController extends AppController
     public function edit($id = null)
     {
         $user = $this->Users->get($id, [
-            'contain' => []
+            'contain' => ['UserTypes']
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $user = $this->Users->patchEntity($user, $this->request->data);
@@ -95,7 +95,8 @@ class UsersController extends AppController
                 $this->Flash->error(__('The user could not be saved. Please, try again.'));
             }
         }
-        $userTypes = $this->Users->UserTypes->find('list', ['limit' => 200]);
+
+        $userTypes = $this->Users->UserTypes->find('list', ['limit' => 200])->toArray();
         $this->set(compact('user', 'userTypes'));
         $this->set('_serialize', ['user']);
     }

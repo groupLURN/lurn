@@ -25,7 +25,7 @@
     </div>
 </div>
 <div class="row mt">
-    <div class="col-md-12">
+    <div class="col-xs-12">
         <div class="content-panel">
             <table class="table table-striped table-advance table-hover">
                 <h4><i class="fa fa-angle-right"></i> <?= __('Suppliers') ?> </h4>

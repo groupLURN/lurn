@@ -101,4 +101,22 @@ class EmployeesTable extends Table
             return $exp->like('name', '%' . $options['name'] . '%');
         });
     }
+
+    public function findByEmployeeTypeId(Query $query, array $options)
+    {
+        if((int)$options['employee_type_id'] > 0)
+            return $query->where(['employee_type_id' => $options['employee_type_id']]);
+        else
+            return $query;
+    }
+
+    public function findByDateFrom(Query $query, array $options)
+    {
+        return $query->where($query->newExpr()->gte('employment_date', $options['date_from'], 'datetime'));
+    }
+
+    public function findByDateTo(Query $query, array $options)
+    {
+        return $query->where($query->newExpr()->lt('employment_date', $options['date_to'], 'datetime'));
+    }
 }

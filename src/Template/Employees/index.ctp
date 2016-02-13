@@ -4,28 +4,78 @@
         <?= $this->newButton(__('New Employee'), ['action' => 'add']); ?>
     </div>
 </div>
+
 <div class="row mt">
     <div class="col-xs-12">
         <div class="content-panel">
             <?= $this->Form->create('Search', ['type' => 'GET']) ?>
-            <div class="row search-container">
-                <div class="col-md-10">
-                    <input type="text" name="name" class="form-control" placeholder="Search Employee's Name"
-                           id="txt-search" <?= isset($name)? "value='" . $name . "'": ""; ?> >
-                </div>
-                <div class="col-md-2">
-                    <?= $this->Form->button(__('Search'), [
-                        'id' => 'btn-search',
-                        'class' => 'btn btn-primary'
-                    ]) ?>
-                </div>
-            </div>
+            <h4><i class="fa fa-angle-right"></i> Filters </h4>
+            <hr>
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td style="padding-top: 15px; padding-left: 10px;">
+                        <input type="checkbox" name="is_date_filter_enabled" <?= isset($is_date_filter_enabled)? 'checked': ''?>
+                               onclick="$('input.datetime-picker:text', $(this).closest('tr')).prop('disabled', !$(this).is(':checked'));">
+                        <label for="date_from">Date From</label>
+                    </td>
+                    <td>
+                        <?= $this->Form->input('date_from', [
+                            'class' => 'datetime-picker form-control',
+                            'style' => 'width: initial; display: initial;',
+                            'label' => false,
+                            'disabled' => !isset($is_date_filter_enabled)
+                        ]); ?>
+                    </td>
+                    <td style="padding-top: 15px; padding-left: 10px;">
+                        <label for="date_to">Date To</label>
+                    </td>
+                    <td>
+                        <?= $this->Form->input('date_to', [
+                            'class' => 'datetime-picker form-control',
+                            'style' => 'width: initial; display: initial;',
+                            'label' => false,
+                            'disabled' => !isset($is_date_filter_enabled)
+                        ]); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-top: 15px; padding-left: 10px;">
+                        <?= $this->Form->label("", "Employee Type"); ?>
+                    </td>
+                    <td colspan="3">
+                        <?= $this->Form->input('employee_type_id', [
+                            'options' => ['0' => 'All'] + $employeeTypes,
+                            'class' => 'form-control',
+                            'label' => false,
+                            'val' => isset($employee_type_id)? $employee_type_id: 0
+                        ]); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <div class="row mt">
+                            <div class="col-md-10">
+                                <input type="text" name="name" class="form-control" placeholder="Search Employee's Name"
+                                       id="txt-search" <?= isset($name)? "value='" . $name . "'": ""; ?> >
+                            </div>
+                            <div class="col-md-2">
+                                <?= $this->Form->button(__('Search'), [
+                                    'id' => 'btn-search',
+                                    'class' => 'btn btn-primary'
+                                ]) ?>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
             <?= $this->Form->end(); ?>
-        </div>
+        </div><!-- --/content-panel ---->
     </div>
 </div>
 <div class="row mt">
-    <div class="col-md-12">
+    <div class="col-xs-12">
         <div class="content-panel">
             <table class="table table-striped table-advance table-hover">
                 <h4><i class="fa fa-angle-right"></i> <?= __('Employees') ?> </h4>

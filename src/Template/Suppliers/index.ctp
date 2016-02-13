@@ -4,24 +4,35 @@
         <?= $this->newButton(__('New Supplier'), ['action' => 'add']); ?>
     </div>
 </div>
+
 <div class="row mt">
     <div class="col-xs-12">
         <div class="content-panel">
             <?= $this->Form->create('Search', ['type' => 'GET']) ?>
-            <div class="row search-container">
-                <div class="col-md-10">
-                    <input type="text" name="name" class="form-control" placeholder="Search Supplier's Name"
-                           id="txt-search" <?= isset($name)? "value='" . $name . "'": ""; ?> >
-                </div>
-                <div class="col-md-2">
-                    <?= $this->Form->button(__('Search'), [
-                        'id' => 'btn-search',
-                        'class' => 'btn btn-primary'
-                    ]) ?>
-                </div>
-            </div>
+            <h4><i class="fa fa-angle-right"></i> Filters </h4>
+            <hr>
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td colspan="4">
+                        <div class="row mt">
+                            <div class="col-md-10">
+                                <input type="text" name="name" class="form-control" placeholder="Search Supplier's Name"
+                                       id="txt-search" <?= isset($name)? "value='" . $name . "'": ""; ?> >
+                            </div>
+                            <div class="col-md-2">
+                                <?= $this->Form->button(__('Search'), [
+                                    'id' => 'btn-search',
+                                    'class' => 'btn btn-primary'
+                                ]) ?>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
             <?= $this->Form->end(); ?>
-        </div>
+        </div><!-- --/content-panel ---->
     </div>
 </div>
 <div class="row mt">

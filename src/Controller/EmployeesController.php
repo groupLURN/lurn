@@ -114,8 +114,14 @@ class EmployeesController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $employee = $this->Employees->get($id);
-        if ($this->Employees->delete($employee)) {
+        $employee = $this->Employees->get($id, ['contain' => ['Users', 'EmployeeTypes']]);
+
+        $isSuccessful = $this->Employees->connection()->transactional(function() use ($employee){
+            return $this->Employees->delete($employee, ['atomic' => false]) &&
+                TableRegistry::get('Users')->delete($employee->user, ['atomic' => false]);
+        });
+
+        if ($isSuccessful) {
             $this->Flash->success(__('The employee has been deleted.'));
         } else {
             $this->Flash->error(__('The employee could not be deleted. Please, try again.'));

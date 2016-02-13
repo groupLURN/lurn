@@ -84,10 +84,14 @@ class ClientsController extends AppController
     public function edit($id = null)
     {
         $client = $this->Clients->get($id, [
-            'contain' => []
+            'contain' => ['Users']
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $client = $this->Clients->patchEntity($client, $this->request->data);
+            $client = $this->Clients->patchEntity($client, $this->request->data, [
+                'associated' => [
+                    'Users'
+                ]
+            ]);
             if ($this->Clients->save($client)) {
                 $this->Flash->success(__('The client has been saved.'));
                 return $this->redirect(['action' => 'index']);

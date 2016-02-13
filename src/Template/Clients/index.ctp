@@ -63,7 +63,7 @@
                             <?= $this->dataTableDeleteButton(__('Delete'),
                                 ['action' => 'delete', $client->id],
                                 __('Are you sure you want to delete {0}? This will also delete its user account.',
-                                    $client->name)
+                                    $client->company_name)
                             );
                             ?>
                         </td>
@@ -134,3 +134,4 @@
         <p><?= $this->Paginator->counter() ?></p>
     </div>
 </div>
+-->

@@ -22,9 +22,11 @@ class ClientsController extends AppController
         $this->paginate = [
             'contain' => ['Users']
         ];
+        $this->paginate += $this->createFinders($this->request->query);
         $clients = $this->paginate($this->Clients);
 
         $this->set(compact('clients'));
+        $this->set($this->request->query);
         $this->set('_serialize', ['clients']);
     }
 

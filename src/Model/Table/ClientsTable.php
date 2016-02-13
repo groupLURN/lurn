@@ -86,4 +86,9 @@ class ClientsTable extends Table
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         return $rules;
     }
+
+    public function findByCompanyName(Query $query, array $options)
+    {
+        return $query->where($query->newExpr()->like('company_name', '%' . $options['company_name'] . '%'));
+    }
 }

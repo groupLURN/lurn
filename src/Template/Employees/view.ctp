@@ -1,3 +1,31 @@
+<div class="employees view large-9 medium-8 columns content">
+    <h3><?= h($employee->name) ?></h3>
+    <table class="vertical-table table table-striped">
+        <tr>
+            <th><?= __('Employee Type') ?></th>
+            <td><?= $employee->has('employee_type') ? h($employee->employee_type->title) : '' ?></td>
+        </tr>
+        <tr>
+            <th><?= __('Employment Date') ?></th>
+            <td><?= h($employee->employment_date) ?></td>
+        </tr>
+        <tr>
+            <th><?= __('Termination Date') ?></th>
+            <td><?= h($employee->termination_date) ?></td>
+        </tr>
+    </table>
+</div>
+
+<div class="employees view large-9 medium-8 columns content">
+    <h3><?= __("User Account") ?></h3>
+    <table class="vertical-table table table-striped">
+        <tr>
+            <th><?= __('Username') ?></th>
+            <td><?= $employee->user->username ?></td>
+        </tr>
+    </table>
+</div>
+<!--
 <nav class="large-3 medium-4 columns" id="actions-sidebar">
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>

@@ -33,6 +33,21 @@ class SuppliersController extends AppController
     }
 
     /**
+     * View method
+     *
+     * @param string|null $id Supplier id.
+     * @return \Cake\Network\Response|null
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function view($id = null)
+    {
+        $supplier = $this->Suppliers->get($id);
+
+        $this->set('supplier', $supplier);
+        $this->set('_serialize', ['supplier']);
+    }
+
+    /**
      * Add method
      *
      * @return void Redirects on successful add, renders view otherwise.

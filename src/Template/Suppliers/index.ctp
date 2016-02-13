@@ -58,6 +58,7 @@
                         <td><?= h($supplier->email) ?></td>
                         <td><?= h($supplier->address) ?></td>
                         <td class="actions">
+                            <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $supplier->id]); ?>
                             <?= $this->dataTableEditButton(__('Edit'), ['action' => 'edit', $supplier->id]); ?>
                             <?= $this->dataTableDeleteButton(__('Delete'),
                                 ['action' => 'delete', $supplier->id],

@@ -46,7 +46,7 @@ class UsersController extends AppController
             'contain' => ['UserTypes', 'Clients', 'Employees']
         ]);
 
-        if($user->has('employees'))
+        if($user->has('employees') && !empty($user->employees))
             $user->employees[0]->employee_type =
                 TableRegistry::get('Employees')->get($user->employees[0]->id, [
                     'contain' => ['EmployeeTypes']

@@ -1,3 +1,17 @@
+<div class="manpower view large-9 medium-8 columns content">
+    <h3><?= h($manpower->name) ?></h3>
+    <table class="vertical-table table table-striped">
+        <tr>
+            <th><?= __('Manpower Type') ?></th>
+            <td><?= $manpower->has('manpower_type') ? $this->Html->link($manpower->manpower_type->title, ['controller' => 'ManpowerTypes', 'action' => 'view', $manpower->manpower_type->id]) : '' ?></td>
+        </tr>
+        <tr>
+            <th><?= __('Name') ?></th>
+            <td><?= h($manpower->name) ?></td>
+        </tr>
+    </table>
+</div>
+<!--
 <nav class="large-3 medium-4 columns" id="actions-sidebar">
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
@@ -34,3 +48,4 @@
         </tr>
     </table>
 </div>
+-->

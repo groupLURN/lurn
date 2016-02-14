@@ -1,3 +1,18 @@
+<div class="materials view large-9 medium-8 columns content">
+    <h3><?= h($material->name) ?></h3>
+    <table class="vertical-table table table-striped">
+        <tr>
+            <th><?= __('Name') ?></th>
+            <td><?= h($material->name) ?></td>
+        </tr>
+        <tr>
+            <th><?= __('Unit Measure') ?></th>
+            <td><?= h($material->unit_measure) ?></td>
+        </tr>
+    </table>
+</div>
+
+<!--
 <nav class="large-3 medium-4 columns" id="actions-sidebar">
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
@@ -32,3 +47,4 @@
         </tr>
     </table>
 </div>
+-->

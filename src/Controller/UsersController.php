@@ -2,6 +2,8 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 
 /**
  * Users Controller
@@ -14,11 +16,20 @@ class UsersController extends AppController
     /**
      * Index method
      *
-     * @return void
+     * @return \Cake\Network\Response|null
      */
     public function index()
     {
-        $this->set('users', $this->paginate($this->Users));
+        $this->paginate = [
+            'contain' => ['UserTypes']
+        ];
+        $this->paginate += $this->createFinders($this->request->query);
+
+        $users = $this->paginate($this->Users);
+        $userTypes = $this->Users->UserTypes->find('list', ['limit' => 200])->toArray();
+
+        $this->set(compact('users', 'userTypes'));
+        $this->set($this->request->query);
         $this->set('_serialize', ['users']);
     }
 
@@ -26,14 +37,21 @@ class UsersController extends AppController
      * View method
      *
      * @param string|null $id User id.
-     * @return void
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     * @return \Cake\Network\Response|null
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function view($id = null)
     {
         $user = $this->Users->get($id, [
-            'contain' => []
+            'contain' => ['UserTypes', 'Clients', 'Employees']
         ]);
+
+        if($user->has('employees') && !empty($user->employees))
+            $user->employees[0]->employee_type =
+                TableRegistry::get('Employees')->get($user->employees[0]->id, [
+                    'contain' => ['EmployeeTypes']
+                ])->employee_type;
+
         $this->set('user', $user);
         $this->set('_serialize', ['user']);
     }
@@ -41,7 +59,7 @@ class UsersController extends AppController
     /**
      * Add method
      *
-     * @return void Redirects on successful add, renders view otherwise.
+     * @return \Cake\Network\Response|void Redirects on successful add, renders view otherwise.
      */
     public function add()
     {
@@ -55,7 +73,8 @@ class UsersController extends AppController
                 $this->Flash->error(__('The user could not be saved. Please, try again.'));
             }
         }
-        $this->set(compact('user'));
+        $userTypes = $this->Users->UserTypes->find('list', ['limit' => 200]);
+        $this->set(compact('user', 'userTypes'));
         $this->set('_serialize', ['user']);
     }
 
@@ -63,13 +82,13 @@ class UsersController extends AppController
      * Edit method
      *
      * @param string|null $id User id.
-     * @return void Redirects on successful edit, renders view otherwise.
+     * @return \Cake\Network\Response|void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
     public function edit($id = null)
     {
         $user = $this->Users->get($id, [
-            'contain' => []
+            'contain' => ['UserTypes']
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $user = $this->Users->patchEntity($user, $this->request->data);
@@ -80,7 +99,9 @@ class UsersController extends AppController
                 $this->Flash->error(__('The user could not be saved. Please, try again.'));
             }
         }
-        $this->set(compact('user'));
+
+        $userTypes = $this->Users->UserTypes->find('list', ['limit' => 200])->toArray();
+        $this->set(compact('user', 'userTypes'));
         $this->set('_serialize', ['user']);
     }
 
@@ -89,7 +110,7 @@ class UsersController extends AppController
      *
      * @param string|null $id User id.
      * @return \Cake\Network\Response|null Redirects to index.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function delete($id = null)
     {
@@ -110,7 +131,7 @@ class UsersController extends AppController
             $user = $this->Auth->identify();
             if ($user) {
                 $this->Auth->setUser($user);
-                return $this->redirect($this->Auth->redirectUrl());
+                return $this->redirect('/Dashboard/');
             }
             $this->Flash->error('Your username or password is incorrect.');
         }

@@ -16,6 +16,7 @@ namespace App\Controller;
 
 use Cake\Controller\Controller;
 use Cake\Event\Event;
+use Cake\Utility\Inflector;
 
 /**
  * Application Controller
@@ -52,8 +53,7 @@ class AppController extends Controller
                         'password' => 'password'
                     ]
                 ]],
-            'loginAction' => ['controller' => 'Users', 'action' => 'login'],
-            'loginRedirect' => '/Dashboard/'
+            'loginAction' => ['controller' => 'Users', 'action' => 'login']
         ]);
     }
 
@@ -70,5 +70,36 @@ class AppController extends Controller
         ) {
             $this->set('_serialize', true);
         }
+    }
+
+    public function paginate($object = null)
+    {
+        if(!empty($this->paginate['finder']) && is_array($this->paginate['finder']))
+        {
+            foreach($this->paginate['finder'] as $finder => $options)
+            {
+                if(!isset($query))
+                    $query = $object->find($finder, $options);
+                else
+                    $query = $query->find($finder, $options);
+            }
+            $object = $query;
+            unset($this->paginate['finder']);
+        }
+        return parent::paginate($object);
+    }
+
+    public function createFinders(array $filters)
+    {
+        $model = $this->loadModel($this->modelClass);
+
+        $finder = [];
+        foreach($filters as $filter => $query)
+        {
+            $findMethod = 'By' . Inflector::camelize($filter);
+            if(method_exists($model, 'Find' . $findMethod))
+                $finder[$findMethod] = [$filter => $query];
+        }
+        return compact('finder');
     }
 }

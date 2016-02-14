@@ -5,11 +5,17 @@ use App\Model\Entity\User;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
+use ArrayObject;
+use Cake\Event\Event;
 
 /**
  * Users Model
  *
+ * @property \Cake\ORM\Association\BelongsTo $UserTypes
+ * @property \Cake\ORM\Association\HasMany $Clients
+ * @property \Cake\ORM\Association\HasMany $Employees
  */
 class UsersTable extends Table
 {
@@ -30,6 +36,16 @@ class UsersTable extends Table
 
         $this->addBehavior('Timestamp');
 
+        $this->belongsTo('UserTypes', [
+            'foreignKey' => 'user_type_id',
+            'joinType' => 'INNER'
+        ]);
+        $this->hasMany('Clients', [
+            'foreignKey' => 'user_id'
+        ]);
+        $this->hasMany('Employees', [
+            'foreignKey' => 'user_id'
+        ]);
     }
 
     /**
@@ -41,7 +57,7 @@ class UsersTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->add('id', 'valid', ['rule' => 'numeric'])
+            ->integer('id')
             ->allowEmpty('id', 'create');
 
         $validator
@@ -52,11 +68,6 @@ class UsersTable extends Table
         $validator
             ->requirePresence('password', 'create')
             ->notEmpty('password');
-
-        $validator
-            ->add('user_type', 'valid', ['rule' => 'numeric'])
-            ->requirePresence('user_type', 'create')
-            ->notEmpty('user_type');
 
         return $validator;
     }
@@ -71,6 +82,31 @@ class UsersTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->isUnique(['username']));
+        $rules->add($rules->existsIn(['user_type_id'], 'UserTypes'));
         return $rules;
+    }
+
+    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
+    {
+        if(!isset($data['user_type_id']) && isset($data['user_type_title'])){
+            $user = TableRegistry::get('user_types')->find()
+                ->select(['id'])
+                ->where(['title' => $data['user_type_title']])
+                ->firstOrFail();
+            $data['user_type_id'] = $user->id;
+        }
+    }
+
+    public function findByUsername(Query $query, array $options)
+    {
+        return $query->where($query->newExpr()->like('username', '%' . $options['username'] . '%'));
+    }
+
+    public function findByUserTypeId(Query $query, array $options)
+    {
+        if((int)$options['user_type_id'] > 0)
+            return $query->where(['user_type_id' => $options['user_type_id']]);
+        else
+            return $query;
     }
 }

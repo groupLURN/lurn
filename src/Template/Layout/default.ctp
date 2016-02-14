@@ -12,6 +12,7 @@ $this->Html->css('/lineicons/style', ['block' => true]);
 $this->Html->css('style', ['block' => true]);
 $this->Html->css('style-responsive', ['block' => true]);
 $this->Html->css('custom', ['block' => true]);
+$this->Html->css('jquery-ui', ['block' => true]);
 
 
 $this->Html->script('jquery', ['block' => true]);
@@ -22,6 +23,7 @@ $this->Html->script('jquery.dcjqaccordion.2.7', ['block' => true]);
 $this->Html->script('jquery.scrollTo.min', ['block' => true]);
 $this->Html->script('jquery.nicescroll', ['block' => true]);
 $this->Html->script('jquery.sparkline', ['block' => true]);
+$this->Html->script('jquery-ui-1.9.2.custom.min', ['block' => true]);
 $this->Html->script('common-scripts', ['block' => true]);
 $this->Html->script('gritter/js/jquery.gritter', ['block' => true]);
 $this->Html->script('gritter-conf', ['block' => true]);
@@ -217,10 +219,26 @@ $this->Html->script('zabuto_calendar', ['block' => true]);
                     <h5 class="centered">Marcel Newman</h5>
 
                     <li class="mt">
-                        <a class="active" href="index.html">
+                        <a class="active" href="/dashboard">
                             <i class="fa fa-dashboard"></i>
                             <span>Dashboard</span>
                         </a>
+                    </li>
+
+                    <li class="sub-menu">
+                        <a href="javascript:;" >
+                            <i class="fa fa-desktop"></i>
+                            <span><?= __('Humans & Resources')?></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a href="/clients">Clients</a></li>
+                            <li><a href="/employees">Employees</a></li>
+                            <li><a href="/equipment">Equipment</a></li>
+                            <li><a href="/manpower">Manpower</a></li>
+                            <li><a href="/materials">Materials</a></li>
+                            <li><a href="/suppliers">Suppliers</a></li>
+                            <li><a href="/users">Users</a></li>
+                        </ul>
                     </li>
 
                     <li class="sub-menu">
@@ -293,8 +311,20 @@ $this->Html->script('zabuto_calendar', ['block' => true]);
         </aside>
         <!--sidebar end-->
 
-    <?= $this->fetch('content'); ?>
+        <!-- **********************************************************************************************************************************************************
+        MAIN CONTENT
+        *********************************************************************************************************************************************************** -->
+        <!--main content start-->
+        <section id="main-content">
+            <section class="wrapper">
+                <?= $this->fetch('content'); ?>
+            </section>
+        </section>
+
     <?= $this->fetch('script'); ?>
+    <script>
+    <?php include(WWW_ROOT . 'js\custom.js') ?>
+    </script>
     <?= $this->fetch('script-inline'); ?>
 </body>
 </html>

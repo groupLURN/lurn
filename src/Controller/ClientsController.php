@@ -60,7 +60,7 @@ class ClientsController extends AppController
             $client->user = TableRegistry::get('Users')->patchEntity($client->user, [
                 'username' => $this->request->data['username'],
                 'password' => $this->request->data['password'],
-                'user_type_title' => 'Employee'
+                'user_type_title' => 'Client'
             ]);
 
             $client = $this->Clients->patchEntity($client, $this->request->data);

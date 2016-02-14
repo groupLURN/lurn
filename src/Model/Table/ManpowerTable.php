@@ -83,5 +83,4 @@ class ManpowerTable extends Table
         else
             return $query;
     }
-
 }

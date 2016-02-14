@@ -8,6 +8,19 @@
             <table class="table">
                 <tbody>
                 <tr>
+                    <td style="padding-top: 15px; padding-left: 10px; width: 20%;">
+                        <?= $this->Form->label("", "User Type"); ?>
+                    </td>
+                    <td colspan="3">
+                        <?= $this->Form->input('user_type_id', [
+                            'options' => ['0' => 'All'] + $userTypes,
+                            'class' => 'form-control',
+                            'label' => false,
+                            'val' => isset($user_type_id)? $user_type_id: 0
+                        ]); ?>
+                    </td>
+                </tr>
+                <tr>
                     <td colspan="4">
                         <div class="row mt">
                             <div class="col-md-10">

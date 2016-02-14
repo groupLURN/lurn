@@ -101,4 +101,12 @@ class UsersTable extends Table
     {
         return $query->where($query->newExpr()->like('username', '%' . $options['username'] . '%'));
     }
+
+    public function findByUserTypeId(Query $query, array $options)
+    {
+        if((int)$options['user_type_id'] > 0)
+            return $query->where(['user_type_id' => $options['user_type_id']]);
+        else
+            return $query;
+    }
 }

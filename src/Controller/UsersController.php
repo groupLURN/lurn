@@ -26,8 +26,9 @@ class UsersController extends AppController
         $this->paginate += $this->createFinders($this->request->query);
 
         $users = $this->paginate($this->Users);
+        $userTypes = $this->Users->UserTypes->find('list', ['limit' => 200])->toArray();
 
-        $this->set(compact('users'));
+        $this->set(compact('users', 'userTypes'));
         $this->set($this->request->query);
         $this->set('_serialize', ['users']);
     }

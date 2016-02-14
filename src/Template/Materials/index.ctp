@@ -17,7 +17,7 @@
                     <td colspan="4">
                         <div class="row mt">
                             <div class="col-md-10">
-                                <input type="text" name="name" class="form-control" placeholder="Search Name"
+                                <input type="text" name="name" class="form-control" placeholder="Search Materials"
                                        id="txt-search" <?= isset($name)? "value='" . $name . "'": ""; ?> >
                             </div>
                             <div class="col-md-2">

@@ -18,9 +18,11 @@ class MaterialsController extends AppController
      */
     public function index()
     {
+        $this->paginate = $this->createFinders($this->request->query);
         $materials = $this->paginate($this->Materials);
 
         $this->set(compact('materials'));
+        $this->set($this->request->query);
         $this->set('_serialize', ['materials']);
     }
 

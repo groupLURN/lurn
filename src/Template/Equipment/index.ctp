@@ -1,6 +1,11 @@
 <?= $this->Flash->render() ?>
 <div class="row mt">
     <div class="col-xs-12">
+        <?= $this->newButton(__('New Equipment'), ['action' => 'add']); ?>
+    </div>
+</div>
+<div class="row mt">
+    <div class="col-xs-12">
         <div class="content-panel">
             <?= $this->Form->create('Search', ['type' => 'GET']) ?>
             <h4><i class="fa fa-angle-right"></i> Filters </h4>

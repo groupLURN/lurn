@@ -68,4 +68,20 @@ class ManpowerTable extends Table
         $rules->add($rules->existsIn(['manpower_type_id'], 'ManpowerTypes'));
         return $rules;
     }
+
+    public function findByName(Query $query, array $options)
+    {
+        return $query->where(function($exp) use ($options){
+            return $exp->like('name', '%' . $options['name'] . '%');
+        });
+    }
+
+    public function findByManpowerTypeId(Query $query, array $options)
+    {
+        if((int)$options['manpower_type_id'] > 0)
+            return $query->where(['manpower_type_id' => $options['manpower_type_id']]);
+        else
+            return $query;
+    }
+
 }

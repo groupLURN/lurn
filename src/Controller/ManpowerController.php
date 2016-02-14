@@ -21,9 +21,12 @@ class ManpowerController extends AppController
         $this->paginate = [
             'contain' => ['ManpowerTypes']
         ];
+        $this->paginate += $this->createFinders($this->request->query);
         $manpower = $this->paginate($this->Manpower);
+        $manpowerTypes = $this->Manpower->ManpowerTypes->find('list', ['limit' => 200])->toArray();
 
-        $this->set(compact('manpower'));
+        $this->set(compact('manpower', 'manpowerTypes'));
+        $this->set($this->request->query);
         $this->set('_serialize', ['manpower']);
     }
 

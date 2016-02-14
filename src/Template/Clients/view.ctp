@@ -2,6 +2,10 @@
     <h3><?= h($client->company_name) ?></h3>
     <table class="vertical-table table table-striped">
         <tr>
+            <th><?= __('Company Name') ?></th>
+            <td><?= h($client->company_name) ?></td>
+        </tr>
+        <tr>
             <th><?= __('Key Person') ?></th>
             <td><?= h($client->key_person) ?></td>
         </tr>

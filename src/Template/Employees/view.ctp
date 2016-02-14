@@ -2,6 +2,10 @@
     <h3><?= h($employee->name) ?></h3>
     <table class="vertical-table table table-striped">
         <tr>
+            <th><?= __('Employee Name') ?></th>
+            <td><?= h($employee->name) ?></td>
+        </tr>
+        <tr>
             <th><?= __('Employee Type') ?></th>
             <td><?= $employee->has('employee_type') ? h($employee->employee_type->title) : '' ?></td>
         </tr>

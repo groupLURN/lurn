@@ -20,6 +20,10 @@
         <h3><?= __("Employee Information") ?></h3>
         <table class="vertical-table table table-striped">
             <tr>
+                <th><?= __('Employee Name') ?></th>
+                <td><?= h($user->employees[0]->name) ?></td>
+            </tr>
+            <tr>
                 <th><?= __('Employee Type') ?></th>
                 <td><?= h($user->employees[0]->employee_type->title) ?></td>
             </tr>
@@ -39,6 +43,10 @@
     <div class="users view large-9 medium-8 columns content">
         <h3><?= __("Client Information") ?></h3>
         <table class="vertical-table table table-striped">
+            <tr>
+                <th><?= __('Company Name') ?></th>
+                <td><?= h($user->clients[0]->company_name) ?></td>
+            </tr>
             <tr>
                 <th><?= __('Key Person') ?></th>
                 <td><?= h($user->clients[0]->key_person) ?></td>

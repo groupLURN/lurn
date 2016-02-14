@@ -2,6 +2,10 @@
     <h3><?= h($supplier->name) ?></h3>
     <table class="vertical-table table table-striped">
         <tr>
+            <th><?= __('Supplier Name') ?></th>
+            <td><?= h($supplier->name) ?></td>
+        </tr>
+        <tr>
             <th><?= __('Contact Number') ?></th>
             <td><?= h($supplier->contact_number) ?></td>
         </tr>

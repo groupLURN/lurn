@@ -11,7 +11,7 @@
                     <td colspan="4">
                         <div class="row mt">
                             <div class="col-xs-10">
-                                <input type="text" name="username" class="form-control" placeholder="Search Equipment"
+                                <input type="text" name="name" class="form-control" placeholder="Search Equipment"
                                        id="txt-search" <?= isset($name)? "value='" . $name . "'": ""; ?> >
                             </div>
                             <div class="col-xs-2">

@@ -18,9 +18,11 @@ class EquipmentController extends AppController
      */
     public function index()
     {
+        $this->paginate = $this->createFinders($this->request->query);
         $equipment = $this->paginate($this->Equipment);
 
         $this->set(compact('equipment'));
+        $this->set($this->request->query);
         $this->set('_serialize', ['equipment']);
     }
 

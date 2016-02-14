@@ -49,4 +49,11 @@ class EquipmentTable extends Table
 
         return $validator;
     }
+
+    public function findByName(Query $query, array $options)
+    {
+        return $query->where(function($exp) use ($options){
+            return $exp->like('name', '%' . $options['name'] . '%');
+        });
+    }
 }

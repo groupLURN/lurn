@@ -46,6 +46,7 @@ class AppController extends Controller
         $this->loadComponent('Flash');
 
         $this->loadComponent('Auth', [
+            'authorize' => 'Controller',
             'authenticate' => [
                 'Form' => [
                     'fields' => [
@@ -53,8 +54,10 @@ class AppController extends Controller
                         'password' => 'password'
                     ]
                 ]],
-            'loginAction' => ['controller' => 'Users', 'action' => 'login']
+            'loginAction' => ['controller' => 'Users', 'action' => 'login'],
+            'unauthorizedRedirect' => $this->referer()
         ]);
+
     }
 
     /**
@@ -101,5 +104,11 @@ class AppController extends Controller
                 $finder[$findMethod] = [$filter => $query];
         }
         return compact('finder');
+    }
+
+    public function isAuthorized($user)
+    {
+        // Initially, permit all access.
+        return true;
     }
 }

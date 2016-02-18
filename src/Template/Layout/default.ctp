@@ -327,6 +327,7 @@ $this->Html->script('zabuto_calendar', ['block' => true]);
         <!--main content start-->
         <section id="main-content">
             <section class="wrapper">
+                <?= $this->Flash->render('auth') ?>
                 <?= $this->fetch('content'); ?>
             </section>
         </section>

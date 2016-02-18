@@ -121,4 +121,25 @@ class ProjectsController extends AppController
         }
         return $this->redirect(['action' => 'index']);
     }
+
+    public function isAuthorized($user)
+    {
+        $action = $this->request->params['action'];
+
+        if (in_array($action, ['edit', 'add'])) {
+
+            // Authorize only if the user is a project manager.
+            $resultSet = $this->Projects->Employees->find()
+                ->contain(['Users'])
+                ->where(['Users.id' => $user['id']])
+                ->matching(
+                    'EmployeeTypes', function($query){
+                    return $query->where(['EmployeeTypes.title' => 'Project Manager/Project Supervisor']);
+                })->first();
+
+            return $resultSet !== null;
+        }
+
+        return parent::isAuthorized($user);
+    }
 }

@@ -2,7 +2,6 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
-use Cake\ORM\TableRegistry;
 
 /**
  * Clients Controller
@@ -40,7 +39,10 @@ class ClientsController extends AppController
     public function view($id = null)
     {
         $client = $this->Clients->get($id, [
-            'contain' => ['Users']
+            'contain' => ['Users', 'Projects' => [
+                'ProjectStatuses',
+                'Employees'
+            ]]
         ]);
 
         $this->set('client', $client);
@@ -55,9 +57,9 @@ class ClientsController extends AppController
     public function add()
     {
         $client = $this->Clients->newEntity();
-        $client->user = TableRegistry::get('Users')->newEntity();
+        $client->user = $this->Clients->Users->newEntity();
         if ($this->request->is('post')) {
-            $client->user = TableRegistry::get('Users')->patchEntity($client->user, [
+            $client->user = $this->Clients->Users->patchEntity($client->user, [
                 'username' => $this->request->data['username'],
                 'password' => $this->request->data['password'],
                 'user_type_title' => 'Client'
@@ -122,7 +124,7 @@ class ClientsController extends AppController
 
         $isSuccessful = $this->Clients->connection()->transactional(function() use ($client){
             return $this->Clients->delete($client, ['atomic' => false]) &&
-            TableRegistry::get('Users')->delete($client->user, ['atomic' => false]);
+            $this->Clients->Users->delete($client->user, ['atomic' => false]);
         });
 
         if ($isSuccessful) {

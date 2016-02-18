@@ -16,6 +16,7 @@ use Cake\ORM\Entity;
  * @property string $address
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
+ * @property \App\Model\Entity\Project[] $projects
  */
 class Client extends Entity
 {

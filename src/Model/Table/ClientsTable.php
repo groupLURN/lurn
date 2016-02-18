@@ -11,6 +11,7 @@ use Cake\Validation\Validator;
  * Clients Model
  *
  * @property \Cake\ORM\Association\BelongsTo $Users
+ * @property \Cake\ORM\Association\HasMany $Projects
  */
 class ClientsTable extends Table
 {
@@ -26,7 +27,7 @@ class ClientsTable extends Table
         parent::initialize($config);
 
         $this->table('clients');
-        $this->displayField('id');
+        $this->displayField('company_name');
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
@@ -35,8 +36,9 @@ class ClientsTable extends Table
             'foreignKey' => 'user_id',
             'joinType' => 'INNER'
         ]);
-
-        $this->displayField('company_name');
+        $this->hasMany('Projects', [
+            'foreignKey' => 'client_id'
+        ]);
     }
 
     /**
@@ -93,4 +95,5 @@ class ClientsTable extends Table
     {
         return $query->where($query->newExpr()->like('company_name', '%' . $options['company_name'] . '%'));
     }
+
 }

@@ -19,7 +19,10 @@ class ClientsControllerTest extends IntegrationTestCase
         'app.clients',
         'app.users',
         'app.user_types',
-        'app.employees'
+        'app.employees',
+        'app.employee_types',
+        'app.projects',
+        'app.project_statuses'
     ];
 
     /**

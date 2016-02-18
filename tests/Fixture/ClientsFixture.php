@@ -54,8 +54,8 @@ class ClientsFixture extends TestFixture
             'contact_number' => 'Lorem ipsum dolor sit amet',
             'email' => 'Lorem ipsum dolor sit amet',
             'address' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
-            'created' => '2016-02-12 22:00:55',
-            'modified' => '2016-02-12 22:00:55'
+            'created' => '2016-02-18 16:50:48',
+            'modified' => '2016-02-18 16:50:48'
         ],
     ];
 }

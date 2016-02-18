@@ -6,9 +6,15 @@ Date.prototype.isValid = function () {
 
 $(".datetime-picker").each(function(){
     var initialValue = new Date($(this).val());
+    var today = new Date();
     $(this).datepicker().datepicker("option","dateFormat", "yy-mm-dd");
     if(initialValue.isValid())
         $(this).datepicker("setDate", initialValue);
+    else if ($(this).hasClass('advance-1-day'))
+    {
+        today.setDate(today.getDate() + 1);
+        $(this).datepicker("setDate", today);
+    }
     else
-        $(this).datepicker("setDate", new Date());
+        $(this).datepicker("setDate", today);
 });

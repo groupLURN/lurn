@@ -29,7 +29,7 @@
                     </td>
                     <td colspan="2">
                         <?= $this->Form->input('start_date_to', [
-                            'class' => 'datetime-picker form-control',
+                            'class' => 'datetime-picker form-control advance-1-day',
                             'style' => 'display: initial;',
                             'label' => false,
                             'disabled' => !isset($start_date_checked),
@@ -54,7 +54,7 @@
                     </td>
                     <td colspan="2">
                         <?= $this->Form->input('end_date_to', [
-                            'class' => 'datetime-picker form-control',
+                            'class' => 'datetime-picker form-control advance-1-day',
                             'style' => 'display: initial;',
                             'label' => false,
                             'disabled' => !isset($end_date_checked),

@@ -30,7 +30,7 @@
                     </td>
                     <td colspan="2">
                         <?= $this->Form->input('employment_date_to', [
-                            'class' => 'datetime-picker form-control',
+                            'class' => 'datetime-picker form-control advance-1-day',
                             'style' => 'display: initial;',
                             'label' => false,
                             'disabled' => !isset($employment_date_checked),
@@ -55,7 +55,7 @@
                     </td>
                     <td colspan="2">
                         <?= $this->Form->input('termination_date_to', [
-                            'class' => 'datetime-picker form-control',
+                            'class' => 'datetime-picker form-control advance-1-day',
                             'style' => 'display: initial;',
                             'label' => false,
                             'disabled' => !isset($termination_date_checked),

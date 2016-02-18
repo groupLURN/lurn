@@ -65,7 +65,7 @@
                             <?= $this->dataTableEditButton(__('Edit'), ['action' => 'edit', $project->id]); ?>
                             <?= $this->dataTableDeleteButton(__('Delete'),
                                 ['action' => 'delete', $project->id],
-                                __('Are you sure you want to delete {0}?', $project->name)
+                                __('Are you sure you want to delete {0}?', $project->title)
                             );
                             ?>
 

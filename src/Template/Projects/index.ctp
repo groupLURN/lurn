@@ -16,7 +16,7 @@
                     <td colspan="4">
                         <div class="row mt">
                             <div class="col-xs-10">
-                                <input type="text" name="title" class="form-control" placeholder="Search Projects' Title"
+                                <input type="text" name="title" class="form-control" placeholder="Search Project's Title"
                                        id="txt-search" <?= isset($title)? "value='" . $title . "'": ""; ?> >
                             </div>
                             <div class="col-xs-2">
@@ -43,8 +43,8 @@
                 <thead>
                 <tr>
                     <th><?= $this->Paginator->sort('title') ?></th>
-                    <th><?= $this->Paginator->sort('project_manager_id') ?></th>
                     <th><?= $this->Paginator->sort('client_id') ?></th>
+                    <th><?= $this->Paginator->sort('project_manager_id') ?></th>
                     <th><?= $this->Paginator->sort('start_date') ?></th>
                     <th><?= $this->Paginator->sort('end_date') ?></th>
                     <th><?= $this->Paginator->sort('project_status_id') ?></th>
@@ -54,13 +54,12 @@
                 <tbody>
                 <?php foreach ($projects as $project): ?>
                     <tr>
-                        <td><?= $this->Number->format($project->id) ?></td>
-                        <td><?= $project->has('client') ? $this->Html->link($project->client->id, ['controller' => 'Clients', 'action' => 'view', $project->client->id]) : '' ?></td>
-                        <td><?= $project->has('employee') ? $this->Html->link($project->employee->name, ['controller' => 'Employees', 'action' => 'view', $project->employee->id]) : '' ?></td>
-                        <td><?= $project->has('project_status') ? $this->Html->link($project->project_status->title, ['controller' => 'ProjectStatuses', 'action' => 'view', $project->project_status->id]) : '' ?></td>
                         <td><?= h($project->title) ?></td>
+                        <td><?= $project->has('client') ? $this->Html->link($project->client->company_name, ['controller' => 'Clients', 'action' => 'view', $project->client->id]) : '' ?></td>
+                        <td><?= $project->has('employee') ? $this->Html->link($project->employee->name, ['controller' => 'Employees', 'action' => 'view', $project->employee->id]) : '' ?></td>
                         <td><?= h($project->start_date) ?></td>
                         <td><?= h($project->end_date) ?></td>
+                        <td><?= $project->has('project_status') ? $this->Html->link($project->project_status->title, ['controller' => 'ProjectStatuses', 'action' => 'view', $project->project_status->id]) : '' ?></td>
                         <td class="actions">
                             <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $project->id]); ?>
                             <?= $this->dataTableEditButton(__('Edit'), ['action' => 'edit', $project->id]); ?>

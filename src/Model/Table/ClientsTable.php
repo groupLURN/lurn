@@ -35,6 +35,8 @@ class ClientsTable extends Table
             'foreignKey' => 'user_id',
             'joinType' => 'INNER'
         ]);
+
+        $this->displayField('company_name');
     }
 
     /**

@@ -106,4 +106,9 @@ class ProjectsTable extends Table
             }
         }
     }
+
+    public function findByTitle(Query $query, array $options)
+    {
+        return $query->where($query->newExpr()->like('Projects.title', '%' . $options['title'] . '%'));
+    }
 }

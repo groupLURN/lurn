@@ -21,9 +21,11 @@ class ProjectsController extends AppController
         $this->paginate = [
             'contain' => ['Clients', 'Employees', 'ProjectStatuses']
         ];
+        $this->paginate += $this->createFinders($this->request->query);
         $projects = $this->paginate($this->Projects);
 
         $this->set(compact('projects'));
+        $this->set($this->request->query);
         $this->set('_serialize', ['projects']);
     }
 

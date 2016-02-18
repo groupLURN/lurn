@@ -67,15 +67,11 @@ class ProjectsController extends AppController
             }
         }
         $clients = $this->Projects->Clients->find('list', ['limit' => 200]);
-        $employees = $this->Projects->Employees->find('list', ['limit' => 200])->matching(
-            'EmployeeTypes', function($query){
-                return $query->where(['EmployeeTypes.title' => 'Project Manager/Project Supervisor']);
-            }
-        );
 
+        $employeesJoin = $this->Projects->EmployeesJoin->find('list', ['limit' => 200])->toArray();
         $projectStatuses = $this->Projects->ProjectStatuses->find('list', ['limit' => 200]);
         $employees = $this->Projects->Employees->find('list', ['limit' => 200]);
-        $this->set(compact('project', 'clients', 'projectStatuses', 'employees'));
+        $this->set(compact('project', 'clients', 'projectStatuses', 'employees', 'employeesJoin'));
         $this->set('_serialize', ['project']);
     }
 
@@ -89,7 +85,7 @@ class ProjectsController extends AppController
     public function edit($id = null)
     {
         $project = $this->Projects->get($id, [
-            'contain' => ['Employees']
+            'contain' => ['Employees', 'EmployeesJoin']
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $project = $this->Projects->patchEntity($project, $this->request->data);
@@ -103,7 +99,13 @@ class ProjectsController extends AppController
         $clients = $this->Projects->Clients->find('list', ['limit' => 200]);
         $employees = $this->Projects->Employees->find('list', ['limit' => 200]);
         $projectStatuses = $this->Projects->ProjectStatuses->find('list', ['limit' => 200]);
-        $this->set(compact('project', 'clients', 'projectStatuses', 'employees'));
+        $employeesJoin = $this->Projects->EmployeesJoin->find('list', ['limit' => 200])->toArray();
+
+        $currentEmployeesJoin = [];
+        foreach($project->employees_join as $employee)
+            $currentEmployeesJoin[] = $employee->id;
+
+        $this->set(compact('project', 'clients', 'projectStatuses', 'employees', 'employeesJoin', 'currentEmployeesJoin'));
         $this->set('_serialize', ['project']);
     }
 

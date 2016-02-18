@@ -13,6 +13,7 @@ $this->Html->css('style', ['block' => true]);
 $this->Html->css('style-responsive', ['block' => true]);
 $this->Html->css('custom', ['block' => true]);
 $this->Html->css('jquery-ui', ['block' => true]);
+$this->Html->css('chosen.min', ['block' => true]);
 
 
 $this->Html->script('jquery', ['block' => true]);
@@ -24,6 +25,7 @@ $this->Html->script('jquery.scrollTo.min', ['block' => true]);
 $this->Html->script('jquery.nicescroll', ['block' => true]);
 $this->Html->script('jquery.sparkline', ['block' => true]);
 $this->Html->script('jquery-ui-1.9.2.custom.min', ['block' => true]);
+$this->Html->script('chosen.jquery.min', ['block' => true]);
 $this->Html->script('common-scripts', ['block' => true]);
 $this->Html->script('gritter/js/jquery.gritter', ['block' => true]);
 $this->Html->script('gritter-conf', ['block' => true]);

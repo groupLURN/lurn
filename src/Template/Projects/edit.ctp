@@ -60,6 +60,22 @@
             ]);
 
             ?>
+
+            <legend class="mt"><h3><i class="fa fa-angle-right"></i> <?= __('Core Team Assignment') ?></h3></legend>
+
+            <?=
+            $this->Form->input('employees_join._ids', [
+                'type' => 'select',
+                'data-placeholder' => 'Add Core Team Members',
+                'multiple' => true,
+                'options' => $employeesJoin,
+                'class' => 'form-control chosen',
+                'label' => [
+                    'text' => 'Assigned Employees'
+                ],
+                'value' => $currentEmployeesJoin
+            ]);
+            ?>
         </fieldset>
 
         <?= $this->Form->button(__('Submit'), [

@@ -94,7 +94,7 @@
         <legend><?= __('Edit Project') ?></legend>
         <?php
             echo $this->Form->input('client_id', ['options' => $clients]);
-            echo $this->Form->input('project_manager_id');
+            echo $this->Form->input('project_manager_id', ['options' => $employees]);
             echo $this->Form->input('project_status_id', ['options' => $projectStatuses]);
             echo $this->Form->input('title');
             echo $this->Form->input('description');

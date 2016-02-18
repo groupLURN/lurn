@@ -119,18 +119,22 @@ class ClientsController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
         $client = $this->Clients->get($id, [
-            'contain' => ['Users']
+            'contain' => ['Users', 'Projects']
         ]);
 
-        $isSuccessful = $this->Clients->connection()->transactional(function() use ($client){
-            return $this->Clients->delete($client, ['atomic' => false]) &&
-            $this->Clients->Users->delete($client->user, ['atomic' => false]);
-        });
+        if(!empty($client->projects))
+            $this->Flash->error(__('The client has project initiations so it cannot be deleted.'));
+        else {
+            $isSuccessful = $this->Clients->connection()->transactional(function() use ($client){
+                return $this->Clients->delete($client, ['atomic' => false]) &&
+                $this->Clients->Users->delete($client->user, ['atomic' => false]);
+            });
 
-        if ($isSuccessful) {
-            $this->Flash->success(__('The client has been deleted.'));
-        } else {
-            $this->Flash->error(__('The client could not be deleted. Please, try again.'));
+            if ($isSuccessful) {
+                $this->Flash->success(__('The client has been deleted.'));
+            } else {
+                $this->Flash->error(__('The client could not be deleted. Please, try again.'));
+            }
         }
         return $this->redirect(['action' => 'index']);
     }

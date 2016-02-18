@@ -132,18 +132,27 @@ class ProjectsController extends AppController
     {
         $action = $this->request->params['action'];
 
-        if (in_array($action, ['edit', 'add'])) {
+        $isProjectManager = $this->Projects->Employees->find()
+            ->contain(['Users'])
+            ->where(['Users.id' => $user['id']])
+            ->matching('EmployeeTypes', function($query){
+                return $query->where(['EmployeeTypes.title' => 'Project Manager/Project Supervisor']);
+            })->first() !== null;
 
-            // Authorize only if the user is a project manager.
-            $resultSet = $this->Projects->Employees->find()
-                ->contain(['Users'])
-                ->where(['Users.id' => $user['id']])
-                ->matching(
-                    'EmployeeTypes', function($query){
-                    return $query->where(['EmployeeTypes.title' => 'Project Manager/Project Supervisor']);
-                })->first();
+        if (in_array($action, ['edit', 'add', 'delete']))
+            return $isProjectManager;
+        else if (in_array($action, ['view']))
+        {
+            $projectId = $this->request->params['pass'][0];
 
-            return $resultSet !== null;
+            $isUserAssigned = $this->Projects->find()
+                ->matching('EmployeesJoin', function($query) use ($user) {
+                    return $query->where(['EmployeesJoin.user_id' => $user['id']]);
+                })
+                ->where(['Projects.id' => $projectId])
+                ->first() !== null;
+
+            return $isUserAssigned || $isProjectManager;
         }
 
         return parent::isAuthorized($user);

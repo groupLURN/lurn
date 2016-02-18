@@ -62,11 +62,11 @@
                         <td><?= h($project->start_date) ?></td>
                         <td><?= h($project->end_date) ?></td>
                         <td class="actions">
-                            <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $equipment_->id]); ?>
-                            <?= $this->dataTableEditButton(__('Edit'), ['action' => 'edit', $equipment_->id]); ?>
+                            <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $project->id]); ?>
+                            <?= $this->dataTableEditButton(__('Edit'), ['action' => 'edit', $project->id]); ?>
                             <?= $this->dataTableDeleteButton(__('Delete'),
-                                ['action' => 'delete', $equipment_->id],
-                                __('Are you sure you want to delete {0}?', $equipment_->name)
+                                ['action' => 'delete', $project->id],
+                                __('Are you sure you want to delete {0}?', $project->name)
                             );
                             ?>
 

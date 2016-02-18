@@ -8,6 +8,7 @@ use Cake\I18n\Time;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
 
 /**
@@ -147,4 +148,23 @@ class ProjectsTable extends Table
         return $query->where($query->newExpr()->lt('Projects.end_date', $options['end_date_to'], 'datetime'));
     }
 
-}
+    public function findByAuthorization(Query $query, array $options)
+    {
+        $resultSet = TableRegistry::get('employees')->find()
+            ->select(['id' => 'Employees.user_id'])
+            ->matching('EmployeeTypes', function($query){
+                return $query->where(['EmployeeTypes.title' => 'Project Manager/Project Supervisor']);
+            });
+
+        $projectManagerUserIds = [];
+        foreach($resultSet as $entity)
+            $projectManagerUserIds[] = $entity->id;
+
+        if(in_array($options['user_id'], $projectManagerUserIds))
+            return $query;
+        else
+            return $query
+                ->matching('EmployeesJoin', function($query) use ($options) {
+                    return $query->where(['EmployeesJoin.user_id' => $options['user_id']]);
+                });
+    }}

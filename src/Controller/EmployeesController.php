@@ -127,17 +127,23 @@ class EmployeesController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $employee = $this->Employees->get($id, ['contain' => ['Users', 'EmployeeTypes']]);
+        $employee = $this->Employees->get($id, ['contain' => ['Users', 'EmployeeTypes', 'Projects']]);
 
-        $isSuccessful = $this->Employees->connection()->transactional(function() use ($employee){
-            return $this->Employees->delete($employee, ['atomic' => false]) &&
-            $this->Employees->Users->delete($employee->user, ['atomic' => false]);
-        });
+        if(!empty($employee->projects))
+            $this->Flash->error(__('The employee is currently assigned to projects so it cannot be deleted.'));
+        else if($this->Auth->user('id') === $employee->user_id)
+            $this->Flash->error(__('You cannot delete yourself.'));
+        else {
+            $isSuccessful = $this->Employees->connection()->transactional(function() use ($employee){
+                return $this->Employees->delete($employee, ['atomic' => false]) &&
+                $this->Employees->Users->delete($employee->user, ['atomic' => false]);
+            });
 
-        if ($isSuccessful) {
-            $this->Flash->success(__('The employee has been deleted.'));
-        } else {
-            $this->Flash->error(__('The employee could not be deleted. Please, try again.'));
+            if ($isSuccessful) {
+                $this->Flash->success(__('The employee has been deleted.'));
+            } else {
+                $this->Flash->error(__('The employee could not be deleted. Please, try again.'));
+            }
         }
         return $this->redirect(['action' => 'index']);
     }

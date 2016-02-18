@@ -55,10 +55,10 @@ class EmployeesFixture extends TestFixture
             'user_id' => 1,
             'employee_type_id' => 1,
             'name' => 'Lorem ipsum dolor sit amet',
-            'employment_date' => '2016-02-12 22:01:16',
-            'termination_date' => '2016-02-12 22:01:16',
-            'created' => '2016-02-12 22:01:16',
-            'modified' => '2016-02-12 22:01:16'
+            'employment_date' => '2016-02-18 17:17:41',
+            'termination_date' => '2016-02-18 17:17:41',
+            'created' => '2016-02-18 17:17:41',
+            'modified' => '2016-02-18 17:17:41'
         ],
     ];
 }

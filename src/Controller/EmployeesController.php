@@ -2,7 +2,6 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
-use Cake\ORM\TableRegistry;
 
 /**
  * Employees Controller
@@ -42,7 +41,10 @@ class EmployeesController extends AppController
     public function view($id = null)
     {
         $employee = $this->Employees->get($id, [
-            'contain' => ['Users', 'EmployeeTypes']
+            'contain' => ['Users', 'EmployeeTypes', 'Projects' => [
+                'Clients',
+                'Employees'
+            ]]
         ]);
 
         $this->set('employee', $employee);
@@ -57,10 +59,10 @@ class EmployeesController extends AppController
     public function add()
     {
         $employee = $this->Employees->newEntity();
-        $employee->user = TableRegistry::get('Users')->newEntity();
+        $employee->user = $this->Employees->Users->newEntity();
 
         if ($this->request->is('post')) {
-            $employee->user = TableRegistry::get('Users')->patchEntity($employee->user, [
+            $employee->user = $this->Employees->Users->patchEntity($employee->user, [
                 'username' => $this->request->data['username'],
                 'password' => $this->request->data['password'],
                 'user_type_title' => 'Employee'
@@ -77,7 +79,8 @@ class EmployeesController extends AppController
         }
         $users = $this->Employees->Users->find('list', ['limit' => 200]);
         $employeeTypes = $this->Employees->EmployeeTypes->find('list', ['limit' => 200]);
-        $this->set(compact('employee', 'users', 'employeeTypes'));
+        $projects = $this->Employees->Projects->find('list', ['limit' => 200]);
+        $this->set(compact('employee', 'users', 'employeeTypes', 'projects'));
         $this->set('_serialize', ['employee']);
     }
 
@@ -91,7 +94,7 @@ class EmployeesController extends AppController
     public function edit($id = null)
     {
         $employee = $this->Employees->get($id, [
-            'contain' => ['Users']
+            'contain' => ['Users', 'Projects']
         ]);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
@@ -109,7 +112,8 @@ class EmployeesController extends AppController
         }
         $users = $this->Employees->Users->find('list', ['limit' => 200]);
         $employeeTypes = $this->Employees->EmployeeTypes->find('list', ['limit' => 200]);
-        $this->set(compact('employee', 'users', 'employeeTypes'));
+        $projects = $this->Employees->Projects->find('list', ['limit' => 200]);
+        $this->set(compact('employee', 'users', 'employeeTypes', 'projects'));
         $this->set('_serialize', ['employee']);
     }
 
@@ -127,7 +131,7 @@ class EmployeesController extends AppController
 
         $isSuccessful = $this->Employees->connection()->transactional(function() use ($employee){
             return $this->Employees->delete($employee, ['atomic' => false]) &&
-                TableRegistry::get('Users')->delete($employee->user, ['atomic' => false]);
+            $this->Employees->Users->delete($employee->user, ['atomic' => false]);
         });
 
         if ($isSuccessful) {

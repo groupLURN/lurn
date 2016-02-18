@@ -20,6 +20,9 @@ class EmployeesControllerTest extends IntegrationTestCase
         'app.users',
         'app.user_types',
         'app.clients',
+        'app.projects',
+        'app.project_statuses',
+        'app.employees_projects',
         'app.employee_types'
     ];
 

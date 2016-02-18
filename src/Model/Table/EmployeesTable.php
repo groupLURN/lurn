@@ -4,6 +4,7 @@ namespace App\Model\Table;
 use App\Model\Entity\Employee;
 use ArrayObject;
 use Cake\Event\Event;
+use Cake\I18n\Time;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -88,11 +89,11 @@ class EmployeesTable extends Table
 
     public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
     {
-        $data['employment_date'] += [
-            'hour' => "0",
-            'minute' => "0",
-            'meridian' => "am"
-        ];
+        foreach (['employment_date', 'termination_date'] as $key) {
+            if (isset($data[$key]) && is_string($data[$key])) {
+                $data[$key] = Time::parseDateTime($data[$key], 'yyyy/MM/dd');
+            }
+        }
     }
 
     public function findByName(Query $query, array $options)

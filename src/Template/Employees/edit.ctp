@@ -25,46 +25,19 @@
                 ]
             ]);
             echo $this->Form->input('employment_date', [
-                'year' => [
-                    'class' => 'form-control margin-left',
-                    'style' => 'width: initial; display: initial;'
-                ],
-                'month' => [
-                    'class' => 'form-control margin-left',
-                    'style' => 'width: initial; display: initial;'
-                ],
-                'day' => [
-                    'class' => 'form-control margin-left',
-                    'style' => 'width: initial; display: initial;'
-                ],
+                'type' => 'text',
+                'class' => 'form-control datetime-picker',
                 'label' => [
                     'class' => 'mt'
-                ],
-                'hour' => false,
-                'minute' => false,
-                'meridian' => false
+                ]
             ]);
+
             echo $this->Form->input('termination_date', [
-                'empty' => true,
-                'class' => 'form-control',
+                'type' => 'text',
+                'class' => 'form-control datetime-picker',
                 'label' => [
                     'class' => 'mt'
-                ],
-                'year' => [
-                    'class' => 'form-control margin-left',
-                    'style' => 'width: initial; display: initial;'
-                ],
-                'month' => [
-                    'class' => 'form-control margin-left',
-                    'style' => 'width: initial; display: initial;'
-                ],
-                'day' => [
-                    'class' => 'form-control margin-left',
-                    'style' => 'width: initial; display: initial;'
-                ],
-                'hour' => false,
-                'minute' => false,
-                'meridian' => false
+                ]
             ]);
             ?>
 

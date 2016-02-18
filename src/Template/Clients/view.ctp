@@ -35,7 +35,7 @@
 </div>
 
 <div class="related">
-    <h3><?= __('Related Projects') ?></h3>
+    <h3><?= __('Project Initiations') ?></h3>
     <?php if (!empty($client->projects)): ?>
         <table cellpadding="0" cellspacing="0" class="table table-striped">
             <tr>
@@ -48,7 +48,7 @@
             <?php foreach ($client->projects as $projects): ?>
                 <tr>
                     <td><?= $this->Html->link($projects->title, ['controller' => 'projects', 'action' => 'view', $projects->id]) ?></td>
-                    <td><?= $this->Html->link($projects->employee->name, ['controller' => 'employees', 'action' => 'view', $projects->employee->id]) ?></td>
+                    <td><?= $this->Html->link($projects->employees[0]->name, ['controller' => 'employees', 'action' => 'view', $projects->employees[0]->id]) ?></td>
                     <td><?= h($projects->start_date) ?></td>
                     <td><?= h($projects->end_date) ?></td>
                     <td><?= h($projects->project_status->title) ?></td>

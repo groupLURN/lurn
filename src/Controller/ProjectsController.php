@@ -62,7 +62,12 @@ class ProjectsController extends AppController
             }
         }
         $clients = $this->Projects->Clients->find('list', ['limit' => 200]);
-        $employees = $this->Projects->Employees->find('list', ['limit' => 200]);
+        $employees = $this->Projects->Employees->find('list', ['limit' => 200])->matching(
+            'EmployeeTypes', function($query){
+                return $query->where(['EmployeeTypes.title' => 'Project Manager/Project Supervisor']);
+            }
+        );
+
         $projectStatuses = $this->Projects->ProjectStatuses->find('list', ['limit' => 200]);
         $this->set(compact('project', 'clients', 'employees', 'projectStatuses'));
         $this->set('_serialize', ['project']);

@@ -14,8 +14,9 @@ use Cake\Validation\Validator;
  * Projects Model
  *
  * @property \Cake\ORM\Association\BelongsTo $Clients
+ * @property \Cake\ORM\Association\BelongsTo $Employees
  * @property \Cake\ORM\Association\BelongsTo $ProjectStatuses
- * @property \Cake\ORM\Association\BelongsToMany $Employees
+ * @property \Cake\ORM\Association\BelongsToMany $EmployeesJoin
  */
 class ProjectsTable extends Table
 {
@@ -48,7 +49,8 @@ class ProjectsTable extends Table
             'foreignKey' => 'project_status_id',
             'joinType' => 'INNER'
         ]);
-        $this->belongsToMany('Employees', [
+        $this->belongsToMany('EmployeesJoin', [
+            'className' => 'Employees',
             'foreignKey' => 'project_id',
             'targetForeignKey' => 'employee_id',
             'joinTable' => 'employees_projects'

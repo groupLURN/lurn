@@ -39,7 +39,7 @@ class ProjectsController extends AppController
     public function view($id = null)
     {
         $project = $this->Projects->get($id, [
-            'contain' => ['Clients', 'Employees', 'ProjectStatuses']
+            'contain' => ['Clients', 'Employees', 'ProjectStatuses', 'EmployeesJoin']
         ]);
 
         $this->set('project', $project);

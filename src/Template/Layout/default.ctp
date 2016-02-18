@@ -243,6 +243,16 @@ $this->Html->script('zabuto_calendar', ['block' => true]);
 
                     <li class="sub-menu">
                         <a href="javascript:;" >
+                            <i class="fa fa-tasks"></i>
+                            <span>Projects</span>
+                        </a>
+                        <ul class="sub">
+                            <li><a  href="/projects">View Projects</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="sub-menu">
+                        <a href="javascript:;" >
                             <i class="fa fa-desktop"></i>
                             <span>UI Elements</span>
                         </a>

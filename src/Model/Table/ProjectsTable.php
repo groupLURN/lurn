@@ -118,4 +118,33 @@ class ProjectsTable extends Table
     {
         return $query->where($query->newExpr()->like('Projects.title', '%' . $options['title'] . '%'));
     }
+
+    public function findByProjectStatusId(Query $query, array $options)
+    {
+        if((int)$options['project_status_id'] > 0)
+            return $query->where(['Projects.project_status_id' => $options['project_status_id']]);
+        else
+            return $query;
+    }
+
+    public function findByStartDateFrom(Query $query, array $options)
+    {
+        return $query->where($query->newExpr()->gte('Projects.start_date', $options['start_date_from'], 'datetime'));
+    }
+
+    public function findByStartDateTo(Query $query, array $options)
+    {
+        return $query->where($query->newExpr()->lt('Projects.start_date', $options['start_date_to'], 'datetime'));
+    }
+
+    public function findByEndDateFrom(Query $query, array $options)
+    {
+        return $query->where($query->newExpr()->gte('Projects.end_date', $options['end_date_from'], 'datetime'));
+    }
+
+    public function findByEndDateTo(Query $query, array $options)
+    {
+        return $query->where($query->newExpr()->lt('Projects.end_date', $options['end_date_to'], 'datetime'));
+    }
+
 }

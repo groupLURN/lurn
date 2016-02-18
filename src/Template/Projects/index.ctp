@@ -13,6 +13,69 @@
             <table class="table">
                 <tbody>
                 <tr>
+                    <td style="padding-top: 15px; padding-left: 10px;">
+                        <input type="checkbox" name="start_date_checked" <?= isset($start_date_checked)? 'checked': ''?>
+                               onclick="$('input.datetime-picker:text', $(this).closest('tr')).prop('disabled', !$(this).is(':checked'));">
+                        <label>Start Date</label>
+                    </td>
+                    <td>
+                        <?= $this->Form->input('start_date_from', [
+                            'class' => 'datetime-picker form-control',
+                            'style' => 'display: initial;',
+                            'label' => false,
+                            'disabled' => !isset($start_date_checked),
+                            'val' => isset($start_date_from)? $start_date_from: ''
+                        ]); ?>
+                    </td>
+                    <td colspan="2">
+                        <?= $this->Form->input('start_date_to', [
+                            'class' => 'datetime-picker form-control',
+                            'style' => 'display: initial;',
+                            'label' => false,
+                            'disabled' => !isset($start_date_checked),
+                            'val' => isset($start_date_to)? $start_date_to: ''
+                        ]); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-top: 15px; padding-left: 10px;">
+                        <input type="checkbox" name="end_date_checked" <?= isset($end_date_checked)? 'checked': ''?>
+                               onclick="$('input.datetime-picker:text', $(this).closest('tr')).prop('disabled', !$(this).is(':checked'));">
+                        <label>End Date</label>
+                    </td>
+                    <td>
+                        <?= $this->Form->input('end_date_from', [
+                            'class' => 'datetime-picker form-control',
+                            'style' => 'display: initial;',
+                            'label' => false,
+                            'disabled' => !isset($end_date_checked),
+                            'val' => isset($end_date_from)? $end_date_from: ''
+                        ]); ?>
+                    </td>
+                    <td colspan="2">
+                        <?= $this->Form->input('end_date_to', [
+                            'class' => 'datetime-picker form-control',
+                            'style' => 'display: initial;',
+                            'label' => false,
+                            'disabled' => !isset($end_date_checked),
+                            'val' => isset($end_date_to)? $end_date_to: ''
+                        ]); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-top: 15px; padding-left: 10px;">
+                        <?= $this->Form->label("", "Status"); ?>
+                    </td>
+                    <td colspan="3">
+                        <?= $this->Form->input('project_status_id', [
+                            'options' => ['0' => 'All'] + $projectStatuses,
+                            'class' => 'form-control',
+                            'label' => false,
+                            'val' => isset($project_status_id)? $project_status_id: 0,
+                        ]); ?>
+                    </td>
+                </tr>
+                <tr>
                     <td colspan="4">
                         <div class="row mt">
                             <div class="col-xs-10">

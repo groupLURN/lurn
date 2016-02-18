@@ -23,8 +23,9 @@ class ProjectsController extends AppController
         ];
         $this->paginate += $this->createFinders($this->request->query);
         $projects = $this->paginate($this->Projects);
+        $projectStatuses = $this->Projects->ProjectStatuses->find('list', ['limit' => 200])->toArray();
 
-        $this->set(compact('projects'));
+        $this->set(compact('projects', 'projectStatuses'));
         $this->set($this->request->query);
         $this->set('_serialize', ['projects']);
     }

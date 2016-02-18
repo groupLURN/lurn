@@ -10,7 +10,6 @@ use Cake\ORM\Entity;
  * @property int $client_id
  * @property \App\Model\Entity\Client $client
  * @property int $project_manager_id
- * @property \App\Model\Entity\Employee $employee
  * @property int $project_status_id
  * @property \App\Model\Entity\ProjectStatus $project_status
  * @property string $title
@@ -19,6 +18,7 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\Time $end_date
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
+ * @property \App\Model\Entity\Employee[] $employees
  */
 class Project extends Entity
 {

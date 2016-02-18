@@ -71,7 +71,8 @@ class ProjectsController extends AppController
         );
 
         $projectStatuses = $this->Projects->ProjectStatuses->find('list', ['limit' => 200]);
-        $this->set(compact('project', 'clients', 'employees', 'projectStatuses'));
+        $employees = $this->Projects->Employees->find('list', ['limit' => 200]);
+        $this->set(compact('project', 'clients', 'projectStatuses', 'employees'));
         $this->set('_serialize', ['project']);
     }
 
@@ -85,7 +86,7 @@ class ProjectsController extends AppController
     public function edit($id = null)
     {
         $project = $this->Projects->get($id, [
-            'contain' => []
+            'contain' => ['Employees']
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $project = $this->Projects->patchEntity($project, $this->request->data);
@@ -99,7 +100,7 @@ class ProjectsController extends AppController
         $clients = $this->Projects->Clients->find('list', ['limit' => 200]);
         $employees = $this->Projects->Employees->find('list', ['limit' => 200]);
         $projectStatuses = $this->Projects->ProjectStatuses->find('list', ['limit' => 200]);
-        $this->set(compact('project', 'clients', 'employees', 'projectStatuses'));
+        $this->set(compact('project', 'clients', 'projectStatuses', 'employees'));
         $this->set('_serialize', ['project']);
     }
 

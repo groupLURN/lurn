@@ -22,6 +22,7 @@ class ProjectsControllerTest extends IntegrationTestCase
         'app.user_types',
         'app.employees',
         'app.employee_types',
+        'app.employees_projects',
         'app.project_statuses'
     ];
 

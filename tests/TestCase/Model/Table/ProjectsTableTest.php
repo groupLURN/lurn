@@ -30,6 +30,7 @@ class ProjectsTableTest extends TestCase
         'app.user_types',
         'app.employees',
         'app.employee_types',
+        'app.employees_projects',
         'app.project_statuses'
     ];
 

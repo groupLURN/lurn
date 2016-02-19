@@ -14,11 +14,13 @@ $this->Html->css('style-responsive', ['block' => true]);
 $this->Html->css('custom', ['block' => true]);
 $this->Html->css('jquery-ui', ['block' => true]);
 $this->Html->css('chosen.min', ['block' => true]);
+$this->Html->css('dhtmlxgantt', ['block' => true]);
 
 
 $this->Html->script('jquery', ['block' => true]);
 $this->Html->script('bootstrap.min', ['block' => true]);
 $this->Html->script('jquery.backstretch.min', ['block' => true]);
+$this->Html->script('dhtmlxgantt', ['block' => true]);
 
 $this->Html->script('jquery.dcjqaccordion.2.7', ['block' => true]);
 $this->Html->script('jquery.scrollTo.min', ['block' => true]);

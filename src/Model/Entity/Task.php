@@ -32,4 +32,9 @@ class Task extends Entity
         '*' => true,
         'id' => false,
     ];
+
+    protected function _getParentUid()
+    {
+        return $this->_properties['parent_uid'];
+    }
 }

@@ -40,11 +40,12 @@ class ProjectPlanningController extends ProjectOverviewController
             else
                 $tasks[(string)$row['id']] = [
                     'id' => (int) $row['id'],
-                    'milestone_id' => $row['parent'],
+                    'milestone_id' => (int) $row['parent'],
                     'title' => $row['text'],
                     'is_finished' => false,
                     'start_date' => (new DateTime($row['start_date']))->format('Y-m-d H:i:s'),
-                    'end_date' => (new DateTime($row['end_date']))->format('Y-m-d H:i:s')
+                    'end_date' => (new DateTime($row['end_date']))->format('Y-m-d H:i:s'),
+                    'parent_uid' => (string) $row['parent']
                 ];
         }
         return [$milestones, $tasks];
@@ -80,7 +81,9 @@ class ProjectPlanningController extends ProjectOverviewController
             }
             catch(\Cake\Datasource\Exception\RecordNotFoundException $e)
             {
-                $taskEntities[] = TableRegistry::get('Tasks')->newEntity($task);
+                $entity = TableRegistry::get('Tasks')->newEntity($task);
+                $entity->set('is_finished', false);
+                $taskEntities[] = $entity;
             }
         }
         return $taskEntities;
@@ -90,24 +93,22 @@ class ProjectPlanningController extends ProjectOverviewController
     {
         if ($this->request->is(['patch', 'post', 'put'])) {
 
-            $tasksTable = TableRegistry::get('Tasks');
-
             list($milestones, $tasks) = $this->__ganttDataAdapter($this->request->data, $id);
 
-            $milestoneEntities = $this->__patchMilestones($milestones);
+            // Patch Tasks first to retain the previous value for is_finished.
             $taskEntities = $this->__patchTasks($tasks);
+
+            foreach($taskEntities as $entity)
+                $milestones[$entity->parent_uid]['tasks'][] = json_decode($entity, true);
+
+            $milestoneEntities = $this->__patchMilestones($milestones);
 
             $isSuccessful = TableRegistry::get('Milestones')->connection()->transactional(
                 function() use ($milestoneEntities, $taskEntities){
                     $isSuccessful = true;
                     foreach($milestoneEntities as $entity)
                         $isSuccessful = $isSuccessful && TableRegistry::get('Milestones')->save($entity, ['atomic' => false]);
-                    debug($isSuccessful);
-
-                    foreach($taskEntities as $entity)
-                        $isSuccessful = $isSuccessful && TableRegistry::get('Tasks')->save($entity, ['atomic' => false]);
-                    debug($isSuccessful);
-                    return $isSuccessful && false;
+                    return $isSuccessful;
                 }
             );
 

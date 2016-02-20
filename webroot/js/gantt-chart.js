@@ -1,0 +1,1 @@
+gantt.init("gantt-chart");

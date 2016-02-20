@@ -322,8 +322,7 @@ gantt._on_dblclick = function(e) {
 		}
 	}
 };
-// Modified by Emmett to disable double click of add.
-gantt._on_dblclick = function(){};
+
 gantt._on_mousemove = function(e){
 	if (gantt.checkEvent("onMouseMove")){
     	var id = gantt.locate(e);

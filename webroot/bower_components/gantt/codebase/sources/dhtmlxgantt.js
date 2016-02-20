@@ -4572,6 +4572,7 @@ gantt.createTask = function(item, parent, index){
 	if(!item.start_date){
 		item.start_date = gantt._default_task_date(item, parent);
 	}
+	// Modified By Emmett: Added new_milestone text.
 	if (item.text === undefined && parent === 0)
 		item.text = gantt.locale.labels.new_milestone;
 	else if(item.text === undefined && parent > 0){
@@ -8463,6 +8464,7 @@ gantt._urlSeparator = function(str){
 		if (!t.area){
 			t.area = document.createElement("DIV");
 			t.area.className = "gantt_message_area dhtmlx_message_area";
+			// Modified by Emmett: Added margin top
 			t.area.style[t.position]="60px";
 			document.body.appendChild(t.area);
 		}
@@ -9248,6 +9250,7 @@ gantt.locale = {
 	},
 	labels:{
 		new_task:"New Task",
+		// Modified By Emmett: Added Milestone
 		new_milestone:"New Milestone",
 		icon_save:"Save",
 		icon_cancel:"Cancel",
@@ -9261,7 +9264,7 @@ gantt.locale = {
 		section_type:"Type",
 
         /* grid columns */
-
+		// Modified by Emmett: Capitalized "name"
         column_text : "Task Name",
         column_start_date : "Start time",
         column_duration : "Duration",

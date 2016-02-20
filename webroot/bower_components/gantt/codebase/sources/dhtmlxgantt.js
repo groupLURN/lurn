@@ -9263,7 +9263,7 @@ gantt.locale = {
 
         /* grid columns */
 
-        column_text : "Milestones",
+        column_text : "Task Name",
         column_start_date : "Start time",
         column_duration : "Duration",
         column_add : "",

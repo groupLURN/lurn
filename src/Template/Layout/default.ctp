@@ -1,38 +1,39 @@
 <?php
 // This uses the default favicon.ico icon.
 $this->Html->meta('icon', null, ['block' => true]);
-// Bootstrap core CSS
-$this->Html->css('bootstrap', ['block' => true]);
-// External CSS
-$this->Html->css('/font-awesome/css/font-awesome', ['block' => true]);
-$this->Html->css('zabuto_calendar', ['block' => true]);
-$this->Html->css('/js/gritter/css/jquery.gritter', ['block' => true]);
-$this->Html->css('/lineicons/style', ['block' => true]);
-// Custom styles for this template.
-$this->Html->css('style', ['block' => true]);
-$this->Html->css('style-responsive', ['block' => true]);
+
+// Third Party CSS
+$this->Html->css('/bower_components/bootstrap/dist/css/bootstrap.min', ['block' => true]);
+$this->Html->css('/bower_components/font-awesome/css/font-awesome.min', ['block' => true]);
+$this->Html->css('/bower_components/zabuto_calendar/zabuto_calendar.min', ['block' => true]);
+$this->Html->css('/bower_components/jquery.gritter/css/jquery.gritter', ['block' => true]);
+$this->Html->css('/bower_components/jquery-ui/themes/base/jquery-ui.min', ['block' => true]);
+$this->Html->css('/bower_components/chosen/chosen', ['block' => true]);
+$this->Html->css('/non_bower_components/lineicons/style', ['block' => true]);
+$this->Html->css('/non_bower_components/dashgum/style', ['block' => true]);
+$this->Html->css('/non_bower_components/dashgum/style-responsive', ['block' => true]);
+
+// User-defined CSS
 $this->Html->css('custom', ['block' => true]);
-$this->Html->css('jquery-ui', ['block' => true]);
-$this->Html->css('chosen.min', ['block' => true]);
-$this->Html->css('dhtmlxgantt', ['block' => true]);
 
+// Third Party Javascript
+$this->Html->script('/bower_components/jquery/dist/jquery.min', ['block' => true]);
+$this->Html->script('/bower_components/bootstrap/dist/js/bootstrap.min', ['block' => true]);
+$this->Html->script('/bower_components/zabuto_calendar/zabuto_calendar.min', ['block' => true]);
+$this->Html->script('/bower_components/jquery.gritter/js/jquery.gritter.min', ['block' => true]);
+$this->Html->script('/bower_components/chosen/chosen.jquery', ['block' => true]);
+$this->Html->script('/bower_components/jquery-ui/jquery-ui.min', ['block' => true]);
+//$this->Html->script('jquery-ui-1.9.2.custom.min', ['block' => true]);
+$this->Html->script('/bower_components/jquery.scrollTo/jquery.scrollTo.min', ['block' => true]);
+$this->Html->script('/bower_components/jquery.nicescroll/dist/jquery.nicescroll.min', ['block' => true]);
+$this->Html->script('/bower_components/jquery.sparkline/dist/jquery.sparkline.min', ['block' => true]);
 
-$this->Html->script('jquery', ['block' => true]);
-$this->Html->script('bootstrap.min', ['block' => true]);
-$this->Html->script('jquery.backstretch.min', ['block' => true]);
-$this->Html->script('dhtmlxgantt', ['block' => true]);
-
-$this->Html->script('jquery.dcjqaccordion.2.7', ['block' => true]);
-$this->Html->script('jquery.scrollTo.min', ['block' => true]);
-$this->Html->script('jquery.nicescroll', ['block' => true]);
-$this->Html->script('jquery.sparkline', ['block' => true]);
-$this->Html->script('jquery-ui-1.9.2.custom.min', ['block' => true]);
-$this->Html->script('chosen.jquery.min', ['block' => true]);
-$this->Html->script('common-scripts', ['block' => true]);
-$this->Html->script('gritter/js/jquery.gritter', ['block' => true]);
-$this->Html->script('gritter-conf', ['block' => true]);
-$this->Html->script('sparkline-chart', ['block' => true]);
-$this->Html->script('zabuto_calendar', ['block' => true]);
+$this->Html->script('/non_bower_components/jquery.backstretch/jquery.backstretch.min', ['block' => true]);
+$this->Html->script('/non_bower_components/uncategorized/jquery.dcjqaccordion.2.7', ['block' => true]);
+$this->Html->script('/non_bower_components/uncategorized/common-scripts', ['block' => true]);
+$this->Html->script('/non_bower_components/uncategorized/gritter-conf', ['block' => true]);
+$this->Html->script('/non_bower_components/uncategorized/sparkline-chart', ['block' => true]);
+$this->Html->script('/non_bower_components/chart-master/Chart', ['block' => 'script-header']);
 ?>
 
 <!DOCTYPE html>
@@ -45,7 +46,7 @@ $this->Html->script('zabuto_calendar', ['block' => true]);
     </title>
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
-    <?= $this->Html->script('/js/chart-master/Chart'); ?>
+    <?= $this->fetch('script-header') ?>
 </head>
 
 <body>
@@ -256,6 +257,7 @@ $this->Html->script('zabuto_calendar', ['block' => true]);
                     </li>
                 </ul>
                 <!-- sidebar menu end-->
+                <?= $this->fetch('additional-sidebar') ?>
             </div>
         </aside>
         <!--sidebar end-->

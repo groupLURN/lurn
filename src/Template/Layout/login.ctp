@@ -2,17 +2,19 @@
 
 // This uses the default favicon.ico icon.
 $this->Html->meta('icon', null, ['block' => true]);
-// Bootstrap core CSS
-$this->Html->css('bootstrap', ['block' => true]);
-// External CSS
-$this->Html->css('/font-awesome/css/font-awesome', ['block' => true]);
-// Custom styles for this template.
-$this->Html->css('style', ['block' => true]);
-$this->Html->css('style-responsive', ['block' => true]);
+// Third Party CSS
+$this->Html->css('/bower_components/bootstrap/dist/css/bootstrap.min', ['block' => true]);
+$this->Html->css('/bower_components/font-awesome/css/font-awesome.min', ['block' => true]);
+$this->Html->css('/non_bower_components/dashgum/style', ['block' => true]);
+$this->Html->css('/non_bower_components/dashgum/style-responsive', ['block' => true]);
+
+// User defined Javascript
 $this->Html->css('custom', ['block' => true]);
-$this->Html->script('jquery', ['block' => true]);
-$this->Html->script('bootstrap.min', ['block' => true]);
-$this->Html->script('jquery.backstretch.min', ['block' => true]);
+
+// Third Party Script
+$this->Html->script('/bower_components/jquery/dist/jquery.min', ['block' => true]);
+$this->Html->script('/bower_components/bootstrap/dist/js/bootstrap.min', ['block' => true]);
+$this->Html->script('/non_bower_components/jquery.backstretch/jquery.backstretch.min', ['block' => true]);
 
 ?>
 

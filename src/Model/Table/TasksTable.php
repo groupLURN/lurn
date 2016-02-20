@@ -2,6 +2,9 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Task;
+use ArrayObject;
+use Cake\Event\Event;
+use Cake\I18n\Time;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -82,5 +85,14 @@ class TasksTable extends Table
     {
         $rules->add($rules->existsIn(['milestone_id'], 'Milestones'));
         return $rules;
+    }
+
+    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
+    {
+        foreach (['start_date', 'end_date'] as $key) {
+            if (isset($data[$key]) && is_string($data[$key])) {
+                $data[$key] = Time::parseDateTime($data[$key], 'yyyy/MM/dd');
+            }
+        }
     }
 }

@@ -20,7 +20,7 @@ gantt.attachEvent("onLightboxSave", function(id, item){
 // On Save
 $(".btn-submit").on("click", function(event)
 {
-    //event.preventDefault();
+    event.preventDefault();
     $("form input#data").val(JSON.stringify(gantt.serialize()));
 });
 ///// Initialization and use of gantt-chart.
@@ -135,3 +135,7 @@ $(".btn-submit").on("click", function(event)
 
     window.zoom_tasks = zoom_tasks;
 })(gantt);
+
+
+if(typeof __ganttData !== 'undefined')
+    gantt.parse(__ganttData);

@@ -59,3 +59,7 @@
 </div>
 
 <?= $this->Form->end() ?>
+
+<script>
+    var __ganttData = <?= $ganttData ?>;
+</script>

@@ -22,7 +22,7 @@ class ProjectPlanningController extends ProjectOverviewController
     {
     }
 
-    private function __ganttDataAdapter($requestData, $projectId)
+    private function __ganttDataAdapterToDB($requestData, $projectId)
     {
         $serializedJson = json_decode($requestData['data'], true);
         $milestones = $tasks = [];
@@ -49,6 +49,32 @@ class ProjectPlanningController extends ProjectOverviewController
                 ];
         }
         return [$milestones, $tasks];
+    }
+
+    private function __dbDataAdapterToGantt($query)
+    {
+        $data = [];
+        foreach($query as $milestone)
+        {
+            $data[] = [
+                'id' => $milestone->id,
+                'parent' => 0,
+                'text' => $milestone->title,
+                'start_date' => $milestone->start_date->format('Y-m-d H:i:s'),
+                'end_date' => $milestone->end_date->format('Y-m-d H:i:s')
+            ];
+
+            if(isset($milestone['tasks']))
+                foreach($milestone['tasks'] as $task)
+                    $data[] = [
+                        'id' => $task->id,
+                        'parent' => $milestone->id,
+                        'text' => $task->title,
+                        'start_date' => $task->start_date->format('Y-m-d H:i:s'),
+                        'end_date' => $task->end_date->format('Y-m-d H:i:s')
+                    ];
+        }
+        return ['data' => $data, 'link' => []];
     }
 
     private function __patchMilestones($milestones)
@@ -93,7 +119,7 @@ class ProjectPlanningController extends ProjectOverviewController
     {
         if ($this->request->is(['patch', 'post', 'put'])) {
 
-            list($milestones, $tasks) = $this->__ganttDataAdapter($this->request->data, $id);
+            list($milestones, $tasks) = $this->__ganttDataAdapterToDB($this->request->data, $id);
 
             // Patch Tasks first to retain the previous value for is_finished.
             $taskEntities = $this->__patchTasks($tasks);
@@ -118,6 +144,14 @@ class ProjectPlanningController extends ProjectOverviewController
             } else {
                 $this->Flash->error(__('The gantt chart could not be saved. Please, try again.'));
             }
+        }
+        else
+        {
+            $query = TableRegistry::get('Milestones')->find()
+                ->contain('Tasks')
+                ->where(['project_id' => $id]);
+
+            $this->set('ganttData', json_encode($this->__dbDataAdapterToGantt($query)));
         }
     }
 

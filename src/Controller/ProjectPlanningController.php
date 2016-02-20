@@ -60,8 +60,8 @@ class ProjectPlanningController extends ProjectOverviewController
                 'id' => $milestone->id,
                 'parent' => 0,
                 'text' => $milestone->title,
-                'start_date' => $milestone->start_date->format('Y-m-d H:i:s'),
-                'end_date' => $milestone->end_date->format('Y-m-d H:i:s')
+                'start_date' => $milestone->start_date->format('d-m-Y'),
+                'end_date' => $milestone->end_date->format('d-m-Y')
             ];
 
             if(isset($milestone['tasks']))
@@ -70,8 +70,8 @@ class ProjectPlanningController extends ProjectOverviewController
                         'id' => $task->id,
                         'parent' => $milestone->id,
                         'text' => $task->title,
-                        'start_date' => $task->start_date->format('Y-m-d H:i:s'),
-                        'end_date' => $task->end_date->format('Y-m-d H:i:s')
+                        'start_date' => $task->start_date->format('d-m-Y'),
+                        'end_date' => $task->end_date->format('d-m-Y')
                     ];
         }
         return ['data' => $data, 'link' => []];

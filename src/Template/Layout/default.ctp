@@ -255,9 +255,9 @@ $this->Html->script('/non_bower_components/chart-master/Chart', ['block' => 'scr
                             <li><a  href="/projects">View Projects</a></li>
                         </ul>
                     </li>
+                    <?= $this->fetch('additional-sidebar') ?>
                 </ul>
                 <!-- sidebar menu end-->
-                <?= $this->fetch('additional-sidebar') ?>
             </div>
         </aside>
         <!--sidebar end-->

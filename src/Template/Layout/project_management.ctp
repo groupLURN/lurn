@@ -1,13 +1,15 @@
 <?php
 $this->extend('/Layout/default');
 
-// Third Party Dependencies
+// Third Party CSS
 $this->Html->css('/bower_components/gantt/codebase/dhtmlxgantt', ['block' => true]);
-$this->Html->script('/bower_components/gantt/codebase/sources/dhtmlxgantt', ['block' => true]);
-
-// User-defined libraries
-$this->Html->script('gantt-chart', ['block' => true]);
+// User-defined CSS
 $this->Html->css('gantt-chart', ['block' => true]);
+
+// Third Party Script
+$this->Html->script('/bower_components/gantt/codebase/sources/dhtmlxgantt', ['block' => 'script-end']);
+// User-defined Script
+$this->Html->script('gantt-chart', ['block' => 'script-end']);
 
 $this->start('additional-sidebar');
 ?>

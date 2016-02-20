@@ -1,4 +1,6 @@
-// Application Logic
+///// Application Logic
+
+// Validation
 gantt.attachEvent("onLightboxSave", function(id, item){
     var parentId = gantt.getParent(id);
     var parentItem = parentId? gantt.getTask(parentId): null;
@@ -15,7 +17,14 @@ gantt.attachEvent("onLightboxSave", function(id, item){
     return false;
 });
 
-// Initialization and use of gantt-chart.
+// On Save
+$(".btn-submit").on("click", function(event)
+{
+    event.preventDefault();
+
+    console.log(gantt.serialize());
+});
+///// Initialization and use of gantt-chart.
 (function(gantt)
 {
     gantt.init("gantt-chart");

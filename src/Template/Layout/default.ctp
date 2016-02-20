@@ -279,5 +279,6 @@ $this->Html->script('/non_bower_components/chart-master/Chart', ['block' => 'scr
     <?php include(WWW_ROOT . 'js\custom.js') ?>
     </script>
     <?= $this->fetch('script-inline'); ?>
+    <?= $this->fetch('script-end'); ?>
 </body>
 </html>

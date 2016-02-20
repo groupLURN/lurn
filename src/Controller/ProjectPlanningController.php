@@ -114,6 +114,7 @@ class ProjectPlanningController extends ProjectOverviewController
 
             if ($isSuccessful) {
                 $this->Flash->success(__('The gantt chart has been saved.'));
+                return $this->redirect(['action' => 'createGanttChart', $id]);
             } else {
                 $this->Flash->error(__('The gantt chart could not be saved. Please, try again.'));
             }

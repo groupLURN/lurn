@@ -4575,7 +4575,9 @@ gantt.createTask = function(item, parent, index){
 	if(!item.start_date){
 		item.start_date = gantt._default_task_date(item, parent);
 	}
-	if(item.text === undefined){
+	if (item.text === undefined && parent === 0)
+		item.text = gantt.locale.labels.new_milestone;
+	else if(item.text === undefined && parent > 0){
 		item.text = gantt.locale.labels.new_task;
 	}
 	if(item.duration === undefined){
@@ -9248,7 +9250,8 @@ gantt.locale = {
 		day_short:["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 	},
 	labels:{
-		new_task:"New task",
+		new_task:"New Task",
+		new_milestone:"New Milestone",
 		icon_save:"Save",
 		icon_cancel:"Cancel",
 		icon_details:"Details",
@@ -9262,7 +9265,7 @@ gantt.locale = {
 
         /* grid columns */
 
-        column_text : "Task name",
+        column_text : "Milestones",
         column_start_date : "Start time",
         column_duration : "Duration",
         column_add : "",

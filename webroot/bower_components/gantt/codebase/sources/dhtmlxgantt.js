@@ -503,8 +503,6 @@ gantt._init_grid = function () {
 		if (this.config.readonly) return;
 
 		var item = { };
-		console.log(e,id, trg);
-		console.log(this);
 		this.createTask(item, id ? id : this.config.root_id);
 
 		return false;
@@ -8466,7 +8464,7 @@ gantt._urlSeparator = function(str){
 		if (!t.area){
 			t.area = document.createElement("DIV");
 			t.area.className = "gantt_message_area dhtmlx_message_area";
-			t.area.style[t.position]="5px";
+			t.area.style[t.position]="60px";
 			document.body.appendChild(t.area);
 		}
 

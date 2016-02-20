@@ -27,6 +27,7 @@ $this->Html->script('/bower_components/jquery-ui/jquery-ui.min', ['block' => tru
 $this->Html->script('/bower_components/jquery.scrollTo/jquery.scrollTo.min', ['block' => true]);
 $this->Html->script('/bower_components/jquery.nicescroll/dist/jquery.nicescroll.min', ['block' => true]);
 $this->Html->script('/bower_components/jquery.sparkline/dist/jquery.sparkline.min', ['block' => true]);
+$this->Html->script('/bower_components/DateJS/build/date', ['block' => true]);
 
 $this->Html->script('/non_bower_components/jquery.backstretch/jquery.backstretch.min', ['block' => true]);
 $this->Html->script('/non_bower_components/uncategorized/jquery.dcjqaccordion.2.7', ['block' => true]);

@@ -20,7 +20,6 @@ gantt.attachEvent("onLightboxSave", function(id, item){
 // On Save
 $(".btn-submit").on("click", function(event)
 {
-    event.preventDefault();
     $("form input#data").val(JSON.stringify(gantt.serialize()));
 });
 ///// Initialization and use of gantt-chart.

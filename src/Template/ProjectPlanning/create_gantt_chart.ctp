@@ -46,6 +46,7 @@
     </div>
 </div>
 <?= $this->Form->create() ?>
+<?= $this->Form->input('data', ['type' => 'hidden']) ?>
 
 <div id="gantt-chart"></div>
 

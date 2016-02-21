@@ -3,20 +3,10 @@ webix.ready(function(){
     //object constructor
     webix.ui({
         view:"kanban",
-        type:"space",
+        type:"board",
         container:"kanban-board",
         //the structure of columns on the board
-        cols:[
-            { header:"Pending",
-                body:{ view:"kanbanlist", status:"new" }},
-            { header:"In Progress",
-                body:{ view:"kanbanlist", status:"work" }},
-            { header:"Delayed",
-                body:{ view:"kanbanlist", status:"test" }},
-            { header:"Done",
-                body:{ view:"kanbanlist", status:"done" }}
-        ],
-        //url to the file with data collection
-        url: "tasks.php"
+        cols: kanbanColumns,
+        data: kanbanData
     });
 });

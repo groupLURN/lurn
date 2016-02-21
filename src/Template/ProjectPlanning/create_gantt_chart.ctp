@@ -24,6 +24,9 @@ $this->Html->script('gantt-chart', ['block' => 'script-end']);
                             <input name='scales' onclick='zoom_tasks(this)' type='radio' value='trplweek'  checked='true'>
                             <span>Days</span></label>
                         <label>
+                            <input name='scales' onclick='zoom_tasks(this)' type='radio' value='month'>
+                            <span>Weeks</span></label>
+                        <label>
                             <input name='scales' onclick='zoom_tasks(this)' type='radio' value='year'>
                             <span>Months</span></label>
                     </div>

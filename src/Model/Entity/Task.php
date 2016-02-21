@@ -6,8 +6,8 @@ use Cake\ORM\Entity;
 /**
  * Task Entity.
  *
- * @property int $id
- * @property int $milestone_id
+ * @property string $id
+ * @property string $milestone_id
  * @property \App\Model\Entity\Milestone $milestone
  * @property string $title
  * @property bool $is_finished
@@ -30,7 +30,7 @@ class Task extends Entity
      */
     protected $_accessible = [
         '*' => true,
-        'id' => false,
+        'id' => true,
     ];
 
     protected function _getParentUid()

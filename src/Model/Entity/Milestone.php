@@ -6,7 +6,7 @@ use Cake\ORM\Entity;
 /**
  * Milestone Entity.
  *
- * @property int $id
+ * @property string $id
  * @property int $project_id
  * @property \App\Model\Entity\Project $project
  * @property string $title
@@ -30,6 +30,6 @@ class Milestone extends Entity
      */
     protected $_accessible = [
         '*' => true,
-        'id' => false,
+        'id' => true,
     ];
 }

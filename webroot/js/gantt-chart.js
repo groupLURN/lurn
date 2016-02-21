@@ -85,6 +85,7 @@ $(".btn-submit").on("click", function(event)
     // Method called outside.
     function zoom_tasks(node){
         switch(node.value){
+            // Hours
             case "week":
                 gantt.config.scale_unit = "day";
                 gantt.config.date_scale = "%d %M";
@@ -96,6 +97,7 @@ $(".btn-submit").on("click", function(event)
                 ];
                 show_scale_options("hour");
                 break;
+            // Days
             case "trplweek":
                 gantt.config.min_column_width = 70;
                 gantt.config.scale_unit = "day";
@@ -104,7 +106,18 @@ $(".btn-submit").on("click", function(event)
                 gantt.config.scale_height = 35;
                 show_scale_options("day");
                 break;
+            //
             case "month":
+                gantt.config.min_column_width = 70;
+                gantt.config.scale_unit = "month";
+                gantt.config.date_scale = "Week #%W";
+                gantt.config.subscales = [
+                    {unit:"day", step:1, date:"%D"}
+                ];
+                show_scale_options();
+                gantt.config.scale_height = 60;
+                break;
+            case "month_":
                 gantt.config.min_column_width = 70;
                 gantt.config.scale_unit = "week";
                 gantt.config.date_scale = "Week #%W";
@@ -114,6 +127,7 @@ $(".btn-submit").on("click", function(event)
                 show_scale_options();
                 gantt.config.scale_height = 60;
                 break;
+            // Year
             case "year":
                 gantt.config.min_column_width = 70;
                 gantt.config.scale_unit = "month";
@@ -138,3 +152,4 @@ $(".btn-submit").on("click", function(event)
 
 if(typeof __ganttData !== 'undefined')
     gantt.parse(__ganttData);
+

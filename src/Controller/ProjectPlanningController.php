@@ -31,7 +31,7 @@ class ProjectPlanningController extends ProjectOverviewController
             // This is a milestone.
             if($row['parent'] === 0)
                 $milestones[(string)$row['id']] = [
-                    'id' => (int) $row['id'],
+                    'id' => (string) $row['id'],
                     'project_id' => (int)$projectId,
                     'title' => $row['text'],
                     'start_date' => (new DateTime($row['start_date']))->format('Y-m-d H:i:s'),
@@ -39,7 +39,7 @@ class ProjectPlanningController extends ProjectOverviewController
                 ];
             else
                 $tasks[(string)$row['id']] = [
-                    'id' => (int) $row['id'],
+                    'id' => (string) $row['id'],
                     'milestone_id' => (int) $row['parent'],
                     'title' => $row['text'],
                     'start_date' => (new DateTime($row['start_date']))->format('Y-m-d H:i:s'),
@@ -139,12 +139,14 @@ class ProjectPlanningController extends ProjectOverviewController
             }
 
             $milestoneEntities = $this->__patchMilestones($milestones);
-
+            
             $isSuccessful = TableRegistry::get('Milestones')->connection()->transactional(
                 function() use ($milestoneEntities, $taskEntities){
                     $isSuccessful = true;
                     foreach($milestoneEntities as $entity)
+                    {
                         $isSuccessful = $isSuccessful && TableRegistry::get('Milestones')->save($entity, ['atomic' => false]);
+                    }
                     return $isSuccessful;
                 }
             );

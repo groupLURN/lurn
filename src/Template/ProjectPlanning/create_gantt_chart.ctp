@@ -75,5 +75,5 @@ $this->Html->script('gantt-chart', ['block' => 'script-end']);
 <?= $this->Form->end() ?>
 
 <script>
-    var __ganttData = <?= $ganttData ?>;
+    var __ganttData = <?= isset($ganttData)? $ganttData: 'undefined' ?>;
 </script>

@@ -152,3 +152,4 @@ $(".btn-submit").on("click", function(event)
 
 if(typeof __ganttData !== 'undefined')
     gantt.parse(__ganttData);
+

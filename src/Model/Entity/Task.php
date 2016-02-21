@@ -35,6 +35,9 @@ class Task extends Entity
 
     protected function _getParentUid()
     {
-        return $this->_properties['parent_uid'];
+        if(isset($this->_properties['parent_uid']))
+            return $this->_properties['parent_uid'];
+        else
+            return null;
     }
 }

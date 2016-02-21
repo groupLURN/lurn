@@ -22,7 +22,7 @@ class ProjectPlanningController extends ProjectOverviewController
     {
     }
 
-    private function __ganttDataAdapterToDB($requestData, $projectId)
+    private function __ganttBackEndAdapter($requestData, $projectId)
     {
         $serializedJson = json_decode($requestData['data'], true);
         $milestones = $tasks = [];
@@ -42,7 +42,6 @@ class ProjectPlanningController extends ProjectOverviewController
                     'id' => (int) $row['id'],
                     'milestone_id' => (int) $row['parent'],
                     'title' => $row['text'],
-                    'is_finished' => false,
                     'start_date' => (new DateTime($row['start_date']))->format('Y-m-d H:i:s'),
                     'end_date' => (new DateTime($row['end_date']))->format('Y-m-d H:i:s'),
                     'parent_uid' => (string) $row['parent']
@@ -51,7 +50,7 @@ class ProjectPlanningController extends ProjectOverviewController
         return [$milestones, $tasks];
     }
 
-    private function __dbDataAdapterToGantt($query)
+    private function __ganttFrontEndAdapter($query)
     {
         $data = [];
         foreach($query as $milestone)
@@ -84,14 +83,22 @@ class ProjectPlanningController extends ProjectOverviewController
         {
             try
             {
-                $entity = TableRegistry::get('Milestones')->get($milestone['id']);
-                $milestoneEntities[] = TableRegistry::get('Milestones')->patchEntity($entity, $milestone);
+                $entity = TableRegistry::get('Milestones')->get($milestone['id'], [
+                    'contain' => ['Tasks']
+                ]);
+
+                $milestoneEntities[] = TableRegistry::get('Milestones')->patchEntity($entity, $milestone, [
+                    'associated' => ['Tasks']
+                ]);
             }
             catch(\Cake\Datasource\Exception\RecordNotFoundException $e)
             {
-                $milestoneEntities[] = TableRegistry::get('Milestones')->newEntity($milestone);
+                $milestoneEntities[] = TableRegistry::get('Milestones')->newEntity($milestone, [
+                    'associated' => ['Tasks']
+                ]);
             }
         }
+
         return $milestoneEntities;
     }
 
@@ -119,13 +126,17 @@ class ProjectPlanningController extends ProjectOverviewController
     {
         if ($this->request->is(['patch', 'post', 'put'])) {
 
-            list($milestones, $tasks) = $this->__ganttDataAdapterToDB($this->request->data, $id);
+            list($milestones, $tasks) = $this->__ganttBackEndAdapter($this->request->data, $id);
 
             // Patch Tasks first to retain the previous value for is_finished.
             $taskEntities = $this->__patchTasks($tasks);
 
             foreach($taskEntities as $entity)
-                $milestones[$entity->parent_uid]['tasks'][] = json_decode($entity, true);
+            {
+                $entityJson = json_decode($entity, true);
+                unset($entityJson['created'], $entityJson['modified']);
+                $milestones[$entity->parent_uid]['tasks'][] = $entityJson;
+            }
 
             $milestoneEntities = $this->__patchMilestones($milestones);
 
@@ -151,7 +162,7 @@ class ProjectPlanningController extends ProjectOverviewController
                 ->contain('Tasks')
                 ->where(['project_id' => $id]);
 
-            $this->set('ganttData', json_encode($this->__dbDataAdapterToGantt($query)));
+            $this->set('ganttData', json_encode($this->__ganttFrontEndAdapter($query)));
         }
     }
 

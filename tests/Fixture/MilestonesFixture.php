@@ -17,7 +17,7 @@ class MilestonesFixture extends TestFixture
      */
     // @codingStandardsIgnoreStart
     public $fields = [
-        'id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'autoIncrement' => true, 'precision' => null],
+        'id' => ['type' => 'string', 'length' => 255, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'fixed' => null],
         'project_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
         'title' => ['type' => 'string', 'length' => 255, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'fixed' => null],
         'start_date' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
@@ -48,13 +48,13 @@ class MilestonesFixture extends TestFixture
      */
     public $records = [
         [
-            'id' => 1,
+            'id' => '7b9b359c-9952-4d61-a6be-6b2fe2736415',
             'project_id' => 1,
             'title' => 'Lorem ipsum dolor sit amet',
-            'start_date' => '2016-02-20 17:04:16',
-            'end_date' => '2016-02-20 17:04:16',
-            'created' => '2016-02-20 17:04:16',
-            'modified' => '2016-02-20 17:04:16'
+            'start_date' => '2016-02-21 21:22:09',
+            'end_date' => '2016-02-21 21:22:09',
+            'created' => '2016-02-21 21:22:09',
+            'modified' => '2016-02-21 21:22:09'
         ],
     ];
 }

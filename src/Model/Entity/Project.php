@@ -19,6 +19,7 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
  * @property \App\Model\Entity\Employee[] $employees
+ * @property \App\Model\Entity\Milestone[] $milestones
  */
 class Project extends Entity
 {

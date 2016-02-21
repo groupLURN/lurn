@@ -1,36 +1,40 @@
 <?php
 // This uses the default favicon.ico icon.
 $this->Html->meta('icon', null, ['block' => true]);
-// Bootstrap core CSS
-$this->Html->css('bootstrap', ['block' => true]);
-// External CSS
-$this->Html->css('/font-awesome/css/font-awesome', ['block' => true]);
-$this->Html->css('zabuto_calendar', ['block' => true]);
-$this->Html->css('/js/gritter/css/jquery.gritter', ['block' => true]);
-$this->Html->css('/lineicons/style', ['block' => true]);
-// Custom styles for this template.
-$this->Html->css('style', ['block' => true]);
-$this->Html->css('style-responsive', ['block' => true]);
+
+// Third Party CSS
+$this->Html->css('/bower_components/bootstrap/dist/css/bootstrap.min', ['block' => true]);
+$this->Html->css('/bower_components/font-awesome/css/font-awesome.min', ['block' => true]);
+$this->Html->css('/bower_components/zabuto_calendar/zabuto_calendar.min', ['block' => true]);
+$this->Html->css('/bower_components/jquery.gritter/css/jquery.gritter', ['block' => true]);
+$this->Html->css('/bower_components/jquery-ui/themes/base/jquery-ui.min', ['block' => true]);
+$this->Html->css('/bower_components/chosen/chosen', ['block' => true]);
+$this->Html->css('/non_bower_components/lineicons/style', ['block' => true]);
+$this->Html->css('/non_bower_components/dashgum/style', ['block' => true]);
+$this->Html->css('/non_bower_components/dashgum/style-responsive', ['block' => true]);
+
+// User-defined CSS
 $this->Html->css('custom', ['block' => true]);
-$this->Html->css('jquery-ui', ['block' => true]);
-$this->Html->css('chosen.min', ['block' => true]);
 
+// Third Party Javascript
+$this->Html->script('/bower_components/jquery/dist/jquery.min', ['block' => true]);
+$this->Html->script('/bower_components/bootstrap/dist/js/bootstrap.min', ['block' => true]);
+$this->Html->script('/bower_components/zabuto_calendar/zabuto_calendar.min', ['block' => true]);
+$this->Html->script('/bower_components/jquery.gritter/js/jquery.gritter.min', ['block' => true]);
+$this->Html->script('/bower_components/chosen/chosen.jquery', ['block' => true]);
+$this->Html->script('/bower_components/jquery-ui/jquery-ui.min', ['block' => true]);
+//$this->Html->script('jquery-ui-1.9.2.custom.min', ['block' => true]);
+$this->Html->script('/bower_components/jquery.scrollTo/jquery.scrollTo.min', ['block' => true]);
+$this->Html->script('/bower_components/jquery.nicescroll/dist/jquery.nicescroll.min', ['block' => true]);
+$this->Html->script('/bower_components/jquery.sparkline/dist/jquery.sparkline.min', ['block' => true]);
+$this->Html->script('/bower_components/DateJS/build/date', ['block' => true]);
 
-$this->Html->script('jquery', ['block' => true]);
-$this->Html->script('bootstrap.min', ['block' => true]);
-$this->Html->script('jquery.backstretch.min', ['block' => true]);
-
-$this->Html->script('jquery.dcjqaccordion.2.7', ['block' => true]);
-$this->Html->script('jquery.scrollTo.min', ['block' => true]);
-$this->Html->script('jquery.nicescroll', ['block' => true]);
-$this->Html->script('jquery.sparkline', ['block' => true]);
-$this->Html->script('jquery-ui-1.9.2.custom.min', ['block' => true]);
-$this->Html->script('chosen.jquery.min', ['block' => true]);
-$this->Html->script('common-scripts', ['block' => true]);
-$this->Html->script('gritter/js/jquery.gritter', ['block' => true]);
-$this->Html->script('gritter-conf', ['block' => true]);
-$this->Html->script('sparkline-chart', ['block' => true]);
-$this->Html->script('zabuto_calendar', ['block' => true]);
+$this->Html->script('/non_bower_components/jquery.backstretch/jquery.backstretch.min', ['block' => true]);
+$this->Html->script('/non_bower_components/uncategorized/jquery.dcjqaccordion.2.7', ['block' => true]);
+$this->Html->script('/non_bower_components/uncategorized/common-scripts', ['block' => true]);
+$this->Html->script('/non_bower_components/uncategorized/gritter-conf', ['block' => true]);
+$this->Html->script('/non_bower_components/uncategorized/sparkline-chart', ['block' => true]);
+$this->Html->script('/non_bower_components/chart-master/Chart', ['block' => 'script-header']);
 ?>
 
 <!DOCTYPE html>
@@ -43,7 +47,7 @@ $this->Html->script('zabuto_calendar', ['block' => true]);
     </title>
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
-    <?= $this->Html->script('/js/chart-master/Chart'); ?>
+    <?= $this->fetch('script-header') ?>
 </head>
 
 <body>
@@ -252,71 +256,7 @@ $this->Html->script('zabuto_calendar', ['block' => true]);
                             <li><a  href="/projects">View Projects</a></li>
                         </ul>
                     </li>
-
-                    <li class="sub-menu">
-                        <a href="javascript:;" >
-                            <i class="fa fa-desktop"></i>
-                            <span>UI Elements</span>
-                        </a>
-                        <ul class="sub">
-                            <li><a  href="general.html">General</a></li>
-                            <li><a  href="buttons.html">Buttons</a></li>
-                            <li><a  href="panels.html">Panels</a></li>
-                        </ul>
-                    </li>
-
-                    <li class="sub-menu">
-                        <a href="javascript:;" >
-                            <i class="fa fa-cogs"></i>
-                            <span>Components</span>
-                        </a>
-                        <ul class="sub">
-                            <li><a  href="calendar.html">Calendar</a></li>
-                            <li><a  href="gallery.html">Gallery</a></li>
-                            <li><a  href="todo_list.html">Todo List</a></li>
-                        </ul>
-                    </li>
-                    <li class="sub-menu">
-                        <a href="javascript:;" >
-                            <i class="fa fa-book"></i>
-                            <span>Extra Pages</span>
-                        </a>
-                        <ul class="sub">
-                            <li><a  href="blank.html">Blank Page</a></li>
-                            <li><a  href="login.html">Login</a></li>
-                            <li><a  href="lock_screen.html">Lock Screen</a></li>
-                        </ul>
-                    </li>
-                    <li class="sub-menu">
-                        <a href="javascript:;" >
-                            <i class="fa fa-tasks"></i>
-                            <span>Forms</span>
-                        </a>
-                        <ul class="sub">
-                            <li><a  href="form_component.html">Form Components</a></li>
-                        </ul>
-                    </li>
-                    <li class="sub-menu">
-                        <a href="javascript:;" >
-                            <i class="fa fa-th"></i>
-                            <span>Data Tables</span>
-                        </a>
-                        <ul class="sub">
-                            <li><a  href="basic_table.html">Basic Table</a></li>
-                            <li><a  href="responsive_table.html">Responsive Table</a></li>
-                        </ul>
-                    </li>
-                    <li class="sub-menu">
-                        <a href="javascript:;" >
-                            <i class=" fa fa-bar-chart-o"></i>
-                            <span>Charts</span>
-                        </a>
-                        <ul class="sub">
-                            <li><a  href="morris.html">Morris</a></li>
-                            <li><a  href="chartjs.html">Chartjs</a></li>
-                        </ul>
-                    </li>
-
+                    <?= $this->fetch('additional-sidebar') ?>
                 </ul>
                 <!-- sidebar menu end-->
             </div>
@@ -339,5 +279,6 @@ $this->Html->script('zabuto_calendar', ['block' => true]);
     <?php include(WWW_ROOT . 'js\custom.js') ?>
     </script>
     <?= $this->fetch('script-inline'); ?>
+    <?= $this->fetch('script-end'); ?>
 </body>
 </html>

@@ -60,6 +60,13 @@ class AppView extends View
         return $this->dataTableGetButton($title, $url, $options, $icon);
     }
 
+    public function dataTableManageButton($title, $url)
+    {
+        $options['class'] = 'btn btn-success btn-xs';
+        $icon = '<i class="fa fa-book"></i>';
+        return $this->dataTableGetButton($title, $url, $options, $icon);
+    }
+
     public function dataTableViewButton($title, $url)
     {
         $options['class'] = 'btn btn-info btn-xs';

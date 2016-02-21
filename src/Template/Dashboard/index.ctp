@@ -22,30 +22,30 @@ echo <<<EOD
         return false;
     });
 
-    $(document).ready(function () {
-        $("#date-popover").popover({html: true, trigger: "manual"});
-        $("#date-popover").hide();
-        $("#date-popover").click(function (e) {
-            $(this).hide();
-        });
-
-        $("#my-calendar").zabuto_calendar({
-            action: function () {
-            return myDateFunction(this.id, false);
-        },
-            action_nav: function () {
-            return myNavFunction(this.id);
-        },
-            ajax: {
-            url: "show_data.php?action=1",
-                modal: true
-            },
-            legend: [
-                {type: "text", label: "Special event", badge: "00"},
-                {type: "block", label: "Regular event", }
-            ]
-        });
-    });
+//    $(document).ready(function () {
+//        $("#date-popover").popover({html: true, trigger: "manual"});
+//        $("#date-popover").hide();
+//        $("#date-popover").click(function (e) {
+//            $(this).hide();
+//        });
+//
+//        $("#my-calendar").zabuto_calendar({
+//            action: function () {
+//            return myDateFunction(this.id, false);
+//        },
+//            action_nav: function () {
+//            return myNavFunction(this.id);
+//        },
+//            ajax: {
+//            url: "show_data.php?action=1",
+//                modal: true
+//            },
+//            legend: [
+//                {type: "text", label: "Special event", badge: "00"},
+//                {type: "block", label: "Regular event", }
+//            ]
+//        });
+//    });
 
 
     function myNavFunction(id) {
@@ -214,17 +214,6 @@ $this->Html->scriptEnd();
                             </div><! -- /darkblue panel -->
                         </div><!-- /col-md-4 -->
 
-
-                        <div class="col-md-4 mb">
-                            <!-- INSTAGRAM PANEL -->
-                            <div class="instagram-panel pn">
-                                <i class="fa fa-instagram fa-4x"></i>
-                                <p>@THISISYOU<br/>
-                                    5 min. ago
-                                </p>
-                                <p><i class="fa fa-comment"></i> 18 | <i class="fa fa-heart"></i> 49</p>
-                            </div>
-                        </div><!-- /col-md-4 -->
 
                         <div class="col-md-4 col-sm-4 mb">
                             <!-- REVENUE PANEL -->

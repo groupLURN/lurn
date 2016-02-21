@@ -61,10 +61,10 @@ class ProjectsFixture extends TestFixture
             'project_status_id' => 1,
             'title' => 'Lorem ipsum dolor sit amet',
             'description' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
-            'start_date' => '2016-02-18 17:35:50',
-            'end_date' => '2016-02-18 17:35:50',
-            'created' => '2016-02-18 17:35:50',
-            'modified' => '2016-02-18 17:35:50'
+            'start_date' => '2016-02-20 17:04:58',
+            'end_date' => '2016-02-20 17:04:58',
+            'created' => '2016-02-20 17:04:58',
+            'modified' => '2016-02-20 17:04:58'
         ],
     ];
 }

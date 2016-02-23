@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Event\Event;
 
 /**
  * Tasks Controller
@@ -10,6 +11,18 @@ use App\Controller\AppController;
  */
 class TasksController extends AppController
 {
+    private $__projectId = null;
+
+    public function beforeFilter(Event $event)
+    {
+        if(!isset($this->request->query['project_id']))
+            return $this->redirect(['controller' => 'dashboard']);
+
+        $this->viewBuilder()->layout('project_management');
+        $this->set('project_id', $this->request->query['project_id']);
+        $this->__projectId = (int) $this->request->query['project_id'];
+        return parent::beforeFilter($event);
+    }
 
     /**
      * Index method

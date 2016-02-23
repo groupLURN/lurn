@@ -22,6 +22,52 @@ class ProjectPlanningController extends ProjectOverviewController
     {
     }
 
+    public function createGanttChart($id = null)
+    {
+        if ($this->request->is(['patch', 'post', 'put'])) {
+
+            list($milestones, $tasks) = $this->__ganttBackEndAdapter($this->request->data, $id);
+
+            // Patch Tasks first to retain the previous value for is_finished.
+            $taskEntities = $this->__patchTasks($tasks);
+
+            foreach($taskEntities as $entity)
+            {
+                $entityJson = json_decode($entity, true);
+                unset($entityJson['created'], $entityJson['modified']);
+                $milestones[$entity->parent_uid]['tasks'][] = $entityJson;
+            }
+
+            $milestoneEntities = $this->__patchMilestones($milestones);
+
+            $isSuccessful = TableRegistry::get('Milestones')->connection()->transactional(
+                function() use ($milestoneEntities, $taskEntities){
+                    $isSuccessful = true;
+                    foreach($milestoneEntities as $entity)
+                    {
+                        $isSuccessful = $isSuccessful && TableRegistry::get('Milestones')->save($entity, ['atomic' => false]);
+                    }
+                    return $isSuccessful;
+                }
+            );
+
+            if ($isSuccessful) {
+                $this->Flash->success(__('The gantt chart has been saved.'));
+                return $this->redirect(['action' => 'createGanttChart', $id]);
+            } else {
+                $this->Flash->error(__('The gantt chart could not be saved. Please, try again.'));
+            }
+        }
+        else
+        {
+            $query = TableRegistry::get('Milestones')->find()
+                ->contain('Tasks')
+                ->where(['project_id' => $id]);
+
+            $this->set('ganttData', json_encode($this->__ganttFrontEndAdapter($query)));
+        }
+    }
+
     private function __ganttBackEndAdapter($requestData, $projectId)
     {
         $serializedJson = json_decode($requestData['data'], true);
@@ -121,51 +167,4 @@ class ProjectPlanningController extends ProjectOverviewController
         }
         return $taskEntities;
     }
-
-    public function createGanttChart($id = null)
-    {
-        if ($this->request->is(['patch', 'post', 'put'])) {
-
-            list($milestones, $tasks) = $this->__ganttBackEndAdapter($this->request->data, $id);
-
-            // Patch Tasks first to retain the previous value for is_finished.
-            $taskEntities = $this->__patchTasks($tasks);
-
-            foreach($taskEntities as $entity)
-            {
-                $entityJson = json_decode($entity, true);
-                unset($entityJson['created'], $entityJson['modified']);
-                $milestones[$entity->parent_uid]['tasks'][] = $entityJson;
-            }
-
-            $milestoneEntities = $this->__patchMilestones($milestones);
-            
-            $isSuccessful = TableRegistry::get('Milestones')->connection()->transactional(
-                function() use ($milestoneEntities, $taskEntities){
-                    $isSuccessful = true;
-                    foreach($milestoneEntities as $entity)
-                    {
-                        $isSuccessful = $isSuccessful && TableRegistry::get('Milestones')->save($entity, ['atomic' => false]);
-                    }
-                    return $isSuccessful;
-                }
-            );
-
-            if ($isSuccessful) {
-                $this->Flash->success(__('The gantt chart has been saved.'));
-                return $this->redirect(['action' => 'createGanttChart', $id]);
-            } else {
-                $this->Flash->error(__('The gantt chart could not be saved. Please, try again.'));
-            }
-        }
-        else
-        {
-            $query = TableRegistry::get('Milestones')->find()
-                ->contain('Tasks')
-                ->where(['project_id' => $id]);
-
-            $this->set('ganttData', json_encode($this->__ganttFrontEndAdapter($query)));
-        }
-    }
-
 }

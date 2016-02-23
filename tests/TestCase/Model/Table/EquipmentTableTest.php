@@ -24,7 +24,19 @@ class EquipmentTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.equipment'
+        'app.equipment',
+        'app.tasks',
+        'app.milestones',
+        'app.projects',
+        'app.clients',
+        'app.users',
+        'app.user_types',
+        'app.employees',
+        'app.employee_types',
+        'app.employees_projects',
+        'app.project_statuses',
+        'app.employees_join',
+        'app.equipment_tasks'
     ];
 
     /**

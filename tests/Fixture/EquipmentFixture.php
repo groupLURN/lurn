@@ -43,8 +43,8 @@ class EquipmentFixture extends TestFixture
         [
             'id' => 1,
             'name' => 'Lorem ipsum dolor sit amet',
-            'created' => '2016-02-13 23:00:48',
-            'modified' => '2016-02-13 23:00:48'
+            'created' => '2016-02-23 14:36:40',
+            'modified' => '2016-02-23 14:36:40'
         ],
     ];
 }

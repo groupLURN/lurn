@@ -98,37 +98,47 @@ class MilestonesTable extends Table
 
     public function findByProjectId(Query $query, array $options)
     {
-        return $query
-            ->contain('Tasks')
-            ->where(['Milestones.project_id' => $options['project_id']]);
+        return $query->where(['Milestones.project_id' => $options['project_id']]);
     }
 
     public function findByTitle(Query $query, array $options)
     {
+        $expression = $query->newExpr()->like('Tasks.title', '%' . $options['title'] . '%');
+
         return $query
-            ->matching('Tasks')
-            ->where(function($exp) use ($options){
-                return $exp->like('Tasks.title', '%' . $options['title'] . '%');
-            }
-        );
+            ->contain(['Tasks' => function ($query) use ($expression){
+                return $query->where($expression);
+            }])
+            ->matching('Tasks')->where($expression);
     }
 
     public function findByStatus(Query $query, array $options)
     {
         $now = (new DateTime())->format('Y-m-d H:i:s');
+        $conditions = [];
 
         switch((int)$options['status'])
         {
             case $this->Tasks->status['Pending']:
-                return $query->where(['Tasks.is_finished' => 0, 'Tasks.start_date >' => $now]);
+                $conditions = ['Tasks.is_finished' => 0, 'Tasks.start_date >' => $now];
+                break;
             case $this->Tasks->status['In Progress']:
-                return $query->where(['Tasks.is_finished' => 0, 'Tasks.start_date <=' => $now, 'Tasks.end_date >=' => $now]);
+                $conditions = ['Tasks.is_finished' => 0, 'Tasks.start_date <=' => $now, 'Tasks.end_date >=' => $now];
+                break;
             case $this->Tasks->status['Done']:
-                return $query->where(['Tasks.is_finished' => 1]);
+                $conditions = ['Tasks.is_finished' => 1];
+                break;
             case $this->Tasks->status['Overdue']:
-                return $query->where(['Tasks.is_finished' => 0, 'Tasks.end_date <' => $now]);
+                $conditions = ['Tasks.is_finished' => 0, 'Tasks.end_date <' => $now];
+                break;
             default:
                 return $query;
         }
+
+        return $query
+            ->contain(['Tasks' => function ($query) use ($conditions){
+                return $query->where($conditions);
+            }])
+            ->matching('Tasks')->where($conditions);
     }
 }

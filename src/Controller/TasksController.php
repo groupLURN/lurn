@@ -33,6 +33,10 @@ class TasksController extends AppController
      */
     public function index()
     {
+        $this->paginate = [
+            'contain' => 'Tasks'
+        ];
+        
         $this->paginate += $this->createFinders($this->request->query, 'Milestones');
         $milestones = $this->paginate($this->Tasks->Milestones);
         $this->set(compact('milestones'));

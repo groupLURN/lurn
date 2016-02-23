@@ -12,6 +12,7 @@ use Cake\Event\Event;
 class TasksController extends AppController
 {
     private $__projectId = null;
+    private $__filteredTasks = null;
 
     public function beforeFilter(Event $event)
     {
@@ -21,6 +22,11 @@ class TasksController extends AppController
         $this->viewBuilder()->layout('project_management');
         $this->set('project_id', $this->request->query['project_id']);
         $this->__projectId = (int) $this->request->query['project_id'];
+
+        $this->__filteredTasks = $this->Tasks->find()
+            ->contain(['Milestones'])
+            ->where(['Milestones.project_id' => $this->__projectId]);
+
         return parent::beforeFilter($event);
     }
 
@@ -34,7 +40,7 @@ class TasksController extends AppController
         $this->paginate = [
             'contain' => ['Milestones']
         ];
-        $tasks = $this->paginate($this->Tasks);
+        $tasks = $this->paginate($this->__filteredTasks);
 
         $this->set(compact('tasks'));
         $this->set('_serialize', ['tasks']);

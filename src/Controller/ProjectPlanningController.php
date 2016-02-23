@@ -22,63 +22,6 @@ class ProjectPlanningController extends ProjectOverviewController
     {
     }
 
-    public function createGanttChart($id = null)
-    {
-        if ($this->request->is(['patch', 'post', 'put'])) {
-
-            list($milestones, $tasks) = $this->__ganttBackEndAdapter($this->request->data, $id);
-
-            // Patch Tasks first to retain the previous value for is_finished.
-            $taskEntities = $this->__patchTasks($tasks);
-
-            foreach($taskEntities as $entity)
-            {
-                $entityJson = json_decode($entity, true);
-                unset($entityJson['created'], $entityJson['modified']);
-                $milestones[$entity->parent_uid]['tasks'][] = $entityJson;
-            }
-
-            $milestoneEntities = $this->__patchMilestones($milestones);
-
-            $isSuccessful = TableRegistry::get('Milestones')->connection()->transactional(
-                function() use ($milestoneEntities, $taskEntities){
-                    $isSuccessful = true;
-                    foreach($milestoneEntities as $entity)
-                        $isSuccessful = $isSuccessful && TableRegistry::get('Milestones')->save($entity, ['atomic' => false]);
-                    return $isSuccessful;
-                }
-            );
-
-            if ($isSuccessful) {
-                $this->Flash->success(__('The gantt chart has been saved.'));
-                return $this->redirect(['action' => 'createGanttChart', $id]);
-            } else {
-                $this->Flash->error(__('The gantt chart could not be saved. Please, try again.'));
-            }
-        }
-        else
-        {
-            $query = TableRegistry::get('Milestones')->find()
-                ->contain('Tasks')
-                ->where(['project_id' => $id]);
-
-            $this->set('ganttData', json_encode($this->__ganttFrontEndAdapter($query)));
-        }
-    }
-
-    public function manageTasksAndResources($id = null)
-    {
-        if ($this->request->is(['patch', 'post', 'put'])) {
-
-        }
-        else
-        {
-
-        }
-    }
-
-
-//////////////////// Private methods
     private function __ganttBackEndAdapter($requestData, $projectId)
     {
         $serializedJson = json_decode($requestData['data'], true);
@@ -88,7 +31,7 @@ class ProjectPlanningController extends ProjectOverviewController
             // This is a milestone.
             if($row['parent'] === 0)
                 $milestones[(string)$row['id']] = [
-                    'id' => (int) $row['id'],
+                    'id' => (string) $row['id'],
                     'project_id' => (int)$projectId,
                     'title' => $row['text'],
                     'start_date' => (new DateTime($row['start_date']))->format('Y-m-d H:i:s'),
@@ -96,7 +39,7 @@ class ProjectPlanningController extends ProjectOverviewController
                 ];
             else
                 $tasks[(string)$row['id']] = [
-                    'id' => (int) $row['id'],
+                    'id' => (string) $row['id'],
                     'milestone_id' => (int) $row['parent'],
                     'title' => $row['text'],
                     'start_date' => (new DateTime($row['start_date']))->format('Y-m-d H:i:s'),
@@ -178,4 +121,51 @@ class ProjectPlanningController extends ProjectOverviewController
         }
         return $taskEntities;
     }
+
+    public function createGanttChart($id = null)
+    {
+        if ($this->request->is(['patch', 'post', 'put'])) {
+
+            list($milestones, $tasks) = $this->__ganttBackEndAdapter($this->request->data, $id);
+
+            // Patch Tasks first to retain the previous value for is_finished.
+            $taskEntities = $this->__patchTasks($tasks);
+
+            foreach($taskEntities as $entity)
+            {
+                $entityJson = json_decode($entity, true);
+                unset($entityJson['created'], $entityJson['modified']);
+                $milestones[$entity->parent_uid]['tasks'][] = $entityJson;
+            }
+
+            $milestoneEntities = $this->__patchMilestones($milestones);
+            
+            $isSuccessful = TableRegistry::get('Milestones')->connection()->transactional(
+                function() use ($milestoneEntities, $taskEntities){
+                    $isSuccessful = true;
+                    foreach($milestoneEntities as $entity)
+                    {
+                        $isSuccessful = $isSuccessful && TableRegistry::get('Milestones')->save($entity, ['atomic' => false]);
+                    }
+                    return $isSuccessful;
+                }
+            );
+
+            if ($isSuccessful) {
+                $this->Flash->success(__('The gantt chart has been saved.'));
+                return $this->redirect(['action' => 'createGanttChart', $id]);
+            } else {
+                $this->Flash->error(__('The gantt chart could not be saved. Please, try again.'));
+            }
+        }
+        else
+        {
+            $query = TableRegistry::get('Milestones')->find()
+                ->contain('Tasks')
+                ->where(['project_id' => $id]);
+
+            $this->set('ganttData', json_encode($this->__ganttFrontEndAdapter($query)));
+        }
+    }
+
 }

@@ -22,6 +22,7 @@ class TasksController extends AppController
         $this->set('project_id', $this->request->query['project_id']);
         $this->__projectId = (int) $this->request->query['project_id'];
 
+        $this->set('projectId', $this->__projectId);
         $this->set('statusList', array_flip($this->Tasks->status));
         return parent::beforeFilter($event);
     }

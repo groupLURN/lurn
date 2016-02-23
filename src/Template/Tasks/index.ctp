@@ -101,8 +101,8 @@
                                         </span>
                                     </td>
                                     <td class="actions">
-                                        <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $task->id]); ?>
-                                        <?= $this->dataTableEditButton(__('Edit'), ['action' => 'edit', $task->id]); ?>
+                                        <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $task->id, '?' => ['project_id' => $projectId]]); ?>
+                                        <?= $this->dataTableEditButton(__('Edit'), ['action' => 'edit', $task->id, '?' => ['project_id' => $projectId]]); ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

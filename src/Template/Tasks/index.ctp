@@ -70,23 +70,27 @@
                     <td>100%</td>
                 </tr>
                 <tr id="milestone-<?=$milestone->id?>" class="collapse in">
-                    <td colspan="3">
+                    <td colspan="3" style="padding-left: 30px">
                         <table class="table table-striped table-advance table-hover">
                             <thead>
                             <tr>
                                 <th><?= $this->Paginator->sort('title', 'Task') ?></th>
-                                <th><?= $this->Paginator->sort('is_finished', 'Status') ?></th>
                                 <th><?= $this->Paginator->sort('start_date') ?></th>
                                 <th><?= $this->Paginator->sort('end_date') ?></th>
+                                <th>Status</th>
                             </tr>
                             </thead>
                             <tbody>
                             <?php foreach ($milestone->tasks as $task): ?>
                                 <tr>
                                     <td><?= h($task->title) ?></td>
-                                    <td><?= h($task->status) ?></td>
                                     <td><?= h($task->start_date) ?></td>
                                     <td><?= h($task->end_date) ?></td>
+                                    <td>
+                                        <span class='task-status <?=str_replace(' ', '-', strtolower($task->status))?>'>
+                                            <?= h($task->status) ?>
+                                        </span>
+                                    </td>
                                     <td class="actions">
                                         <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $task->id]); ?>
                                         <?= $this->dataTableEditButton(__('Edit'), ['action' => 'edit', $task->id]); ?>

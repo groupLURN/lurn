@@ -46,3 +46,29 @@ form .error-message {
 .margin-left {
     margin-left: 15px;
 }
+
+.task-status {
+    border-radius:20px;
+    color: black;
+    padding: 5px;
+}
+
+.task-status.pending {
+    background-color: #5bc0de;
+    color: white;
+}
+
+.task-status.in-progress {
+    background-color: #337ab7;
+    color: white;
+}
+
+.task-status.done {
+    background-color: green;
+    color: white;
+}
+
+.task-status.overdue {
+    background-color: red;
+    color: white;
+}

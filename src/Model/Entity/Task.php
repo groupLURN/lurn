@@ -15,6 +15,9 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\Time $end_date
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
+ * @property \App\Model\Entity\Equipment[] $equipment
+ * @property \App\Model\Entity\Manpower[] $manpower
+ * @property \App\Model\Entity\Material[] $materials
  */
 class Task extends Entity
 {

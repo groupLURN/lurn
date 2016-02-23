@@ -34,7 +34,14 @@ class TasksTableTest extends TestCase
         'app.employee_types',
         'app.employees_projects',
         'app.project_statuses',
-        'app.employees_join'
+        'app.employees_join',
+        'app.equipment',
+        'app.equipment_tasks',
+        'app.manpower',
+        'app.manpower_types',
+        'app.manpower_tasks',
+        'app.materials',
+        'app.materials_tasks'
     ];
 
     /**

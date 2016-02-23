@@ -12,6 +12,7 @@ use Cake\ORM\Entity;
  * @property string $name
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
+ * @property \App\Model\Entity\Task[] $tasks
  */
 class Manpower extends Entity
 {

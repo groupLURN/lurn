@@ -25,7 +25,19 @@ class ManpowerTableTest extends TestCase
      */
     public $fixtures = [
         'app.manpower',
-        'app.manpower_types'
+        'app.manpower_types',
+        'app.tasks',
+        'app.milestones',
+        'app.projects',
+        'app.clients',
+        'app.users',
+        'app.user_types',
+        'app.employees',
+        'app.employee_types',
+        'app.employees_projects',
+        'app.project_statuses',
+        'app.employees_join',
+        'app.manpower_tasks'
     ];
 
     /**

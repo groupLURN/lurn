@@ -49,7 +49,6 @@ form .error-message {
 
 .task-status {
     border-radius:20px;
-    color: black;
     padding: 5px;
 }
 
@@ -70,5 +69,10 @@ form .error-message {
 
 .task-status.overdue {
     background-color: red;
+    color: white;
+}
+
+.task-status.progress {
+    background-color: blue;
     color: white;
 }

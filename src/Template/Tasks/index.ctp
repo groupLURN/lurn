@@ -53,7 +53,7 @@
                 <thead>
                 <tr>
                     <th></th>
-                    <th>Milestone</th>
+                    <th>Milestones</th>
                     <th>Progress</th>
                 </tr>
                 </thead>
@@ -67,7 +67,16 @@
                         </button>
                     </td>
                     <td><?= h($milestone->title) ?></td>
-                    <td>100%</td>
+                    <td>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar"
+                                 aria-valuenow="<?=$milestonesProgress[$milestone->id] ?>"
+                                 aria-valuemin="0" aria-valuemax="100" style="margin-right: -<?=$milestonesProgress[$milestone->id] ?>%;
+                                width: <?=$milestonesProgress[$milestone->id] ?>%">
+                            </div>
+                            <div style="text-align:center; color:black;"><?= h(number_format($milestonesProgress[$milestone->id], 2)).'% Complete'?></div>
+                        </div>
+                    </td>
                 </tr>
                 <tr id="milestone-<?=$milestone->id?>" class="collapse">
                     <td colspan="3" style="padding-left: 30px">

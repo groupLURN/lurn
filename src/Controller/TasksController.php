@@ -39,7 +39,25 @@ class TasksController extends AppController
         
         $this->paginate += $this->createFinders($this->request->query, 'Milestones');
         $milestones = $this->paginate($this->Tasks->Milestones);
-        $this->set(compact('milestones'));
+
+        $query = $this->Tasks->Milestones->find();
+
+        $isFinishedCase = $query->newExpr()->addCase($query->newExpr()->add(['Tasks.is_finished' => 1]), 1, 'integer');
+
+        $resultSet =
+            $query
+                ->select(['Milestones.id', 'finished_tasks' => $query->func()->coalesce([$query->func()->sum($isFinishedCase), 0]),
+                    'total_tasks' => $query->func()->count('Tasks.id')])
+                ->matching('Tasks')
+                ->where(['Milestones.id IN' => $milestones->extract('id')->toArray()])
+                ->group('Milestones.id')
+                ->toArray();
+
+        $milestonesProgress = [];
+        foreach($resultSet as $milestoneProgress)
+            $milestonesProgress[$milestoneProgress->id] = $milestoneProgress['finished_tasks']/ $milestoneProgress['total_tasks'] * 100;
+
+        $this->set(compact('milestones', 'milestonesProgress'));
         $this->set($this->request->query);
         $this->set('_serialize', ['milestones']);
     }

@@ -12,7 +12,6 @@ use Cake\Event\Event;
 class TasksController extends AppController
 {
     private $__projectId = null;
-    private $__filteredTasks = null;
 
     public function beforeFilter(Event $event)
     {
@@ -23,10 +22,7 @@ class TasksController extends AppController
         $this->set('project_id', $this->request->query['project_id']);
         $this->__projectId = (int) $this->request->query['project_id'];
 
-        $this->__filteredTasks = $this->Tasks->find()
-            ->contain(['Milestones'])
-            ->where(['Milestones.project_id' => $this->__projectId]);
-
+        $this->set('statusList', array_flip($this->Tasks->status));
         return parent::beforeFilter($event);
     }
 
@@ -37,13 +33,11 @@ class TasksController extends AppController
      */
     public function index()
     {
-        $this->paginate = [
-            'contain' => ['Milestones']
-        ];
-        $tasks = $this->paginate($this->__filteredTasks);
-
-        $this->set(compact('tasks'));
-        $this->set('_serialize', ['tasks']);
+        $this->paginate += $this->createFinders($this->request->query, 'Milestones');
+        $milestones = $this->paginate($this->Tasks->Milestones);
+        $this->set(compact('milestones'));
+        $this->set($this->request->query);
+        $this->set('_serialize', ['milestones']);
     }
 
     /**

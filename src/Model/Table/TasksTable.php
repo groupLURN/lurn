@@ -20,6 +20,13 @@ use Cake\Validation\Validator;
  */
 class TasksTable extends Table
 {
+    public $status = [
+        'All' => 0,
+        'Pending' => 1,
+        'In Progress' => 2,
+        'Done' => 3,
+        'Overdue' => 4
+    ];
 
     /**
      * Initialize method

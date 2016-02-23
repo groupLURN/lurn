@@ -1,3 +1,116 @@
+<?= $this->Html->script('tasks.js', ['block' => 'script-end']); ?>
+<?= $this->Flash->render() ?>
+<div class="row mt">
+    <div class="col-xs-12">
+        <div class="content-panel">
+            <?= $this->Form->create('Search', ['type' => 'GET']) ?>
+            <h4><i class="fa fa-angle-right"></i> Filters </h4>
+            <hr>
+            <?= $this->Form->input('project_id', ['type' => 'hidden', 'value' => $project_id]); ?>
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td style="padding-top: 15px; padding-left: 10px; width: 20%;">
+                        <?= $this->Form->label("", "Task Status"); ?>
+                    </td>
+                    <td colspan="3">
+                        <?= $this->Form->input('status', [
+                            'options' => [0 => 'All'] + $statusList,
+                            'class' => 'form-control',
+                            'label' => false,
+                            'val' => isset($status)? $status: 0
+                        ]); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <div class="row mt">
+                            <div class="col-md-10">
+                                <input type="text" name="title" class="form-control" placeholder="Search Tasks"
+                                       id="txt-search" <?= isset($title)? "value='" . $title . "'": ""; ?> >
+                            </div>
+                            <div class="col-md-2">
+                                <?= $this->Form->button(__('Search'), [
+                                    'id' => 'btn-search',
+                                    'class' => 'btn btn-primary'
+                                ]) ?>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <?= $this->Form->end(); ?>
+        </div><!-- --/content-panel ---->
+    </div>
+</div>
+<div class="row mt">
+    <div class="col-xs-12">
+        <div class="content-panel">
+            <table class="table table-striped table-advance table-hover">
+                <h4><i class="fa fa-angle-right"></i> <?= __('Tasks') ?> </h4>
+                <hr>
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>Milestone</th>
+                    <th>Progress</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($milestones as $milestone): ?>
+                <tr>
+                    <td>
+                        <button data-toggle="collapse" data-target="#milestone-<?=$milestone->id?>"
+                        class="btn btn-info btn-xs">
+                            <i class="fa fa-arrow-down"></i>
+                        </button>
+                    </td>
+                    <td><?= h($milestone->title) ?></td>
+                    <td>100%</td>
+                </tr>
+                <tr id="milestone-<?=$milestone->id?>" class="collapse in">
+                    <td colspan="3">
+                        <table class="table table-striped table-advance table-hover">
+                            <thead>
+                            <tr>
+                                <th><?= $this->Paginator->sort('title', 'Task') ?></th>
+                                <th><?= $this->Paginator->sort('is_finished', 'Status') ?></th>
+                                <th><?= $this->Paginator->sort('start_date') ?></th>
+                                <th><?= $this->Paginator->sort('end_date') ?></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php foreach ($milestone->tasks as $task): ?>
+                                <tr>
+                                    <td><?= h($task->title) ?></td>
+                                    <td><?= h($task->status) ?></td>
+                                    <td><?= h($task->start_date) ?></td>
+                                    <td><?= h($task->end_date) ?></td>
+                                    <td class="actions">
+                                        <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $task->id]); ?>
+                                        <?= $this->dataTableEditButton(__('Edit'), ['action' => 'edit', $task->id]); ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </table>
+            <div class="paginator">
+                <ul class="pagination">
+                    <?= $this->Paginator->prev('< ' . __('previous')) ?>
+                    <?= $this->Paginator->numbers() ?>
+                    <?= $this->Paginator->next(__('next') . ' >') ?>
+                </ul>
+                <p><?= $this->Paginator->counter() ?></p>
+            </div>
+        </div><!-- /content-panel -->
+    </div><!-- /col-md-12 -->
+</div><!-- /row -->
+<!--
 <nav class="large-3 medium-4 columns" id="actions-sidebar">
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
@@ -55,3 +168,4 @@
         <p><?= $this->Paginator->counter() ?></p>
     </div>
 </div>
+-->

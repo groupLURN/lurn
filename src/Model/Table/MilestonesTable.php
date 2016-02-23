@@ -2,6 +2,8 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Milestone;
+use Cake\Chronos\Date;
+use DateTime;
 use ArrayObject;
 use Cake\Event\Event;
 use Cake\I18n\Time;
@@ -91,6 +93,42 @@ class MilestonesTable extends Table
             if (isset($data[$key]) && is_string($data[$key])) {
                 $data[$key] = Time::parseDateTime($data[$key], 'yyyy/MM/dd');
             }
+        }
+    }
+
+    public function findByProjectId(Query $query, array $options)
+    {
+        return $query
+            ->contain('Tasks')
+            ->where(['Milestones.project_id' => $options['project_id']]);
+    }
+
+    public function findByTitle(Query $query, array $options)
+    {
+        return $query
+            ->matching('Tasks')
+            ->where(function($exp) use ($options){
+                return $exp->like('Tasks.title', '%' . $options['title'] . '%');
+            }
+        );
+    }
+
+    public function findByStatus(Query $query, array $options)
+    {
+        $now = (new DateTime())->format('Y-m-d H:i:s');
+
+        switch((int)$options['status'])
+        {
+            case $this->Tasks->status['Pending']:
+                return $query->where(['Tasks.is_finished' => 0, 'Tasks.start_date >' => $now]);
+            case $this->Tasks->status['In Progress']:
+                return $query->where(['Tasks.is_finished' => 0, 'Tasks.start_date <=' => $now, 'Tasks.end_date >=' => $now]);
+            case $this->Tasks->status['Done']:
+                return $query->where(['Tasks.is_finished' => 1]);
+            case $this->Tasks->status['Overdue']:
+                return $query->where(['Tasks.is_finished' => 0, 'Tasks.end_date <' => $now]);
+            default:
+                return $query;
         }
     }
 }

@@ -2,6 +2,7 @@
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
+use DateTime;
 
 /**
  * Task Entity.
@@ -43,4 +44,19 @@ class Task extends Entity
         else
             return null;
     }
+
+    protected function _getStatus()
+    {
+        $now = new DateTime();
+
+        if($this->is_finished === false && $now < $this->start_date)
+            return 'Pending';
+        else if($this->is_finished === false && $this->start_date <= $now && $now <= $this->end_date)
+            return 'In Progress';
+        else if($this->is_finished === false && $now > $this->end_date)
+            return 'Overdue';
+        else if($this->is_finished === true);
+            return 'Done';
+    }
+
 }

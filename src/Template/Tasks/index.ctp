@@ -63,13 +63,13 @@
                     <td>
                         <button data-toggle="collapse" data-target="#milestone-<?=$milestone->id?>"
                         class="btn btn-info btn-xs">
-                            <i class="fa fa-arrow-down"></i>
+                            <i class="fa fa-arrow-right"></i>
                         </button>
                     </td>
                     <td><?= h($milestone->title) ?></td>
                     <td>100%</td>
                 </tr>
-                <tr id="milestone-<?=$milestone->id?>" class="collapse in">
+                <tr id="milestone-<?=$milestone->id?>" class="collapse">
                     <td colspan="3" style="padding-left: 30px">
                         <table class="table table-striped table-advance table-hover">
                             <thead>

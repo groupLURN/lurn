@@ -73,7 +73,9 @@ class TasksController extends AppController
     public function view($id = null)
     {
         $task = $this->Tasks->get($id, [
-            'contain' => ['Milestones', 'Equipment', 'Manpower', 'Materials']
+            'contain' => ['Milestones', 'Equipment', 'Manpower' => [
+                'ManpowerTypes'
+            ], 'Materials']
         ]);
 
         $this->set('task', $task);

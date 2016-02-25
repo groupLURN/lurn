@@ -30,63 +30,31 @@
                 ],
                 'disabled' => true
             ]);
-//            echo $this->Form->input('equipment._ids', [
-//                'options' => $equipment,
-//                'label' => ['class' => 'mt'],
-//                'class' => 'form-control'
-//            ]);
-
-//            echo $this->Form->input('manpower._ids', [
-//                'options' => $manpower,
-//                'label' => ['class' => 'mt'],
-//                'class' => 'form-control'
-//            ]);
-//
-//            echo $this->Form->input('materials._ids', [
-//                'options' => $materials,
-//                'label' => ['class' => 'mt'],
-//                'class' => 'form-control'
-//            ]);
         ?>
             <div class="row mt">
                 <div class="col-xs-12">
                     <div class="row">
                         <div class="col-xs-4">
-                            <legend><h4><i class="fa fa-angle-right"></i> <?= __('Assign Equipment') ?></h4></legend>
-                            <div class="content-panel" style="text-align: center;">
-                                <table style="margin: auto;">
-                                    <tr>
-                                        <td style="padding-right: 20px;">
-                                            <?= $this->Form->input('equipment_list', [
-                                                'label' => false,
-                                                'type' => 'select',
-                                                'class' => 'chosen resource form-control',
-                                                'options' => $equipment
-                                            ]) ?>
-                                        </td>
-                                        <td>
-                                            <label> Quantity Needed: </label>
-                                            <input type="text" class='number-only resource-quantity' style="width: 40px;">
-                                            <img src="/img/add.png" alt="Add" style="vertical-align: middle;"
-                                                 class="add-button">
-                                        </td>
-                                    </tr>
-                                </table>
-                                <ul class="options mt" style="margin: 20px auto;">
-                                </ul>
-                            </div>
+                            <legend><h4><i class="fa fa-angle-right"></i> <?= __('Assign Equipment Needed') ?></h4></legend>
+                        <?= $this->element('multi_select_with_input', [
+                            'options' => $equipment,
+                            'resource' => 'equipment'
+                        ]) ?>
                         </div>
                         <div class="col-xs-4">
-                            <legend><h4><i class="fa fa-angle-right"></i> <?= __('Assign Manpower') ?></h4></legend>
-                            <div class="content-panel">
-
-                            </div>
+                            <legend><h4><i class="fa fa-angle-right"></i> <?= __('Assign Manpower Needed') ?></h4></legend>
+                                <?= $this->element('multi_select_with_input', [
+                                    'options' => $manpower,
+                                    'resource' => 'manpower',
+                                    'quantity' => false
+                                ]) ?>
                         </div>
                         <div class="col-xs-4">
-                            <legend><h4><i class="fa fa-angle-right"></i> <?= __('Assign Materials') ?></h4></legend>
-                            <div class="content-panel">
-
-                            </div>
+                            <legend><h4><i class="fa fa-angle-right"></i> <?= __('Assign Materials Needed') ?></h4></legend>
+                                <?= $this->element('multi_select_with_input', [
+                                    'options' => $materials,
+                                    'resource' => 'materials'
+                                ]) ?>
                         </div>
                     </div>
                 </div>

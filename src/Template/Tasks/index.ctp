@@ -62,7 +62,7 @@
                 <tr>
                     <td>
                         <button data-toggle="collapse" data-target="#milestone-<?=$milestone->id?>"
-                        class="btn btn-info btn-xs">
+                        class="btn btn-info btn-xs collapsable-button">
                             <i class="fa fa-arrow-right"></i>
                         </button>
                     </td>

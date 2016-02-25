@@ -137,7 +137,22 @@ class TasksController extends AppController
 
         $milestones = $this->Tasks->Milestones->find('list', ['limit' => 200]);
         $equipment = $this->Tasks->Equipment->find('list', ['limit' => 200]);
-        $manpower = $this->Tasks->Manpower->find('list', ['limit' => 200]);
+        $manpower = $this->Tasks->Manpower->find('list', ['limit' => 200])
+            ->matching('Tasks', function($query) use ($task)
+            {
+                return $query->where(
+                    [
+                        'Tasks.start_date >' => $task->start_date,
+                        'Tasks.end_date <' => $task->start_date
+                    ]
+                )->andWhere(
+                    [
+                        'Tasks.start_date >' => $task->end_date,
+                        'Tasks.end_date <' => $task->end_date
+                    ]
+                )->orWhere(['Tasks.id' => $task->id]);
+            });
+
         $materials = $this->Tasks->Materials->find('list', ['limit' => 200]);
 
         $selectedEquipment = $task->equipment;

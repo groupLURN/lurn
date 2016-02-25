@@ -38,7 +38,8 @@
                             <legend><h4><i class="fa fa-angle-right"></i> <?= __('Assign Equipment Needed') ?></h4></legend>
                         <?= $this->element('multi_select_with_input', [
                             'options' => $equipment,
-                            'resource' => 'equipment'
+                            'resource' => 'equipment',
+                            'values' => $selectedEquipment
                         ]) ?>
                         </div>
                         <div class="col-xs-4">
@@ -46,14 +47,16 @@
                                 <?= $this->element('multi_select_with_input', [
                                     'options' => $manpower,
                                     'resource' => 'manpower',
-                                    'quantity' => false
+                                    'quantity' => false,
+                                    'values' => $selectedManpower
                                 ]) ?>
                         </div>
                         <div class="col-xs-4">
                             <legend><h4><i class="fa fa-angle-right"></i> <?= __('Assign Materials Needed') ?></h4></legend>
                                 <?= $this->element('multi_select_with_input', [
                                     'options' => $materials,
-                                    'resource' => 'materials'
+                                    'resource' => 'materials',
+                                    'values' => $selectedMaterials
                                 ]) ?>
                         </div>
                     </div>

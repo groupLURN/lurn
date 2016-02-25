@@ -132,11 +132,18 @@ class TasksController extends AppController
                 $this->Flash->error(__('The task could not be saved. Please, try again.'));
             }
         }
+
         $milestones = $this->Tasks->Milestones->find('list', ['limit' => 200]);
         $equipment = $this->Tasks->Equipment->find('list', ['limit' => 200]);
         $manpower = $this->Tasks->Manpower->find('list', ['limit' => 200]);
         $materials = $this->Tasks->Materials->find('list', ['limit' => 200]);
-        $this->set(compact('task', 'milestones', 'equipment', 'manpower', 'materials'));
+
+        $selectedEquipment = $task->equipment;
+        $selectedMaterials = $task->materials;
+        $selectedManpower =  $task->manpower;
+
+        $this->set(compact('task', 'milestones', 'equipment', 'manpower', 'materials',
+            'selectedEquipment', 'selectedMaterials', 'selectedManpower'));
         $this->set('_serialize', ['task']);
     }
 

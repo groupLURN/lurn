@@ -21,6 +21,16 @@
         </tr>
     </table>
     <ul class="options">
+    <?php foreach($values as $value) : ?>
+        <li onclick="$(this).remove();">
+            <?php if ($quantity) : ?>
+            <input type="hidden" name="resources[<?= $resource ?>][_joinData][][quantity]" value="<?= $value['_joinData']['quantity'] ?>">
+            <?php endif; ?>
+            <input type="hidden" class="id" name="resources[<?= $resource ?>][id][]" value="<?= $value['id'] ?>">
+            <?php if ($quantity) : ?> <?= $value['_joinData']['quantity'] ?>x  <?php endif; ?>
+            <?= $value['name'] ?>
+        </li>
+    <?php endforeach; ?>
     </ul>
 </div>
 

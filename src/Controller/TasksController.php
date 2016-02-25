@@ -117,12 +117,13 @@ class TasksController extends AppController
         $task = $this->Tasks->get($id, [
             'contain' => ['Equipment', 'Manpower', 'Materials']
         ]);
+
         if ($this->request->is(['patch', 'post', 'put'])) {
 
+            $this->request->data += $this->_resourcesAdapter($this->request->data['resources']);
             $task = $this->Tasks->patchEntity($task, $this->request->data, [
-                'associated' => ['Equipment']
+                'associated' => ['Equipment', 'Manpower', 'Materials']
             ]);
-
 
             if ($this->Tasks->save($task)) {
                 $this->Flash->success(__('The task has been saved.'));
@@ -156,5 +157,17 @@ class TasksController extends AppController
             $this->Flash->error(__('The task could not be deleted. Please, try again.'));
         }
         return $this->redirect(['action' => 'index']);
+    }
+
+    private function _resourcesAdapter($input)
+    {
+        $output = [];
+        // resource (e.g. ['materials', 'manpower']
+        foreach($input as $resource => $resourceElement)
+            // Key (e.g. ['id', '_joinData']
+            foreach($resourceElement as $key => $array)
+                foreach($array as $index => $value)
+                    $output[$resource][$index][$key] = $value;
+        return $output;
     }
 }

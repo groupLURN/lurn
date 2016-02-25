@@ -7,6 +7,7 @@
                 <?= $this->Form->input('equipment_list', [
                     'label' => false,
                     'type' => 'select',
+                    'data-placeholder' => 'No ' . $resource,
                     'class' => 'chosen resource form-control',
                     'options' => $options
                 ]) ?>

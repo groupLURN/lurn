@@ -97,3 +97,24 @@ ul.options li {
 .add-button {
     cursor: pointer;
 }
+
+.multi-select-with-input table {
+    margin: auto;
+    table-layout: fixed;
+    width: 80%;
+    text-align: center;
+}
+
+.multi-select-with-input input {
+    width: 30%;
+    border-radius: 4px;
+    box-shadow: 30px;
+}
+
+.multi-select-with-input img {
+    width: 15%;
+}
+
+.multi-select-with-input ul {
+    margin: 20px auto;
+}

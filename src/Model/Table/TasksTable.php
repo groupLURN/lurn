@@ -14,9 +14,19 @@ use Cake\Validation\Validator;
  * Tasks Model
  *
  * @property \Cake\ORM\Association\BelongsTo $Milestones
+ * @property \Cake\ORM\Association\BelongsToMany $Equipment
+ * @property \Cake\ORM\Association\BelongsToMany $Manpower
+ * @property \Cake\ORM\Association\BelongsToMany $Materials
  */
 class TasksTable extends Table
 {
+    public $status = [
+        'All' => 0,
+        'Pending' => 1,
+        'In Progress' => 2,
+        'Done' => 3,
+        'Overdue' => 4
+    ];
 
     /**
      * Initialize method
@@ -37,6 +47,21 @@ class TasksTable extends Table
         $this->belongsTo('Milestones', [
             'foreignKey' => 'milestone_id',
             'joinType' => 'INNER'
+        ]);
+        $this->belongsToMany('Equipment', [
+            'foreignKey' => 'task_id',
+            'targetForeignKey' => 'equipment_id',
+            'joinTable' => 'equipment_tasks'
+        ]);
+        $this->belongsToMany('Manpower', [
+            'foreignKey' => 'task_id',
+            'targetForeignKey' => 'manpower_id',
+            'joinTable' => 'manpower_tasks'
+        ]);
+        $this->belongsToMany('Materials', [
+            'foreignKey' => 'task_id',
+            'targetForeignKey' => 'material_id',
+            'joinTable' => 'materials_tasks'
         ]);
     }
 

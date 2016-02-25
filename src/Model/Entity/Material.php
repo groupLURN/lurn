@@ -11,6 +11,7 @@ use Cake\ORM\Entity;
  * @property string $unit_measure
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
+ * @property \App\Model\Entity\Task[] $tasks
  */
 class Material extends Entity
 {

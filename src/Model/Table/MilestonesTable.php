@@ -2,6 +2,8 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Milestone;
+use Cake\Chronos\Date;
+use DateTime;
 use ArrayObject;
 use Cake\Event\Event;
 use Cake\I18n\Time;
@@ -92,5 +94,51 @@ class MilestonesTable extends Table
                 $data[$key] = Time::parseDateTime($data[$key], 'yyyy/MM/dd');
             }
         }
+    }
+
+    public function findByProjectId(Query $query, array $options)
+    {
+        return $query->where(['Milestones.project_id' => $options['project_id']]);
+    }
+
+    public function findByTitle(Query $query, array $options)
+    {
+        $expression = $query->newExpr()->like('Tasks.title', '%' . $options['title'] . '%');
+
+        return $query
+            ->contain(['Tasks' => function ($query) use ($expression){
+                return $query->where($expression);
+            }])
+            ->matching('Tasks')->where($expression);
+    }
+
+    public function findByStatus(Query $query, array $options)
+    {
+        $now = (new DateTime())->format('Y-m-d H:i:s');
+        $conditions = [];
+
+        switch((int)$options['status'])
+        {
+            case $this->Tasks->status['Pending']:
+                $conditions = ['Tasks.is_finished' => 0, 'Tasks.start_date >' => $now];
+                break;
+            case $this->Tasks->status['In Progress']:
+                $conditions = ['Tasks.is_finished' => 0, 'Tasks.start_date <=' => $now, 'Tasks.end_date >=' => $now];
+                break;
+            case $this->Tasks->status['Done']:
+                $conditions = ['Tasks.is_finished' => 1];
+                break;
+            case $this->Tasks->status['Overdue']:
+                $conditions = ['Tasks.is_finished' => 0, 'Tasks.end_date <' => $now];
+                break;
+            default:
+                return $query;
+        }
+
+        return $query
+            ->contain(['Tasks' => function ($query) use ($conditions){
+                return $query->where($conditions);
+            }])
+            ->matching('Tasks')->where($conditions);
     }
 }

@@ -10,6 +10,7 @@ use Cake\Validation\Validator;
 /**
  * Materials Model
  *
+ * @property \Cake\ORM\Association\BelongsToMany $Tasks
  */
 class MaterialsTable extends Table
 {
@@ -29,6 +30,12 @@ class MaterialsTable extends Table
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
+
+        $this->belongsToMany('Tasks', [
+            'foreignKey' => 'material_id',
+            'targetForeignKey' => 'task_id',
+            'joinTable' => 'materials_tasks'
+        ]);
     }
 
     /**

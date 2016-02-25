@@ -17,8 +17,8 @@ class TasksFixture extends TestFixture
      */
     // @codingStandardsIgnoreStart
     public $fields = [
-        'id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'autoIncrement' => true, 'precision' => null],
-        'milestone_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
+        'id' => ['type' => 'string', 'length' => 255, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'fixed' => null],
+        'milestone_id' => ['type' => 'string', 'length' => 255, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'fixed' => null],
         'title' => ['type' => 'string', 'length' => 255, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'fixed' => null],
         'is_finished' => ['type' => 'boolean', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         'start_date' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
@@ -50,14 +50,14 @@ class TasksFixture extends TestFixture
      */
     public $records = [
         [
-            'id' => 1,
-            'milestone_id' => 1,
+            'id' => 'f57a5292-4f54-4ee9-b82a-e484cc37cf58',
+            'milestone_id' => 'Lorem ipsum dolor sit amet',
             'title' => 'Lorem ipsum dolor sit amet',
             'is_finished' => 1,
-            'start_date' => '2016-02-20 17:04:32',
-            'end_date' => '2016-02-20 17:04:32',
-            'created' => '2016-02-20 17:04:32',
-            'modified' => '2016-02-20 17:04:32'
+            'start_date' => '2016-02-23 14:37:48',
+            'end_date' => '2016-02-23 14:37:48',
+            'created' => '2016-02-23 14:37:48',
+            'modified' => '2016-02-23 14:37:48'
         ],
     ];
 }

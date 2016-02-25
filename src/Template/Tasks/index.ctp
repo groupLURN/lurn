@@ -66,7 +66,7 @@
                             <i class="fa fa-arrow-right"></i>
                         </button>
                     </td>
-                    <td><?= h($milestone->title) ?></td>
+                    <td><strong style="font-size: 20px;"><?= h($milestone->title) ?></strong></td>
                     <td>
                         <div class="progress">
                             <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar"

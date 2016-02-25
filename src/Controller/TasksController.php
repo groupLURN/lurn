@@ -118,7 +118,12 @@ class TasksController extends AppController
             'contain' => ['Equipment', 'Manpower', 'Materials']
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $task = $this->Tasks->patchEntity($task, $this->request->data);
+
+            $task = $this->Tasks->patchEntity($task, $this->request->data, [
+                'associated' => ['Equipment']
+            ]);
+
+
             if ($this->Tasks->save($task)) {
                 $this->Flash->success(__('The task has been saved.'));
                 return $this->redirect(['action' => 'index']);

@@ -33,9 +33,9 @@ $(".add-button").on("click", function()
         quantity: $(".resource-quantity", $context).val()
     };
 
-    $li.append($("<input>", {type: "hidden", class:'id'}).attr("name", "equipment[id]").val(selectedObject.id));
-    $li.append($("<input>", {type: "hidden"}).attr("name", "equipment[name]").val(selectedObject.name));
-    $li.append($("<input>", {type: "hidden"}).attr("name", "equipment[quantity]").val(selectedObject.quantity));
+    var index = $("li", $ul).length;
+    $li.append($("<input>", {type: "hidden", class:'id'}).attr("name", "equipment[" + index + "][id]").val(selectedObject.id));
+    $li.append($("<input>", {type: "hidden"}).attr("name", "equipment[" + index + "][_joinData][quantity]").val(selectedObject.quantity));
     $li.append(selectedObject.quantity + 'x ' + selectedObject.name);
 
     if($ul.find('input.id[value=' + selectedObject.id + ']').length === 0 && selectedObject.quantity.trim() !== "")

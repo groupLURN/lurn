@@ -35,7 +35,7 @@
 //                'label' => ['class' => 'mt'],
 //                'class' => 'form-control'
 //            ]);
-//
+
 //            echo $this->Form->input('manpower._ids', [
 //                'options' => $manpower,
 //                'label' => ['class' => 'mt'],

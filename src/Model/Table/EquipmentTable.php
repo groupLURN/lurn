@@ -10,6 +10,7 @@ use Cake\Validation\Validator;
 /**
  * Equipment Model
  *
+ * @property \Cake\ORM\Association\HasMany $EquipmentGeneralInventories
  * @property \Cake\ORM\Association\BelongsToMany $Tasks
  */
 class EquipmentTable extends Table
@@ -31,6 +32,9 @@ class EquipmentTable extends Table
 
         $this->addBehavior('Timestamp');
 
+        $this->hasMany('EquipmentGeneralInventories', [
+            'foreignKey' => 'equipment_id'
+        ]);
         $this->belongsToMany('Tasks', [
             'foreignKey' => 'equipment_id',
             'targetForeignKey' => 'task_id',

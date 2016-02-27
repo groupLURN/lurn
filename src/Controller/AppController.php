@@ -92,9 +92,10 @@ class AppController extends Controller
         return parent::paginate($object);
     }
 
-    public function createFinders(array $filters)
+    public function createFinders(array $filters, $modelClass = null)
     {
-        $model = $this->loadModel($this->modelClass);
+        $modelClass = $modelClass === null? $this->modelClass: $modelClass;
+        $model = $this->loadModel($modelClass);
 
         $finder = [];
         foreach($filters as $filter => $query)

@@ -46,3 +46,75 @@ form .error-message {
 .margin-left {
     margin-left: 15px;
 }
+
+.task-status {
+    border-radius:20px;
+    padding: 5px;
+}
+
+.task-status.pending {
+    background-color: #5bc0de;
+    color: white;
+}
+
+.task-status.in-progress {
+    background-color: #337ab7;
+    color: white;
+}
+
+.task-status.done {
+    background-color: green;
+    color: white;
+}
+
+.task-status.overdue {
+    background-color: red;
+    color: white;
+}
+
+.task-status.progress {
+    background-color: blue;
+    color: white;
+}
+
+ul.options {
+    list-style-type: none;
+    width: 15em;
+    margin: 0.3em 0;
+    padding: 0;
+}
+
+ul.options li {
+    background: #def url(../img/cross_bright.png) no-repeat 98% center;
+    margin: 1px;
+    padding: 0.1em 0.3em;
+    cursor: pointer;
+    color: #46a;
+    font-weight: bold;
+    border: solid 1px #cde;
+}
+
+.add-button {
+    cursor: pointer;
+}
+
+.multi-select-with-input table {
+    margin: auto;
+    table-layout: fixed;
+    width: 80%;
+    text-align: center;
+}
+
+.multi-select-with-input input {
+    width: 30%;
+    border-radius: 4px;
+    box-shadow: 30px;
+}
+
+.multi-select-with-input img {
+    width: 15%;
+}
+
+.multi-select-with-input ul {
+    margin: 20px auto;
+}

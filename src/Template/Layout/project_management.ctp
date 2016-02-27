@@ -1,4 +1,5 @@
 <?php
+$this->assign('title', 'Project Planning');
 $this->extend('/Layout/default');
 $this->start('additional-sidebar');
 ?>
@@ -15,6 +16,9 @@ $this->start('additional-sidebar');
     </a>
     <ul class="sub">
         <li><a href="/project-planning/create-gantt-chart/<?= $project_id ?>">Create Gantt Chart</a></li>
+    </ul>
+    <ul class="sub">
+        <li><a href="/tasks?project_id=<?= $project_id ?>">Manage Tasks & Resources</a></li>
     </ul>
 </li>
 <?php $this->end(); ?>

@@ -30,7 +30,7 @@ $this->Html->script('gantt-chart', ['block' => 'script-end']);
                             <input name='scales' onclick='zoom_tasks(this)' type='radio' value='year'>
                             <span>Months</span></label>
                     </div>
-                    <div class="col-xs-6">
+                    <div class="col-xs-6" hidden>
                         <div id="filter_hours">
                             <strong> Display: &nbsp; </strong>
                             <label>

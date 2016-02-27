@@ -24,7 +24,19 @@ class MaterialsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.materials'
+        'app.materials',
+        'app.tasks',
+        'app.milestones',
+        'app.projects',
+        'app.clients',
+        'app.users',
+        'app.user_types',
+        'app.employees',
+        'app.employee_types',
+        'app.employees_projects',
+        'app.project_statuses',
+        'app.employees_join',
+        'app.materials_tasks'
     ];
 
     /**

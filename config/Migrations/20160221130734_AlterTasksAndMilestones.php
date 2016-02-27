@@ -1,7 +1,7 @@
 <?php
 use Migrations\AbstractMigration;
 
-class AlterTasks extends AbstractMigration
+class AlterTasksAndMilestones extends AbstractMigration
 {
     /**
      * Change Method.

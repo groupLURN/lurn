@@ -33,7 +33,7 @@ class EquipmentGeneralInventoriesTable extends Table
 
         $this->belongsTo('Equipment', [
             'foreignKey' => 'equipment_id',
-            'joinType' => 'INNER'
+            'joinType' => 'RIGHT'
         ]);
     }
 

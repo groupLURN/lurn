@@ -25,6 +25,7 @@ class EquipmentGeneralInventoriesController extends AppController
             'sortWhitelist' => [
                 'available_quantity',
                 'unavailable_quantity',
+                'total_quantity',
                 'last_modified'
             ],
             'group' => [

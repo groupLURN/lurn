@@ -88,7 +88,7 @@ class EquipmentTable extends Table
         if(isset($options['id']))
             $query = $query->where(['Equipment.id' => $options['id']]);
 
-        return $query->select(['Equipment.id', 'Equipment.name', 'Equipment.modified', 'available_quantity' => $available_quantity,
+        return $query->select(['Equipment.id', 'Equipment.name', 'last_modified' => 'EquipmentGeneralInventories.modified', 'available_quantity' => $available_quantity,
             'unavailable_quantity' => $unavailable_quantity])
             ->leftJoin(['EquipmentGeneralInventories' => 'equipment_general_inventories'], [
                 'EquipmentGeneralInventories.equipment_id = Equipment.id'

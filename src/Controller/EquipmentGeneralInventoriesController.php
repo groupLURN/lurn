@@ -24,7 +24,8 @@ class EquipmentGeneralInventoriesController extends AppController
         $this->paginate = [
             'sortWhitelist' => [
                 'available_quantity',
-                'unavailable_quantity'
+                'unavailable_quantity',
+                'last_modified'
             ],
             'group' => [
                 'Equipment.id'

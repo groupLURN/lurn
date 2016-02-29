@@ -41,7 +41,7 @@
                     <th><?= $this->Paginator->sort('name') ?></th>
                     <th><?= $this->Paginator->sort('available_quantity') ?></th>
                     <th><?= $this->Paginator->sort('unavailable_quantity') ?></th>
-                    <th><?= $this->Paginator->sort('modified') ?></th>
+                    <th><?= $this->Paginator->sort('last_modified', 'Last Modified') ?></th>
                     <th></th>
                 </tr>
                 </thead>
@@ -51,7 +51,7 @@
                         <td><?= $this->Html->link($equipment_->name, ['controller' => 'Equipment', 'action' => 'view', $equipment_->id]) ?></td>
                         <td><?= $this->Number->format($equipment_->available_quantity) ?></td>
                         <td><?= $this->Number->format($equipment_->unavailable_quantity) ?></td>
-                        <td><?= h($equipment_->modified) ?></td>
+                        <td><?= h($equipment_->last_modified) ?></td>
                         <td class="actions">
                             <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $equipment_->id]); ?>
                             <?= $this->dataTableEditButton(__('Adjust'), ['action' => 'edit', $equipment_->id]); ?>

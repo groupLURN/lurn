@@ -95,7 +95,6 @@ class EquipmentTable extends Table
             ])
             ->leftJoin(['EquipmentTaskInventories' => 'equipment_task_inventories'], [
                 'EquipmentTaskInventories.equipment_id = Equipment.id'
-            ])
-            ->group('Equipment.id');
+            ]);
     }
 }

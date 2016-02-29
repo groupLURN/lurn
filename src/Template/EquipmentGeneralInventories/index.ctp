@@ -54,13 +54,7 @@
                         <td><?= h($equipment_->modified) ?></td>
                         <td class="actions">
                             <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $equipment_->id]); ?>
-                            <?= $this->dataTableEditButton(__('Edit'), ['action' => 'edit', $equipment_->id]); ?>
-                            <?= $this->dataTableDeleteButton(__('Delete'),
-                                ['action' => 'delete', $equipment_->id],
-                                __('Are you sure you want to delete {0}? This will also delete its user account.',
-                                    $equipment_->name)
-                            );
-                            ?>
+                            <?= $this->dataTableEditButton(__('Adjust'), ['action' => 'edit', $equipment_->id]); ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>

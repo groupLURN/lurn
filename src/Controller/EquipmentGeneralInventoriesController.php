@@ -20,16 +20,21 @@ class EquipmentGeneralInventoriesController extends AppController
     public function index()
     {
         $this->paginate = [
-            'finder' => 'generalInventorySummary',
             'sortWhitelist' => [
                 'available_quantity',
                 'unavailable_quantity'
+            ],
+            'group' => [
+                'Equipment.id'
             ]
         ];
 
+        $this->paginate += $this->createFinders($this->request->query, 'Equipment');
+        $this->paginate['finder']['generalInventorySummary'] = [];
         $equipment = $this->paginate(TableRegistry::get('Equipment'));
 
         $this->set(compact('equipment'));
+        $this->set($this->request->query);
         $this->set('_serialize', ['equipment']);
     }
 

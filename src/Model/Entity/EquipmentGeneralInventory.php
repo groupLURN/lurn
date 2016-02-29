@@ -6,7 +6,6 @@ use Cake\ORM\Entity;
 /**
  * EquipmentGeneralInventory Entity.
  *
- * @property int $id
  * @property int $equipment_id
  * @property \App\Model\Entity\Equipment $equipment
  * @property int $quantity

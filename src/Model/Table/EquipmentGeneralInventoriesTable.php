@@ -33,7 +33,7 @@ class EquipmentGeneralInventoriesTable extends Table
 
         $this->belongsTo('Equipment', [
             'foreignKey' => 'equipment_id',
-            'joinType' => 'RIGHT'
+            'joinType' => 'INNER'
         ]);
     }
 
@@ -45,10 +45,6 @@ class EquipmentGeneralInventoriesTable extends Table
      */
     public function validationDefault(Validator $validator)
     {
-        $validator
-            ->integer('id')
-            ->allowEmpty('id', 'create');
-
         $validator
             ->integer('quantity')
             ->requirePresence('quantity', 'create')

@@ -1,4 +1,5 @@
 <?= $this->Flash->render() ?>
+<?= $this->assign('title', 'Equipment General Inventory') ?>
 <div class="row mt">
     <div class="col-xs-12">
         <div class="content-panel">

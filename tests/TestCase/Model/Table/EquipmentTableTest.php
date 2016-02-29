@@ -26,6 +26,8 @@ class EquipmentTableTest extends TestCase
     public $fixtures = [
         'app.equipment',
         'app.equipment_general_inventories',
+        'app.equipment_project_inventories',
+        'app.equipment_task_inventories',
         'app.tasks',
         'app.milestones',
         'app.projects',

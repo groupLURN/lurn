@@ -26,6 +26,6 @@ class EquipmentGeneralInventory extends Entity
      */
     protected $_accessible = [
         '*' => true,
-        'id' => false,
+        'equipment_id' => false,
     ];
 }

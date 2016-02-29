@@ -41,8 +41,8 @@ class EquipmentGeneralInventoriesFixture extends TestFixture
         [
             'equipment_id' => 1,
             'quantity' => 1,
-            'created' => '2016-02-29 15:42:42',
-            'modified' => '2016-02-29 15:42:42'
+            'created' => '2016-02-29 21:16:06',
+            'modified' => '2016-02-29 21:16:06'
         ],
     ];
 }

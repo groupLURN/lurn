@@ -26,8 +26,8 @@ class EquipmentGeneralInventoriesTable extends Table
         parent::initialize($config);
 
         $this->table('equipment_general_inventories');
-        $this->displayField('id');
-        $this->primaryKey('id');
+        $this->displayField('equipment_id');
+        $this->primaryKey('equipment_id');
 
         $this->addBehavior('Timestamp');
 

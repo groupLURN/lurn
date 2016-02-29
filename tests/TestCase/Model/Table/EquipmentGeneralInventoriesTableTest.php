@@ -26,8 +26,7 @@ class EquipmentGeneralInventoriesTableTest extends TestCase
     public $fixtures = [
         'app.equipment_general_inventories',
         'app.equipment',
-        'app.tasks',
-        'app.milestones',
+        'app.equipment_project_inventories',
         'app.projects',
         'app.clients',
         'app.users',
@@ -36,13 +35,16 @@ class EquipmentGeneralInventoriesTableTest extends TestCase
         'app.employee_types',
         'app.employees_projects',
         'app.project_statuses',
-        'app.employees_join',
+        'app.milestones',
+        'app.tasks',
         'app.equipment_tasks',
         'app.manpower',
         'app.manpower_types',
         'app.manpower_tasks',
         'app.materials',
-        'app.materials_tasks'
+        'app.materials_tasks',
+        'app.employees_join',
+        'app.equipment_task_inventories'
     ];
 
     /**

@@ -2,6 +2,8 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Core\Exception\Exception;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -94,9 +96,18 @@ class EquipmentGeneralInventoriesController extends AppController
      */
     public function edit($id = null)
     {
-        $equipmentGeneralInventory = $this->EquipmentGeneralInventories->get($id, [
-            'contain' => []
-        ]);
+        try
+        {
+            $equipmentGeneralInventory = $this->EquipmentGeneralInventories->get($id);
+        }
+        catch(RecordNotFoundException $e)
+        {
+            $equipmentGeneralInventory = $this->EquipmentGeneralInventories->newEntity([
+                'equipment_id' => $id,
+                'quantity' => 0
+            ]);
+        }
+
         if ($this->request->is(['patch', 'post', 'put'])) {
             $equipmentGeneralInventory = $this->EquipmentGeneralInventories->patchEntity($equipmentGeneralInventory, $this->request->data);
             if ($this->EquipmentGeneralInventories->save($equipmentGeneralInventory)) {

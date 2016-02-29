@@ -38,25 +38,27 @@
                 <hr>
                 <thead>
                 <tr>
-                    <th><?= $this->Paginator->sort('equipment_id') ?></th>
-                    <th><?= $this->Paginator->sort('quantity') ?></th>
+                    <th><?= $this->Paginator->sort('name') ?></th>
+                    <th><?= $this->Paginator->sort('available_quantity') ?></th>
+                    <th><?= $this->Paginator->sort('unavailable_quantity') ?></th>
                     <th><?= $this->Paginator->sort('modified') ?></th>
                     <th></th>
                 </tr>
                 </thead>
                 <tbody>
-                <?php foreach ($equipmentGeneralInventories as $equipmentGeneralInventory): ?>
+                <?php foreach ($equipment as $equipment_): ?>
                     <tr>
-                        <td><?= $equipmentGeneralInventory->has('equipment') ? $this->Html->link($equipmentGeneralInventory->equipment->name, ['controller' => 'Equipment', 'action' => 'view', $equipmentGeneralInventory->equipment->id]) : '' ?></td>
-                        <td><?= $this->Number->format($equipmentGeneralInventory->quantity) ?></td>
-                        <td><?= h($equipmentGeneralInventory->modified) ?></td>
+                        <td><?= $this->Html->link($equipment_->name, ['controller' => 'Equipment', 'action' => 'view', $equipment_->id]) ?></td>
+                        <td><?= $this->Number->format($equipment_->available_quantity) ?></td>
+                        <td><?= $this->Number->format($equipment_->unavailable_quantity) ?></td>
+                        <td><?= h($equipment_->modified) ?></td>
                         <td class="actions">
-                            <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $equipmentGeneralInventory->id]); ?>
-                            <?= $this->dataTableEditButton(__('Edit'), ['action' => 'edit', $equipmentGeneralInventory->id]); ?>
+                            <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $equipment_->id]); ?>
+                            <?= $this->dataTableEditButton(__('Edit'), ['action' => 'edit', $equipment_->id]); ?>
                             <?= $this->dataTableDeleteButton(__('Delete'),
-                                ['action' => 'delete', $equipmentGeneralInventory->id],
+                                ['action' => 'delete', $equipment_->id],
                                 __('Are you sure you want to delete {0}? This will also delete its user account.',
-                                    $equipmentGeneralInventory->name)
+                                    $equipment_->name)
                             );
                             ?>
                         </td>

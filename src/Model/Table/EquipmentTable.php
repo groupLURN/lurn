@@ -48,6 +48,7 @@ class EquipmentTable extends Table
             'targetForeignKey' => 'task_id',
             'joinTable' => 'equipment_tasks'
         ]);
+
     }
 
     /**
@@ -74,5 +75,27 @@ class EquipmentTable extends Table
         return $query->where(function($exp) use ($options){
             return $exp->like('name', '%' . $options['name'] . '%');
         });
+    }
+
+    public function findGeneralInventorySummary(Query $query, array $options)
+    {
+        $available_quantity = $query->func()->coalesce(['EquipmentGeneralInventories.quantity', 0]);
+
+        $unavailable_quantity = $query->newExpr()->add([
+            'SUM(COALESCE(EquipmentProjectInventories.quantity, 0)) + SUM(COALESCE(EquipmentTaskInventories.quantity, 0))'
+        ]);
+
+        return $query->select(['Equipment.id', 'Equipment.name', 'Equipment.modified', 'available_quantity' => $available_quantity,
+            'unavailable_quantity' => $unavailable_quantity])
+            ->leftJoin(['EquipmentGeneralInventories' => 'equipment_general_inventories'], [
+                'EquipmentGeneralInventories.equipment_id = Equipment.id'
+            ])
+            ->leftJoin(['EquipmentProjectInventories' => 'equipment_project_inventories'], [
+                'EquipmentProjectInventories.equipment_id = Equipment.id'
+            ])
+            ->leftJoin(['EquipmentTaskInventories' => 'equipment_task_inventories'], [
+                'EquipmentTaskInventories.equipment_id = Equipment.id'
+            ])
+            ->group('Equipment.id');
     }
 }

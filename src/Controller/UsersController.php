@@ -133,7 +133,8 @@ class UsersController extends AppController
                 $this->Auth->setUser($user);
                 return $this->redirect('/Dashboard/');
             }
-            $this->Flash->error('Your username or password is incorrect.');
+            else
+                $this->Flash->error('Your username or password is incorrect.');
         }
     }
 

@@ -1,36 +1,49 @@
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('Edit Equipment General Inventory'), ['action' => 'edit', $equipmentGeneralInventory->id]) ?> </li>
-        <li><?= $this->Form->postLink(__('Delete Equipment General Inventory'), ['action' => 'delete', $equipmentGeneralInventory->id], ['confirm' => __('Are you sure you want to delete # {0}?', $equipmentGeneralInventory->id)]) ?> </li>
-        <li><?= $this->Html->link(__('List Equipment General Inventories'), ['action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Equipment General Inventory'), ['action' => 'add']) ?> </li>
-        <li><?= $this->Html->link(__('List Equipment'), ['controller' => 'Equipment', 'action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Equipment'), ['controller' => 'Equipment', 'action' => 'add']) ?> </li>
-    </ul>
-</nav>
-<div class="equipmentGeneralInventories view large-9 medium-8 columns content">
-    <h3><?= h($equipmentGeneralInventory->id) ?></h3>
-    <table class="vertical-table">
+<div class="equipment view large-9 medium-8 columns content">
+    <h3><?= h($summary->name) ?></h3>
+    <table class="vertical-table table table-striped">
         <tr>
-            <th><?= __('Equipment') ?></th>
-            <td><?= $equipmentGeneralInventory->has('equipment') ? $this->Html->link($equipmentGeneralInventory->equipment->name, ['controller' => 'Equipment', 'action' => 'view', $equipmentGeneralInventory->equipment->id]) : '' ?></td>
+            <th><?= __('Equipment Name') ?></th>
+            <td><?= h($summary->name) ?></td>
         </tr>
         <tr>
-            <th><?= __('Id') ?></th>
-            <td><?= $this->Number->format($equipmentGeneralInventory->id) ?></td>
+            <th><?= __('Available Quantity') ?></th>
+            <td><?= h($summary->available_quantity) ?></td>
         </tr>
         <tr>
-            <th><?= __('Quantity') ?></th>
-            <td><?= $this->Number->format($equipmentGeneralInventory->quantity) ?></td>
+            <th><?= __('Unavailable Quantity') ?></th>
+            <td><?= h($summary->unavailable_quantity) ?></td>
         </tr>
         <tr>
-            <th><?= __('Created') ?></th>
-            <td><?= h($equipmentGeneralInventory->created) ?></td>
-        </tr>
-        <tr>
-            <th><?= __('Modified') ?></th>
-            <td><?= h($equipmentGeneralInventory->modified) ?></td>
+            <th><?= __('Total Quantity') ?></th>
+            <td><?= h($summary->available_quantity + $summary->unavailable_quantity) ?></td>
         </tr>
     </table>
+</div>
+
+<div class="related">
+    <h3><?= __('Track Equipment') ?></h3>
+    <?php if (!empty($equipment->equipment_project_inventories)): ?>
+        <table cellpadding="0" cellspacing="0" class="table table-striped">
+            <tr>
+                <th><?= __('Project') ?></th>
+                <th><?= __('Client') ?></th>
+                <th><?= __('Project Manager') ?></th>
+                <th><?= __('Start Date') ?></th>
+                <th><?= __('End Date') ?></th>
+                <th><?= __('Project Status') ?></th>
+                <th><?= __('Quantity Assigned') ?></th>
+            </tr>
+            <?php foreach ($equipment->equipment_project_inventories as $projectInventory): ?>
+                <tr>
+                    <td><?= $this->Html->link($projectInventory->project->title, ['controller' => 'projects', 'action' => 'view', $projectInventory->project->id]) ?></td>
+                    <td><?= $this->Html->link($projectInventory->project->client->company_name, ['controller' => 'clients', 'action' => 'view', $projectInventory->project->client_id]) ?></td>
+                    <td><?= $this->Html->link($projectInventory->project->employee->name, ['controller' => 'employees', 'action' => 'view', $projectInventory->project->employee->id]) ?></td>
+                    <td><?= h($projectInventory->project->start_date) ?></td>
+                    <td><?= h($projectInventory->project->end_date) ?></td>
+                    <td><?= h($projectInventory->project->project_status->title) ?></td>
+                    <td><?= $this->Number->format($projectInventory->quantity) ?> </td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    <?php endif; ?>
 </div>

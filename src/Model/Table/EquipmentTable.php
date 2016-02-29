@@ -79,11 +79,14 @@ class EquipmentTable extends Table
 
     public function findGeneralInventorySummary(Query $query, array $options)
     {
-        $available_quantity = $query->func()->coalesce(['EquipmentGeneralInventories.quantity', 0]);
+        $available_quantity = $query->func()->coalesce(['EquipmentGeneralInventories.quantity' => 'literal', 0]);
 
         $unavailable_quantity = $query->newExpr()->add([
             'SUM(COALESCE(EquipmentProjectInventories.quantity, 0)) + SUM(COALESCE(EquipmentTaskInventories.quantity, 0))'
         ]);
+
+        if(isset($options['id']))
+            $query = $query->where(['Equipment.id' => $options['id']]);
 
         return $query->select(['Equipment.id', 'Equipment.name', 'Equipment.modified', 'available_quantity' => $available_quantity,
             'unavailable_quantity' => $unavailable_quantity])

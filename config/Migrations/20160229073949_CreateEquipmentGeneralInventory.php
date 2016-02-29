@@ -3,6 +3,9 @@ use Migrations\AbstractMigration;
 
 class CreateEquipmentGeneralInventory extends AbstractMigration
 {
+
+    public $autoId = false;
+
     /**
      * Change Method.
      *
@@ -31,7 +34,9 @@ class CreateEquipmentGeneralInventory extends AbstractMigration
             'default' => null,
             'null' => false,
         ]);
-
+        $table->addPrimaryKey([
+            'equipment_id',
+        ]);
         $table->addForeignKey('equipment_id', 'equipment');
         $table->create();
     }

@@ -10,8 +10,9 @@
                 'type' => 'text',
                 'class' => 'form-control number-only',
                 'label' => [
-                    'class' => 'mt'
-                ]
+                    'class' => 'mt',
+                    'text' => 'Available Quantity'
+                ],
             ]);
 
             ?>

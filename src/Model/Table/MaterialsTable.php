@@ -95,7 +95,8 @@ class MaterialsTable extends Table
         if(isset($options['id']))
             $query = $query->where(['Materials.id' => $options['id']]);
 
-        return $query->select(['Materials.id', 'Materials.name', 'last_modified' => 'MaterialsGeneralInventories.modified', 'available_quantity' => $available_quantity,
+        return $query->select(['Materials.id', 'Materials.name', 'Materials.unit_measure',
+            'last_modified' => 'MaterialsGeneralInventories.modified', 'available_quantity' => $available_quantity,
             'unavailable_quantity' => $unavailable_quantity, 'total_quantity' => $total_quantity])
             ->leftJoin(['MaterialsGeneralInventories' => 'materials_general_inventories'], [
                 'MaterialsGeneralInventories.material_id = Materials.id'
@@ -105,6 +106,36 @@ class MaterialsTable extends Table
             ])
             ->leftJoin(['MaterialsTaskInventories' => 'materials_task_inventories'], [
                 'MaterialsTaskInventories.material_id = Materials.id'
-            ]);
+            ])
+            ->group('Materials.id');
+    }
+
+    public function findProjectInventorySummary(Query $query, array $options)
+    {
+        $available_quantity = $query->func()->coalesce(['MaterialsProjectInventories.quantity' => 'literal', 0]);
+
+        $unavailable_quantity = $query->newExpr()->add([
+            'SUM(COALESCE(MaterialsTaskInventories.quantity, 0))'
+        ]);
+
+        $total_quantity = $query->newExpr()->add([
+            'COALESCE(MaterialsProjectInventories.quantity, 0) + SUM(COALESCE(MaterialsTaskInventories.quantity, 0))'
+        ]);
+
+        if(isset($options['id']))
+            $query = $query->where(['Materials.id' => $options['id']]);
+
+        return $query->select(['Materials.id', 'Materials.name', 'Materials.unit_measure',
+            'last_modified' => 'MaterialsProjectInventories.modified', 'available_quantity' => $available_quantity,
+            'unavailable_quantity' => $unavailable_quantity, 'total_quantity' => $total_quantity])
+            ->innerJoin(['MaterialsProjectInventories' => 'materials_project_inventories'], [
+                'MaterialsProjectInventories.material_id = Materials.id',
+                'MaterialsProjectInventories.project_id' => $options['project_id']
+            ])
+            ->leftJoin(['MaterialsTaskInventories' => 'materials_task_inventories'], [
+                'MaterialsTaskInventories.material_id = Materials.id',
+                'MaterialsTaskInventories.project_id' => $options['project_id']
+            ])
+            ->group(['MaterialsProjectInventories.project_id', 'Materials.id']);
     }
 }

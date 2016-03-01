@@ -1,22 +1,14 @@
 <?php
-namespace App\Test\TestCase\Model\Table;
+namespace App\Test\TestCase\Controller;
 
-use App\Model\Table\EquipmentProjectInventoriesTable;
-use Cake\ORM\TableRegistry;
-use Cake\TestSuite\TestCase;
+use App\Controller\EquipmentProjectInventoriesController;
+use Cake\TestSuite\IntegrationTestCase;
 
 /**
- * App\Model\Table\EquipmentProjectInventoriesTable Test Case
+ * App\Controller\EquipmentProjectInventoriesController Test Case
  */
-class EquipmentProjectInventoriesTableTest extends TestCase
+class EquipmentProjectInventoriesControllerTest extends IntegrationTestCase
 {
-
-    /**
-     * Test subject
-     *
-     * @var \App\Model\Table\EquipmentProjectInventoriesTable
-     */
-    public $EquipmentProjectInventories;
 
     /**
      * Fixtures
@@ -37,8 +29,8 @@ class EquipmentProjectInventoriesTableTest extends TestCase
         'app.employees',
         'app.employee_types',
         'app.employees_projects',
-        'app.project_statuses',
         'app.employees_join',
+        'app.project_statuses',
         'app.equipment_tasks',
         'app.manpower',
         'app.manpower_types',
@@ -51,55 +43,51 @@ class EquipmentProjectInventoriesTableTest extends TestCase
     ];
 
     /**
-     * setUp method
+     * Test index method
      *
      * @return void
      */
-    public function setUp()
-    {
-        parent::setUp();
-        $config = TableRegistry::exists('EquipmentProjectInventories') ? [] : ['className' => 'App\Model\Table\EquipmentProjectInventoriesTable'];
-        $this->EquipmentProjectInventories = TableRegistry::get('EquipmentProjectInventories', $config);
-    }
-
-    /**
-     * tearDown method
-     *
-     * @return void
-     */
-    public function tearDown()
-    {
-        unset($this->EquipmentProjectInventories);
-
-        parent::tearDown();
-    }
-
-    /**
-     * Test initialize method
-     *
-     * @return void
-     */
-    public function testInitialize()
+    public function testIndex()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test validationDefault method
+     * Test view method
      *
      * @return void
      */
-    public function testValidationDefault()
+    public function testView()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test buildRules method
+     * Test add method
      *
      * @return void
      */
-    public function testBuildRules()
+    public function testAdd()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test edit method
+     *
+     * @return void
+     */
+    public function testEdit()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test delete method
+     *
+     * @return void
+     */
+    public function testDelete()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

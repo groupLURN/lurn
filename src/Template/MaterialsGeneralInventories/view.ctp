@@ -6,6 +6,10 @@
             <td><?= h($summary->name) ?></td>
         </tr>
         <tr>
+            <th><?= __('Unit Measure') ?></th>
+            <td><?= h($summary->unit_measure) ?></td>
+        </tr>
+        <tr>
             <th><?= __('Available Quantity') ?></th>
             <td><?= h($summary->available_quantity) ?></td>
         </tr>

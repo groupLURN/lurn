@@ -259,7 +259,7 @@ $this->Html->script('/non_bower_components/chart-master/Chart', ['block' => 'scr
 
                     <li class="sub-menu">
                         <a href="javascript:;" >
-                            <i class="fa fa-tasks"></i>
+                            <i class="fa fa-archive"></i>
                             <span>General Inventories</span>
                         </a>
                         <ul class="sub">

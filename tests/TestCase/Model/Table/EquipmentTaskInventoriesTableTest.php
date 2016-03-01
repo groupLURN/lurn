@@ -1,22 +1,22 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\EquipmentProjectInventoriesTable;
+use App\Model\Table\EquipmentTaskInventoriesTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\EquipmentProjectInventoriesTable Test Case
+ * App\Model\Table\EquipmentTaskInventoriesTable Test Case
  */
-class EquipmentProjectInventoriesTableTest extends TestCase
+class EquipmentTaskInventoriesTableTest extends TestCase
 {
 
     /**
      * Test subject
      *
-     * @var \App\Model\Table\EquipmentProjectInventoriesTable
+     * @var \App\Model\Table\EquipmentTaskInventoriesTable
      */
-    public $EquipmentProjectInventories;
+    public $EquipmentTaskInventories;
 
     /**
      * Fixtures
@@ -24,12 +24,10 @@ class EquipmentProjectInventoriesTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.equipment_project_inventories',
+        'app.equipment_task_inventories',
         'app.equipment',
         'app.equipment_general_inventories',
-        'app.equipment_task_inventories',
-        'app.tasks',
-        'app.milestones',
+        'app.equipment_project_inventories',
         'app.projects',
         'app.clients',
         'app.users',
@@ -38,7 +36,8 @@ class EquipmentProjectInventoriesTableTest extends TestCase
         'app.employee_types',
         'app.employees_projects',
         'app.project_statuses',
-        'app.employees_join',
+        'app.milestones',
+        'app.tasks',
         'app.equipment_tasks',
         'app.manpower',
         'app.manpower_types',
@@ -47,7 +46,8 @@ class EquipmentProjectInventoriesTableTest extends TestCase
         'app.materials_general_inventories',
         'app.materials_project_inventories',
         'app.materials_task_inventories',
-        'app.materials_tasks'
+        'app.materials_tasks',
+        'app.employees_join'
     ];
 
     /**
@@ -58,8 +58,8 @@ class EquipmentProjectInventoriesTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('EquipmentProjectInventories') ? [] : ['className' => 'App\Model\Table\EquipmentProjectInventoriesTable'];
-        $this->EquipmentProjectInventories = TableRegistry::get('EquipmentProjectInventories', $config);
+        $config = TableRegistry::exists('EquipmentTaskInventories') ? [] : ['className' => 'App\Model\Table\EquipmentTaskInventoriesTable'];
+        $this->EquipmentTaskInventories = TableRegistry::get('EquipmentTaskInventories', $config);
     }
 
     /**
@@ -69,7 +69,7 @@ class EquipmentProjectInventoriesTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->EquipmentProjectInventories);
+        unset($this->EquipmentTaskInventories);
 
         parent::tearDown();
     }

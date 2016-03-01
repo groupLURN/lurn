@@ -19,7 +19,6 @@ class TasksController extends AppController
             return $this->redirect(['controller' => 'dashboard']);
 
         $this->viewBuilder()->layout('project_management');
-        $this->set('project_id', $this->request->query['project_id']);
         $this->__projectId = (int) $this->request->query['project_id'];
 
         $this->set('projectId', $this->__projectId);

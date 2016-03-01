@@ -1,8 +1,8 @@
 <?= $this->Flash->render() ?>
-<?= $this->assign('title', 'Materials General Inventory') ?>
+<?= $this->assign('title', 'Materials Project Inventory') ?>
 <div class="row mt">
     <div class="col-md-12">
-        <?= $this->Form->create($materialsGeneralInventory) ?>
+        <?= $this->Form->create($equipmentProjectInventory) ?>
         <fieldset>
             <legend><h3><i class="fa fa-angle-right"></i> <?= __('Adjust Inventory') ?></h3></legend>
             <?php
@@ -32,19 +32,21 @@
         <li class="heading"><?= __('Actions') ?></li>
         <li><?= $this->Form->postLink(
                 __('Delete'),
-                ['action' => 'delete', $materialsGeneralInventory->material_id],
-                ['confirm' => __('Are you sure you want to delete # {0}?', $materialsGeneralInventory->material_id)]
+                ['action' => 'delete', $equipmentProjectInventory->equipment_id],
+                ['confirm' => __('Are you sure you want to delete # {0}?', $equipmentProjectInventory->equipment_id)]
             )
         ?></li>
-        <li><?= $this->Html->link(__('List Materials General Inventories'), ['action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('List Materials'), ['controller' => 'Materials', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Material'), ['controller' => 'Materials', 'action' => 'add']) ?></li>
+        <li><?= $this->Html->link(__('List Equipment Project Inventories'), ['action' => 'index']) ?></li>
+        <li><?= $this->Html->link(__('List Equipment'), ['controller' => 'Equipment', 'action' => 'index']) ?></li>
+        <li><?= $this->Html->link(__('New Equipment'), ['controller' => 'Equipment', 'action' => 'add']) ?></li>
+        <li><?= $this->Html->link(__('List Projects'), ['controller' => 'Projects', 'action' => 'index']) ?></li>
+        <li><?= $this->Html->link(__('New Project'), ['controller' => 'Projects', 'action' => 'add']) ?></li>
     </ul>
 </nav>
-<div class="materialsGeneralInventories form large-9 medium-8 columns content">
-    <?= $this->Form->create($materialsGeneralInventory) ?>
+<div class="equipmentProjectInventories form large-9 medium-8 columns content">
+    <?= $this->Form->create($equipmentProjectInventory) ?>
     <fieldset>
-        <legend><?= __('Edit Materials General Inventory') ?></legend>
+        <legend><?= __('Edit Equipment Project Inventory') ?></legend>
         <?php
             echo $this->Form->input('quantity');
         ?>

@@ -66,7 +66,7 @@
                         <td><?= $this->Number->format($manpower_->total_quantity) ?></td>
                         <td><?= h($manpower_->last_modified) ?></td>
                         <td class="actions">
-                            <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $manpower_->id, '?' => ['project_id' => $projectId]]); ?>
+                            <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $manpower_->manpower_type->id, '?' => ['project_id' => $projectId]]); ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>

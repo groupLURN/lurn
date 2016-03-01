@@ -12,8 +12,8 @@ use Cake\Validation\Validator;
  *
  * @property \Cake\ORM\Association\BelongsTo $Projects
  * @property \Cake\ORM\Association\BelongsTo $ManpowerTypes
- * @property \Cake\ORM\Association\BelongsTo $Tasks
- * @property \Cake\ORM\Association\BelongsToMany $TaskInventory
+ * @property \Cake\ORM\Association\BelongsTo $TaskInventory
+ * @property \Cake\ORM\Association\BelongsToMany $Tasks
  */
 class ManpowerTable extends Table
 {
@@ -41,7 +41,8 @@ class ManpowerTable extends Table
             'foreignKey' => 'manpower_type_id',
             'joinType' => 'INNER'
         ]);
-        $this->belongsTo('Tasks', [
+        $this->belongsTo('TaskInventory', [
+            'className' => 'Tasks',
             'foreignKey' => 'task_id'
         ]);
         $this->belongsToMany('Tasks', [

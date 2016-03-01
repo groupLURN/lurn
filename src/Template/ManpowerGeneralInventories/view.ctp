@@ -23,7 +23,7 @@
 </div>
 
 <div class="related">
-    <?php if (!empty($availableManpower)) : ?>
+    <?php if (!$availableManpower->isEmpty()) : ?>
         <h3><?= __('Track Available Manpower') ?></h3>
         <table cellpadding="0" cellspacing="0" class="table table-striped">
             <tr>

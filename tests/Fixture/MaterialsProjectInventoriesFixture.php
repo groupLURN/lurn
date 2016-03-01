@@ -47,8 +47,8 @@ class MaterialsProjectInventoriesFixture extends TestFixture
             'material_id' => 1,
             'project_id' => 1,
             'quantity' => 1,
-            'created' => '2016-03-01 14:14:05',
-            'modified' => '2016-03-01 14:14:05'
+            'created' => '2016-03-01 19:27:41',
+            'modified' => '2016-03-01 19:27:41'
         ],
     ];
 }

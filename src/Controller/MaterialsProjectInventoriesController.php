@@ -2,6 +2,8 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Event\Event;
+use Cake\ORM\TableRegistry;
 
 /**
  * MaterialsProjectInventories Controller
@@ -10,6 +12,19 @@ use App\Controller\AppController;
  */
 class MaterialsProjectInventoriesController extends AppController
 {
+    private $_projectId = null;
+
+    public function beforeFilter(Event $event)
+    {
+        if(!isset($this->request->query['project_id']))
+            return $this->redirect(['controller' => 'dashboard']);
+
+        $this->viewBuilder()->layout('project_management');
+        $this->_projectId = (int) $this->request->query['project_id'];
+
+        $this->set('projectId', $this->_projectId);
+        return parent::beforeFilter($event);
+    }
 
     /**
      * Index method
@@ -19,12 +34,25 @@ class MaterialsProjectInventoriesController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['Materials', 'Projects']
+            'sortWhitelist' => [
+                'unit_measure',
+                'available_quantity',
+                'unavailable_quantity',
+                'total_quantity',
+                'last_modified'
+            ],
+            'group' => [
+                'Materials.id'
+            ]
         ];
-        $materialsProjectInventories = $this->paginate($this->MaterialsProjectInventories);
 
-        $this->set(compact('materialsProjectInventories'));
-        $this->set('_serialize', ['materialsProjectInventories']);
+        $this->paginate += $this->createFinders($this->request->query, 'Materials');
+        $this->paginate['finder']['projectInventorySummary'] = ['project_id' => $this->_projectId];
+        $materials = $this->paginate(TableRegistry::get('Materials'));
+
+        $this->set(compact('materials'));
+        $this->set($this->request->query);
+        $this->set('_serialize', ['materials']);
     }
 
     /**

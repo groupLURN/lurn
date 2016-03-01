@@ -1,5 +1,4 @@
 <?php
-$this->assign('title', 'Project Planning');
 $this->extend('/Layout/default');
 $this->start('additional-sidebar');
 ?>

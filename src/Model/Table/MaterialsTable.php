@@ -135,6 +135,6 @@ class MaterialsTable extends Table
                 'MaterialsTaskInventories.material_id = Materials.id',
                 'MaterialsTaskInventories.project_id' => $options['project_id']
             ])
-            ->group('MaterialsProjectInventories.project_id');
+            ->group(['MaterialsProjectInventories.project_id', 'Materials.id']);
     }
 }

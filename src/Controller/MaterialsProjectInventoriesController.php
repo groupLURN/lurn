@@ -41,9 +41,6 @@ class MaterialsProjectInventoriesController extends AppController
                 'unavailable_quantity',
                 'total_quantity',
                 'last_modified'
-            ],
-            'group' => [
-                'Materials.id'
             ]
         ];
 

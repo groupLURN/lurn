@@ -39,6 +39,7 @@
                 <thead>
                 <tr>
                     <th><?= $this->Paginator->sort('name') ?></th>
+                    <th><?= $this->Paginator->sort('unit_measure') ?></th>
                     <th><?= $this->Paginator->sort('available_quantity') ?></th>
                     <th><?= $this->Paginator->sort('unavailable_quantity') ?></th>
                     <th><?= $this->Paginator->sort('total_quantity') ?></th>
@@ -50,6 +51,7 @@
                 <?php foreach ($materials as $material): ?>
                     <tr>
                         <td><?= $this->Html->link($material->name, ['controller' => 'Equipment', 'action' => 'view', $material->id]) ?></td>
+                        <td><?= h($material->unit_measure) ?></td>
                         <td><?= $this->Number->format($material->available_quantity) ?></td>
                         <td><?= $this->Number->format($material->unavailable_quantity) ?></td>
                         <td><?= $this->Number->format($material->total_quantity) ?></td>

@@ -95,7 +95,8 @@ class MaterialsTable extends Table
         if(isset($options['id']))
             $query = $query->where(['Materials.id' => $options['id']]);
 
-        return $query->select(['Materials.id', 'Materials.name', 'last_modified' => 'MaterialsGeneralInventories.modified', 'available_quantity' => $available_quantity,
+        return $query->select(['Materials.id', 'Materials.name', 'Materials.unit_measure',
+            'last_modified' => 'MaterialsGeneralInventories.modified', 'available_quantity' => $available_quantity,
             'unavailable_quantity' => $unavailable_quantity, 'total_quantity' => $total_quantity])
             ->leftJoin(['MaterialsGeneralInventories' => 'materials_general_inventories'], [
                 'MaterialsGeneralInventories.material_id = Materials.id'

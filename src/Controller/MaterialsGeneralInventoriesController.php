@@ -22,6 +22,7 @@ class MaterialsGeneralInventoriesController extends AppController
     {
         $this->paginate = [
             'sortWhitelist' => [
+                'unit_measure',
                 'available_quantity',
                 'unavailable_quantity',
                 'total_quantity',

@@ -4,19 +4,17 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Manpower Entity.
+ * EquipmentProjectInventory Entity.
  *
- * @property int $id
+ * @property int $equipment_id
+ * @property \App\Model\Entity\Equipment $equipment
  * @property int $project_id
- * @property int $manpower_type_id
- * @property \App\Model\Entity\ManpowerType $manpower_type
- * @property string $name
+ * @property \App\Model\Entity\Project $project
+ * @property int $quantity
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
- * @property string $task_id
- * @property \App\Model\Entity\Task[] $tasks
  */
-class Manpower extends Entity
+class EquipmentProjectInventory extends Entity
 {
 
     /**
@@ -30,6 +28,7 @@ class Manpower extends Entity
      */
     protected $_accessible = [
         '*' => true,
-        'id' => false,
+        'equipment_id' => false,
+        'project_id' => false,
     ];
 }

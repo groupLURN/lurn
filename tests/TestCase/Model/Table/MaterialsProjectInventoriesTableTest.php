@@ -1,22 +1,22 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\MaterialsTable;
+use App\Model\Table\MaterialsProjectInventoriesTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\MaterialsTable Test Case
+ * App\Model\Table\MaterialsProjectInventoriesTable Test Case
  */
-class MaterialsTableTest extends TestCase
+class MaterialsProjectInventoriesTableTest extends TestCase
 {
 
     /**
      * Test subject
      *
-     * @var \App\Model\Table\MaterialsTable
+     * @var \App\Model\Table\MaterialsProjectInventoriesTable
      */
-    public $Materials;
+    public $MaterialsProjectInventories;
 
     /**
      * Fixtures
@@ -24,7 +24,10 @@ class MaterialsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
+        'app.materials_project_inventories',
         'app.materials',
+        'app.materials_general_inventories',
+        'app.materials_task_inventories',
         'app.tasks',
         'app.milestones',
         'app.projects',
@@ -55,8 +58,8 @@ class MaterialsTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Materials') ? [] : ['className' => 'App\Model\Table\MaterialsTable'];
-        $this->Materials = TableRegistry::get('Materials', $config);
+        $config = TableRegistry::exists('MaterialsProjectInventories') ? [] : ['className' => 'App\Model\Table\MaterialsProjectInventoriesTable'];
+        $this->MaterialsProjectInventories = TableRegistry::get('MaterialsProjectInventories', $config);
     }
 
     /**
@@ -66,7 +69,7 @@ class MaterialsTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->Materials);
+        unset($this->MaterialsProjectInventories);
 
         parent::tearDown();
     }
@@ -92,11 +95,11 @@ class MaterialsTableTest extends TestCase
     }
 
     /**
-     * Test findByName method
+     * Test buildRules method
      *
      * @return void
      */
-    public function testFindByName()
+    public function testBuildRules()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

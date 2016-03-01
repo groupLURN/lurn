@@ -4,10 +4,10 @@ namespace App\Test\Fixture;
 use Cake\TestSuite\Fixture\TestFixture;
 
 /**
- * MaterialsFixture
+ * ManpowerTypesFixture
  *
  */
-class MaterialsFixture extends TestFixture
+class ManpowerTypesFixture extends TestFixture
 {
 
     /**
@@ -18,15 +18,12 @@ class MaterialsFixture extends TestFixture
     // @codingStandardsIgnoreStart
     public $fields = [
         'id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'autoIncrement' => true, 'precision' => null],
-        'name' => ['type' => 'string', 'length' => 255, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'fixed' => null],
-        'unit_measure' => ['type' => 'string', 'length' => 20, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'fixed' => null],
+        'title' => ['type' => 'string', 'length' => 255, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'fixed' => null],
         'created' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         'modified' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
-        '_indexes' => [
-            'BY_NAME' => ['type' => 'index', 'columns' => ['name'], 'length' => []],
-        ],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
+            'UNIQUE_TITLE' => ['type' => 'unique', 'columns' => ['title'], 'length' => []],
         ],
         '_options' => [
             'engine' => 'InnoDB',
@@ -43,10 +40,9 @@ class MaterialsFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'name' => 'Lorem ipsum dolor sit amet',
-            'unit_measure' => 'Lorem ipsum dolor ',
-            'created' => '2016-03-01 13:49:06',
-            'modified' => '2016-03-01 13:49:06'
+            'title' => 'Lorem ipsum dolor sit amet',
+            'created' => '2016-03-01 16:22:17',
+            'modified' => '2016-03-01 16:22:17'
         ],
     ];
 }

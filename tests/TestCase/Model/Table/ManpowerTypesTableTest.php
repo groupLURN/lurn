@@ -1,22 +1,22 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\MaterialsTable;
+use App\Model\Table\ManpowerTypesTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\MaterialsTable Test Case
+ * App\Model\Table\ManpowerTypesTable Test Case
  */
-class MaterialsTableTest extends TestCase
+class ManpowerTypesTableTest extends TestCase
 {
 
     /**
      * Test subject
      *
-     * @var \App\Model\Table\MaterialsTable
+     * @var \App\Model\Table\ManpowerTypesTable
      */
-    public $Materials;
+    public $ManpowerTypes;
 
     /**
      * Fixtures
@@ -24,9 +24,8 @@ class MaterialsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.materials',
-        'app.tasks',
-        'app.milestones',
+        'app.manpower_types',
+        'app.manpower',
         'app.projects',
         'app.clients',
         'app.users',
@@ -35,16 +34,20 @@ class MaterialsTableTest extends TestCase
         'app.employee_types',
         'app.employees_projects',
         'app.project_statuses',
-        'app.employees_join',
+        'app.milestones',
+        'app.tasks',
         'app.equipment',
         'app.equipment_general_inventories',
         'app.equipment_project_inventories',
         'app.equipment_task_inventories',
         'app.equipment_tasks',
-        'app.manpower',
-        'app.manpower_types',
         'app.manpower_tasks',
-        'app.materials_tasks'
+        'app.materials',
+        'app.materials_general_inventories',
+        'app.materials_project_inventories',
+        'app.materials_task_inventories',
+        'app.materials_tasks',
+        'app.employees_join'
     ];
 
     /**
@@ -55,8 +58,8 @@ class MaterialsTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Materials') ? [] : ['className' => 'App\Model\Table\MaterialsTable'];
-        $this->Materials = TableRegistry::get('Materials', $config);
+        $config = TableRegistry::exists('ManpowerTypes') ? [] : ['className' => 'App\Model\Table\ManpowerTypesTable'];
+        $this->ManpowerTypes = TableRegistry::get('ManpowerTypes', $config);
     }
 
     /**
@@ -66,7 +69,7 @@ class MaterialsTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->Materials);
+        unset($this->ManpowerTypes);
 
         parent::tearDown();
     }
@@ -92,11 +95,11 @@ class MaterialsTableTest extends TestCase
     }
 
     /**
-     * Test findByName method
+     * Test buildRules method
      *
      * @return void
      */
-    public function testFindByName()
+    public function testBuildRules()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

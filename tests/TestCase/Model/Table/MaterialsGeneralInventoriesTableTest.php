@@ -1,22 +1,22 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\MaterialsTable;
+use App\Model\Table\MaterialsGeneralInventoriesTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\MaterialsTable Test Case
+ * App\Model\Table\MaterialsGeneralInventoriesTable Test Case
  */
-class MaterialsTableTest extends TestCase
+class MaterialsGeneralInventoriesTableTest extends TestCase
 {
 
     /**
      * Test subject
      *
-     * @var \App\Model\Table\MaterialsTable
+     * @var \App\Model\Table\MaterialsGeneralInventoriesTable
      */
-    public $Materials;
+    public $MaterialsGeneralInventories;
 
     /**
      * Fixtures
@@ -24,6 +24,7 @@ class MaterialsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
+        'app.materials_general_inventories',
         'app.materials',
         'app.tasks',
         'app.milestones',
@@ -55,8 +56,8 @@ class MaterialsTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Materials') ? [] : ['className' => 'App\Model\Table\MaterialsTable'];
-        $this->Materials = TableRegistry::get('Materials', $config);
+        $config = TableRegistry::exists('MaterialsGeneralInventories') ? [] : ['className' => 'App\Model\Table\MaterialsGeneralInventoriesTable'];
+        $this->MaterialsGeneralInventories = TableRegistry::get('MaterialsGeneralInventories', $config);
     }
 
     /**
@@ -66,7 +67,7 @@ class MaterialsTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->Materials);
+        unset($this->MaterialsGeneralInventories);
 
         parent::tearDown();
     }
@@ -92,11 +93,11 @@ class MaterialsTableTest extends TestCase
     }
 
     /**
-     * Test findByName method
+     * Test buildRules method
      *
      * @return void
      */
-    public function testFindByName()
+    public function testBuildRules()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

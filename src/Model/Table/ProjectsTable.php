@@ -41,15 +41,15 @@ class ProjectsTable extends Table
 
         $this->belongsTo('Clients', [
             'foreignKey' => 'client_id',
-            'joinType' => 'INNER'
+            'joinType' => 'LEFT'
         ]);
         $this->belongsTo('Employees', [
             'foreignKey' => 'project_manager_id',
-            'joinType' => 'INNER'
+            'joinType' => 'LEFT'
         ]);
         $this->belongsTo('ProjectStatuses', [
             'foreignKey' => 'project_status_id',
-            'joinType' => 'INNER'
+            'joinType' => 'LEFT'
         ]);
         $this->hasMany('Milestones', [
             'foreignKey' => 'project_id'

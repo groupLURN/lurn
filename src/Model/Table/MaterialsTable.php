@@ -10,6 +10,9 @@ use Cake\Validation\Validator;
 /**
  * Materials Model
  *
+ * @property \Cake\ORM\Association\HasMany $MaterialsGeneralInventories
+ * @property \Cake\ORM\Association\HasMany $MaterialsProjectInventories
+ * @property \Cake\ORM\Association\HasMany $MaterialsTaskInventories
  * @property \Cake\ORM\Association\BelongsToMany $Tasks
  */
 class MaterialsTable extends Table
@@ -31,6 +34,15 @@ class MaterialsTable extends Table
 
         $this->addBehavior('Timestamp');
 
+        $this->hasMany('MaterialsGeneralInventories', [
+            'foreignKey' => 'material_id'
+        ]);
+        $this->hasMany('MaterialsProjectInventories', [
+            'foreignKey' => 'material_id'
+        ]);
+        $this->hasMany('MaterialsTaskInventories', [
+            'foreignKey' => 'material_id'
+        ]);
         $this->belongsToMany('Tasks', [
             'foreignKey' => 'material_id',
             'targetForeignKey' => 'task_id',
@@ -66,5 +78,33 @@ class MaterialsTable extends Table
         return $query->where(function($exp) use ($options){
             return $exp->like('name', '%' . $options['name'] . '%');
         });
+    }
+
+    public function findGeneralInventorySummary(Query $query, array $options)
+    {
+        $available_quantity = $query->func()->coalesce(['MaterialsGeneralInventories.quantity' => 'literal', 0]);
+
+        $unavailable_quantity = $query->newExpr()->add([
+            'SUM(COALESCE(MaterialsProjectInventories.quantity, 0)) + SUM(COALESCE(MaterialsTaskInventories.quantity, 0))'
+        ]);
+
+        $total_quantity = $query->newExpr()->add([
+            'COALESCE(MaterialsGeneralInventories.quantity, 0) + SUM(COALESCE(MaterialsProjectInventories.quantity, 0)) + SUM(COALESCE(MaterialsTaskInventories.quantity, 0))'
+        ]);
+
+        if(isset($options['id']))
+            $query = $query->where(['Materials.id' => $options['id']]);
+
+        return $query->select(['Materials.id', 'Materials.name', 'last_modified' => 'MaterialsGeneralInventories.modified', 'available_quantity' => $available_quantity,
+            'unavailable_quantity' => $unavailable_quantity, 'total_quantity' => $total_quantity])
+            ->leftJoin(['MaterialsGeneralInventories' => 'materials_general_inventories'], [
+                'MaterialsGeneralInventories.material_id = Materials.id'
+            ])
+            ->leftJoin(['MaterialsProjectInventories' => 'materials_project_inventories'], [
+                'MaterialsProjectInventories.material_id = Materials.id'
+            ])
+            ->leftJoin(['MaterialsTaskInventories' => 'materials_task_inventories'], [
+                'MaterialsTaskInventories.material_id = Materials.id'
+            ]);
     }
 }

@@ -10,8 +10,10 @@ use Cake\Validation\Validator;
 /**
  * Manpower Model
  *
+ * @property \Cake\ORM\Association\BelongsTo $Projects
  * @property \Cake\ORM\Association\BelongsTo $ManpowerTypes
- * @property \Cake\ORM\Association\BelongsToMany $Tasks
+ * @property \Cake\ORM\Association\BelongsTo $Tasks
+ * @property \Cake\ORM\Association\BelongsToMany $TaskInventory
  */
 class ManpowerTable extends Table
 {
@@ -32,9 +34,15 @@ class ManpowerTable extends Table
 
         $this->addBehavior('Timestamp');
 
+        $this->belongsTo('Projects', [
+            'foreignKey' => 'project_id'
+        ]);
         $this->belongsTo('ManpowerTypes', [
             'foreignKey' => 'manpower_type_id',
             'joinType' => 'INNER'
+        ]);
+        $this->belongsTo('Tasks', [
+            'foreignKey' => 'task_id'
         ]);
         $this->belongsToMany('Tasks', [
             'foreignKey' => 'manpower_id',
@@ -71,7 +79,9 @@ class ManpowerTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
+        $rules->add($rules->existsIn(['project_id'], 'Projects'));
         $rules->add($rules->existsIn(['manpower_type_id'], 'ManpowerTypes'));
+        $rules->add($rules->existsIn(['task_id'], 'Tasks'));
         return $rules;
     }
 
@@ -88,5 +98,38 @@ class ManpowerTable extends Table
             return $query->where(['manpower_type_id' => $options['manpower_type_id']]);
         else
             return $query;
+    }
+
+
+    public function findGeneralInventorySummary(Query $query, array $options)
+    {
+
+        $available_quantity = $query->func()->sum(
+            $query->newExpr()->addCase(
+                $query->newExpr()->add(['Manpower.project_id IS' => null]),
+                1,
+                'integer'
+            )
+        );
+
+        $unavailable_quantity = $query->func()->sum(
+            $query->newExpr()->addCase(
+                $query->newExpr()->add(['Manpower.project_id IS NOT' => null]),
+                1,
+                'integer'
+            )
+        );
+
+        $total_quantity = $query->func()->count('Manpower.id');
+
+        if(isset($options['id']))
+            $query = $query->where(['ManpowerTypes.id' => $options['id']]);
+
+        return $query->select(['ManpowerTypes.id', 'ManpowerTypes.title', 'last_modified' => 'Manpower.modified',
+            'available_quantity' => $available_quantity,
+            'unavailable_quantity' => $unavailable_quantity,
+            'total_quantity' => $total_quantity])
+            ->contain(['ManpowerTypes'])
+            ->group('ManpowerTypes.id');
     }
 }

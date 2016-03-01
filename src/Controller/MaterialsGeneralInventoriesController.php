@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\ORM\TableRegistry;
 
 /**
  * MaterialsGeneralInventories Controller
@@ -19,12 +20,24 @@ class MaterialsGeneralInventoriesController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['Materials']
+            'sortWhitelist' => [
+                'available_quantity',
+                'unavailable_quantity',
+                'total_quantity',
+                'last_modified'
+            ],
+            'group' => [
+                'Materials.id'
+            ]
         ];
-        $materialsGeneralInventories = $this->paginate($this->MaterialsGeneralInventories);
 
-        $this->set(compact('materialsGeneralInventories'));
-        $this->set('_serialize', ['materialsGeneralInventories']);
+        $this->paginate += $this->createFinders($this->request->query, 'Materials');
+        $this->paginate['finder']['generalInventorySummary'] = [];
+        $materials = $this->paginate(TableRegistry::get('Materials'));
+
+        $this->set(compact('materials'));
+        $this->set($this->request->query);
+        $this->set('_serialize', ['materials']);
     }
 
     /**

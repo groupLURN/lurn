@@ -47,8 +47,8 @@ class EquipmentProjectInventoriesFixture extends TestFixture
             'equipment_id' => 1,
             'project_id' => 1,
             'quantity' => 1,
-            'created' => '2016-02-29 20:48:51',
-            'modified' => '2016-02-29 20:48:51'
+            'created' => '2016-03-01 20:46:23',
+            'modified' => '2016-03-01 20:46:23'
         ],
     ];
 }

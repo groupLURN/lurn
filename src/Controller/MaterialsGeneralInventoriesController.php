@@ -49,12 +49,20 @@ class MaterialsGeneralInventoriesController extends AppController
      */
     public function view($id = null)
     {
-        $materialsGeneralInventory = $this->MaterialsGeneralInventories->get($id, [
-            'contain' => ['Materials']
+        $summary = TableRegistry::get('Materials')->find('generalInventorySummary', ['id' => $id])
+            ->group('Materials.id')->first();
+
+        $material = TableRegistry::get('Materials')->get($id, [
+            'contain' => [
+                'MaterialsGeneralInventories', 'MaterialsProjectInventories' => [
+                    'Projects' => ['Clients', 'Employees', 'ProjectStatuses']
+                ],
+                'MaterialsTaskInventories'
+            ]
         ]);
 
-        $this->set('materialsGeneralInventory', $materialsGeneralInventory);
-        $this->set('_serialize', ['materialsGeneralInventory']);
+        $this->set(compact('material', 'summary'));
+        $this->set('_serialize', ['material', 'summary']);
     }
 
     /**

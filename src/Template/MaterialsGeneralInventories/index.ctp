@@ -1,3 +1,79 @@
+<?= $this->Flash->render() ?>
+<?= $this->assign('title', 'Materials General Inventory') ?>
+<div class="row mt">
+    <div class="col-xs-12">
+        <div class="content-panel">
+            <?= $this->Form->create('Search', ['type' => 'GET']) ?>
+            <h4><i class="fa fa-angle-right"></i> Filters </h4>
+            <hr>
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td colspan="4">
+                        <div class="row mt">
+                            <div class="col-md-10">
+                                <input type="text" name="name" class="form-control" placeholder="Search Materials"
+                                       id="txt-search" <?= isset($name)? "value='" . $name . "'": ""; ?> >
+                            </div>
+                            <div class="col-md-2">
+                                <?= $this->Form->button(__('Search'), [
+                                    'id' => 'btn-search',
+                                    'class' => 'btn btn-primary'
+                                ]) ?>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <?= $this->Form->end(); ?>
+        </div><!-- --/content-panel ---->
+    </div>
+</div>
+<div class="row mt">
+    <div class="col-xs-12">
+        <div class="content-panel">
+            <table class="table table-striped table-advance table-hover">
+                <h4><i class="fa fa-angle-right"></i> <?= __('Materials General Inventory') ?> </h4>
+                <hr>
+                <thead>
+                <tr>
+                    <th><?= $this->Paginator->sort('name') ?></th>
+                    <th><?= $this->Paginator->sort('available_quantity') ?></th>
+                    <th><?= $this->Paginator->sort('unavailable_quantity') ?></th>
+                    <th><?= $this->Paginator->sort('total_quantity') ?></th>
+                    <th><?= $this->Paginator->sort('last_modified', 'Last Modified') ?></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($materials as $material): ?>
+                    <tr>
+                        <td><?= $this->Html->link($material->name, ['controller' => 'Equipment', 'action' => 'view', $material->id]) ?></td>
+                        <td><?= $this->Number->format($material->available_quantity) ?></td>
+                        <td><?= $this->Number->format($material->unavailable_quantity) ?></td>
+                        <td><?= $this->Number->format($material->total_quantity) ?></td>
+                        <td><?= h($material->last_modified) ?></td>
+                        <td class="actions">
+                            <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $material->id]); ?>
+                            <?= $this->dataTableEditButton(__('Adjust'), ['action' => 'edit', $material->id]); ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+            <div class="paginator">
+                <ul class="pagination">
+                    <?= $this->Paginator->prev('< ' . __('previous')) ?>
+                    <?= $this->Paginator->numbers() ?>
+                    <?= $this->Paginator->next(__('next') . ' >') ?>
+                </ul>
+                <p><?= $this->Paginator->counter() ?></p>
+            </div>
+        </div><!-- /content-panel -->
+    </div><!-- /col-md-12 -->
+</div>
+<!--
 <nav class="large-3 medium-4 columns" id="actions-sidebar">
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
@@ -43,3 +119,4 @@
         <p><?= $this->Paginator->counter() ?></p>
     </div>
 </div>
+-->

@@ -7,11 +7,13 @@ use Cake\ORM\Entity;
  * Manpower Entity.
  *
  * @property int $id
+ * @property int $project_id
  * @property int $manpower_type_id
  * @property \App\Model\Entity\ManpowerType $manpower_type
  * @property string $name
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
+ * @property string $task_id
  * @property \App\Model\Entity\Task[] $tasks
  */
 class Manpower extends Entity

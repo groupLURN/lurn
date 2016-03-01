@@ -10,7 +10,9 @@ use Cake\Validation\Validator;
 /**
  * Manpower Model
  *
+ * @property \Cake\ORM\Association\BelongsTo $Projects
  * @property \Cake\ORM\Association\BelongsTo $ManpowerTypes
+ * @property \Cake\ORM\Association\BelongsTo $Tasks
  * @property \Cake\ORM\Association\BelongsToMany $Tasks
  */
 class ManpowerTable extends Table
@@ -32,9 +34,15 @@ class ManpowerTable extends Table
 
         $this->addBehavior('Timestamp');
 
+        $this->belongsTo('Projects', [
+            'foreignKey' => 'project_id'
+        ]);
         $this->belongsTo('ManpowerTypes', [
             'foreignKey' => 'manpower_type_id',
             'joinType' => 'INNER'
+        ]);
+        $this->belongsTo('Tasks', [
+            'foreignKey' => 'task_id'
         ]);
         $this->belongsToMany('Tasks', [
             'foreignKey' => 'manpower_id',
@@ -71,7 +79,9 @@ class ManpowerTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
+        $rules->add($rules->existsIn(['project_id'], 'Projects'));
         $rules->add($rules->existsIn(['manpower_type_id'], 'ManpowerTypes'));
+        $rules->add($rules->existsIn(['task_id'], 'Tasks'));
         return $rules;
     }
 

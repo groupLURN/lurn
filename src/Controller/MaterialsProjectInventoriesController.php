@@ -64,12 +64,21 @@ class MaterialsProjectInventoriesController extends AppController
      */
     public function view($id = null)
     {
-        $materialsProjectInventory = $this->MaterialsProjectInventories->get($id, [
-            'contain' => ['Materials', 'Projects']
+        $summary = TableRegistry::get('Materials')->find('projectInventorySummary', [
+            'id' => $id,
+            'project_id' => $this->_projectId
+        ])->first();
+
+        $material = TableRegistry::get('Materials')->get($id, [
+            'contain' => [
+                'MaterialsTaskInventories' => [
+                    'Tasks'
+                ]
+            ]
         ]);
 
-        $this->set('materialsProjectInventory', $materialsProjectInventory);
-        $this->set('_serialize', ['materialsProjectInventory']);
+        $this->set(compact('material', 'summary'));
+        $this->set('_serialize', ['material', 'summary']);
     }
 
     /**

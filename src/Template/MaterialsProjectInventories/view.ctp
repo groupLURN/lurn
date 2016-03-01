@@ -1,38 +1,54 @@
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('Edit Materials Project Inventory'), ['action' => 'edit', $materialsProjectInventory->material_id]) ?> </li>
-        <li><?= $this->Form->postLink(__('Delete Materials Project Inventory'), ['action' => 'delete', $materialsProjectInventory->material_id], ['confirm' => __('Are you sure you want to delete # {0}?', $materialsProjectInventory->material_id)]) ?> </li>
-        <li><?= $this->Html->link(__('List Materials Project Inventories'), ['action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Materials Project Inventory'), ['action' => 'add']) ?> </li>
-        <li><?= $this->Html->link(__('List Materials'), ['controller' => 'Materials', 'action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Material'), ['controller' => 'Materials', 'action' => 'add']) ?> </li>
-        <li><?= $this->Html->link(__('List Projects'), ['controller' => 'Projects', 'action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Project'), ['controller' => 'Projects', 'action' => 'add']) ?> </li>
-    </ul>
-</nav>
-<div class="materialsProjectInventories view large-9 medium-8 columns content">
-    <h3><?= h($materialsProjectInventory->material_id) ?></h3>
-    <table class="vertical-table">
+<?= $this->assign('title', 'Material Project Inventory') ?>
+<div class="material view large-9 medium-8 columns content">
+    <h3><?= h($summary->name) ?></h3>
+    <table class="vertical-table table table-striped">
         <tr>
-            <th><?= __('Material') ?></th>
-            <td><?= $materialsProjectInventory->has('material') ? $this->Html->link($materialsProjectInventory->material->name, ['controller' => 'Materials', 'action' => 'view', $materialsProjectInventory->material->id]) : '' ?></td>
+            <th><?= __('Material Name') ?></th>
+            <td><?= h($summary->name) ?></td>
         </tr>
         <tr>
-            <th><?= __('Project') ?></th>
-            <td><?= $materialsProjectInventory->has('project') ? $this->Html->link($materialsProjectInventory->project->title, ['controller' => 'Projects', 'action' => 'view', $materialsProjectInventory->project->id]) : '' ?></td>
+            <th><?= __('Unit Measure') ?></th>
+            <td><?= h($summary->unit_measure) ?></td>
         </tr>
         <tr>
-            <th><?= __('Quantity') ?></th>
-            <td><?= $this->Number->format($materialsProjectInventory->quantity) ?></td>
+            <th><?= __('Available Quantity') ?></th>
+            <td><?= h($summary->available_quantity) ?></td>
         </tr>
         <tr>
-            <th><?= __('Created') ?></th>
-            <td><?= h($materialsProjectInventory->created) ?></td>
+            <th><?= __('Unavailable Quantity') ?></th>
+            <td><?= h($summary->unavailable_quantity) ?></td>
         </tr>
         <tr>
-            <th><?= __('Modified') ?></th>
-            <td><?= h($materialsProjectInventory->modified) ?></td>
+            <th><?= __('Total Quantity') ?></th>
+            <td><?= h($summary->available_quantity + $summary->unavailable_quantity) ?></td>
         </tr>
     </table>
+</div>
+
+<div class="related">
+    <h3><?= __('Track Materials') ?></h3>
+    <?php if (!empty($material->materials_task_inventories)): ?>
+        <table cellpadding="0" cellspacing="0" class="table table-striped">
+            <tr>
+                <th><?= $this->Paginator->sort('title', 'Task') ?></th>
+                <th><?= $this->Paginator->sort('start_date') ?></th>
+                <th><?= $this->Paginator->sort('end_date') ?></th>
+                <th>Status</th>
+                <th><?= __('Quantity Assigned') ?></th>
+            </tr>
+            <?php foreach ($material->materials_task_inventories as $taskInventory): ?>
+                <tr>
+                    <td><?= $this->Html->link($taskInventory->task->title, ['controller' => 'tasks', 'action' => 'view', $taskInventory->task->id]) ?></td>
+                    <td><?= h($taskInventory->task->start_date) ?></td>
+                    <td><?= h($taskInventory->task->end_date) ?></td>
+                    <td>
+                        <span class='task-status <?=str_replace(' ', '-', strtolower($taskInventory->task->status))?>'>
+                            <?= h($taskInventory->task->status) ?>
+                        </span>
+                    </td>
+                    <td><?= $this->Number->format($taskInventory->quantity) ?> </td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    <?php endif; ?>
 </div>

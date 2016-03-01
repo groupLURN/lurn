@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Collection\Collection;
 use Cake\Core\Exception\Exception;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
@@ -50,19 +51,32 @@ class ManpowerGeneralInventoriesController extends AppController
     public function view($id = null)
     {
         $summary = TableRegistry::get('Manpower')->find('generalInventorySummary', ['id' => $id])
-            ->group('Manpower.id')->first();
+            ->first();
 
-        $equipment = TableRegistry::get('Manpower')->get($id, [
+        $manpower = TableRegistry::get('ManpowerTypes')->get($id, [
             'contain' => [
-                'ManpowerGeneralInventories', 'ManpowerProjectInventories' => [
-                    'Projects' => ['Clients', 'Employees', 'ProjectStatuses']
-                ],
-                'ManpowerTaskInventories'
+                'Manpower' => [
+                    'Projects' => ['Employees', 'Clients', 'ProjectStatuses']
+                ]
             ]
-        ]);
+        ])->manpower;
 
-        $this->set(compact('equipment', 'summary'));
-        $this->set('_serialize', ['equipment', 'summary']);
+        $collection = new Collection($manpower);
+
+        $availableManpower = $collection->filter(function($manpower)
+        {
+            return !$manpower->has('project');
+        });
+
+        $unavailableManpower = $collection->filter(function($manpower)
+        {
+            return $manpower->has('project');
+        });
+
+        $unavailableManpowerByProject = $unavailableManpower->groupBy('project_id');
+
+        $this->set(compact('summary', 'availableManpower', 'unavailableManpowerByProject'));
+        $this->set('_serialize', ['summary', 'availableManpower', 'unavailableManpowerByProject']);
     }
 
     /**

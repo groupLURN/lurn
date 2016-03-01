@@ -123,9 +123,9 @@ class ManpowerTable extends Table
         $total_quantity = $query->func()->count('Manpower.id');
 
         if(isset($options['id']))
-            $query = $query->where(['Manpower.id' => $options['id']]);
+            $query = $query->where(['ManpowerTypes.id' => $options['id']]);
 
-        return $query->select(['ManpowerTypes.title', 'last_modified' => 'Manpower.modified',
+        return $query->select(['ManpowerTypes.id', 'ManpowerTypes.title', 'last_modified' => 'Manpower.modified',
             'available_quantity' => $available_quantity,
             'unavailable_quantity' => $unavailable_quantity,
             'total_quantity' => $total_quantity])

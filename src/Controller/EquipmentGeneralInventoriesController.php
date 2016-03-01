@@ -27,9 +27,6 @@ class EquipmentGeneralInventoriesController extends AppController
                 'unavailable_quantity',
                 'total_quantity',
                 'last_modified'
-            ],
-            'group' => [
-                'Equipment.id'
             ]
         ];
 
@@ -51,8 +48,7 @@ class EquipmentGeneralInventoriesController extends AppController
      */
     public function view($id = null)
     {
-        $summary = TableRegistry::get('Equipment')->find('generalInventorySummary', ['id' => $id])
-            ->group('Equipment.id')->first();
+        $summary = TableRegistry::get('Equipment')->find('generalInventorySummary', ['id' => $id])->first();
 
         $equipment = TableRegistry::get('Equipment')->get($id, [
             'contain' => [

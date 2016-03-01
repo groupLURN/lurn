@@ -27,9 +27,6 @@ class MaterialsGeneralInventoriesController extends AppController
                 'unavailable_quantity',
                 'total_quantity',
                 'last_modified'
-            ],
-            'group' => [
-                'Materials.id'
             ]
         ];
 
@@ -51,8 +48,7 @@ class MaterialsGeneralInventoriesController extends AppController
      */
     public function view($id = null)
     {
-        $summary = TableRegistry::get('Materials')->find('generalInventorySummary', ['id' => $id])
-            ->group('Materials.id')->first();
+        $summary = TableRegistry::get('Materials')->find('generalInventorySummary', ['id' => $id])->first();
 
         $material = TableRegistry::get('Materials')->get($id, [
             'contain' => [

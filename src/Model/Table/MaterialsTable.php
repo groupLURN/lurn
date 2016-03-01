@@ -106,7 +106,8 @@ class MaterialsTable extends Table
             ])
             ->leftJoin(['MaterialsTaskInventories' => 'materials_task_inventories'], [
                 'MaterialsTaskInventories.material_id = Materials.id'
-            ]);
+            ])
+            ->group('Materials.id');
     }
 
     public function findProjectInventorySummary(Query $query, array $options)

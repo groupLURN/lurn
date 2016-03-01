@@ -1,3 +1,32 @@
+<?= $this->Flash->render() ?>
+<?= $this->assign('title', 'Materials Project Inventory') ?>
+<div class="row mt">
+    <div class="col-md-12">
+        <?= $this->Form->create($materialsProjectInventory) ?>
+        <fieldset>
+            <legend><h3><i class="fa fa-angle-right"></i> <?= __('Adjust Inventory') ?></h3></legend>
+            <?php
+
+            echo $this->Form->input('quantity', [
+                'type' => 'text',
+                'class' => 'form-control number-only',
+                'label' => [
+                    'class' => 'mt',
+                    'text' => 'Available Quantity'
+                ],
+            ]);
+
+            ?>
+        </fieldset>
+
+        <?= $this->Form->button(__('Submit'), [
+            'class' => 'btn btn-primary btn-submit'
+        ]) ?>
+        <?= $this->Form->end() ?>
+
+    </div>
+</div>
+<!--
 <nav class="large-3 medium-4 columns" id="actions-sidebar">
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
@@ -25,3 +54,4 @@
     <?= $this->Form->button(__('Submit')) ?>
     <?= $this->Form->end() ?>
 </div>
+-->

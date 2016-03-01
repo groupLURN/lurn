@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 
@@ -113,14 +114,26 @@ class MaterialsProjectInventoriesController extends AppController
      */
     public function edit($id = null)
     {
-        $materialsProjectInventory = $this->MaterialsProjectInventories->get($id, [
-            'contain' => []
-        ]);
+        try
+        {
+            $materialsProjectInventory = $this->MaterialsProjectInventories->get([
+                'material_id' => $id,
+                'project_id' => $this->_projectId
+            ]);
+        }
+        catch(RecordNotFoundException $e)
+        {
+            $materialsProjectInventory = $this->MaterialsProjectInventories->newEntity([
+                'material_id' => $id,
+                'project_id' => $this->_projectId,
+                'quantity' => 0
+            ]);
+        }
         if ($this->request->is(['patch', 'post', 'put'])) {
             $materialsProjectInventory = $this->MaterialsProjectInventories->patchEntity($materialsProjectInventory, $this->request->data);
             if ($this->MaterialsProjectInventories->save($materialsProjectInventory)) {
                 $this->Flash->success(__('The materials project inventory has been saved.'));
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'index', '?' => ['project_id' => $this->_projectId]]);
             } else {
                 $this->Flash->error(__('The materials project inventory could not be saved. Please, try again.'));
             }

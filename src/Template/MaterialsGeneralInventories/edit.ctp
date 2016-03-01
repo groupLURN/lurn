@@ -1,4 +1,5 @@
 <?= $this->Flash->render() ?>
+<?= $this->assign('title', 'Materials General Inventory') ?>
 <div class="row mt">
     <div class="col-md-12">
         <?= $this->Form->create($materialsGeneralInventory) ?>

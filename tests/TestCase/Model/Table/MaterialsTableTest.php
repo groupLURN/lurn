@@ -36,6 +36,14 @@ class MaterialsTableTest extends TestCase
         'app.employees_projects',
         'app.project_statuses',
         'app.employees_join',
+        'app.equipment',
+        'app.equipment_general_inventories',
+        'app.equipment_project_inventories',
+        'app.equipment_task_inventories',
+        'app.equipment_tasks',
+        'app.manpower',
+        'app.manpower_types',
+        'app.manpower_tasks',
         'app.materials_tasks'
     ];
 
@@ -79,6 +87,16 @@ class MaterialsTableTest extends TestCase
      * @return void
      */
     public function testValidationDefault()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test findByName method
+     *
+     * @return void
+     */
+    public function testFindByName()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

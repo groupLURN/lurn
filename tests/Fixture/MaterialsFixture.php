@@ -45,8 +45,8 @@ class MaterialsFixture extends TestFixture
             'id' => 1,
             'name' => 'Lorem ipsum dolor sit amet',
             'unit_measure' => 'Lorem ipsum dolor ',
-            'created' => '2016-02-23 14:37:10',
-            'modified' => '2016-02-23 14:37:10'
+            'created' => '2016-03-01 13:49:06',
+            'modified' => '2016-03-01 13:49:06'
         ],
     ];
 }

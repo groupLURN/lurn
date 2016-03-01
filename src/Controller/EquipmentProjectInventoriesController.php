@@ -61,12 +61,21 @@ class EquipmentProjectInventoriesController extends AppController
      */
     public function view($id = null)
     {
-        $equipmentProjectInventory = $this->EquipmentProjectInventories->get($id, [
-            'contain' => ['Equipment', 'Projects']
+        $summary = TableRegistry::get('Equipment')->find('projectInventorySummary', [
+            'id' => $id,
+            'project_id' => $this->_projectId
+        ])->first();
+
+        $equipment = TableRegistry::get('Equipment')->get($id, [
+            'contain' => [
+                'EquipmentTaskInventories' => [
+                    'Tasks'
+                ]
+            ]
         ]);
 
-        $this->set('equipmentProjectInventory', $equipmentProjectInventory);
-        $this->set('_serialize', ['equipmentProjectInventory']);
+        $this->set(compact('equipment', 'summary'));
+        $this->set('_serialize', ['equipment', 'summary']);
     }
 
     /**

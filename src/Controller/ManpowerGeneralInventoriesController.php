@@ -7,11 +7,11 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
 
 /**
- * EquipmentGeneralInventories Controller
+ * ManpowerGeneralInventories Controller
  *
- * @property \App\Model\Table\EquipmentGeneralInventoriesTable $EquipmentGeneralInventories
+ * @property \App\Model\Table\ManpowerTable $Manpower
  */
-class EquipmentGeneralInventoriesController extends AppController
+class ManpowerGeneralInventoriesController extends AppController
 {
 
     /**
@@ -27,39 +27,37 @@ class EquipmentGeneralInventoriesController extends AppController
                 'unavailable_quantity',
                 'total_quantity',
                 'last_modified'
-            ],
-            'group' => [
-                'Equipment.id'
             ]
         ];
 
-        $this->paginate += $this->createFinders($this->request->query, 'Equipment');
+        $this->paginate += $this->createFinders($this->request->query, 'Manpower');
         $this->paginate['finder']['generalInventorySummary'] = [];
-        $equipment = $this->paginate(TableRegistry::get('Equipment'));
+        $manpower = $this->paginate(TableRegistry::get('Manpower'));
+        $manpowerTypes = $this->Manpower->ManpowerTypes->find('list', ['limit' => 200])->toArray();
 
-        $this->set(compact('equipment'));
+        $this->set(compact('manpower', 'manpowerTypes'));
         $this->set($this->request->query);
-        $this->set('_serialize', ['equipment']);
+        $this->set('_serialize', ['manpower', 'manpowerTypes']);
     }
 
     /**
      * View method
      *
-     * @param string|null $id Equipment General Inventory id.
+     * @param string|null $id Manpower General Inventory id.
      * @return \Cake\Network\Response|null
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function view($id = null)
     {
-        $summary = TableRegistry::get('Equipment')->find('generalInventorySummary', ['id' => $id])
-            ->group('Equipment.id')->first();
+        $summary = TableRegistry::get('Manpower')->find('generalInventorySummary', ['id' => $id])
+            ->group('Manpower.id')->first();
 
-        $equipment = TableRegistry::get('Equipment')->get($id, [
+        $equipment = TableRegistry::get('Manpower')->get($id, [
             'contain' => [
-                'EquipmentGeneralInventories', 'EquipmentProjectInventories' => [
+                'ManpowerGeneralInventories', 'ManpowerProjectInventories' => [
                     'Projects' => ['Clients', 'Employees', 'ProjectStatuses']
                 ],
-                'EquipmentTaskInventories'
+                'ManpowerTaskInventories'
             ]
         ]);
 
@@ -68,31 +66,9 @@ class EquipmentGeneralInventoriesController extends AppController
     }
 
     /**
-     * Add method
-     *
-     * @return \Cake\Network\Response|void Redirects on successful add, renders view otherwise.
-     */
-    public function add()
-    {
-        $equipmentGeneralInventory = $this->EquipmentGeneralInventories->newEntity();
-        if ($this->request->is('post')) {
-            $equipmentGeneralInventory = $this->EquipmentGeneralInventories->patchEntity($equipmentGeneralInventory, $this->request->data);
-            if ($this->EquipmentGeneralInventories->save($equipmentGeneralInventory)) {
-                $this->Flash->success(__('The equipment general inventory has been saved.'));
-                return $this->redirect(['action' => 'index']);
-            } else {
-                $this->Flash->error(__('The equipment general inventory could not be saved. Please, try again.'));
-            }
-        }
-        $equipment = $this->EquipmentGeneralInventories->Equipment->find('list', ['limit' => 200]);
-        $this->set(compact('equipmentGeneralInventory', 'equipment'));
-        $this->set('_serialize', ['equipmentGeneralInventory']);
-    }
-
-    /**
      * Edit method
      *
-     * @param string|null $id Equipment General Inventory id.
+     * @param string|null $id Manpower General Inventory id.
      * @return \Cake\Network\Response|void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
@@ -100,46 +76,27 @@ class EquipmentGeneralInventoriesController extends AppController
     {
         try
         {
-            $equipmentGeneralInventory = $this->EquipmentGeneralInventories->get($id);
+            $equipmentGeneralInventory = $this->ManpowerGeneralInventories->get($id);
         }
         catch(RecordNotFoundException $e)
         {
-            $equipmentGeneralInventory = $this->EquipmentGeneralInventories->newEntity([
+            $equipmentGeneralInventory = $this->ManpowerGeneralInventories->newEntity([
                 'equipment_id' => $id,
                 'quantity' => 0
             ]);
         }
 
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $equipmentGeneralInventory = $this->EquipmentGeneralInventories->patchEntity($equipmentGeneralInventory, $this->request->data);
-            if ($this->EquipmentGeneralInventories->save($equipmentGeneralInventory)) {
+            $equipmentGeneralInventory = $this->ManpowerGeneralInventories->patchEntity($equipmentGeneralInventory, $this->request->data);
+            if ($this->ManpowerGeneralInventories->save($equipmentGeneralInventory)) {
                 $this->Flash->success(__('The equipment general inventory has been saved.'));
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The equipment general inventory could not be saved. Please, try again.'));
             }
         }
-        $equipment = $this->EquipmentGeneralInventories->Equipment->find('list', ['limit' => 200]);
+        $equipment = $this->ManpowerGeneralInventories->Manpower->find('list', ['limit' => 200]);
         $this->set(compact('equipmentGeneralInventory', 'equipment'));
         $this->set('_serialize', ['equipmentGeneralInventory']);
-    }
-
-    /**
-     * Delete method
-     *
-     * @param string|null $id Equipment General Inventory id.
-     * @return \Cake\Network\Response|null Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function delete($id = null)
-    {
-        $this->request->allowMethod(['post', 'delete']);
-        $equipmentGeneralInventory = $this->EquipmentGeneralInventories->get($id);
-        if ($this->EquipmentGeneralInventories->delete($equipmentGeneralInventory)) {
-            $this->Flash->success(__('The equipment general inventory has been deleted.'));
-        } else {
-            $this->Flash->error(__('The equipment general inventory could not be deleted. Please, try again.'));
-        }
-        return $this->redirect(['action' => 'index']);
     }
 }

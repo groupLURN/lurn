@@ -1,5 +1,5 @@
 <?= $this->Flash->render() ?>
-<?= $this->assign('title', 'Equipment Project Inventory') ?>
+<?= $this->assign('title', 'Manpower Project Inventory') ?>
 <div class="row mt">
     <div class="col-xs-12">
         <div class="content-panel">
@@ -9,14 +9,24 @@
             <hr>
             <table class="table">
                 <tbody>
+
+                <tr>
+                    <td style="padding-top: 15px; padding-left: 10px; width: 20%;">
+                        <?= $this->Form->label("", "Manpower Type"); ?>
+                    </td>
+                    <td colspan="3">
+                        <?= $this->Form->input('manpower_type_id', [
+                            'options' => ['0' => 'All'] + $manpowerTypes,
+                            'class' => 'form-control',
+                            'label' => false,
+                            'val' => isset($manpower_type_id)? $manpower_type_id: 0
+                        ]); ?>
+                    </td>
+                </tr>
                 <tr>
                     <td colspan="4">
                         <div class="row mt">
-                            <div class="col-md-10">
-                                <input type="text" name="name" class="form-control" placeholder="Search Equipment"
-                                       id="txt-search" <?= isset($name)? "value='" . $name . "'": ""; ?> >
-                            </div>
-                            <div class="col-md-2">
+                            <div class="col-md-1 col-md-offset-11">
                                 <?= $this->Form->button(__('Search'), [
                                     'id' => 'btn-search',
                                     'class' => 'btn btn-primary'
@@ -35,11 +45,11 @@
     <div class="col-xs-12">
         <div class="content-panel">
             <table class="table table-striped table-advance table-hover">
-                <h4><i class="fa fa-angle-right"></i> <?= __('Equipment Project Inventory') ?> </h4>
+                <h4><i class="fa fa-angle-right"></i> <?= __('Manpower Project Inventory') ?> </h4>
                 <hr>
                 <thead>
                 <tr>
-                    <th><?= $this->Paginator->sort('name') ?></th>
+                    <th><?= $this->Paginator->sort('ManpowerTypes.title', 'Job Title') ?></th>
                     <th><?= $this->Paginator->sort('available_quantity') ?></th>
                     <th><?= $this->Paginator->sort('unavailable_quantity') ?></th>
                     <th><?= $this->Paginator->sort('total_quantity') ?></th>
@@ -48,16 +58,15 @@
                 </tr>
                 </thead>
                 <tbody>
-                <?php foreach ($equipment as $equipment_): ?>
+                <?php foreach ($manpower as $manpower_): ?>
                     <tr>
-                        <td><?= $this->Html->link($equipment_->name, ['controller' => 'Equipment', 'action' => 'view', $equipment_->id]) ?></td>
-                        <td><?= $this->Number->format($equipment_->available_quantity) ?></td>
-                        <td><?= $this->Number->format($equipment_->unavailable_quantity) ?></td>
-                        <td><?= $this->Number->format($equipment_->total_quantity) ?></td>
-                        <td><?= h($equipment_->last_modified) ?></td>
+                        <td><?= h($manpower_->manpower_type->title) ?></td>
+                        <td><?= $this->Number->format($manpower_->available_quantity) ?></td>
+                        <td><?= $this->Number->format($manpower_->unavailable_quantity) ?></td>
+                        <td><?= $this->Number->format($manpower_->total_quantity) ?></td>
+                        <td><?= h($manpower_->last_modified) ?></td>
                         <td class="actions">
-                            <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $equipment_->id, '?' => ['project_id' => $projectId]]); ?>
-                            <?= $this->dataTableEditButton(__('Adjust'), ['action' => 'edit', $equipment_->id, '?' => ['project_id' => $projectId]]); ?>
+                            <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $manpower_->id, '?' => ['project_id' => $projectId]]); ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -78,15 +87,15 @@
 <nav class="large-3 medium-4 columns" id="actions-sidebar">
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('New Equipment Project Inventory'), ['action' => 'add']) ?></li>
-        <li><?= $this->Html->link(__('List Equipment'), ['controller' => 'Equipment', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Equipment'), ['controller' => 'Equipment', 'action' => 'add']) ?></li>
+        <li><?= $this->Html->link(__('New Manpower Project Inventory'), ['action' => 'add']) ?></li>
+        <li><?= $this->Html->link(__('List Manpower'), ['controller' => 'Manpower', 'action' => 'index']) ?></li>
+        <li><?= $this->Html->link(__('New Manpower'), ['controller' => 'Manpower', 'action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Projects'), ['controller' => 'Projects', 'action' => 'index']) ?></li>
         <li><?= $this->Html->link(__('New Project'), ['controller' => 'Projects', 'action' => 'add']) ?></li>
     </ul>
 </nav>
 <div class="equipmentProjectInventories index large-9 medium-8 columns content">
-    <h3><?= __('Equipment Project Inventories') ?></h3>
+    <h3><?= __('Manpower Project Inventories') ?></h3>
     <table cellpadding="0" cellspacing="0">
         <thead>
             <tr>
@@ -101,7 +110,7 @@
         <tbody>
             <?php foreach ($equipmentProjectInventories as $equipmentProjectInventory): ?>
             <tr>
-                <td><?= $equipmentProjectInventory->has('equipment') ? $this->Html->link($equipmentProjectInventory->equipment->name, ['controller' => 'Equipment', 'action' => 'view', $equipmentProjectInventory->equipment->id]) : '' ?></td>
+                <td><?= $equipmentProjectInventory->has('equipment') ? $this->Html->link($equipmentProjectInventory->equipment->name, ['controller' => 'Manpower', 'action' => 'view', $equipmentProjectInventory->equipment->id]) : '' ?></td>
                 <td><?= $equipmentProjectInventory->has('project') ? $this->Html->link($equipmentProjectInventory->project->title, ['controller' => 'Projects', 'action' => 'view', $equipmentProjectInventory->project->id]) : '' ?></td>
                 <td><?= $this->Number->format($equipmentProjectInventory->quantity) ?></td>
                 <td><?= h($equipmentProjectInventory->created) ?></td>

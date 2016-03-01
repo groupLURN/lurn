@@ -100,7 +100,6 @@ class ManpowerTable extends Table
             return $query;
     }
 
-
     public function findGeneralInventorySummary(Query $query, array $options)
     {
 
@@ -131,5 +130,37 @@ class ManpowerTable extends Table
             'total_quantity' => $total_quantity])
             ->contain(['ManpowerTypes'])
             ->group('ManpowerTypes.id');
+    }
+
+    public function findProjectInventorySummary(Query $query, array $options)
+    {
+        $available_quantity = $query->func()->sum(
+            $query->newExpr()->addCase(
+                $query->newExpr()->add(['Manpower.project_id IS NOT' => null, 'Manpower.task_id IS' => null]),
+                1,
+                'integer'
+            )
+        );
+
+        $unavailable_quantity = $query->func()->sum(
+            $query->newExpr()->addCase(
+                $query->newExpr()->add(['Manpower.project_id IS NOT' => null, 'Manpower.task_id IS NOT' => null]),
+                1,
+                'integer'
+            )
+        );
+
+        $total_quantity = $query->func()->count('Manpower.id');
+
+        if(isset($options['id']))
+            $query = $query->where(['ManpowerTypes.id' => $options['id']]);
+
+        return $query->select(['ManpowerTypes.id', 'ManpowerTypes.title', 'last_modified' => 'Manpower.modified',
+            'available_quantity' => $available_quantity,
+            'unavailable_quantity' => $unavailable_quantity,
+            'total_quantity' => $total_quantity])
+            ->contain(['ManpowerTypes'])
+            ->where(['Manpower.project_id' => $options['project_id']])
+            ->group(['ManpowerTypes.id']);
     }
 }

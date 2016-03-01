@@ -7,11 +7,11 @@ use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 
 /**
- * EquipmentProjectInventories Controller
+ * ManpowerProjectInventories Controller
  *
- * @property \App\Model\Table\EquipmentProjectInventoriesTable $EquipmentProjectInventories
+ * @property \App\Model\Table\ManpowerTable $Manpower
  */
-class EquipmentProjectInventoriesController extends AppController
+class ManpowerProjectInventoriesController extends AppController
 {
     private $_projectId = null;
 
@@ -43,32 +43,33 @@ class EquipmentProjectInventoriesController extends AppController
             ]
         ];
 
-        $this->paginate += $this->createFinders($this->request->query, 'Equipment');
+        $this->paginate += $this->createFinders($this->request->query, 'Manpower');
         $this->paginate['finder']['projectInventorySummary'] = ['project_id' => $this->_projectId];
-        $equipment = $this->paginate(TableRegistry::get('Equipment'));
+        $manpower = $this->paginate(TableRegistry::get('Manpower'));
+        $manpowerTypes = $this->Manpower->ManpowerTypes->find('list', ['limit' => 200])->toArray();
 
-        $this->set(compact('equipment'));
+        $this->set(compact('manpower', 'manpowerTypes'));
         $this->set($this->request->query);
-        $this->set('_serialize', ['equipment']);
+        $this->set('_serialize', ['manpower', 'manpowerTypes']);
     }
 
     /**
      * View method
      *
-     * @param string|null $id Equipment Project Inventory id.
+     * @param string|null $id Manpower Project Inventory id.
      * @return \Cake\Network\Response|null
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function view($id = null)
     {
-        $summary = TableRegistry::get('Equipment')->find('projectInventorySummary', [
+        $summary = TableRegistry::get('Manpower')->find('projectInventorySummary', [
             'id' => $id,
             'project_id' => $this->_projectId
         ])->first();
 
-        $equipment = TableRegistry::get('Equipment')->get($id, [
+        $equipment = TableRegistry::get('Manpower')->get($id, [
             'contain' => [
-                'EquipmentTaskInventories' => [
+                'ManpowerTaskInventories' => [
                     'Tasks'
                 ]
             ]
@@ -85,18 +86,18 @@ class EquipmentProjectInventoriesController extends AppController
      */
     public function add()
     {
-        $equipmentProjectInventory = $this->EquipmentProjectInventories->newEntity();
+        $equipmentProjectInventory = $this->ManpowerProjectInventories->newEntity();
         if ($this->request->is('post')) {
-            $equipmentProjectInventory = $this->EquipmentProjectInventories->patchEntity($equipmentProjectInventory, $this->request->data);
-            if ($this->EquipmentProjectInventories->save($equipmentProjectInventory)) {
+            $equipmentProjectInventory = $this->ManpowerProjectInventories->patchEntity($equipmentProjectInventory, $this->request->data);
+            if ($this->ManpowerProjectInventories->save($equipmentProjectInventory)) {
                 $this->Flash->success(__('The equipment project inventory has been saved.'));
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The equipment project inventory could not be saved. Please, try again.'));
             }
         }
-        $equipment = $this->EquipmentProjectInventories->Equipment->find('list', ['limit' => 200]);
-        $projects = $this->EquipmentProjectInventories->Projects->find('list', ['limit' => 200]);
+        $equipment = $this->ManpowerProjectInventories->Manpower->find('list', ['limit' => 200]);
+        $projects = $this->ManpowerProjectInventories->Projects->find('list', ['limit' => 200]);
         $this->set(compact('equipmentProjectInventory', 'equipment', 'projects'));
         $this->set('_serialize', ['equipmentProjectInventory']);
     }
@@ -104,7 +105,7 @@ class EquipmentProjectInventoriesController extends AppController
     /**
      * Edit method
      *
-     * @param string|null $id Equipment Project Inventory id.
+     * @param string|null $id Manpower Project Inventory id.
      * @return \Cake\Network\Response|void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
@@ -112,30 +113,30 @@ class EquipmentProjectInventoriesController extends AppController
     {
         try
         {
-            $equipmentProjectInventory = $this->EquipmentProjectInventories->get([
+            $equipmentProjectInventory = $this->ManpowerProjectInventories->get([
                 'equipment_id' => $id,
                 'project_id' => $this->_projectId
             ]);
         }
         catch(RecordNotFoundException $e)
         {
-            $equipmentProjectInventory = $this->EquipmentProjectInventories->newEntity([
+            $equipmentProjectInventory = $this->ManpowerProjectInventories->newEntity([
                 'equipment_id' => $id,
                 'project_id' => $this->_projectId,
                 'quantity' => 0
             ]);
         }
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $equipmentProjectInventory = $this->EquipmentProjectInventories->patchEntity($equipmentProjectInventory, $this->request->data);
-            if ($this->EquipmentProjectInventories->save($equipmentProjectInventory)) {
+            $equipmentProjectInventory = $this->ManpowerProjectInventories->patchEntity($equipmentProjectInventory, $this->request->data);
+            if ($this->ManpowerProjectInventories->save($equipmentProjectInventory)) {
                 $this->Flash->success(__('The equipment project inventory has been saved.'));
                 return $this->redirect(['action' => 'index', '?' => ['project_id' => $this->_projectId]]);
             } else {
                 $this->Flash->error(__('The equipment project inventory could not be saved. Please, try again.'));
             }
         }
-        $equipment = $this->EquipmentProjectInventories->Equipment->find('list', ['limit' => 200]);
-        $projects = $this->EquipmentProjectInventories->Projects->find('list', ['limit' => 200]);
+        $equipment = $this->ManpowerProjectInventories->Manpower->find('list', ['limit' => 200]);
+        $projects = $this->ManpowerProjectInventories->Projects->find('list', ['limit' => 200]);
         $this->set(compact('equipmentProjectInventory', 'equipment', 'projects'));
         $this->set('_serialize', ['equipmentProjectInventory']);
     }
@@ -143,15 +144,15 @@ class EquipmentProjectInventoriesController extends AppController
     /**
      * Delete method
      *
-     * @param string|null $id Equipment Project Inventory id.
+     * @param string|null $id Manpower Project Inventory id.
      * @return \Cake\Network\Response|null Redirects to index.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $equipmentProjectInventory = $this->EquipmentProjectInventories->get($id);
-        if ($this->EquipmentProjectInventories->delete($equipmentProjectInventory)) {
+        $equipmentProjectInventory = $this->ManpowerProjectInventories->get($id);
+        if ($this->ManpowerProjectInventories->delete($equipmentProjectInventory)) {
             $this->Flash->success(__('The equipment project inventory has been deleted.'));
         } else {
             $this->Flash->error(__('The equipment project inventory could not be deleted. Please, try again.'));

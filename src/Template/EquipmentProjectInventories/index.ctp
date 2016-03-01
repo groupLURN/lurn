@@ -1,3 +1,80 @@
+<?= $this->Flash->render() ?>
+<?= $this->assign('title', 'Equipment Project Inventory') ?>
+<div class="row mt">
+    <div class="col-xs-12">
+        <div class="content-panel">
+            <?= $this->Form->create('Search', ['type' => 'GET']) ?>
+            <h4><i class="fa fa-angle-right"></i> Filters </h4>
+            <?= $this->Form->input('project_id', ['type' => 'hidden', 'value' => $project_id]); ?>
+            <hr>
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td colspan="4">
+                        <div class="row mt">
+                            <div class="col-md-10">
+                                <input type="text" name="name" class="form-control" placeholder="Search Equipment"
+                                       id="txt-search" <?= isset($name)? "value='" . $name . "'": ""; ?> >
+                            </div>
+                            <div class="col-md-2">
+                                <?= $this->Form->button(__('Search'), [
+                                    'id' => 'btn-search',
+                                    'class' => 'btn btn-primary'
+                                ]) ?>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <?= $this->Form->end(); ?>
+        </div><!-- --/content-panel ---->
+    </div>
+</div>
+<div class="row mt">
+    <div class="col-xs-12">
+        <div class="content-panel">
+            <table class="table table-striped table-advance table-hover">
+                <h4><i class="fa fa-angle-right"></i> <?= __('Equipment Project Inventory') ?> </h4>
+                <hr>
+                <thead>
+                <tr>
+                    <th><?= $this->Paginator->sort('name') ?></th>
+                    <th><?= $this->Paginator->sort('available_quantity') ?></th>
+                    <th><?= $this->Paginator->sort('unavailable_quantity') ?></th>
+                    <th><?= $this->Paginator->sort('total_quantity') ?></th>
+                    <th><?= $this->Paginator->sort('last_modified', 'Last Modified') ?></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($equipment as $equipment_): ?>
+                    <tr>
+                        <td><?= $this->Html->link($equipment_->name, ['controller' => 'Equipment', 'action' => 'view', $equipment_->id]) ?></td>
+                        <td><?= $this->Number->format($equipment_->available_quantity) ?></td>
+                        <td><?= $this->Number->format($equipment_->unavailable_quantity) ?></td>
+                        <td><?= $this->Number->format($equipment_->total_quantity) ?></td>
+                        <td><?= h($equipment_->last_modified) ?></td>
+                        <td class="actions">
+                            <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $equipment_->id, '?' => ['project_id' => $projectId]]); ?>
+                            <?= $this->dataTableEditButton(__('Adjust'), ['action' => 'edit', $equipment_->id, '?' => ['project_id' => $projectId]]); ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+            <div class="paginator">
+                <ul class="pagination">
+                    <?= $this->Paginator->prev('< ' . __('previous')) ?>
+                    <?= $this->Paginator->numbers() ?>
+                    <?= $this->Paginator->next(__('next') . ' >') ?>
+                </ul>
+                <p><?= $this->Paginator->counter() ?></p>
+            </div>
+        </div><!-- /content-panel -->
+    </div><!-- /col-md-12 -->
+</div>
+<!--
 <nav class="large-3 medium-4 columns" id="actions-sidebar">
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
@@ -47,3 +124,4 @@
         <p><?= $this->Paginator->counter() ?></p>
     </div>
 </div>
+-->

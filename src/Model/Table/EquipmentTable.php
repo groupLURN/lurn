@@ -105,4 +105,34 @@ class EquipmentTable extends Table
             ])
             ->group('Equipment.id');
     }
+
+    public function findProjectInventorySummary(Query $query, array $options)
+    {
+        $available_quantity = $query->func()->coalesce(['EquipmentProjectInventories.quantity' => 'literal', 0]);
+
+        $unavailable_quantity = $query->newExpr()->add([
+            'SUM(COALESCE(EquipmentTaskInventories.quantity, 0))'
+        ]);
+
+        $total_quantity = $query->newExpr()->add([
+            'COALESCE(EquipmentProjectInventories.quantity, 0) + SUM(COALESCE(EquipmentTaskInventories.quantity, 0))'
+        ]);
+
+        if(isset($options['id']))
+            $query = $query->where(['Equipment.id' => $options['id']]);
+
+        return $query->select(['Equipment.id', 'Equipment.name',
+            'last_modified' => 'EquipmentProjectInventories.modified', 'available_quantity' => $available_quantity,
+            'unavailable_quantity' => $unavailable_quantity, 'total_quantity' => $total_quantity])
+            ->innerJoin(['EquipmentProjectInventories' => 'equipment_project_inventories'], [
+                'EquipmentProjectInventories.equipment_id = Equipment.id',
+                'EquipmentProjectInventories.project_id' => $options['project_id']
+            ])
+            ->leftJoin(['EquipmentTaskInventories' => 'equipment_task_inventories'], [
+                'EquipmentTaskInventories.equipment_id = Equipment.id',
+                'EquipmentTaskInventories.project_id' => $options['project_id']
+            ])
+            ->group(['EquipmentProjectInventories.project_id', 'Equipment.id']);
+    }
+
 }

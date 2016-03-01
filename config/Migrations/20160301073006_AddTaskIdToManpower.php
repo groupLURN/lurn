@@ -17,6 +17,7 @@ class AddTaskIdToManpower extends AbstractMigration
             'default' => null,
             'limit' => 255,
             'null' => true,
+            'after' => 'project_id'
         ]);
         $table->addForeignKey('task_id', 'tasks');
         $table->update();

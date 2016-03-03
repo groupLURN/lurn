@@ -70,11 +70,11 @@
                     <td>
                         <div class="progress">
                             <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar"
-                                 aria-valuenow="<?=$milestonesProgress[$milestone->id] ?>"
-                                 aria-valuemin="0" aria-valuemax="100" style="margin-right: -<?=$milestonesProgress[$milestone->id] ?>%;
-                                width: <?=$milestonesProgress[$milestone->id] ?>%">
+                                 aria-valuenow="<?=isset($milestonesProgress[$milestone->id])?$milestonesProgress[$milestone->id]: 0 ?>"
+                                 aria-valuemin="0" aria-valuemax="100" style="margin-right: -<?=isset($milestonesProgress[$milestone->id])?$milestonesProgress[$milestone->id]: 0 ?>%;
+                                width: <?=isset($milestonesProgress[$milestone->id])?$milestonesProgress[$milestone->id]: 0 ?>%">
                             </div>
-                            <div style="text-align:center; color:black;"><?= h(number_format($milestonesProgress[$milestone->id], 2)).'% Complete'?></div>
+                            <div style="text-align:center; color:black;"><?= h(number_format(isset($milestonesProgress[$milestone->id])?$milestonesProgress[$milestone->id]: 0, 2)).'% Complete'?></div>
                         </div>
                     </td>
                 </tr>

@@ -110,6 +110,7 @@
                     <th><?= $this->Paginator->sort('project_manager_id') ?></th>
                     <th><?= $this->Paginator->sort('start_date') ?></th>
                     <th><?= $this->Paginator->sort('end_date') ?></th>
+                    <th><?= $this->Paginator->sort('location') ?></th>
                     <th><?= $this->Paginator->sort('project_status_id') ?></th>
                     <th></th>
                 </tr>
@@ -122,6 +123,7 @@
                         <td><?= $project->has('employee') ? $this->Html->link($project->employee->name, ['controller' => 'Employees', 'action' => 'view', $project->employee->id]) : '' ?></td>
                         <td><?= h($project->start_date) ?></td>
                         <td><?= h($project->end_date) ?></td>
+                        <td><?= h($project->location) ?></td>
                         <td><?= $project->has('project_status') ? $this->Html->link($project->project_status->title, ['controller' => 'ProjectStatuses', 'action' => 'view', $project->project_status->id]) : '' ?></td>
                         <td class="actions">
                             <?= $this->dataTableManageButton(__('Manage'), ['controller' => 'ProjectOverview', 'action' => 'index', $project->id]); ?>

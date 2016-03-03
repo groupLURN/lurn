@@ -37,7 +37,7 @@
         </table>
     <?php endif; ?>
 
-    <?php if (!empty($unavailableManpowerByTask)): ?>
+    <?php if (!$unavailableManpowerByTask->isEmpty()): ?>
         <h3><?= __('Track Unavailable Manpower') ?></h3>
         <table cellpadding="0" cellspacing="0" class="table table-striped">
             <tr>

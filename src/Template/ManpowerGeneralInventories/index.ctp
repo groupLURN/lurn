@@ -47,10 +47,10 @@
                 <hr>
                 <thead>
                 <tr>
-                    <th><?= $this->Paginator->sort('title', 'Job Title') ?></th>
-                    <th><?= $this->Paginator->sort('available_quantity') ?></th>
-                    <th><?= $this->Paginator->sort('unavailable_quantity') ?></th>
-                    <th><?= $this->Paginator->sort('total_quantity') ?></th>
+                    <th><?= $this->Paginator->sort('title', 'Manpower Type') ?></th>
+                    <th><?= $this->Paginator->sort('available_quantity', 'Available Pax') ?></th>
+                    <th><?= $this->Paginator->sort('unavailable_quantity', 'Unavailable Pax') ?></th>
+                    <th><?= $this->Paginator->sort('total_quantity', 'Total Pax') ?></th>
                     <th><?= $this->Paginator->sort('last_modified', 'Last Modified') ?></th>
                     <th></th>
                 </tr>

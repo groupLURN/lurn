@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Collection\Collection;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
 
@@ -52,12 +53,22 @@ class MaterialsGeneralInventoriesController extends AppController
 
         $material = TableRegistry::get('Materials')->get($id, [
             'contain' => [
-                'MaterialsGeneralInventories', 'MaterialsProjectInventories' => [
-                    'Projects' => ['Clients', 'Employees', 'ProjectStatuses']
-                ],
-                'MaterialsTaskInventories'
+                'MaterialsProjectInventories' => [
+                    'Projects' => ['Clients', 'Employees', 'ProjectStatuses'],
+                    'MaterialsTaskInventories'
+                ]
             ]
         ]);
+
+        foreach($material->materials_project_inventories as &$projectInventory)
+        {
+            $collection = new Collection($projectInventory->materials_task_inventories);
+            $projectInventory->quantity += $collection->reduce(function($accumulated, $taskInventory)
+            {
+                return $accumulated + $taskInventory->quantity;
+            }, 0);
+        }
+        unset($projectInventory);
 
         $this->set(compact('material', 'summary'));
         $this->set('_serialize', ['material', 'summary']);

@@ -12,6 +12,7 @@ use Cake\Validation\Validator;
  *
  * @property \Cake\ORM\Association\BelongsTo $Materials
  * @property \Cake\ORM\Association\BelongsTo $Projects
+ * @property \Cake\ORM\Association\HasMany   $MaterialsTaskInventories
  */
 class MaterialsProjectInventoriesTable extends Table
 {
@@ -39,6 +40,11 @@ class MaterialsProjectInventoriesTable extends Table
         $this->belongsTo('Projects', [
             'foreignKey' => 'project_id',
             'joinType' => 'INNER'
+        ]);
+
+        $this->hasMany('MaterialsTaskInventories', [
+            'foreignKey' => ['material_id', 'project_id'],
+            'bindingKey' => ['material_id', 'project_id']
         ]);
     }
 

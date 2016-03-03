@@ -1,3 +1,4 @@
+<?= $this->assign('title', 'Materials General Inventory') ?>
 <div class="material view large-9 medium-8 columns content">
     <h3><?= h($summary->name) ?></h3>
     <table class="vertical-table table table-striped">

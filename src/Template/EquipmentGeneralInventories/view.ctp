@@ -27,6 +27,7 @@
         <table cellpadding="0" cellspacing="0" class="table table-striped">
             <tr>
                 <th><?= __('Project') ?></th>
+                <th><?= __('Location') ?></th>
                 <th><?= __('Client') ?></th>
                 <th><?= __('Project Manager') ?></th>
                 <th><?= __('Start Date') ?></th>
@@ -37,6 +38,7 @@
             <?php foreach ($equipment->equipment_project_inventories as $projectInventory): ?>
                 <tr>
                     <td><?= $this->Html->link($projectInventory->project->title, ['controller' => 'projects', 'action' => 'view', $projectInventory->project->id]) ?></td>
+                    <td><?= h($projectInventory->project->location) ?></td>
                     <td><?= $this->Html->link($projectInventory->project->client->company_name, ['controller' => 'clients', 'action' => 'view', $projectInventory->project->client_id]) ?></td>
                     <td><?= $this->Html->link($projectInventory->project->employee->name, ['controller' => 'employees', 'action' => 'view', $projectInventory->project->employee->id]) ?></td>
                     <td><?= h($projectInventory->project->start_date) ?></td>

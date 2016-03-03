@@ -43,6 +43,7 @@
             <tr>
                 <th></th>
                 <th><?= __('Project') ?></th>
+                <th><?= __('Location') ?></th>
                 <th><?= __('Client') ?></th>
                 <th><?= __('Project Manager') ?></th>
                 <th><?= __('Start Date') ?></th>
@@ -61,6 +62,7 @@
                         </button>
                     </td>
                     <td><?= $this->Html->link($manpower->project->title, ['controller' => 'projects', 'action' => 'view', $manpower->project->id]) ?></td>
+                    <td><?= h($manpower->project->location) ?></td>
                     <td><?= $this->Html->link($manpower->project->client->company_name, ['controller' => 'clients', 'action' => 'view', $manpower->project->client_id]) ?></td>
                     <td><?= $this->Html->link($manpower->project->employee->name, ['controller' => 'employees', 'action' => 'view', $manpower->project->employee->id]) ?></td>
                     <td><?= h($manpower->project->start_date) ?></td>

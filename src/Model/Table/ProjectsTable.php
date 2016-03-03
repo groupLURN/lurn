@@ -17,6 +17,11 @@ use Cake\Validation\Validator;
  * @property \Cake\ORM\Association\BelongsTo $Clients
  * @property \Cake\ORM\Association\BelongsTo $Employees
  * @property \Cake\ORM\Association\BelongsTo $ProjectStatuses
+ * @property \Cake\ORM\Association\HasMany $EquipmentProjectInventories
+ * @property \Cake\ORM\Association\HasMany $EquipmentTaskInventories
+ * @property \Cake\ORM\Association\HasMany $Manpower
+ * @property \Cake\ORM\Association\HasMany $MaterialsProjectInventories
+ * @property \Cake\ORM\Association\HasMany $MaterialsTaskInventories
  * @property \Cake\ORM\Association\HasMany $Milestones
  * @property \Cake\ORM\Association\BelongsToMany $EmployeesJoin
  */
@@ -50,6 +55,21 @@ class ProjectsTable extends Table
         $this->belongsTo('ProjectStatuses', [
             'foreignKey' => 'project_status_id',
             'joinType' => 'LEFT'
+        ]);
+        $this->hasMany('EquipmentProjectInventories', [
+            'foreignKey' => 'project_id'
+        ]);
+        $this->hasMany('EquipmentTaskInventories', [
+            'foreignKey' => 'project_id'
+        ]);
+        $this->hasMany('Manpower', [
+            'foreignKey' => 'project_id'
+        ]);
+        $this->hasMany('MaterialsProjectInventories', [
+            'foreignKey' => 'project_id'
+        ]);
+        $this->hasMany('MaterialsTaskInventories', [
+            'foreignKey' => 'project_id'
         ]);
         $this->hasMany('Milestones', [
             'foreignKey' => 'project_id'

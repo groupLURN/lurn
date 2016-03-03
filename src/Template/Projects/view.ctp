@@ -10,6 +10,10 @@
             <td><?= $this->Text->autoParagraph(h($project->description)); ?></td>
         </tr>
         <tr>
+            <th><?= __('Location') ?></th>
+            <td><?= h($project->location) ?></td>
+        </tr>
+        <tr>
             <th><?= __('Client') ?></th>
             <td><?= $project->has('client') ? $this->Html->link($project->client->company_name, ['controller' => 'Clients', 'action' => 'view', $project->client->id]) : '' ?></td>
         </tr>

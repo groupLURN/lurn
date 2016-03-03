@@ -1,4 +1,5 @@
 <?php
+$this->assign('title', 'Create Gantt Chart');
 // Third Party CSS
 $this->Html->css('/bower_components/gantt/codebase/dhtmlxgantt', ['block' => true]);
 // User-defined CSS

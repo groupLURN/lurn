@@ -17,6 +17,14 @@ gantt.attachEvent("onLightboxSave", function(id, item){
     return false;
 });
 
+gantt.attachEvent("onAfterTaskAdd", function(id,item){
+    gantt.render();
+});
+
+gantt.attachEvent("onAfterTaskUpdate", function(id,item){
+    gantt.render();
+});
+
 // On Save
 $(".btn-submit").on("click", function(event)
 {

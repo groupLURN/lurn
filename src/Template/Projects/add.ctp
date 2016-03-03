@@ -19,6 +19,13 @@
                 ]
             ]);
 
+            echo $this->Form->input('location', [
+                'class' => 'form-control',
+                'label' => [
+                    'class' => 'mt'
+                ]
+            ]);
+
             echo $this->Form->input('client_id', [
                 'options' => $clients,
                 'class' => 'form-control',

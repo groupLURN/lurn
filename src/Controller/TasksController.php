@@ -154,7 +154,19 @@ class TasksController extends AppController
 
         $milestones = $this->Tasks->Milestones->find('list', ['limit' => 200]);
         $equipment = $this->Tasks->Equipment->find('list', ['limit' => 200]);
-        $manpower = $this->Tasks->Manpower->find('list', ['limit' => 200])
+        $manpower = $this->Tasks->Manpower->find('list', ['limit' => 200]);
+        $manpower
+            ->select(['__violation' =>
+                $manpower->func()->coalesce([
+                    $manpower->func()->sum(
+                        $manpower->newExpr()->addCase([
+                            $manpower->newExpr()->add(["Tasks.id IS NOT" => null])
+                        ], 1
+                        )
+                    ), 0
+                ])
+            ])
+            ->select($this->Tasks->Manpower)
             ->leftJoinWith('ManpowerTasks.Tasks', function($query) use ($task)
             {
                 return $query
@@ -172,7 +184,9 @@ class TasksController extends AppController
                             'Tasks.id !=' => $task->id
                         ]
                     );
-            })->where(['Tasks.id IS' => null]);
+            })
+            ->group(['Manpower.id'])
+            ->having(['__violation' => 0]);
 
         $materials = $this->Tasks->Materials->find('list', ['limit' => 200]);
 

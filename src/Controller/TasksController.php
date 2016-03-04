@@ -115,16 +115,30 @@ class TasksController extends AppController
      */
     public function edit($id = null)
     {
-        $task = $this->Tasks->get($id, [
-            'contain' => ['Equipment', 'Manpower', 'Materials']
-        ]);
-
         if ($this->request->is(['patch', 'post', 'put'])) {
 
+            $task = $this->Tasks->get($id);
+
+            $nullSet = [
+                'manpower' => [],
+                'equipment' => [],
+                'materials' => []
+            ];
+
+            if(isset($this->request->data['resources']))
+                $this->request->data['resources'] += $nullSet;
+            else
+                $this->request->data['resources'] = $nullSet;
+
             $this->request->data += $this->_resourcesAdapter($this->request->data['resources']);
+
             $task = $this->Tasks->patchEntity($task, $this->request->data, [
                 'associated' => ['Equipment', 'Manpower', 'Materials']
             ]);
+
+            $task->dirty('manpower', true);
+            $task->dirty('equipment', true);
+            $task->dirty('materials', true);
 
             if ($this->Tasks->save($task)) {
                 $this->Flash->success(__('The task has been saved.'));
@@ -133,6 +147,10 @@ class TasksController extends AppController
                 $this->Flash->error(__('The task could not be saved. Please, try again.'));
             }
         }
+
+        $task = $this->Tasks->get($id, [
+            'contain' => ['Equipment', 'Manpower', 'Materials']
+        ]);
 
         $milestones = $this->Tasks->Milestones->find('list', ['limit' => 200]);
         $equipment = $this->Tasks->Equipment->find('list', ['limit' => 200]);

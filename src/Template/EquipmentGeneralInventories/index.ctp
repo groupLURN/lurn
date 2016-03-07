@@ -9,6 +9,19 @@
             <table class="table">
                 <tbody>
                 <tr>
+                    <td style="padding-top: 15px; padding-left: 10px;">
+                        <?= $this->Form->label("", "Project"); ?>
+                    </td>
+                    <td colspan="3">
+                        <?= $this->Form->input('project_id', [
+                            'options' => ['0' => 'All'] + $projects,
+                            'class' => 'form-control',
+                            'label' => false,
+                            'val' => isset($project_id)? $project_id: 0
+                        ]); ?>
+                    </td>
+                </tr>
+                <tr>
                     <td colspan="4">
                         <div class="row mt">
                             <div class="col-md-10">
@@ -42,7 +55,6 @@
                     <th><?= $this->Paginator->sort('available_quantity') ?></th>
                     <th><?= $this->Paginator->sort('unavailable_quantity') ?></th>
                     <th><?= $this->Paginator->sort('total_quantity') ?></th>
-                    <th><?= $this->Paginator->sort('last_modified', 'Last Modified') ?></th>
                     <th></th>
                 </tr>
                 </thead>
@@ -53,7 +65,6 @@
                         <td><?= $this->Number->format($equipmentInventory->available_quantity) ?></td>
                         <td><?= $this->Number->format($equipmentInventory->unavailable_quantity) ?></td>
                         <td><?= $this->Number->format($equipmentInventory->total_quantity) ?></td>
-                        <td><?= h($equipmentInventory->last_modified) ?></td>
                         <td class="actions">
                             <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $equipmentInventory->equipment->id]); ?>
                         </td>

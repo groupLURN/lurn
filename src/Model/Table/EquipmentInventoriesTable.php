@@ -80,6 +80,13 @@ class EquipmentInventoriesTable extends Table
         return $query->where(['name LIKE' => '%' . $options['name'] . '%']);
     }
 
+    public function findByProjectId(Query $query, array $options)
+    {
+        if(!empty($options['project_id']))
+            return $query->where(['project_id' => $options['project_id']]);
+        return $query;
+    }
+
     public function findGeneralInventorySummary(Query $query, array $options)
     {
         $available_quantity = $query->func()->sum(

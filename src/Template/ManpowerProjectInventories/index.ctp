@@ -53,7 +53,6 @@
                     <th><?= $this->Paginator->sort('available_quantity') ?></th>
                     <th><?= $this->Paginator->sort('unavailable_quantity') ?></th>
                     <th><?= $this->Paginator->sort('total_quantity') ?></th>
-                    <th><?= $this->Paginator->sort('last_modified', 'Last Modified') ?></th>
                     <th></th>
                 </tr>
                 </thead>
@@ -64,7 +63,6 @@
                         <td><?= $this->Number->format($manpower_->available_quantity) ?></td>
                         <td><?= $this->Number->format($manpower_->unavailable_quantity) ?></td>
                         <td><?= $this->Number->format($manpower_->total_quantity) ?></td>
-                        <td><?= h($manpower_->last_modified) ?></td>
                         <td class="actions">
                             <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $manpower_->manpower_type->id, '?' => ['project_id' => $projectId]]); ?>
                         </td>

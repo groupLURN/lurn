@@ -108,6 +108,9 @@ class MaterialsTable extends Table
         if(isset($options['id']))
             $query = $query->where(['Materials.id' => $options['id']]);
 
+        if(isset($options['project_id']))
+            $query = $query->where(['MaterialsProjectInventories.project_id' => $options['project_id']]);
+
         return $query->select(['Materials.id', 'Materials.name', 'Materials.unit_measure',
             'last_modified' => 'MaterialsGeneralInventories.modified', 'available_quantity' => $available_quantity,
             'unavailable_quantity' => $unavailable_quantity, 'total_quantity' => $total_quantity])

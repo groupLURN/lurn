@@ -84,6 +84,7 @@ class EquipmentInventoriesTable extends Table
     {
         if(!empty($options['project_id']))
             return $query->where(['project_id' => $options['project_id']]);
+        return $query;
     }
 
     public function findGeneralInventorySummary(Query $query, array $options)

@@ -48,28 +48,35 @@ class EquipmentGeneralInventoriesController extends AppController
      */
     public function view($id = null)
     {
-        $summary = TableRegistry::get('Equipment')->find('generalInventorySummary', ['id' => $id])->first();
+        $summary = TableRegistry::get('EquipmentInventories')->find('generalInventorySummary', ['id' => $id])
+            ->first();
 
-        $equipment = TableRegistry::get('Equipment')->get($id, [
+        $equipmentInventories = TableRegistry::get('Equipment')->get($id, [
             'contain' => [
-                'EquipmentProjectInventories' => [
-                    'Projects' => ['Clients', 'Employees', 'ProjectStatuses'],
-                    'EquipmentTaskInventories'
+                'EquipmentInventories' => [
+                    'Projects' => ['Employees', 'Clients', 'ProjectStatuses']
                 ]
             ]
-        ]);
+        ])->equipment_inventories;
 
-        foreach($equipment->equipment_project_inventories as &$projectInventory)
+        $collection = new Collection($equipmentInventories);
+
+        $unavailableEquipment = $collection->filter(function($equipmentInventories)
         {
-            $collection = new Collection($projectInventory->equipment_task_inventories);
-            $projectInventory->quantity += $collection->reduce(function($accumulated, $taskInventory)
-            {
-                return $accumulated + $taskInventory->quantity;
-            }, 0);
-        }
-        unset($projectInventory);
-        $this->set(compact('equipment', 'summary'));
-        $this->set('_serialize', ['equipment', 'summary']);
+            return $equipmentInventories->has('project');
+        });
+
+        $unavailableEquipmentByProject = $unavailableEquipment->groupBy('project_id');
+
+        $details = [];
+        foreach($unavailableEquipmentByProject as $row)
+            $details[] = [
+                'quantity' => count($row),
+                'project' => $row[0]->project
+            ];
+
+        $this->set(compact('details', 'summary'));
+        $this->set('_serialize', ['details', 'summary']);
     }
 
     /**

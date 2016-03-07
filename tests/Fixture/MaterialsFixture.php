@@ -27,6 +27,7 @@ class MaterialsFixture extends TestFixture
         ],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
+            'BY_NAME_UNIT_MEASURE' => ['type' => 'unique', 'columns' => ['name', 'unit_measure'], 'length' => []],
         ],
         '_options' => [
             'engine' => 'InnoDB',
@@ -45,8 +46,8 @@ class MaterialsFixture extends TestFixture
             'id' => 1,
             'name' => 'Lorem ipsum dolor sit amet',
             'unit_measure' => 'Lorem ipsum dolor ',
-            'created' => '2016-03-01 13:49:06',
-            'modified' => '2016-03-01 13:49:06'
+            'created' => '2016-03-07 21:53:53',
+            'modified' => '2016-03-07 21:53:53'
         ],
     ];
 }

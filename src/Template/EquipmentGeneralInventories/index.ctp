@@ -47,16 +47,15 @@
                 </tr>
                 </thead>
                 <tbody>
-                <?php foreach ($equipment as $equipment_): ?>
+                <?php foreach ($equipmentInventories as $equipmentInventory): ?>
                     <tr>
-                        <td><?= $this->Html->link($equipment_->name, ['controller' => 'Equipment', 'action' => 'view', $equipment_->id]) ?></td>
-                        <td><?= $this->Number->format($equipment_->available_quantity) ?></td>
-                        <td><?= $this->Number->format($equipment_->unavailable_quantity) ?></td>
-                        <td><?= $this->Number->format($equipment_->total_quantity) ?></td>
-                        <td><?= h($equipment_->last_modified) ?></td>
+                        <td><?= $this->Html->link($equipmentInventory->equipment->name, ['controller' => 'Equipment', 'action' => 'view', $equipmentInventory->id]) ?></td>
+                        <td><?= $this->Number->format($equipmentInventory->available_quantity) ?></td>
+                        <td><?= $this->Number->format($equipmentInventory->unavailable_quantity) ?></td>
+                        <td><?= $this->Number->format($equipmentInventory->total_quantity) ?></td>
+                        <td><?= h($equipmentInventory->last_modified) ?></td>
                         <td class="actions">
-                            <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $equipment_->id]); ?>
-                            <?= $this->dataTableEditButton(__('Adjust'), ['action' => 'edit', $equipment_->id]); ?>
+                            <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $equipmentInventory->id]); ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>

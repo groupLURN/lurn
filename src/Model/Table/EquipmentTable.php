@@ -93,35 +93,6 @@ class EquipmentTable extends Table
         });
     }
 
-    public function findGeneralInventorySummary(Query $query, array $options)
-    {
-        $available_quantity = $query->func()->coalesce(['EquipmentGeneralInventories.quantity' => 'literal', 0]);
-
-        $unavailable_quantity = $query->newExpr()->add([
-            'SUM(COALESCE(EquipmentProjectInventories.quantity, 0)) + SUM(COALESCE(EquipmentTaskInventories.quantity, 0))'
-        ]);
-
-        $total_quantity = $query->newExpr()->add([
-            'COALESCE(EquipmentGeneralInventories.quantity, 0) + SUM(COALESCE(EquipmentProjectInventories.quantity, 0)) + SUM(COALESCE(EquipmentTaskInventories.quantity, 0))'
-        ]);
-
-        if(isset($options['id']))
-            $query = $query->where(['Equipment.id' => $options['id']]);
-
-        return $query->select(['Equipment.id', 'Equipment.name', 'last_modified' => 'EquipmentGeneralInventories.modified', 'available_quantity' => $available_quantity,
-            'unavailable_quantity' => $unavailable_quantity, 'total_quantity' => $total_quantity])
-            ->leftJoin(['EquipmentGeneralInventories' => 'equipment_general_inventories'], [
-                'EquipmentGeneralInventories.equipment_id = Equipment.id'
-            ])
-            ->leftJoin(['EquipmentProjectInventories' => 'equipment_project_inventories'], [
-                'EquipmentProjectInventories.equipment_id = Equipment.id'
-            ])
-            ->leftJoin(['EquipmentTaskInventories' => 'equipment_task_inventories'], [
-                'EquipmentTaskInventories.equipment_id = Equipment.id'
-            ])
-            ->group('Equipment.id');
-    }
-
     public function findProjectInventorySummary(Query $query, array $options)
     {
         $available_quantity = $query->func()->coalesce(['EquipmentProjectInventories.quantity' => 'literal', 0]);

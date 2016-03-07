@@ -10,7 +10,6 @@ use Cake\ORM\TableRegistry;
 /**
  * EquipmentGeneralInventories Controller
  *
- * @property \App\Model\Table\EquipmentGeneralInventoriesTable $EquipmentGeneralInventories
  */
 class EquipmentGeneralInventoriesController extends AppController
 {
@@ -31,13 +30,13 @@ class EquipmentGeneralInventoriesController extends AppController
             ]
         ];
 
-        $this->paginate += $this->createFinders($this->request->query, 'Equipment');
+        $this->paginate += $this->createFinders($this->request->query, 'EquipmentInventories');
         $this->paginate['finder']['generalInventorySummary'] = [];
-        $equipment = $this->paginate(TableRegistry::get('Equipment'));
+        $equipmentInventories = $this->paginate(TableRegistry::get('EquipmentInventories'));
 
-        $this->set(compact('equipment'));
+        $this->set(compact('equipmentInventories'));
         $this->set($this->request->query);
-        $this->set('_serialize', ['equipment']);
+        $this->set('_serialize', ['equipmentInventories']);
     }
 
     /**

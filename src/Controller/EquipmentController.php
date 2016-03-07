@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\ORM\TableRegistry;
 
 /**
  * Equipment Controller
@@ -50,10 +51,17 @@ class EquipmentController extends AppController
      */
     public function add()
     {
-        $equipment = $this->Equipment->newEntity();
+        $equipmentInventory = TableRegistry::get('EquipmentInventories')->newEntity();
+
         if ($this->request->is('post')) {
-            $equipment = $this->Equipment->patchEntity($equipment, $this->request->data);
-            if ($this->Equipment->save($equipment)) {
+            $equipment = $this->Equipment->find()->where(['name' => $this->request->data['Equipment']['name']])->first();
+            if($equipment === null)
+                $equipment = $this->Equipment->newEntity($this->request->data['Equipment']);
+
+            $equipmentInventory = TableRegistry::get('EquipmentInventories')->patchEntity($equipmentInventory, $this->request->data);
+            $equipmentInventory->equipment = $equipment;
+
+            if (TableRegistry::get('EquipmentInventories')->save($equipmentInventory)) {
                 $this->Flash->success(__('The equipment has been saved.'));
                 return $this->redirect(['action' => 'index']);
             } else {
@@ -67,8 +75,8 @@ class EquipmentController extends AppController
         foreach($equipmentArray as $item)
             $names[] = $item['name'];
 
-        $this->set(compact('equipment'));
-        $this->set('_serialize', ['equipment']);
+        $this->set(compact('equipmentInventory'));
+        $this->set('_serialize', ['equipmentInventory']);
         $this->set('_backEnd', [
             [
             'autocomplete' => $names

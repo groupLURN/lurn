@@ -2,6 +2,9 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Equipment;
+use ArrayObject;
+use Cake\Event\Event;
+use Cake\I18n\Time;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -72,6 +75,15 @@ class EquipmentTable extends Table
             ->notEmpty('name');
 
         return $validator;
+    }
+
+    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
+    {
+        foreach (['created', 'modified'] as $key) {
+            if (isset($data[$key]) && is_string($data[$key])) {
+                $data[$key] = Time::parseDateTime($data[$key], 'yyyy/MM/dd');
+            }
+        }
     }
 
     public function findByName(Query $query, array $options)

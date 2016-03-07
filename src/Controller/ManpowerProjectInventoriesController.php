@@ -49,9 +49,13 @@ class ManpowerProjectInventoriesController extends AppController
         $manpower = $this->paginate(TableRegistry::get('Manpower'));
         $manpowerTypes = $this->Manpower->ManpowerTypes->find('list', ['limit' => 200])->toArray();
 
-        $this->set(compact('manpower', 'manpowerTypes'));
+        $milestones = TableRegistry::get('Milestones')->find('list')
+            ->where(['project_id' => $this->_projectId])
+            ->toArray();
+
+        $this->set(compact('manpower', 'manpowerTypes', 'milestones'));
         $this->set($this->request->query);
-        $this->set('_serialize', ['manpower', 'manpowerTypes']);
+        $this->set('_serialize', ['manpower', 'manpowerTypes', 'milestones']);
     }
 
     /**

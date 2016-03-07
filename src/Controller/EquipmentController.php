@@ -60,8 +60,20 @@ class EquipmentController extends AppController
                 $this->Flash->error(__('The equipment could not be saved. Please, try again.'));
             }
         }
+
+        $equipmentArray = $this->Equipment->find('all')->select('name')->toArray();
+
+        $names = [];
+        foreach($equipmentArray as $item)
+            $names[] = $item['name'];
+
         $this->set(compact('equipment'));
         $this->set('_serialize', ['equipment']);
+        $this->set('_backEnd', [
+            [
+            'autocomplete' => $names
+            ]
+        ]);
     }
 
     /**
@@ -85,8 +97,20 @@ class EquipmentController extends AppController
                 $this->Flash->error(__('The equipment could not be saved. Please, try again.'));
             }
         }
+
+        $equipmentArray = $this->Equipment->find('all')->select('name')->toArray();
+
+        $names = [];
+        foreach($equipmentArray as $item)
+            $names[] = $item['name'];
+
         $this->set(compact('equipment'));
         $this->set('_serialize', ['equipment']);
+        $this->set('_backEnd', [
+            [
+                'autocomplete' => $names
+            ]
+        ]);
     }
 
     /**

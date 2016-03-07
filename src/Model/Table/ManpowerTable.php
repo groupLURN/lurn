@@ -103,7 +103,6 @@ class ManpowerTable extends Table
 
     public function findGeneralInventorySummary(Query $query, array $options)
     {
-
         $available_quantity = $query->func()->sum(
             $query->newExpr()->addCase(
                 $query->newExpr()->add(['Manpower.project_id IS' => null]),

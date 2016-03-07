@@ -34,9 +34,11 @@ class EquipmentGeneralInventoriesController extends AppController
         $this->paginate['finder']['generalInventorySummary'] = [];
         $equipmentInventories = $this->paginate(TableRegistry::get('EquipmentInventories'));
 
-        $this->set(compact('equipmentInventories'));
+        $projects = TableRegistry::get('Projects')->find('list')->toArray();
+
+        $this->set(compact('equipmentInventories', 'projects'));
         $this->set($this->request->query);
-        $this->set('_serialize', ['equipmentInventories']);
+        $this->set('_serialize', ['equipmentInventories', 'projects']);
     }
 
     /**

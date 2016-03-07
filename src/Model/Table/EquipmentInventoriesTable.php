@@ -87,6 +87,16 @@ class EquipmentInventoriesTable extends Table
         return $query;
     }
 
+    public function findByMilestoneId(Query $query, array $options)
+    {
+        if(!empty($options['milestone_id']))
+            return $query->matching('Tasks', function($query) use ($options)
+            {
+                return $query->where(['Tasks.milestone_id' => $options['milestone_id']]);
+            });
+        return $query;
+    }
+
     public function findGeneralInventorySummary(Query $query, array $options)
     {
         $available_quantity = $query->func()->sum(

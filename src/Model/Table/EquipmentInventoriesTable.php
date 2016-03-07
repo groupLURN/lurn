@@ -90,10 +90,8 @@ class EquipmentInventoriesTable extends Table
     public function findByMilestoneId(Query $query, array $options)
     {
         if(!empty($options['milestone_id']))
-            return $query->matching('Tasks', function($query) use ($options)
-            {
-                return $query->where(['Tasks.milestone_id' => $options['milestone_id']]);
-            });
+            return $query->select('Tasks.milestone_id')->leftJoinWith('Tasks')
+                ->having(['Tasks.milestone_id' => $options['milestone_id']]);
         return $query;
     }
 

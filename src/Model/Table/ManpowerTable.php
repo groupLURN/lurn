@@ -106,10 +106,8 @@ class ManpowerTable extends Table
     public function findByMilestoneId(Query $query, array $options)
     {
         if(!empty($options['milestone_id']))
-            return $query->matching('TaskInventory', function($query) use ($options)
-            {
-                return $query->where(['TaskInventory.milestone_id' => $options['milestone_id']]);
-            });
+            return $query->select('TaskInventory.milestone_id')->leftJoinWith('TaskInventory')
+                ->having(['TaskInventory.milestone_id' => $options['milestone_id']]);
         return $query;
     }
 

@@ -47,15 +47,14 @@
                 </tr>
                 </thead>
                 <tbody>
-                <?php foreach ($equipment as $equipment_): ?>
+                <?php foreach ($equipmentInventories as $equipmentInventory): ?>
                     <tr>
-                        <td><?= h($equipment_->name) ?></td>
+                        <td><?= h($equipmentInventory->equipment->name) ?></td>
                         <td class="actions">
-                            <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $equipment_->id]); ?>
-                            <?= $this->dataTableEditButton(__('Edit'), ['action' => 'edit', $equipment_->id]); ?>
+                            <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $equipmentInventory->id]); ?>
                             <?= $this->dataTableDeleteButton(__('Delete'),
-                                ['action' => 'delete', $equipment_->id],
-                                __('Are you sure you want to delete {0}?', $equipment_->name)
+                                ['action' => 'delete', $equipmentInventory->id],
+                                __('Are you sure you want to delete {0}?', $equipmentInventory->equipment->name)
                             );
                             ?>
 

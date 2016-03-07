@@ -74,4 +74,11 @@ class EquipmentInventoriesTable extends Table
         $rules->add($rules->existsIn(['equipment_id'], 'Equipment'));
         return $rules;
     }
+
+    public function findByName(Query $query, array $options)
+    {
+        return $query->matching('Equipment', function($query) use ($options){
+            return $query->where(['name LIKE' => '%' . $options['name'] . '%']);
+        });
+    }
 }

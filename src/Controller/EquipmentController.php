@@ -81,9 +81,7 @@ class EquipmentController extends AppController
         $this->set(compact('equipmentInventory'));
         $this->set('_serialize', ['equipmentInventory']);
         $this->set('_backEnd', [
-            [
-            'autocomplete' => $names
-            ]
+            'autocomplete' => [$names]
         ]);
     }
 
@@ -118,9 +116,7 @@ class EquipmentController extends AppController
         $this->set(compact('equipment'));
         $this->set('_serialize', ['equipment']);
         $this->set('_backEnd', [
-            [
-                'autocomplete' => $names
-            ]
+            'autocomplete' => [$names]
         ]);
     }
 
@@ -134,8 +130,19 @@ class EquipmentController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $equipment = $this->Equipment->get($id);
-        if ($this->Equipment->delete($equipment)) {
+        $equipmentInventory = TableRegistry::get('EquipmentInventories')->get($id, [
+            'contain' => 'Equipment'
+        ]);
+        if (TableRegistry::get('EquipmentInventories')->delete($equipmentInventory)) {
+
+            try
+            {
+                $this->Equipment->delete($equipmentInventory->equipment);
+            }
+            catch(\PDOException $e)
+            {
+            }
+
             $this->Flash->success(__('The equipment has been deleted.'));
         } else {
             $this->Flash->error(__('The equipment could not be deleted. Please, try again.'));

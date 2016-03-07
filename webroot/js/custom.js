@@ -45,7 +45,6 @@ $(".number-only").keydown(function (e) {
 $(".autocomplete").each(
     function(index)
     {
-        alert(backEnd.autocomplete[index]);
         $(this).autocomplete({
             source: backEnd.autocomplete[index]
         });

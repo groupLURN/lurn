@@ -83,7 +83,7 @@ class EquipmentInventoriesTable extends Table
     public function findByProjectId(Query $query, array $options)
     {
         if(!empty($options['project_id']))
-            return $query->where(['project_id' => $options['project_id']]);
+            return $query->select('project_id')->having(['project_id' => $options['project_id']]);
         return $query;
     }
 

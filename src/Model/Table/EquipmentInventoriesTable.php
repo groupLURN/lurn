@@ -77,9 +77,7 @@ class EquipmentInventoriesTable extends Table
 
     public function findByName(Query $query, array $options)
     {
-        return $query->matching('Equipment', function($query) use ($options){
-            return $query->where(['name LIKE' => '%' . $options['name'] . '%']);
-        });
+        return $query->where(['name LIKE' => '%' . $options['name'] . '%']);
     }
 
     public function findGeneralInventorySummary(Query $query, array $options)

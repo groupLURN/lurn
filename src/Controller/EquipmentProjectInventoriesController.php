@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Collection\Collection;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
@@ -61,21 +62,38 @@ class EquipmentProjectInventoriesController extends AppController
      */
     public function view($id = null)
     {
-        $summary = TableRegistry::get('Equipment')->find('projectInventorySummary', [
+        $summary = TableRegistry::get('EquipmentInventories')->find('projectInventorySummary', [
             'id' => $id,
             'project_id' => $this->_projectId
         ])->first();
 
-        $equipment = TableRegistry::get('Equipment')->get($id, [
-            'contain' => [
-                'EquipmentTaskInventories' => [
-                    'Tasks'
-                ]
-            ]
-        ]);
+        $equipmentInventories = TableRegistry::get('EquipmentInventories')->find()
+            ->contain(['Equipment', 'Tasks'])
+            ->matching('Equipment', function($query) use ($id)
+            {
+                return $query->where(['Equipment.id' => $id]);
+            })
+            ->where(['EquipmentInventories.project_id' => $this->_projectId])
+            ->toArray();
 
-        $this->set(compact('equipment', 'summary'));
-        $this->set('_serialize', ['equipment', 'summary']);
+        $collection = new Collection($equipmentInventories);
+
+        $unavailableEquipment = $collection->filter(function($equipmentInventories)
+        {
+            return $equipmentInventories->has('task');
+        });
+
+        $unavailableEquipmentByTask = $unavailableEquipment->groupBy('task_id');
+
+        $details = [];
+        foreach($unavailableEquipmentByTask as $row)
+            $details[] = [
+                'quantity' => count($row),
+                'task' => $row[0]->task
+            ];
+
+        $this->set(compact('details', 'summary'));
+        $this->set('_serialize', ['details', 'summary']);
     }
 
     /**

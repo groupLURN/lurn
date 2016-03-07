@@ -4,26 +4,26 @@
     <table class="vertical-table table table-striped">
         <tr>
             <th><?= __('Equipment Name') ?></th>
-            <td><?= h($summary->name) ?></td>
+            <td><?= h($summary->equipment->name) ?></td>
         </tr>
 
         <tr>
             <th><?= __('Available Quantity') ?></th>
-            <td><?= h($summary->available_quantity) ?></td>
+            <td><?= $this->Number->format($summary->available_quantity) ?></td>
         </tr>
         <tr>
             <th><?= __('Unavailable Quantity') ?></th>
-            <td><?= h($summary->unavailable_quantity) ?></td>
+            <td><?= $this->Number->format($summary->unavailable_quantity) ?></td>
         </tr>
         <tr>
             <th><?= __('Total Quantity') ?></th>
-            <td><?= h($summary->available_quantity + $summary->unavailable_quantity) ?></td>
+            <td><?= $this->Number->format($summary->available_quantity + $summary->unavailable_quantity) ?></td>
         </tr>
     </table>
 </div>
 
 <div class="related">
-    <?php if (!empty($equipment->equipment_task_inventories)): ?>
+    <?php if (!empty($details)): ?>
         <h3><?= __('Track Equipment') ?></h3>
         <table cellpadding="0" cellspacing="0" class="table table-striped">
             <tr>
@@ -33,17 +33,17 @@
                 <th>Status</th>
                 <th><?= __('Quantity Assigned') ?></th>
             </tr>
-            <?php foreach ($equipment->equipment_task_inventories as $taskInventory): ?>
+            <?php foreach ($details as $detail): ?>
                 <tr>
-                    <td><?= $this->Html->link($taskInventory->task->title, ['controller' => 'tasks', 'action' => 'view', $taskInventory->task->id]) ?></td>
-                    <td><?= h($taskInventory->task->start_date) ?></td>
-                    <td><?= h($taskInventory->task->end_date) ?></td>
+                    <td><?= $this->Html->link($detail['task']->title, ['controller' => 'tasks', 'action' => 'view', $detail['task']->id]) ?></td>
+                    <td><?= h($detail['task']->start_date) ?></td>
+                    <td><?= h($detail['task']->end_date) ?></td>
                     <td>
-                        <span class='task-status <?=str_replace(' ', '-', strtolower($taskInventory->task->status))?>'>
-                            <?= h($taskInventory->task->status) ?>
+                        <span class='task-status <?=str_replace(' ', '-', strtolower($detail['task']->status))?>'>
+                            <?= h($detail['task']->status) ?>
                         </span>
                     </td>
-                    <td><?= $this->Number->format($taskInventory->quantity) ?> </td>
+                    <td><?= $this->Number->format($detail['quantity']) ?> </td>
                 </tr>
             <?php endforeach; ?>
         </table>

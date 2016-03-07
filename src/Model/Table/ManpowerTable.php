@@ -66,7 +66,8 @@ class ManpowerTable extends Table
 
         $validator
             ->requirePresence('name', 'create')
-            ->notEmpty('name');
+            ->notEmpty('name')
+            ->add('name', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         return $validator;
     }
@@ -80,9 +81,10 @@ class ManpowerTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
+        $rules->add($rules->isUnique(['name']));
         $rules->add($rules->existsIn(['project_id'], 'Projects'));
-        $rules->add($rules->existsIn(['manpower_type_id'], 'ManpowerTypes'));
         $rules->add($rules->existsIn(['task_id'], 'Tasks'));
+        $rules->add($rules->existsIn(['manpower_type_id'], 'ManpowerTypes'));
         return $rules;
     }
 

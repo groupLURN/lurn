@@ -41,3 +41,12 @@ $(".number-only").keydown(function (e) {
         e.preventDefault();
     }
 });
+
+$(".autocomplete").each(
+    function(index)
+    {
+        $(this).autocomplete({
+            source: backEnd.autocomplete[index]
+        });
+    }
+);

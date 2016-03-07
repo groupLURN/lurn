@@ -1,13 +1,13 @@
 <?= $this->Flash->render() ?>
 <div class="row mt">
     <div class="col-md-12">
-        <?= $this->Form->create($equipment) ?>
+        <?= $this->Form->create($equipmentInventory) ?>
         <fieldset>
             <legend><h3><i class="fa fa-angle-right"></i> <?= __('Add Equipment') ?></h3></legend>
             <?php
 
-            echo $this->Form->input('name', [
-                'class' => 'form-control',
+            echo $this->Form->input('Equipment.name', [
+                'class' => 'form-control autocomplete',
                 'label' => [
                     'class' => 'mt'
                 ]

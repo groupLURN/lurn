@@ -2,6 +2,9 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Equipment;
+use ArrayObject;
+use Cake\Event\Event;
+use Cake\I18n\Time;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -11,6 +14,7 @@ use Cake\Validation\Validator;
  * Equipment Model
  *
  * @property \Cake\ORM\Association\HasMany $EquipmentGeneralInventories
+ * @property \Cake\ORM\Association\HasMany $EquipmentInventories
  * @property \Cake\ORM\Association\HasMany $EquipmentProjectInventories
  * @property \Cake\ORM\Association\HasMany $EquipmentTaskInventories
  * @property \Cake\ORM\Association\BelongsToMany $Tasks
@@ -35,6 +39,9 @@ class EquipmentTable extends Table
         $this->addBehavior('Timestamp');
 
         $this->hasMany('EquipmentGeneralInventories', [
+            'foreignKey' => 'equipment_id'
+        ]);
+        $this->hasMany('EquipmentInventories', [
             'foreignKey' => 'equipment_id'
         ]);
         $this->hasMany('EquipmentProjectInventories', [
@@ -68,6 +75,15 @@ class EquipmentTable extends Table
             ->notEmpty('name');
 
         return $validator;
+    }
+
+    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
+    {
+        foreach (['created', 'modified'] as $key) {
+            if (isset($data[$key]) && is_string($data[$key])) {
+                $data[$key] = Time::parseDateTime($data[$key], 'yyyy/MM/dd');
+            }
+        }
     }
 
     public function findByName(Query $query, array $options)

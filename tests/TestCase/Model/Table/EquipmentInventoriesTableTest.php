@@ -1,22 +1,22 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\EquipmentTable;
+use App\Model\Table\EquipmentInventoriesTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\EquipmentTable Test Case
+ * App\Model\Table\EquipmentInventoriesTable Test Case
  */
-class EquipmentTableTest extends TestCase
+class EquipmentInventoriesTableTest extends TestCase
 {
 
     /**
      * Test subject
      *
-     * @var \App\Model\Table\EquipmentTable
+     * @var \App\Model\Table\EquipmentInventoriesTable
      */
-    public $Equipment;
+    public $EquipmentInventories;
 
     /**
      * Fixtures
@@ -24,8 +24,6 @@ class EquipmentTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.equipment',
-        'app.equipment_general_inventories',
         'app.equipment_inventories',
         'app.projects',
         'app.clients',
@@ -36,6 +34,8 @@ class EquipmentTableTest extends TestCase
         'app.employees_projects',
         'app.project_statuses',
         'app.equipment_project_inventories',
+        'app.equipment',
+        'app.equipment_general_inventories',
         'app.equipment_task_inventories',
         'app.tasks',
         'app.milestones',
@@ -60,8 +60,8 @@ class EquipmentTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Equipment') ? [] : ['className' => 'App\Model\Table\EquipmentTable'];
-        $this->Equipment = TableRegistry::get('Equipment', $config);
+        $config = TableRegistry::exists('EquipmentInventories') ? [] : ['className' => 'App\Model\Table\EquipmentInventoriesTable'];
+        $this->EquipmentInventories = TableRegistry::get('EquipmentInventories', $config);
     }
 
     /**
@@ -71,7 +71,7 @@ class EquipmentTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->Equipment);
+        unset($this->EquipmentInventories);
 
         parent::tearDown();
     }
@@ -92,6 +92,16 @@ class EquipmentTableTest extends TestCase
      * @return void
      */
     public function testValidationDefault()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test buildRules method
+     *
+     * @return void
+     */
+    public function testBuildRules()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

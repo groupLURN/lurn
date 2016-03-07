@@ -55,7 +55,6 @@
                     <th><?= $this->Paginator->sort('available_quantity') ?></th>
                     <th><?= $this->Paginator->sort('unavailable_quantity') ?></th>
                     <th><?= $this->Paginator->sort('total_quantity') ?></th>
-                    <th><?= $this->Paginator->sort('last_modified', 'Last Modified') ?></th>
                     <th></th>
                 </tr>
                 </thead>
@@ -66,7 +65,6 @@
                         <td><?= $this->Number->format($equipmentInventory->available_quantity) ?></td>
                         <td><?= $this->Number->format($equipmentInventory->unavailable_quantity) ?></td>
                         <td><?= $this->Number->format($equipmentInventory->total_quantity) ?></td>
-                        <td><?= h($equipmentInventory->last_modified) ?></td>
                         <td class="actions">
                             <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $equipmentInventory->equipment->id]); ?>
                         </td>

@@ -25,6 +25,7 @@ class ManpowerProjectInventoriesController extends AppController
         $this->_projectId = (int) $this->request->query['project_id'];
 
         $this->set('projectId', $this->_projectId);
+        unset($this->request->query['project_id']);
         return parent::beforeFilter($event);
     }
 

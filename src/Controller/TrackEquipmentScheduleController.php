@@ -23,21 +23,22 @@ class TrackEquipmentScheduleController extends AppController
     {
         $this->paginate = [
             'sortWhitelist' => [
-                'available_quantity',
-                'unavailable_quantity',
-                'total_quantity',
-                'last_modified'
+                'Projects.title',
+                'Milestones.title',
+                'Tasks.title',
+                'Tasks.start_date',
+                'Tasks.end_date',
+                'EquipmentTasks.quantity',
+                'quantity_available'
             ],
             'contain' => [
-                'Tasks' => [
-                    'Milestones' => ['Projects']
-                ],
                 'EquipmentGeneralInventories'
             ]
         ];
 
 
         $this->paginate += $this->createFinders($this->request->query, 'Equipment');
+        $this->paginate['finder']['equipmentSchedule'] = [];
         $equipment = $this->paginate(TableRegistry::get('Equipment'));
 
         $projects = TableRegistry::get('Projects')->find('list')->toArray();

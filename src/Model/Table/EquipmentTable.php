@@ -8,6 +8,7 @@ use Cake\I18n\Time;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
 
 /**
@@ -87,5 +88,23 @@ class EquipmentTable extends Table
         return $query->where(function($exp) use ($options){
             return $exp->like('name', '%' . $options['name'] . '%');
         });
+    }
+
+    public function findEquipmentSchedule(Query $query, array $options)
+    {
+        return $query
+            ->hydrate(false)
+            ->select(TableRegistry::get('Equipment'))
+            ->select(TableRegistry::get('Tasks'))
+            ->select(TableRegistry::get('EquipmentTasks'))
+            ->select(TableRegistry::get('Projects'))
+            ->select(TableRegistry::get('Milestones'))
+            ->select(['quantity_available' => $query->func()->count('EquipmentGeneralInventories.id')])
+            ->innerJoin(['EquipmentTasks' => 'equipment_tasks'], ['EquipmentTasks.equipment_id = Equipment.id'])
+            ->innerJoin(['Tasks' => 'tasks'], ['Tasks.id = EquipmentTasks.task_id'])
+            ->leftJoin(['Milestones' => 'milestones'], ['Milestones.id = Tasks.milestone_id'])
+            ->leftJoin(['Projects' => 'projects'], ['Projects.id = Milestones.project_id'])
+            ->leftJoinWith('EquipmentGeneralInventories')
+            ->group(['EquipmentTasks.equipment_id', 'EquipmentTasks.task_id']);
     }
 }

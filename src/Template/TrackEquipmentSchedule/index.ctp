@@ -77,29 +77,27 @@
                 <thead>
                 <tr>
                     <th><?= $this->Paginator->sort('name') ?></th>
-                    <th><?= $this->Paginator->sort('project_id', 'Project') ?></th>
-                    <th><?= $this->Paginator->sort('milestone_id', 'Milestone') ?></th>
-                    <th><?= $this->Paginator->sort('task_id', 'Task') ?></th>
-                    <th><?= $this->Paginator->sort('start_date') ?></th>
-                    <th><?= $this->Paginator->sort('end_date') ?></th>
-                    <th><?= $this->Paginator->sort('quantity', 'Quantity Needed') ?></th>
-                    <th><?= $this->Paginator->sort('general_inventory', 'Available Quantity') ?></th>
+                    <th><?= $this->Paginator->sort('Projects.title', 'Project') ?></th>
+                    <th><?= $this->Paginator->sort('Milestones.title', 'Milestone') ?></th>
+                    <th><?= $this->Paginator->sort('Tasks.title', 'Task') ?></th>
+                    <th><?= $this->Paginator->sort('Tasks.start_date') ?></th>
+                    <th><?= $this->Paginator->sort('Tasks.end_date') ?></th>
+                    <th><?= $this->Paginator->sort('EquipmentTasks.quantity', 'Quantity Needed') ?></th>
+                    <th><?= $this->Paginator->sort('quantity_available', 'Available Quantity') ?></th>
                     <th></th>
                 </tr>
                 </thead>
                 <tbody>
                 <?php foreach ($equipment as $equipment_): ?>
-                        <?php foreach($equipment_->tasks as $task) : ?>
                     <tr>
-                        <td><?= h($equipment_->name) ?></td>
-                        <td><?= $this->Html->link($task->milestone->project->title, ['controller' => 'Projects', 'action' => 'view', $task->milestone->project->id]) ?></td>
-                        <td><?= h($task->milestone->title) ?></td>
-                        <td><?= h($task->title) ?></td>
-                        <td><?= h($task->start_date) ?></td>
-                        <td><?= h($task->end_date) ?></td>
-                        <td><?= $this->Number->format($task['_joinData']['quantity']) ?></td>
-                        <td><?= count($equipment_->equipment_general_inventories) ?></td>
-                        <?php endforeach; ?>
+                        <td><?= h($equipment_['name']) ?></td>
+                        <td><?= $this->Html->link($equipment_['Projects']['title'], ['controller' => 'Projects', 'action' => 'view', $equipment_['Projects']['id']]) ?></td>
+                        <td><?= h($equipment_['Milestones']['title']) ?></td>
+                        <td><?= h($equipment_['Tasks']['title']) ?></td>
+                        <td><?= h($equipment_['Tasks']['start_date']) ?></td>
+                        <td><?= h($equipment_['Tasks']['end_date']) ?></td>
+                        <td><?= $this->Number->format($equipment_['EquipmentTasks']['quantity']) ?></td>
+                        <td><?= $this->Number->format($equipment_['quantity_available']) ?></td>
                     </tr>
                 <?php endforeach; ?>
                 </tbody>

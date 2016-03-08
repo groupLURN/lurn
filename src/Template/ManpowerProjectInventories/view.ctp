@@ -53,22 +53,22 @@
                     <?php if($key === 0) : ?>
                         <tr>
                             <td>
-                                <button data-toggle="collapse" data-target="#task-<?=$manpower->task_inventory->id?>"
+                                <button data-toggle="collapse" data-target="#task-<?=$manpower->task->id?>"
                                         class="btn btn-info btn-xs collapsable-button">
                                     <i class="fa fa-arrow-right"></i>
                                 </button>
                             </td>
-                            <td><?= h($manpower->task_inventory->title) ?></td>
-                            <td><?= h($manpower->task_inventory->start_date) ?></td>
-                            <td><?= h($manpower->task_inventory->end_date) ?></td>
+                            <td><?= h($manpower->task->title) ?></td>
+                            <td><?= h($manpower->task->start_date) ?></td>
+                            <td><?= h($manpower->task->end_date) ?></td>
                             <td>
-                                <span class='task-status <?=str_replace(' ', '-', strtolower($manpower->task_inventory->status))?>'>
-                                    <?= h($manpower->task_inventory->status) ?>
+                                <span class='task-status <?=str_replace(' ', '-', strtolower($manpower->task->status))?>'>
+                                    <?= h($manpower->task->status) ?>
                                 </span>
                             </td>
                             <td><?= $this->Number->format(count($unavailableManpower)) ?> </td>
                         </tr>
-                        <tr id="task-<?=$manpower->task_inventory->id?>" class="collapse">
+                        <tr id="task-<?=$manpower->task->id?>" class="collapse">
                         <td colspan="10" style="padding-left: 30px">
                         <table class="table table-striped table-advance table-hover">
                         <thead>

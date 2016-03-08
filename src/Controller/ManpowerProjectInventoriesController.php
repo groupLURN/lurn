@@ -73,7 +73,7 @@ class ManpowerProjectInventoriesController extends AppController
         ])->first();
 
         $manpower = TableRegistry::get('Manpower')->find()
-            ->contain(['TaskInventory'])
+            ->contain(['Tasks'])
             ->matching('ManpowerTypes', function($query) use ($id)
             {
                 return $query->where(['ManpowerTypes.id' => $id]);
@@ -85,12 +85,12 @@ class ManpowerProjectInventoriesController extends AppController
 
         $availableManpower = $collection->filter(function($manpower)
         {
-            return !$manpower->has('task_inventory');
+            return !$manpower->has('task');
         });
 
         $unavailableManpower = $collection->filter(function($manpower)
         {
-            return $manpower->has('task_inventory');
+            return $manpower->has('task');
         });
 
         $unavailableManpowerByTask = $unavailableManpower->groupBy('task_id');

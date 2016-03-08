@@ -29,7 +29,7 @@
             <?php endif; ?>
             <input type="hidden" class="id" name="resources[<?= $resource ?>][id][]" value="<?= $value['id'] ?>">
             <?php if ($quantity) : ?> <?= $value['_joinData']['quantity'] ?>x  <?php endif; ?>
-            <?= $value['name'] ?>
+            <?= isset($value['name'])? $value['name']: $value['title'] ?>
         </li>
     <?php endforeach; ?>
     </ul>

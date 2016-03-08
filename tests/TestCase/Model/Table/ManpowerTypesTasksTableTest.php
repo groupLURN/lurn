@@ -1,22 +1,22 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\ManpowerTable;
+use App\Model\Table\ManpowerTypesTasksTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\ManpowerTable Test Case
+ * App\Model\Table\ManpowerTypesTasksTable Test Case
  */
-class ManpowerTableTest extends TestCase
+class ManpowerTypesTasksTableTest extends TestCase
 {
 
     /**
      * Test subject
      *
-     * @var \App\Model\Table\ManpowerTable
+     * @var \App\Model\Table\ManpowerTypesTasksTable
      */
-    public $Manpower;
+    public $ManpowerTypesTasks;
 
     /**
      * Fixtures
@@ -24,6 +24,8 @@ class ManpowerTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
+        'app.manpower_types_tasks',
+        'app.manpower_types',
         'app.manpower',
         'app.projects',
         'app.clients',
@@ -41,15 +43,12 @@ class ManpowerTableTest extends TestCase
         'app.materials_task_inventories',
         'app.tasks',
         'app.milestones',
+        'app.equipment_inventories',
         'app.equipment',
         'app.equipment_general_inventories',
-        'app.equipment_inventories',
         'app.equipment_tasks',
-        'app.manpower_tasks',
         'app.materials_tasks',
-        'app.employees_join',
-        'app.manpower_types',
-        'app.task_inventory'
+        'app.employees_join'
     ];
 
     /**
@@ -60,8 +59,8 @@ class ManpowerTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Manpower') ? [] : ['className' => 'App\Model\Table\ManpowerTable'];
-        $this->Manpower = TableRegistry::get('Manpower', $config);
+        $config = TableRegistry::exists('ManpowerTypesTasks') ? [] : ['className' => 'App\Model\Table\ManpowerTypesTasksTable'];
+        $this->ManpowerTypesTasks = TableRegistry::get('ManpowerTypesTasks', $config);
     }
 
     /**
@@ -71,7 +70,7 @@ class ManpowerTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->Manpower);
+        unset($this->ManpowerTypesTasks);
 
         parent::tearDown();
     }
@@ -102,56 +101,6 @@ class ManpowerTableTest extends TestCase
      * @return void
      */
     public function testBuildRules()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test findByName method
-     *
-     * @return void
-     */
-    public function testFindByName()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test findByManpowerTypeId method
-     *
-     * @return void
-     */
-    public function testFindByManpowerTypeId()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test findByMilestoneId method
-     *
-     * @return void
-     */
-    public function testFindByMilestoneId()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test findGeneralInventorySummary method
-     *
-     * @return void
-     */
-    public function testFindGeneralInventorySummary()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test findProjectInventorySummary method
-     *
-     * @return void
-     */
-    public function testFindProjectInventorySummary()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

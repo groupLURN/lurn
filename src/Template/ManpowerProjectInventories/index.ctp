@@ -5,7 +5,7 @@
         <div class="content-panel">
             <?= $this->Form->create('Search', ['type' => 'GET']) ?>
             <h4><i class="fa fa-angle-right"></i> Filters </h4>
-            <?= $this->Form->input('project_id', ['type' => 'hidden', 'value' => $project_id]); ?>
+            <?= $this->Form->input('project_id', ['type' => 'hidden', 'value' => $projectId]); ?>
             <hr>
             <table class="table">
                 <tbody>

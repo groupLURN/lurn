@@ -8,6 +8,7 @@ use Cake\I18n\Time;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
 
 /**
@@ -15,8 +16,6 @@ use Cake\Validation\Validator;
  *
  * @property \Cake\ORM\Association\HasMany $EquipmentGeneralInventories
  * @property \Cake\ORM\Association\HasMany $EquipmentInventories
- * @property \Cake\ORM\Association\HasMany $EquipmentProjectInventories
- * @property \Cake\ORM\Association\HasMany $EquipmentTaskInventories
  * @property \Cake\ORM\Association\BelongsToMany $Tasks
  */
 class EquipmentTable extends Table
@@ -39,17 +38,15 @@ class EquipmentTable extends Table
         $this->addBehavior('Timestamp');
 
         $this->hasMany('EquipmentGeneralInventories', [
-            'foreignKey' => 'equipment_id'
+            'className' => 'EquipmentInventories',
+            'foreignKey' => 'equipment_id',
+            'conditions' => ['EquipmentGeneralInventories.project_id IS' => null]
         ]);
+
         $this->hasMany('EquipmentInventories', [
             'foreignKey' => 'equipment_id'
         ]);
-        $this->hasMany('EquipmentProjectInventories', [
-            'foreignKey' => 'equipment_id'
-        ]);
-        $this->hasMany('EquipmentTaskInventories', [
-            'foreignKey' => 'equipment_id'
-        ]);
+
         $this->belongsToMany('Tasks', [
             'foreignKey' => 'equipment_id',
             'targetForeignKey' => 'task_id',
@@ -91,5 +88,44 @@ class EquipmentTable extends Table
         return $query->where(function($exp) use ($options){
             return $exp->like('name', '%' . $options['name'] . '%');
         });
+    }
+
+    public function findByProjectId(Query $query, array $options)
+    {
+        if($options['project_id'] > 0)
+            return $query->where(['Projects.id' => $options['project_id']]);
+        return $query;
+    }
+
+    public function findByScheduleDateFrom(Query $query, array $options)
+    {
+        return $query->where([
+            $query->newExpr()->gte('Tasks.start_date', $options['schedule_date_from'], 'datetime'),
+        ]);
+    }
+
+    public function findByScheduleDateTo(Query $query, array $options)
+    {
+        return $query->where([
+            $query->newExpr()->lt('Tasks.end_date', $options['schedule_date_to'], 'datetime')
+        ]);
+    }
+
+    public function findEquipmentSchedule(Query $query, array $options)
+    {
+        return $query
+            ->hydrate(false)
+            ->select(TableRegistry::get('Equipment'))
+            ->select(TableRegistry::get('Tasks'))
+            ->select(TableRegistry::get('EquipmentTasks'))
+            ->select(TableRegistry::get('Projects'))
+            ->select(TableRegistry::get('Milestones'))
+            ->select(['quantity_available' => $query->func()->count('EquipmentGeneralInventories.id')])
+            ->innerJoin(['EquipmentTasks' => 'equipment_tasks'], ['EquipmentTasks.equipment_id = Equipment.id'])
+            ->innerJoin(['Tasks' => 'tasks'], ['Tasks.id = EquipmentTasks.task_id'])
+            ->leftJoin(['Milestones' => 'milestones'], ['Milestones.id = Tasks.milestone_id'])
+            ->leftJoin(['Projects' => 'projects'], ['Projects.id = Milestones.project_id'])
+            ->leftJoinWith('EquipmentGeneralInventories')
+            ->group(['EquipmentTasks.equipment_id', 'EquipmentTasks.task_id']);
     }
 }

@@ -268,8 +268,6 @@ $this->Html->script('/non_bower_components/chart-master/Chart', ['block' => 'scr
                             <li><a  href="/manpower-general-inventories">Manpower Inventory</a></li>
                         </ul>
                     </li>
-                    <?= $this->fetch('additional-sidebar') ?>
-
                     <li class="sub-menu">
                         <a href="javascript:;" >
                             <i class="fa fa-search"></i>
@@ -281,6 +279,7 @@ $this->Html->script('/non_bower_components/chart-master/Chart', ['block' => 'scr
                             <li><a  href="/track-manpower-schedule">Track Manpower</a></li>
                         </ul>
                     </li>
+                    <?= $this->fetch('additional-sidebar') ?>
                 </ul>
                 <!-- sidebar menu end-->
             </div>

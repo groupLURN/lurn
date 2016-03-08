@@ -34,14 +34,21 @@ class TasksTableTest extends TestCase
         'app.employee_types',
         'app.employees_projects',
         'app.project_statuses',
-        'app.employees_join',
-        'app.equipment',
-        'app.equipment_tasks',
+        'app.equipment_project_inventories',
+        'app.equipment_task_inventories',
         'app.manpower',
         'app.manpower_types',
-        'app.manpower_tasks',
+        'app.materials_project_inventories',
         'app.materials',
-        'app.materials_tasks'
+        'app.materials_general_inventories',
+        'app.materials_task_inventories',
+        'app.materials_tasks',
+        'app.employees_join',
+        'app.equipment',
+        'app.equipment_general_inventories',
+        'app.equipment_inventories',
+        'app.equipment_tasks',
+        'app.manpower_tasks'
     ];
 
     /**
@@ -64,6 +71,7 @@ class TasksTableTest extends TestCase
     public function tearDown()
     {
         unset($this->Tasks);
+
         parent::tearDown();
     }
 
@@ -74,7 +82,7 @@ class TasksTableTest extends TestCase
      */
     public function testInitialize()
     {
-//        $this->markTestIncomplete('Not implemented yet.');
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
@@ -84,7 +92,7 @@ class TasksTableTest extends TestCase
      */
     public function testValidationDefault()
     {
-//        $this->markTestIncomplete('Not implemented yet.');
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
@@ -94,32 +102,16 @@ class TasksTableTest extends TestCase
      */
     public function testBuildRules()
     {
-//        $this->markTestIncomplete('Not implemented yet.');
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
-    public function testTasksJoinTableEntity()
+    /**
+     * Test beforeMarshal method
+     *
+     * @return void
+     */
+    public function testBeforeMarshal()
     {
-        $id = '1456288551600';
-
-        $data = [
-            'equipment' => [
-                [
-                    'id' => 5,
-                    '_joinData' => [
-                        'quantity' => 3
-                    ]
-                ]
-            ]
-        ];
-
-        $task = $this->Tasks->get($id, [
-            'contain' => ['Equipment']
-        ]);
-
-        $task = $this->Tasks->patchEntity($task, $data, [
-            'associated' => ['Equipment']
-        ]);
-
-        fwrite(STDERR, print_r($task, true));
+        $this->markTestIncomplete('Not implemented yet.');
     }
 }

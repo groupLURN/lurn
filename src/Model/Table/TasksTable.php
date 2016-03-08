@@ -14,8 +14,11 @@ use Cake\Validation\Validator;
  * Tasks Model
  *
  * @property \Cake\ORM\Association\BelongsTo $Milestones
+ * @property \Cake\ORM\Association\HasMany $EquipmentInventories
+ * @property \Cake\ORM\Association\HasMany $Manpower
+ * @property \Cake\ORM\Association\HasMany $MaterialsTaskInventories
  * @property \Cake\ORM\Association\BelongsToMany $Equipment
- * @property \Cake\ORM\Association\BelongsToMany $Manpower
+ * @property \Cake\ORM\Association\BelongsToMany $ManpowerTypes
  * @property \Cake\ORM\Association\BelongsToMany $Materials
  */
 class TasksTable extends Table
@@ -48,15 +51,24 @@ class TasksTable extends Table
             'foreignKey' => 'milestone_id',
             'joinType' => 'INNER'
         ]);
+        $this->hasMany('EquipmentInventories', [
+            'foreignKey' => 'task_id'
+        ]);
+        $this->hasMany('Manpower', [
+            'foreignKey' => 'task_id'
+        ]);
+        $this->hasMany('MaterialsTaskInventories', [
+            'foreignKey' => 'task_id'
+        ]);
         $this->belongsToMany('Equipment', [
             'foreignKey' => 'task_id',
             'targetForeignKey' => 'equipment_id',
             'joinTable' => 'equipment_tasks'
         ]);
-        $this->belongsToMany('Manpower', [
+        $this->belongsToMany('ManpowerTypes', [
             'foreignKey' => 'task_id',
-            'targetForeignKey' => 'manpower_id',
-            'joinTable' => 'manpower_tasks'
+            'targetForeignKey' => 'manpower_type_id',
+            'joinTable' => 'manpower_types_tasks'
         ]);
         $this->belongsToMany('Materials', [
             'foreignKey' => 'task_id',
@@ -74,7 +86,6 @@ class TasksTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->integer('id')
             ->allowEmpty('id', 'create');
 
         $validator

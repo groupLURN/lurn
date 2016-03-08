@@ -120,7 +120,7 @@ class TasksController extends AppController
             $task = $this->Tasks->get($id);
 
             $nullSet = [
-                'manpower' => [],
+                'manpower_types' => [],
                 'equipment' => [],
                 'materials' => []
             ];
@@ -133,10 +133,10 @@ class TasksController extends AppController
             $this->request->data += $this->_resourcesAdapter($this->request->data['resources']);
 
             $task = $this->Tasks->patchEntity($task, $this->request->data, [
-                'associated' => ['Equipment', 'Manpower', 'Materials']
+                'associated' => ['Equipment', 'ManpowerTypes', 'Materials']
             ]);
 
-            $task->dirty('manpower', true);
+            $task->dirty('manpower_types', true);
             $task->dirty('equipment', true);
             $task->dirty('materials', true);
 
@@ -149,18 +149,18 @@ class TasksController extends AppController
         }
 
         $task = $this->Tasks->get($id, [
-            'contain' => ['Equipment', 'Manpower', 'Materials']
+            'contain' => ['Equipment', 'ManpowerTypes', 'Materials']
         ]);
 
         $milestones = $this->Tasks->Milestones->find('list', ['limit' => 200]);
         $equipment = $this->Tasks->Equipment->find('list', ['limit' => 200]);
-        $manpower = $this->Tasks->Manpower->find('list', ['limit' => 200]);
-//        $manpower
+        $manpowerTypes = $this->Tasks->ManpowerTypes->find('list', ['limit' => 200]);
+//        $manpowerTypes
 //            ->select(['__violation' =>
-//                $manpower->func()->coalesce([
-//                    $manpower->func()->sum(
-//                        $manpower->newExpr()->addCase([
-//                            $manpower->newExpr()->add(["Tasks.id IS NOT" => null])
+//                $manpowerTypes->func()->coalesce([
+//                    $manpowerTypes->func()->sum(
+//                        $manpowerTypes->newExpr()->addCase([
+//                            $manpowerTypes->newExpr()->add(["Tasks.id IS NOT" => null])
 //                        ], 1
 //                        )
 //                    ), 0
@@ -192,10 +192,10 @@ class TasksController extends AppController
 
         $selectedEquipment = $task->equipment;
         $selectedMaterials = $task->materials;
-        $selectedManpower =  $task->manpower;
+        $selectedManpowerTypes =  $task->manpower_types;
 
-        $this->set(compact('task', 'milestones', 'equipment', 'manpower', 'materials',
-            'selectedEquipment', 'selectedMaterials', 'selectedManpower'));
+        $this->set(compact('task', 'milestones', 'equipment', 'manpowerTypes', 'materials',
+            'selectedEquipment', 'selectedMaterials', 'selectedManpowerTypes'));
         $this->set('_serialize', ['task']);
     }
 

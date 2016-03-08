@@ -45,10 +45,9 @@
                         <div class="col-xs-4">
                             <legend><h4><i class="fa fa-angle-right"></i> <?= __('Assign Manpower Needed') ?></h4></legend>
                                 <?= $this->element('multi_select_with_input', [
-                                    'options' => $manpower,
-                                    'resource' => 'manpower',
-                                    'quantity' => false,
-                                    'values' => $selectedManpower
+                                    'options' => $manpowerTypes,
+                                    'resource' => 'manpower_types',
+                                    'values' => $selectedManpowerTypes
                                 ]) ?>
                         </div>
                         <div class="col-xs-4">

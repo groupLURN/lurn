@@ -103,6 +103,14 @@ class ManpowerTable extends Table
             return $query;
     }
 
+    public function findByMilestoneId(Query $query, array $options)
+    {
+        if(!empty($options['milestone_id']))
+            return $query->select('TaskInventory.milestone_id')->leftJoinWith('TaskInventory')
+                ->having(['TaskInventory.milestone_id' => $options['milestone_id']]);
+        return $query;
+    }
+
     public function findGeneralInventorySummary(Query $query, array $options)
     {
         $available_quantity = $query->func()->sum(

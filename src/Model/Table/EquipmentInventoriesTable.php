@@ -83,7 +83,15 @@ class EquipmentInventoriesTable extends Table
     public function findByProjectId(Query $query, array $options)
     {
         if(!empty($options['project_id']))
-            return $query->where(['project_id' => $options['project_id']]);
+            return $query->select('project_id')->having(['project_id' => $options['project_id']]);
+        return $query;
+    }
+
+    public function findByMilestoneId(Query $query, array $options)
+    {
+        if(!empty($options['milestone_id']))
+            return $query->select('Tasks.milestone_id')->leftJoinWith('Tasks')
+                ->having(['Tasks.milestone_id' => $options['milestone_id']]);
         return $query;
     }
 

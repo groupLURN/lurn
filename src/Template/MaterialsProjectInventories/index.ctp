@@ -10,6 +10,19 @@
             <table class="table">
                 <tbody>
                 <tr>
+                    <td style="padding-top: 15px; padding-left: 10px;">
+                        <?= $this->Form->label("", "Milestone"); ?>
+                    </td>
+                    <td colspan="3">
+                        <?= $this->Form->input('milestone_id', [
+                            'options' => ['0' => 'All'] + $milestones,
+                            'class' => 'form-control',
+                            'label' => false,
+                            'val' => isset($milestone_id)? $milestone_id: 0
+                        ]); ?>
+                    </td>
+                </tr>
+                <tr>
                     <td colspan="4">
                         <div class="row mt">
                             <div class="col-md-10">

@@ -276,9 +276,9 @@ $this->Html->script('/non_bower_components/chart-master/Chart', ['block' => 'scr
                             <span>Track Resources Schedule</span>
                         </a>
                         <ul class="sub">
-                            <li><a  href="/equipment-tracking-schedule">Track Equipment</a></li>
-                            <li><a  href="/materials-tracking-schedule">Track Materials</a></li>
-                            <li><a  href="/manpower-tracking-schedule">Track Manpower</a></li>
+                            <li><a  href="/track-equipment-schedule">Track Equipment</a></li>
+                            <li><a  href="/track-materials-schedule">Track Materials</a></li>
+                            <li><a  href="/track-manpower-schedule">Track Manpower</a></li>
                         </ul>
                     </li>
                 </ul>

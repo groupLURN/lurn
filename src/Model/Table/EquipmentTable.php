@@ -90,6 +90,27 @@ class EquipmentTable extends Table
         });
     }
 
+    public function findByProjectId(Query $query, array $options)
+    {
+        if($options['project_id'] > 0)
+            return $query->where(['Projects.id' => $options['project_id']]);
+        return $query;
+    }
+
+    public function findByScheduleDateFrom(Query $query, array $options)
+    {
+        return $query->where([
+            $query->newExpr()->gte('Tasks.start_date', $options['schedule_date_from'], 'datetime'),
+        ]);
+    }
+
+    public function findByScheduleDateTo(Query $query, array $options)
+    {
+        return $query->where([
+            $query->newExpr()->lt('Tasks.end_date', $options['schedule_date_to'], 'datetime')
+        ]);
+    }
+
     public function findEquipmentSchedule(Query $query, array $options)
     {
         return $query

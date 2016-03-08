@@ -76,12 +76,12 @@
                 <hr>
                 <thead>
                 <tr>
-                    <th><?= $this->Paginator->sort('name') ?></th>
+                    <th><?= $this->Paginator->sort('name', 'Equipment') ?></th>
                     <th><?= $this->Paginator->sort('Projects.title', 'Project') ?></th>
                     <th><?= $this->Paginator->sort('Milestones.title', 'Milestone') ?></th>
                     <th><?= $this->Paginator->sort('Tasks.title', 'Task') ?></th>
-                    <th><?= $this->Paginator->sort('Tasks.start_date') ?></th>
-                    <th><?= $this->Paginator->sort('Tasks.end_date') ?></th>
+                    <th><?= $this->Paginator->sort('Tasks.start_date', 'Task Start') ?></th>
+                    <th><?= $this->Paginator->sort('Tasks.end_date', 'Task End') ?></th>
                     <th><?= $this->Paginator->sort('EquipmentTasks.quantity', 'Quantity Needed') ?></th>
                     <th><?= $this->Paginator->sort('quantity_available', 'Available Quantity') ?></th>
                     <th></th>

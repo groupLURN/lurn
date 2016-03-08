@@ -31,7 +31,8 @@ class TrackEquipmentScheduleController extends AppController
             'contain' => [
                 'Tasks' => [
                     'Milestones' => ['Projects']
-                ]
+                ],
+                'EquipmentGeneralInventories'
             ]
         ];
 

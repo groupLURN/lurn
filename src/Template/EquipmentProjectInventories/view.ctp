@@ -27,15 +27,17 @@
         <h3><?= __('Track Equipment') ?></h3>
         <table cellpadding="0" cellspacing="0" class="table table-striped">
             <tr>
-                <th><?= $this->Paginator->sort('title', 'Task') ?></th>
-                <th><?= $this->Paginator->sort('start_date') ?></th>
-                <th><?= $this->Paginator->sort('end_date') ?></th>
+                <th><?= h('Milestone') ?></th>
+                <th><?= h('Task') ?></th>
+                <th><?= h('Start Date') ?></th>
+                <th><?= h('End Date') ?></th>
                 <th>Status</th>
                 <th><?= __('Quantity Assigned') ?></th>
             </tr>
             <?php foreach ($details as $detail): ?>
                 <tr>
-                    <td><?= $this->Html->link($detail['task']->title, ['controller' => 'tasks', 'action' => 'view', $detail['task']->id]) ?></td>
+                    <td><?= h($detail['task']->milestone->title) ?></td>
+                    <td><?= h($detail['task']->title) ?></td>
                     <td><?= h($detail['task']->start_date) ?></td>
                     <td><?= h($detail['task']->end_date) ?></td>
                     <td>

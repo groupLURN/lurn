@@ -42,9 +42,10 @@
         <table cellpadding="0" cellspacing="0" class="table table-striped">
             <tr>
                 <th></th>
+                <th><?= h('Milestone') ?></th>
                 <th><?= h('Task') ?></th>
-                <th><?= h('start_date') ?></th>
-                <th><?= h('end_date') ?></th>
+                <th><?= h('Start Date') ?></th>
+                <th><?= h('End Date') ?></th>
                 <th><?= h('Status') ?></th>
                 <th><?= h('Assigned') ?></th>
             </tr>
@@ -58,6 +59,7 @@
                                     <i class="fa fa-arrow-right"></i>
                                 </button>
                             </td>
+                            <td><?= h($manpower->task->milestone->title) ?></td>
                             <td><?= h($manpower->task->title) ?></td>
                             <td><?= h($manpower->task->start_date) ?></td>
                             <td><?= h($manpower->task->end_date) ?></td>

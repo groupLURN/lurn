@@ -83,7 +83,7 @@ class MaterialsProjectInventoriesController extends AppController
         $material = TableRegistry::get('Materials')->get($id, [
             'contain' => [
                 'MaterialsTaskInventories' => [
-                    'Tasks'
+                    'Tasks' => ['Milestones']
                 ]
             ]
         ]);

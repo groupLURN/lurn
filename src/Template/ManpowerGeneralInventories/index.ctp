@@ -48,9 +48,9 @@
                 <thead>
                 <tr>
                     <th><?= $this->Paginator->sort('title', 'Manpower Type') ?></th>
-                    <th><?= $this->Paginator->sort('available_quantity', 'Available Pax') ?></th>
-                    <th><?= $this->Paginator->sort('unavailable_quantity', 'Unavailable Pax') ?></th>
-                    <th><?= $this->Paginator->sort('total_quantity', 'Total Pax') ?></th>
+                    <th><?= $this->Paginator->sort('available_quantity', 'Available') ?></th>
+                    <th><?= $this->Paginator->sort('unavailable_quantity', 'Unavailable') ?></th>
+                    <th><?= $this->Paginator->sort('total_quantity', 'Total') ?></th>
                     <th></th>
                 </tr>
                 </thead>

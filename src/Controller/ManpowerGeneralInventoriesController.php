@@ -35,10 +35,11 @@ class ManpowerGeneralInventoriesController extends AppController
         $this->paginate['finder']['generalInventorySummary'] = [];
         $manpower = $this->paginate(TableRegistry::get('Manpower'));
         $manpowerTypes = $this->Manpower->ManpowerTypes->find('list', ['limit' => 200])->toArray();
+        $projects = TableRegistry::get('Projects')->find('list')->toArray();
 
-        $this->set(compact('manpower', 'manpowerTypes'));
+        $this->set(compact('manpower', 'manpowerTypes', 'projects'));
         $this->set($this->request->query);
-        $this->set('_serialize', ['manpower', 'manpowerTypes']);
+        $this->set('_serialize', ['manpower', 'manpowerTypes', 'projects']);
     }
 
     /**

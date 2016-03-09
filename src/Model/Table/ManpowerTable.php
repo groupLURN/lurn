@@ -88,6 +88,13 @@ class ManpowerTable extends Table
         });
     }
 
+    public function findByProjectId(Query $query, array $options)
+    {
+        if($options['project_id'] > 0)
+            return $query->where(['project_id' => $options['project_id']]);
+        return $query;
+    }
+
     public function findByManpowerTypeId(Query $query, array $options)
     {
         if((int)$options['manpower_type_id'] > 0)

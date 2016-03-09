@@ -9,6 +9,19 @@
             <table class="table">
                 <tbody>
                 <tr>
+                    <td style="padding-top: 15px; padding-left: 10px;">
+                        <?= $this->Form->label("", "Project"); ?>
+                    </td>
+                    <td colspan="3">
+                        <?= $this->Form->input('project_id', [
+                            'options' => ['0' => 'All'] + $projects,
+                            'class' => 'form-control',
+                            'label' => false,
+                            'val' => isset($project_id)? $project_id: 0
+                        ]); ?>
+                    </td>
+                </tr>
+                <tr>
                     <td style="padding-top: 15px; padding-left: 10px; width: 20%;">
                         <?= $this->Form->label("", "Manpower Type"); ?>
                     </td>
@@ -48,9 +61,9 @@
                 <thead>
                 <tr>
                     <th><?= $this->Paginator->sort('title', 'Manpower Type') ?></th>
-                    <th><?= $this->Paginator->sort('available_quantity', 'Available Pax') ?></th>
-                    <th><?= $this->Paginator->sort('unavailable_quantity', 'Unavailable Pax') ?></th>
-                    <th><?= $this->Paginator->sort('total_quantity', 'Total Pax') ?></th>
+                    <th><?= $this->Paginator->sort('available_quantity', 'Available') ?></th>
+                    <th><?= $this->Paginator->sort('unavailable_quantity', 'Unavailable') ?></th>
+                    <th><?= $this->Paginator->sort('total_quantity', 'Total') ?></th>
                     <th></th>
                 </tr>
                 </thead>

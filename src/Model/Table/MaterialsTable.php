@@ -124,6 +124,7 @@ class MaterialsTable extends Table
             ->leftJoin(['MaterialsTaskInventories' => 'materials_task_inventories'], [
                 'MaterialsTaskInventories.material_id = Materials.id'
             ])
+            ->leftJoin(['Projects' => 'projects'], ['Projects.id = MaterialsProjectInventories.project_id'])
             ->group('Materials.id');
     }
 

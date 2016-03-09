@@ -72,12 +72,13 @@ class EquipmentProjectInventoriesController extends AppController
         ])->first();
 
         $equipmentInventories = TableRegistry::get('EquipmentInventories')->find()
-            ->contain(['Equipment', 'Tasks'])
+            ->contain(['Equipment', 'Tasks' => ['Milestones']])
             ->matching('Equipment', function($query) use ($id)
             {
                 return $query->where(['Equipment.id' => $id]);
             })
             ->where(['EquipmentInventories.project_id' => $this->_projectId])
+            ->orderAsc('Milestones.title')
             ->toArray();
 
         $collection = new Collection($equipmentInventories);

@@ -8,15 +8,15 @@
             <td><?= h($summary->manpower_type->title) ?></td>
         </tr>
         <tr>
-            <th><?= __('Available Pax') ?></th>
+            <th><?= __('Available') ?></th>
             <td><?= $this->Number->format($summary->available_quantity) ?></td>
         </tr>
         <tr>
-            <th><?= __('Unavailable Pax') ?></th>
+            <th><?= __('Unavailable') ?></th>
             <td><?= $this->Number->format($summary->unavailable_quantity) ?></td>
         </tr>
         <tr>
-            <th><?= __('Total Pax') ?></th>
+            <th><?= __('Total') ?></th>
             <td><?= $this->Number->format($summary->available_quantity + $summary->unavailable_quantity) ?></td>
         </tr>
     </table>
@@ -42,11 +42,12 @@
         <table cellpadding="0" cellspacing="0" class="table table-striped">
             <tr>
                 <th></th>
+                <th><?= h('Milestone') ?></th>
                 <th><?= h('Task') ?></th>
-                <th><?= h('start_date') ?></th>
-                <th><?= h('end_date') ?></th>
+                <th><?= h('Start Date') ?></th>
+                <th><?= h('End Date') ?></th>
                 <th><?= h('Status') ?></th>
-                <th><?= h('Quantity Assigned') ?></th>
+                <th><?= h('Assigned') ?></th>
             </tr>
             <?php foreach ($unavailableManpowerByTask as $unavailableManpower): ?>
                 <?php foreach ($unavailableManpower as $key => $manpower): ?>
@@ -58,6 +59,7 @@
                                     <i class="fa fa-arrow-right"></i>
                                 </button>
                             </td>
+                            <td><?= h($manpower->task->milestone->title) ?></td>
                             <td><?= h($manpower->task->title) ?></td>
                             <td><?= h($manpower->task->start_date) ?></td>
                             <td><?= h($manpower->task->end_date) ?></td>

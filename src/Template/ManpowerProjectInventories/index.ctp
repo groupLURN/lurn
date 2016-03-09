@@ -62,9 +62,9 @@
                 <thead>
                 <tr>
                     <th><?= $this->Paginator->sort('ManpowerTypes.title', 'Job Title') ?></th>
-                    <th><?= $this->Paginator->sort('available_quantity') ?></th>
-                    <th><?= $this->Paginator->sort('unavailable_quantity') ?></th>
-                    <th><?= $this->Paginator->sort('total_quantity') ?></th>
+                    <th><?= $this->Paginator->sort('available_quantity', 'Available') ?></th>
+                    <th><?= $this->Paginator->sort('unavailable_quantity', 'Unavailable') ?></th>
+                    <th><?= $this->Paginator->sort('total_quantity', 'Total') ?></th>
                     <th></th>
                 </tr>
                 </thead>

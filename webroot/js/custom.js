@@ -7,7 +7,7 @@ Date.prototype.isValid = function () {
 };
 
 $(".datetime-picker").each(function(){
-    var initialValue = new Date($(this).val());
+    var initialValue = Date.parse($(this).val());
     var today = new Date();
     $(this).datepicker().datepicker("option","dateFormat", "yy-mm-dd");
     if(initialValue.isValid())

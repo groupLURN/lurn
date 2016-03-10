@@ -66,53 +66,8 @@ class RentalRequestHeadersController extends AppController
         }
         $projects = $this->RentalRequestHeaders->Projects->find('list', ['limit' => 200]);
         $suppliers = $this->RentalRequestHeaders->Suppliers->find('list', ['limit' => 200]);
-        $this->set(compact('rentalRequestHeader', 'projects', 'suppliers'));
-        $this->set('_serialize', ['rentalRequestHeader']);
-    }
-
-    /**
-     * Edit method
-     *
-     * @param string|null $id Rental Request Header id.
-     * @return \Cake\Network\Response|void Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
-    public function edit($id = null)
-    {
-        $rentalRequestHeader = $this->RentalRequestHeaders->get($id, [
-            'contain' => []
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $rentalRequestHeader = $this->RentalRequestHeaders->patchEntity($rentalRequestHeader, $this->request->data);
-            if ($this->RentalRequestHeaders->save($rentalRequestHeader)) {
-                $this->Flash->success(__('The rental request header has been saved.'));
-                return $this->redirect(['action' => 'index']);
-            } else {
-                $this->Flash->error(__('The rental request header could not be saved. Please, try again.'));
-            }
-        }
-        $projects = $this->RentalRequestHeaders->Projects->find('list', ['limit' => 200]);
-        $suppliers = $this->RentalRequestHeaders->Suppliers->find('list', ['limit' => 200]);
-        $this->set(compact('rentalRequestHeader', 'projects', 'suppliers'));
-        $this->set('_serialize', ['rentalRequestHeader']);
-    }
-
-    /**
-     * Delete method
-     *
-     * @param string|null $id Rental Request Header id.
-     * @return \Cake\Network\Response|null Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function delete($id = null)
-    {
-        $this->request->allowMethod(['post', 'delete']);
-        $rentalRequestHeader = $this->RentalRequestHeaders->get($id);
-        if ($this->RentalRequestHeaders->delete($rentalRequestHeader)) {
-            $this->Flash->success(__('The rental request header has been deleted.'));
-        } else {
-            $this->Flash->error(__('The rental request header could not be deleted. Please, try again.'));
-        }
-        return $this->redirect(['action' => 'index']);
+        $equipment = TableRegistry::get('Equipment')->find('list', ['limit' => 200]);
+        $this->set(compact('rentalRequestHeader', 'projects', 'suppliers', 'equipment'));
+        $this->set('_serialize', ['rentalRequestHeader', 'projects', 'suppliers', 'equipment']);
     }
 }

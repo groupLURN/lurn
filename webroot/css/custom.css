@@ -126,3 +126,7 @@ tr:last-child .editable-data-table-delete {
 tr:not(:last-child) .editable-data-table-add {
     display: none;
 }
+
+form .chosen-container {
+    font-size: 14px;
+}

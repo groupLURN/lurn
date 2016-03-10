@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\ORM\TableRegistry;
 
 /**
  * RentalRequestHeaders Controller
@@ -22,9 +23,11 @@ class RentalRequestHeadersController extends AppController
             'contain' => ['Projects', 'Suppliers']
         ];
         $rentalRequestHeaders = $this->paginate($this->RentalRequestHeaders);
+        $projects = TableRegistry::get('Projects')->find('list')->toArray();
+        $suppliers = TableRegistry::get('Suppliers')->find('list')->toArray();
 
-        $this->set(compact('rentalRequestHeaders'));
-        $this->set('_serialize', ['rentalRequestHeaders']);
+        $this->set(compact('rentalRequestHeaders', 'projects', 'suppliers'));
+        $this->set('_serialize', ['rentalRequestHeaders', 'projects', 'suppliers']);
     }
 
     /**

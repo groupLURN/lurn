@@ -109,7 +109,7 @@
                         <td><?= $rentalRequestHeader->has('supplier') ? $this->Html->link($rentalRequestHeader->supplier->name, ['controller' => 'Suppliers', 'action' => 'view', $rentalRequestHeader->supplier->id]) : '' ?></td>
                         <td><?= h($rentalRequestHeader->created) ?></td>
                         <td class="actions">
-                            <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $project->id]); ?>
+                            <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $rentalRequestHeader->id]); ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>

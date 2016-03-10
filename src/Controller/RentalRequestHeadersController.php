@@ -56,17 +56,20 @@ class RentalRequestHeadersController extends AppController
     {
         $rentalRequestHeader = $this->RentalRequestHeaders->newEntity();
         if ($this->request->is('post')) {
-            $rentalRequestHeader = $this->RentalRequestHeaders->patchEntity($rentalRequestHeader, $this->request->data);
+            $this->transpose($this->request->data, 'rental_request_details');
+            $rentalRequestHeader = $this->RentalRequestHeaders->patchEntity($rentalRequestHeader, $this->request->data, [
+                'associated' => ['RentalRequestDetails']
+            ]);
             if ($this->RentalRequestHeaders->save($rentalRequestHeader)) {
                 $this->Flash->success(__('The rental request header has been saved.'));
-                return $this->redirect(['action' => 'index']);
+                $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The rental request header could not be saved. Please, try again.'));
             }
         }
         $projects = $this->RentalRequestHeaders->Projects->find('list', ['limit' => 200]);
         $suppliers = $this->RentalRequestHeaders->Suppliers->find('list', ['limit' => 200]);
-        $equipment = TableRegistry::get('Equipment')->find('list', ['limit' => 200]);
+        $equipment = TableRegistry::get('Equipment')->find('list', ['limit' => 200])->toArray();
         $this->set(compact('rentalRequestHeader', 'projects', 'suppliers', 'equipment'));
         $this->set('_serialize', ['rentalRequestHeader', 'projects', 'suppliers', 'equipment']);
     }

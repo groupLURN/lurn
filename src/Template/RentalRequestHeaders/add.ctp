@@ -33,18 +33,18 @@
                     'Duration (days)'
                 ],
                 'columns' => [
-                    $this->Form->input('RentalRequestDetails.equipment_id[]', [
+                    $this->Form->input('rental_request_details.equipment_id[]', [
                         'class' => 'chosen form-control',
                         'label' => false,
                         'options' => ['0' => '-'] + $equipment,
                         'id' => false
                     ]),
-                    $this->Form->input('RentalRequestDetails.quantity', [
+                    $this->Form->input('rental_request_details.quantity[]', [
                         'class' => 'number-only',
                         'label' => false,
                         'id' => false
                     ]),
-                    $this->Form->input('RentalRequestDetails.duration', [
+                    $this->Form->input('rental_request_details.duration[]', [
                         'class' => 'number-only',
                         'label' => false,
                         'id' => false

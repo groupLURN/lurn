@@ -112,4 +112,22 @@ class AppController extends Controller
         // Initially, permit all access.
         return true;
     }
+
+    protected function transpose(&$data, $key)
+    {
+        // Subject consists of N parallel arrays where its keys are the properties of the entity.
+        $subject = $data[$key];
+        $data[$key] = [];
+
+        $index = 0;
+        foreach($subject as $property => $parallelArrays)
+        {
+            foreach($parallelArrays as $value)
+            {
+                $data[$key][$index][$property] = $value;
+                $index++;
+            }
+            $index = 0;
+        }
+    }
 }

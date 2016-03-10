@@ -118,3 +118,11 @@ ul.options li {
 .multi-select-with-input ul {
     margin: 20px auto;
 }
+
+tr:last-child .editable-data-table-delete {
+    display: none;
+}
+
+tr:not(:last-child) .editable-data-table-add {
+    display: none;
+}

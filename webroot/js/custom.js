@@ -1,4 +1,4 @@
-$(".chosen").chosen();
+$(".chosen").chosen({width: '100%'});
 
 Date.prototype.isValid = function () {
     // An invalid date object returns NaN for getTime() and NaN is the only

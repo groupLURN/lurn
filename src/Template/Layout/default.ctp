@@ -279,6 +279,18 @@ $this->Html->script('/non_bower_components/chart-master/Chart', ['block' => 'scr
                             <li><a  href="/track-manpower-schedule">Track Manpower</a></li>
                         </ul>
                     </li>
+                    <li class="sub-menu">
+                        <a href="javascript:;" >
+                            <i class="fa fa-cube"></i>
+                            <span>Replenishments</span>
+                        </a>
+                        <ul class="sub">
+                            <li><a  href="/rental-request-headers">Rental Requests</a></li>
+                            <li><a  href="/track-materials-schedule">Rental Receives</a></li>
+                            <li><a  href="/track-manpower-schedule">Purchase Orders</a></li>
+                            <li><a  href="/track-manpower-schedule">Purchase Receives</a></li>
+                        </ul>
+                    </li>
                     <?= $this->fetch('additional-sidebar') ?>
                 </ul>
                 <!-- sidebar menu end-->

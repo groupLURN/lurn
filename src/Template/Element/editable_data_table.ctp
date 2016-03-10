@@ -44,7 +44,7 @@
                     $td.html($(this));
                     $(this).chosen({width: '100%'});
                 });
-
+                $clone.find('input').val('');
                 $(this).closest('tr').after($clone);">
         </td>
     </tr>

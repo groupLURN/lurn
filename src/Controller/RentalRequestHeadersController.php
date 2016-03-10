@@ -40,7 +40,7 @@ class RentalRequestHeadersController extends AppController
     public function view($id = null)
     {
         $rentalRequestHeader = $this->RentalRequestHeaders->get($id, [
-            'contain' => ['Projects', 'Suppliers', 'RentalRequestDetails']
+            'contain' => ['Projects', 'Suppliers', 'RentalRequestDetails' => ['Equipment']]
         ]);
 
         $this->set('rentalRequestHeader', $rentalRequestHeader);

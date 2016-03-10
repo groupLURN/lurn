@@ -56,7 +56,12 @@
         <?= $this->Form->button(__('Submit'), [
             'class' => 'btn btn-primary btn-submit',
             'onclick' => "
-            if(!confirm('Once the rental request is submitted, the rental request cannot be edited or deleted. Are you sure with your rental request?'))
+            if($('.editable-data-table tr.data').length === 1)
+            {
+                alert('There should be at least one rental detail.');
+                event.preventDefault();
+            }
+            else if(!confirm('Once the rental request is submitted, the rental request cannot be edited or deleted. Are you sure with your rental request?'))
                 event.preventDefault();
             else
             {

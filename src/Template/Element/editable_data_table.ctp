@@ -28,9 +28,9 @@
 </tr>
 </thead>
 <tbody>
-    <tr>
+    <tr class="data">
         <?php foreach ($columns as $column): ?>
-        <td class="data" style="width: <?= 90/count($columns) ?>%"><?= $column ?></td>
+        <td style="width: <?= 90/count($columns) ?>%"><?= $column ?></td>
         <?php endforeach; ?>
         <td style="width: 10%;">
             <img src="/img/cross_bright.png" class='editable-data-table-delete' alt="Delete" style="cursor: pointer;" onclick="if(confirm('Are you sure you want to delete this entry?')) $(this).closest('tr').remove();">

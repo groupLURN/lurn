@@ -36,15 +36,15 @@
                     $this->Form->input('RentalRequestDetails.equipment_id[]', [
                         'class' => 'chosen form-control',
                         'label' => false,
-                        'options' => $equipment,
+                        'options' => ['0' => '-'] + $equipment,
                         'id' => false
                     ]),
-                    $this->Form->input('quantity', [
+                    $this->Form->input('RentalRequestDetails.quantity', [
                         'class' => 'number-only',
                         'label' => false,
                         'id' => false
                     ]),
-                    $this->Form->input('duration', [
+                    $this->Form->input('RentalRequestDetails.duration', [
                         'class' => 'number-only',
                         'label' => false,
                         'id' => false
@@ -55,7 +55,19 @@
 
         <?= $this->Form->button(__('Submit'), [
             'class' => 'btn btn-primary btn-submit',
-            'onclick' => "if(!confirm('Once the rental request is submitted, the rental request cannot be edited or deleted. Are you sure with your rental request?')) event.preventDefault();"
+            'onclick' => "
+            if(!confirm('Once the rental request is submitted, the rental request cannot be edited or deleted. Are you sure with your rental request?'))
+                event.preventDefault();
+            else
+            {
+                $('.editable-data-table').find('input, select').each(function()
+                {
+                    $(this).prop('disabled', !$(this).prop('disabled'));
+                    if($(this).is('select'))
+                        $(this).trigger('chosen:updated');
+                });
+            }
+            "
         ]) ?>
         <?= $this->Form->end() ?>
 

@@ -19,7 +19,7 @@
 
     extract($defaults, EXTR_SKIP);
 ?>
-<table class="table table-striped table-advance table-hover" style="width: <?=$tableWidth?>; margin: 0 auto;">
+<table class="table table-striped table-advance table-hover editable-data-table" style="width: <?=$tableWidth?>; margin: 0 auto;">
 <thead>
 <tr class="headers">
     <?php foreach($headers as $header) : ?>

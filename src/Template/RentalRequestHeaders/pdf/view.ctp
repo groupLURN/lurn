@@ -5,10 +5,12 @@
         <th><?= __('Rental Request Number') ?></th>
         <td><?= h($rentalRequestHeader->id) ?></td>
     </tr>
+    <?php if($rentalRequestHeader->has('project')) : ?>
     <tr>
         <th><?= __('Project') ?></th>
         <td><?= $rentalRequestHeader->project->title?></td>
     </tr>
+    <?php endif; ?>
     <tr>
         <th><?= __('Supplier') ?></th>
         <td><?= $rentalRequestHeader->supplier->name?></td>

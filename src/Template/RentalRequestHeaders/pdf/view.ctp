@@ -14,6 +14,10 @@
         <td><?= $rentalRequestHeader->supplier->name?></td>
     </tr>
     <tr>
+        <th><?= __('Supplier Address') ?></th>
+        <td><?= $rentalRequestHeader->supplier->address?></td>
+    </tr>
+    <tr>
         <th><?= __('Date Requested') ?></th>
         <td><?= h($rentalRequestHeader->created) ?></td>
     </tr>

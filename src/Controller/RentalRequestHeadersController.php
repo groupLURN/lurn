@@ -63,10 +63,10 @@ class RentalRequestHeadersController extends AppController
                 'associated' => ['RentalRequestDetails']
             ]);
             if ($this->RentalRequestHeaders->save($rentalRequestHeader)) {
-                $this->Flash->success(__('The rental request header has been saved.'));
+                $this->Flash->success(__('The rental request number ' . $rentalRequestHeader->id . ' has been saved.'));
                 $this->redirect(['action' => 'index']);
             } else {
-                $this->Flash->error(__('The rental request header could not be saved. Please, try again.'));
+                $this->Flash->error(__('The rental request could not be saved. Please, try again.'));
             }
         }
         $projects = $this->RentalRequestHeaders->Projects->find('list', ['limit' => 200])->toArray();

@@ -11,7 +11,7 @@ use Cake\Validation\Validator;
  * RentalReceiveDetails Model
  *
  * @property \Cake\ORM\Association\BelongsTo $RentalReceiveHeaders
- * @property \Cake\ORM\Association\BelongsTo $Equipment
+ * @property \Cake\ORM\Association\BelongsTo $RentalRequestDetails
  */
 class RentalReceiveDetailsTable extends Table
 {
@@ -36,8 +36,8 @@ class RentalReceiveDetailsTable extends Table
             'foreignKey' => 'rental_receive_header_id',
             'joinType' => 'INNER'
         ]);
-        $this->belongsTo('Equipment', [
-            'foreignKey' => 'equipment_id',
+        $this->belongsTo('RentalRequestDetails', [
+            'foreignKey' => 'rental_request_detail_id',
             'joinType' => 'INNER'
         ]);
     }
@@ -82,7 +82,7 @@ class RentalReceiveDetailsTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['rental_receive_header_id'], 'RentalReceiveHeaders'));
-        $rules->add($rules->existsIn(['equipment_id'], 'Equipment'));
+        $rules->add($rules->existsIn(['rental_request_detail_id'], 'RentalRequestDetails'));
         return $rules;
     }
 }

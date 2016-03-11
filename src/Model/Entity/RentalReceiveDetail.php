@@ -9,8 +9,8 @@ use Cake\ORM\Entity;
  * @property int $id
  * @property int $rental_receive_header_id
  * @property \App\Model\Entity\RentalReceiveHeader $rental_receive_header
- * @property int $equipment_id
- * @property \App\Model\Entity\Equipment $equipment
+ * @property int $rental_request_detail_id
+ * @property \App\Model\Entity\RentalRequestDetail $rental_request_detail
  * @property int $quantity
  * @property \Cake\I18n\Time $start_date
  * @property \Cake\I18n\Time $end_date

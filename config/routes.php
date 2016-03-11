@@ -40,16 +40,11 @@ use Cake\Routing\Router;
  *
  */
 
-/**
- * Load all plugin routes.  See the Plugin documentation on
- * how to customize the loading of plugin routes.
- */
-Plugin::routes();
-
 Router::defaultRouteClass('DashedRoute');
 
 Router::scope('/', function ($routes) {
 
+    $routes->extensions(['json', 'pdf']);
     $routes->connect('/', ['controller' => 'Dashboard', 'action' => 'index']);
 
     /**
@@ -70,3 +65,9 @@ Router::scope('/', function ($routes) {
      */
     $routes->fallbacks('DashedRoute');
 });
+
+/**
+ * Load all plugin routes.  See the Plugin documentation on
+ * how to customize the loading of plugin routes.
+ */
+Plugin::routes();

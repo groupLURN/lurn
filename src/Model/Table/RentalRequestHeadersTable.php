@@ -74,4 +74,32 @@ class RentalRequestHeadersTable extends Table
         $rules->add($rules->existsIn(['supplier_id'], 'Suppliers'));
         return $rules;
     }
+
+    public function findByProjectId(Query $query, array $options)
+    {
+        if($options['project_id'] > 0)
+            return $query->where(['RentalRequestHeaders.project_id' => $options['project_id']]);
+        return $query;
+    }
+
+    public function findBySupplierId(Query $query, array $options)
+    {
+        if($options['supplier_id'] > 0)
+            return $query->where(['RentalRequestHeaders.supplier_id' => $options['supplier_id']]);
+        return $query;
+    }
+
+    public function findByRequestDateFrom(Query $query, array $options)
+    {
+        return $query->where([
+            $query->newExpr()->gte('RentalRequestHeaders.created', $options['request_date_from'], 'datetime'),
+        ]);
+    }
+
+    public function findByRequestDateTo(Query $query, array $options)
+    {
+        return $query->where([
+            $query->newExpr()->lt('RentalRequestHeaders.created', $options['request_date_to'], 'datetime')
+        ]);
+    }
 }

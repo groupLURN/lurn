@@ -22,11 +22,13 @@ class RentalRequestHeadersController extends AppController
         $this->paginate = [
             'contain' => ['Projects', 'Suppliers']
         ];
+        $this->paginate += $this->createFinders($this->request->query);
         $rentalRequestHeaders = $this->paginate($this->RentalRequestHeaders);
         $projects = TableRegistry::get('Projects')->find('list')->toArray();
         $suppliers = TableRegistry::get('Suppliers')->find('list')->toArray();
 
         $this->set(compact('rentalRequestHeaders', 'projects', 'suppliers'));
+        $this->set($this->request->query);
         $this->set('_serialize', ['rentalRequestHeaders', 'projects', 'suppliers']);
     }
 

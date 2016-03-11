@@ -110,6 +110,7 @@
                         <td><?= h($rentalRequestHeader->created) ?></td>
                         <td class="actions">
                             <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $rentalRequestHeader->id]); ?>
+                            <?= $this->dataTablePrintButton(__('Print'), ['action' => 'view', $rentalRequestHeader->id, '_ext' => 'pdf']); ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>

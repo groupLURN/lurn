@@ -2,6 +2,9 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\RentalReceiveHeader;
+use ArrayObject;
+use Cake\Event\Event;
+use Cake\I18n\Time;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -54,5 +57,14 @@ class RentalReceiveHeadersTable extends Table
             ->notEmpty('receive_date');
 
         return $validator;
+    }
+
+    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
+    {
+        foreach (['receive_date'] as $key) {
+            if (isset($data[$key]) && is_string($data[$key])) {
+                $data[$key] = Time::parseDateTime($data[$key], 'yyyy/MM/dd');
+            }
+        }
     }
 }

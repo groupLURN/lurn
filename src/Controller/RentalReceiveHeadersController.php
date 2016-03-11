@@ -53,17 +53,28 @@ class RentalReceiveHeadersController extends AppController
     {
         $rentalReceiveHeader = $this->RentalReceiveHeaders->newEntity();
         if ($this->request->is('post')) {
+
+            $this->transpose($this->request->data, 'rental_receive_details');
+
+            foreach($this->request->data['rental_receive_details'] as &$rentalReceiveDetail)
+            {
+                $rentalReceiveDetail['start_date'] = $this->request->data['receive_date'];
+                $rentalReceiveDetail['end_date'] = Time::parse($this->request->data['receive_date'])->addDays($rentalReceiveDetail['duration'])->jsonSerialize();
+            }
+            unset($rentalReceiveDetail);
+
             $rentalReceiveHeader = $this->RentalReceiveHeaders->patchEntity($rentalReceiveHeader, $this->request->data);
             if ($this->RentalReceiveHeaders->save($rentalReceiveHeader)) {
-                $this->Flash->success(__('The rental receive header has been saved.'));
+                $this->Flash->success(__('The rental receive number ' . $rentalReceiveHeader->id . ' has been saved.'));
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The rental receive header could not be saved. Please, try again.'));
             }
         }
-        $rentalRequestHeaders = $this->RentalReceiveHeaders->RentalRequestHeaders->find('list', ['limit' => 200]);
-        $this->set(compact('rentalReceiveHeader', 'rentalRequestHeaders'));
-        $this->set('_serialize', ['rentalReceiveHeader']);
+        $equipment = TableRegistry::get('Equipment')->find('list', ['limit' => 200])->toArray();
+        $rentalRequestHeaders = $this->RentalReceiveHeaders->RentalReceiveDetails->RentalRequestDetails->RentalRequestHeaders->find('list', ['limit' => 200])->toArray();
+        $this->set(compact('rentalReceiveHeader', 'rentalRequestHeaders', 'equipment'));
+        $this->set('_serialize', ['rentalReceiveHeader', 'rentalRequestHeaders', 'equipment']);
     }
 
     /**

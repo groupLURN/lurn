@@ -13,7 +13,7 @@
                     'class' => 'mt',
                     'text' => 'Rental Request Number'
                 ],
-                'options' => $rentalRequestHeaders,
+                'options' => [null => '-'] + $rentalRequestHeaders,
                 'onchange' => sprintf("
                     if(!confirm('Are you sure you want to change rental request number? This will erase the details below.'))
                     {
@@ -28,6 +28,7 @@
                                 $.map(response.rentalRequestHeader.rental_request_details, function(rental_request_detail)
                                 {
                                     return [[
+                                        rental_request_detail.id,
                                         rental_request_detail.equipment.id,
                                         rental_request_detail.quantity,
                                         rental_request_detail.duration,
@@ -54,6 +55,7 @@
             <legend class="mt"><h3><i class="fa fa-angle-right"></i> <?= __('Rental Details') ?></h3></legend>
             <?= $this->element('editable_data_table', [
                 'headers' => [
+                    '',
                     'Equipment',
                     'Quantity Requested',
                     'Duration (days)',
@@ -61,32 +63,38 @@
                     'Quantity Receive',
                 ],
                 'columns' => [
-                    $this->Form->input('rental_request_details.equipment_id[]', [
+                    $this->Form->input('rental_receive_details.rental_request_detail_id[]', [
+                        'class' => 'form-control',
+                        'type' => 'hidden',
+                        'label' => false,
+                        'id' => false
+                    ]),
+                    $this->Form->input('rental_receive_details.equipment_id[]', [
                         'class' => 'chosen form-control',
                         'label' => false,
                         'options' => ['0' => '-'] + $equipment,
                         'id' => false,
                         'disabled' => true
                     ]),
-                    $this->Form->input('rental_request_details.quantity[]', [
+                    $this->Form->input('rental_receive_details.quantity[]', [
                         'class' => 'number-only',
                         'label' => false,
                         'id' => false,
                         'disabled' => true
                     ]),
-                    $this->Form->input('rental_request_details.duration[]', [
+                    $this->Form->input('rental_receive_details.duration[]', [
+                        'class' => 'number-only duration',
+                        'label' => false,
+                        'id' => false,
+                        'disabled' => true
+                    ]),
+                    $this->Form->input('rental_receive_details.quantity_remaining[]', [
                         'class' => 'number-only',
                         'label' => false,
                         'id' => false,
                         'disabled' => true
                     ]),
-                    $this->Form->input('rental_request_details.quantity_remaining[]', [
-                        'class' => 'number-only',
-                        'label' => false,
-                        'id' => false,
-                        'disabled' => true
-                    ]),
-                    $this->Form->input('rental_request_details.quantity_receive[]', [
+                    $this->Form->input('rental_receive_details.quantity[]', [
                         'class' => 'number-only',
                         'label' => false,
                         'id' => false
@@ -106,16 +114,12 @@
                 alert('There should be at least one rental detail.');
                 event.preventDefault();
             }
-            else if(!confirm('Once the rental request is submitted, the rental request cannot be edited or deleted. Are you sure with your rental request?'))
+            else if(!confirm('Once the rental receive is submitted, the rental receive cannot be edited or deleted. Are you sure with your rental receive?'))
                 event.preventDefault();
             else
             {
-                $('.editable-data-table').find('input, select').each(function()
-                {
-                    $(this).prop('disabled', !$(this).prop('disabled'));
-                    if($(this).is('select'))
-                        $(this).trigger('chosen:updated');
-                });
+                $('.editable-data-table tr:last').find('input, select').prop('disabled', true);
+                $('.duration', '.editable-data-table tr.data:not(:last)').prop('disabled', false);
             }
             "
         ]) ?>

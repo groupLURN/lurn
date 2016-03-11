@@ -73,16 +73,8 @@ $editableDataTable.find('.editable-data-table-add').on('click', function(event)
         event.preventDefault();
         return;
     }
-    var $clone = $tr.clone(true);
-    var rowIndex = $tr.index();
 
-    $clone.find('select.chosen').each(function()
-    {
-        var $td = $(this).closest('td');
-        $td.html($(this));
-        $(this).chosen({width: '100%'});
-    });
-    $clone.find('input').val('');
+    var $clone = $editableDataTable.cloneDataRow();
     $tr.after($clone);
     $tr.find('input, select').prop('disabled', true);
     $tr.find('select').trigger('chosen:updated');

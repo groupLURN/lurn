@@ -13,6 +13,7 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\Supplier $supplier
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
+ * @property \App\Model\Entity\RentalReceiveHeader[] $rental_receive_headers
  * @property \App\Model\Entity\RentalRequestDetail[] $rental_request_details
  */
 class RentalRequestHeader extends Entity

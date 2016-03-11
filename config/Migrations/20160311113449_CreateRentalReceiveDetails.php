@@ -18,7 +18,7 @@ class CreateRentalReceiveDetails extends AbstractMigration
             'limit' => 11,
             'null' => false,
         ]);
-        $table->addColumn('equipment_id', 'integer', [
+        $table->addColumn('rental_request_detail_id', 'integer', [
             'default' => null,
             'limit' => 11,
             'null' => false,
@@ -45,7 +45,7 @@ class CreateRentalReceiveDetails extends AbstractMigration
             'null' => false,
         ]);
         $table->addForeignKey('rental_receive_header_id', 'rental_receive_headers');
-        $table->addForeignKey('equipment_id', 'equipment');
+        $table->addForeignKey('rental_request_detail_id', 'rental_request_details');
         $table->create();
     }
 }

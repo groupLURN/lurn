@@ -13,11 +13,6 @@ class CreateRentalReceiveHeaders extends AbstractMigration
     public function change()
     {
         $table = $this->table('rental_receive_headers');
-        $table->addColumn('rental_request_header_id', 'integer', [
-            'default' => null,
-            'limit' => 11,
-            'null' => false,
-        ]);
         $table->addColumn('receive_date', 'datetime', [
             'default' => null,
             'null' => false,
@@ -30,7 +25,7 @@ class CreateRentalReceiveHeaders extends AbstractMigration
             'default' => null,
             'null' => false,
         ]);
-        $table->addForeignKey('rental_request_header_id', 'rental_request_headers');
+
         $table->create();
     }
 }

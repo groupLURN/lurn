@@ -35,7 +35,7 @@ class RentalRequestHeadersTable extends Table
 
         $this->belongsTo('Projects', [
             'foreignKey' => 'project_id',
-            'joinType' => 'INNER'
+            'joinType' => 'LEFT'
         ]);
         $this->belongsTo('Suppliers', [
             'foreignKey' => 'supplier_id',

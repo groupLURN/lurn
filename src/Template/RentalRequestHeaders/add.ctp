@@ -12,7 +12,7 @@
                 'label' => [
                     'class' => 'mt'
                 ],
-                'options' => $projects
+                'options' => [null => '-'] + $projects
             ]);
 
             echo $this->Form->input('supplier_id', [

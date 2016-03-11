@@ -7,8 +7,6 @@ use Cake\ORM\Entity;
  * RentalReceiveHeader Entity.
  *
  * @property int $id
- * @property int $rental_request_header_id
- * @property \App\Model\Entity\RentalRequestHeader $rental_request_header
  * @property \Cake\I18n\Time $receive_date
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified

@@ -25,6 +25,8 @@ class RentalReceiveHeadersTableTest extends TestCase
      */
     public $fixtures = [
         'app.rental_receive_headers',
+        'app.rental_receive_details',
+        'app.rental_request_details',
         'app.rental_request_headers',
         'app.projects',
         'app.clients',
@@ -52,9 +54,7 @@ class RentalReceiveHeadersTableTest extends TestCase
         'app.manpower_general_inventories',
         'app.manpower_types_tasks',
         'app.employees_join',
-        'app.suppliers',
-        'app.rental_request_details',
-        'app.rental_receive_details'
+        'app.suppliers'
     ];
 
     /**
@@ -97,16 +97,6 @@ class RentalReceiveHeadersTableTest extends TestCase
      * @return void
      */
     public function testValidationDefault()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test buildRules method
-     *
-     * @return void
-     */
-    public function testBuildRules()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

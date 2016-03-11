@@ -48,8 +48,8 @@ class RentalRequestHeadersFixture extends TestFixture
             'id' => 1,
             'project_id' => 1,
             'supplier_id' => 1,
-            'created' => '2016-03-11 19:41:59',
-            'modified' => '2016-03-11 19:41:59'
+            'created' => '2016-03-11 22:16:22',
+            'modified' => '2016-03-11 22:16:22'
         ],
     ];
 }

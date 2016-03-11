@@ -52,8 +52,6 @@ class RentalRequestHeadersTableTest extends TestCase
         'app.manpower_types_tasks',
         'app.employees_join',
         'app.suppliers',
-        'app.rental_receive_headers',
-        'app.rental_receive_details',
         'app.rental_request_details'
     ];
 

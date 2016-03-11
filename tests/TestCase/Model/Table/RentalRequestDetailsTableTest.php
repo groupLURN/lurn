@@ -52,7 +52,9 @@ class RentalRequestDetailsTableTest extends TestCase
         'app.manpower_general_inventories',
         'app.manpower_types_tasks',
         'app.employees_join',
-        'app.suppliers'
+        'app.suppliers',
+        'app.rental_receive_details',
+        'app.rental_receive_headers'
     ];
 
     /**

@@ -67,11 +67,7 @@
                 <tr>
                     <td colspan="4">
                         <div class="row mt">
-                            <div class="col-xs-10">
-                                <input type="text" name="rental_request_number" class="form-control" placeholder="Search Rental Request Number"
-                                       id="txt-search" <?= isset($rental_request_number)? "value='" . $rental_request_number . "'": ""; ?> >
-                            </div>
-                            <div class="col-xs-2">
+                            <div class="col-md-1 col-md-offset-11">
                                 <?= $this->Form->button(__('Search'), [
                                     'id' => 'btn-search',
                                     'class' => 'btn btn-primary'

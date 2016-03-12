@@ -1,22 +1,14 @@
 <?php
-namespace App\Test\TestCase\Model\Table;
+namespace App\Test\TestCase\Controller;
 
-use App\Model\Table\RentalRequestDetailsTable;
-use Cake\ORM\TableRegistry;
-use Cake\TestSuite\TestCase;
+use App\Controller\RentalReceiveHeadersController;
+use Cake\TestSuite\IntegrationTestCase;
 
 /**
- * App\Model\Table\RentalRequestDetailsTable Test Case
+ * App\Controller\RentalReceiveHeadersController Test Case
  */
-class RentalRequestDetailsTableTest extends TestCase
+class RentalReceiveHeadersControllerTest extends IntegrationTestCase
 {
-
-    /**
-     * Test subject
-     *
-     * @var \App\Model\Table\RentalRequestDetailsTable
-     */
-    public $RentalRequestDetails;
 
     /**
      * Fixtures
@@ -24,7 +16,7 @@ class RentalRequestDetailsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.rental_request_details',
+        'app.rental_receive_headers',
         'app.rental_request_headers',
         'app.projects',
         'app.clients',
@@ -33,6 +25,7 @@ class RentalRequestDetailsTableTest extends TestCase
         'app.employees',
         'app.employee_types',
         'app.employees_projects',
+        'app.employees_join',
         'app.project_statuses',
         'app.equipment_project_inventories',
         'app.equipment_task_inventories',
@@ -51,62 +44,57 @@ class RentalRequestDetailsTableTest extends TestCase
         'app.manpower_types',
         'app.manpower_general_inventories',
         'app.manpower_types_tasks',
-        'app.employees_join',
         'app.suppliers',
-        'app.rental_receive_details',
-        'app.rental_receive_headers'
+        'app.rental_request_details',
+        'app.rental_receive_details'
     ];
 
     /**
-     * setUp method
+     * Test index method
      *
      * @return void
      */
-    public function setUp()
-    {
-        parent::setUp();
-        $config = TableRegistry::exists('RentalRequestDetails') ? [] : ['className' => 'App\Model\Table\RentalRequestDetailsTable'];
-        $this->RentalRequestDetails = TableRegistry::get('RentalRequestDetails', $config);
-    }
-
-    /**
-     * tearDown method
-     *
-     * @return void
-     */
-    public function tearDown()
-    {
-        unset($this->RentalRequestDetails);
-
-        parent::tearDown();
-    }
-
-    /**
-     * Test initialize method
-     *
-     * @return void
-     */
-    public function testInitialize()
+    public function testIndex()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test validationDefault method
+     * Test view method
      *
      * @return void
      */
-    public function testValidationDefault()
+    public function testView()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test buildRules method
+     * Test add method
      *
      * @return void
      */
-    public function testBuildRules()
+    public function testAdd()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test edit method
+     *
+     * @return void
+     */
+    public function testEdit()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test delete method
+     *
+     * @return void
+     */
+    public function testDelete()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

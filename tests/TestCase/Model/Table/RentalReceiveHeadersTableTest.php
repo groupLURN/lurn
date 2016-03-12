@@ -1,22 +1,22 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\RentalRequestDetailsTable;
+use App\Model\Table\RentalReceiveHeadersTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\RentalRequestDetailsTable Test Case
+ * App\Model\Table\RentalReceiveHeadersTable Test Case
  */
-class RentalRequestDetailsTableTest extends TestCase
+class RentalReceiveHeadersTableTest extends TestCase
 {
 
     /**
      * Test subject
      *
-     * @var \App\Model\Table\RentalRequestDetailsTable
+     * @var \App\Model\Table\RentalReceiveHeadersTable
      */
-    public $RentalRequestDetails;
+    public $RentalReceiveHeaders;
 
     /**
      * Fixtures
@@ -24,6 +24,8 @@ class RentalRequestDetailsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
+        'app.rental_receive_headers',
+        'app.rental_receive_details',
         'app.rental_request_details',
         'app.rental_request_headers',
         'app.projects',
@@ -52,9 +54,7 @@ class RentalRequestDetailsTableTest extends TestCase
         'app.manpower_general_inventories',
         'app.manpower_types_tasks',
         'app.employees_join',
-        'app.suppliers',
-        'app.rental_receive_details',
-        'app.rental_receive_headers'
+        'app.suppliers'
     ];
 
     /**
@@ -65,8 +65,8 @@ class RentalRequestDetailsTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('RentalRequestDetails') ? [] : ['className' => 'App\Model\Table\RentalRequestDetailsTable'];
-        $this->RentalRequestDetails = TableRegistry::get('RentalRequestDetails', $config);
+        $config = TableRegistry::exists('RentalReceiveHeaders') ? [] : ['className' => 'App\Model\Table\RentalReceiveHeadersTable'];
+        $this->RentalReceiveHeaders = TableRegistry::get('RentalReceiveHeaders', $config);
     }
 
     /**
@@ -76,7 +76,7 @@ class RentalRequestDetailsTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->RentalRequestDetails);
+        unset($this->RentalReceiveHeaders);
 
         parent::tearDown();
     }
@@ -97,16 +97,6 @@ class RentalRequestDetailsTableTest extends TestCase
      * @return void
      */
     public function testValidationDefault()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test buildRules method
-     *
-     * @return void
-     */
-    public function testBuildRules()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

@@ -4,20 +4,21 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * RentalRequestDetail Entity.
+ * RentalReceiveDetail Entity.
  *
  * @property int $id
- * @property int $rental_request_header_id
- * @property \App\Model\Entity\RentalRequestHeader $rental_request_header
- * @property int $equipment_id
- * @property \App\Model\Entity\Equipment $equipment
+ * @property int $rental_receive_header_id
+ * @property \App\Model\Entity\RentalReceiveHeader $rental_receive_header
+ * @property int $rental_request_detail_id
+ * @property \App\Model\Entity\RentalRequestDetail $rental_request_detail
  * @property int $quantity
- * @property int $duration
+ * @property \Cake\I18n\Time $start_date
+ * @property \Cake\I18n\Time $end_date
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
- * @property \App\Model\Entity\RentalReceiveDetail[] $rental_receive_details
+ * @property \App\Model\Entity\EquipmentInventory[] $equipment_inventories
  */
-class RentalRequestDetail extends Entity
+class RentalReceiveDetail extends Entity
 {
 
     /**

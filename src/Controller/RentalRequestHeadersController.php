@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Collection\Collection;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -42,9 +43,12 @@ class RentalRequestHeadersController extends AppController
     public function view($id = null)
     {
         $rentalRequestHeader = $this->RentalRequestHeaders->get($id, [
-            'contain' => ['Projects', 'Suppliers', 'RentalRequestDetails' => ['Equipment']]
+            'contain' => ['Projects', 'Suppliers', 'RentalRequestDetails' => [
+                'Equipment', 'RentalReceiveDetails']
+            ]
         ]);
 
+        $this->RentalRequestHeaders->computeQuantityRemaining($rentalRequestHeader);
         $this->set('rentalRequestHeader', $rentalRequestHeader);
         $this->set('_serialize', ['rentalRequestHeader']);
     }

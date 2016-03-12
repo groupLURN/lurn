@@ -52,8 +52,8 @@ class RentalRequestDetailsFixture extends TestFixture
             'equipment_id' => 1,
             'quantity' => 1,
             'duration' => 1,
-            'created' => '2016-03-10 15:13:36',
-            'modified' => '2016-03-10 15:13:36'
+            'created' => '2016-03-11 22:17:26',
+            'modified' => '2016-03-11 22:17:26'
         ],
     ];
 }

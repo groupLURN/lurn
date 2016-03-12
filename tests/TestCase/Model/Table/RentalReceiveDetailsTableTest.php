@@ -1,22 +1,22 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\RentalRequestDetailsTable;
+use App\Model\Table\RentalReceiveDetailsTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\RentalRequestDetailsTable Test Case
+ * App\Model\Table\RentalReceiveDetailsTable Test Case
  */
-class RentalRequestDetailsTableTest extends TestCase
+class RentalReceiveDetailsTableTest extends TestCase
 {
 
     /**
      * Test subject
      *
-     * @var \App\Model\Table\RentalRequestDetailsTable
+     * @var \App\Model\Table\RentalReceiveDetailsTable
      */
-    public $RentalRequestDetails;
+    public $RentalReceiveDetails;
 
     /**
      * Fixtures
@@ -24,6 +24,8 @@ class RentalRequestDetailsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
+        'app.rental_receive_details',
+        'app.rental_receive_headers',
         'app.rental_request_details',
         'app.rental_request_headers',
         'app.projects',
@@ -52,9 +54,7 @@ class RentalRequestDetailsTableTest extends TestCase
         'app.manpower_general_inventories',
         'app.manpower_types_tasks',
         'app.employees_join',
-        'app.suppliers',
-        'app.rental_receive_details',
-        'app.rental_receive_headers'
+        'app.suppliers'
     ];
 
     /**
@@ -65,8 +65,8 @@ class RentalRequestDetailsTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('RentalRequestDetails') ? [] : ['className' => 'App\Model\Table\RentalRequestDetailsTable'];
-        $this->RentalRequestDetails = TableRegistry::get('RentalRequestDetails', $config);
+        $config = TableRegistry::exists('RentalReceiveDetails') ? [] : ['className' => 'App\Model\Table\RentalReceiveDetailsTable'];
+        $this->RentalReceiveDetails = TableRegistry::get('RentalReceiveDetails', $config);
     }
 
     /**
@@ -76,7 +76,7 @@ class RentalRequestDetailsTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->RentalRequestDetails);
+        unset($this->RentalReceiveDetails);
 
         parent::tearDown();
     }

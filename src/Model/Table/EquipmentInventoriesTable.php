@@ -13,6 +13,7 @@ use Cake\Validation\Validator;
  * @property \Cake\ORM\Association\BelongsTo $Projects
  * @property \Cake\ORM\Association\BelongsTo $Tasks
  * @property \Cake\ORM\Association\BelongsTo $Equipment
+ * @property \Cake\ORM\Association\BelongsTo $RentalReceiveDetails
  */
 class EquipmentInventoriesTable extends Table
 {
@@ -43,6 +44,9 @@ class EquipmentInventoriesTable extends Table
             'foreignKey' => 'equipment_id',
             'joinType' => 'INNER'
         ]);
+        $this->belongsTo('RentalReceiveDetails', [
+            'foreignKey' => 'rental_receive_detail_id'
+        ]);
     }
 
     /**
@@ -72,6 +76,7 @@ class EquipmentInventoriesTable extends Table
         $rules->add($rules->existsIn(['project_id'], 'Projects'));
         $rules->add($rules->existsIn(['task_id'], 'Tasks'));
         $rules->add($rules->existsIn(['equipment_id'], 'Equipment'));
+        $rules->add($rules->existsIn(['rental_receive_detail_id'], 'RentalReceiveDetails'));
         return $rules;
     }
 

@@ -19,15 +19,13 @@ class EquipmentController extends AppController
      */
     public function index()
     {
-        $this->paginate = $this->createFinders($this->request->query, 'EquipmentInventories') + [
-                'contain' => ['Equipment']
-        ];
+        $this->paginate = $this->createFinders($this->request->query);
 
-        $equipmentInventories = $this->paginate(TableRegistry::get('EquipmentInventories'));
+        $equipment = $this->paginate($this->Equipment);
 
-        $this->set(compact('equipmentInventories'));
+        $this->set(compact('equipment'));
         $this->set($this->request->query);
-        $this->set('_serialize', ['equipmentInventories']);
+        $this->set('_serialize', ['equipment']);
     }
 
     /**

@@ -89,13 +89,13 @@
                         'disabled' => true
                     ]),
                     $this->Form->input('rental_receive_details.quantity_remaining[]', [
-                        'class' => 'number-only',
+                        'class' => 'number-only quantity-remaining',
                         'label' => false,
                         'id' => false,
                         'disabled' => true
                     ]),
                     $this->Form->input('rental_receive_details.quantity[]', [
-                        'class' => 'number-only',
+                        'class' => 'number-only quantity-receive',
                         'label' => false,
                         'id' => false
                     ])
@@ -109,9 +109,27 @@
         <?= $this->Form->button(__('Submit'), [
             'class' => 'btn btn-primary btn-submit',
             'onclick' => "
-            if($('.editable-data-table tr.data').length === 1)
+            var hasReceives = false;
+            var hasReceivesExceeded = false;
+            $('.editable-data-table tr.data:not(:last)').each(
+                function()
+                {
+                    var quantityReceive = Number($(this).find('.quantity-receive').val());
+                    var quantityRemaining = Number($(this).find('.quantity-remaining').val());
+
+                    hasReceives = hasReceives || quantityReceive !== 0 ;
+                    hasReceivesExceeded = hasReceivesExceeded || quantityReceive > quantityRemaining;
+                }
+            );
+
+            if($('.editable-data-table tr.data').length === 1 || !hasReceives)
             {
-                alert('There should be at least one rental detail.');
+                alert('There should be at least one rental receive.');
+                event.preventDefault();
+            }
+            else if(hasReceivesExceeded)
+            {
+                alert('You cannot receive more than what you was requested.');
                 event.preventDefault();
             }
             else if(!confirm('Once the rental receive is submitted, the rental receive cannot be edited or deleted. Are you sure with your rental receive?'))

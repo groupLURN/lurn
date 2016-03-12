@@ -17,7 +17,9 @@ class AddRentalReceiveDetailIdToEquipmentInventory extends AbstractMigration
             'default' => null,
             'limit' => 11,
             'null' => true,
+            'after' => 'equipment_id'
         ]);
+        $table->addForeignKey('rental_receive_detail_id', 'rental_receive_details');
         $table->update();
     }
 }

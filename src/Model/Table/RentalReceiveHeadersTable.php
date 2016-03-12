@@ -3,6 +3,7 @@ namespace App\Model\Table;
 
 use App\Model\Entity\RentalReceiveHeader;
 use ArrayObject;
+use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\I18n\Time;
 use Cake\ORM\Query;
@@ -68,6 +69,28 @@ class RentalReceiveHeadersTable extends Table
         }
     }
 
+    public function afterSave(Event $event, EntityInterface $entity, ArrayObject $options)
+    {
+        $rentalReceiveHeader = $this->get($entity->id, [
+            'contain' => ['RentalReceiveDetails.RentalRequestDetails.Equipment']
+        ]);
+
+        foreach($rentalReceiveHeader->rental_receive_details as $rentalReceiveDetail)
+        {
+            $datum = [
+                'equipment_id' => $rentalReceiveDetail->rental_request_detail->equipment->id,
+                'rental_receive_detail_id' => $rentalReceiveDetail->id
+            ];
+
+            $data = array_fill(0, $rentalReceiveDetail->quantity, $datum);
+
+            $equipmentInventories = $this->RentalReceiveDetails->EquipmentInventories->newEntities($data);
+
+            foreach($equipmentInventories as $equipmentInventory)
+                $this->RentalReceiveDetails->EquipmentInventories->save($equipmentInventory);
+        }
+    }
+
     public function findRentalReceives(Query $query, array $options)
     {
         return $query
@@ -81,4 +104,5 @@ class RentalReceiveHeadersTable extends Table
             ->innerJoinWith('RentalReceiveDetails.RentalRequestDetails.RentalRequestHeaders.Suppliers')
             ->group('RentalReceiveHeaders.id');
     }
+
 }

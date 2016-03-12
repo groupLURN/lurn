@@ -22,12 +22,18 @@ class RentalReceiveHeadersController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['RentalRequestHeaders']
+            'sortWhitelist' => ['RentalReceiveHeaders.id', 'RentalRequestHeaders.id', 'Projects.title', 'Suppliers.name', 'RentalRequestHeaders.created', 'RentalReceiveHeaders.created']
         ];
+
+        $this->paginate += $this->createFinders($this->request->query);
+        $this->paginate['finder']['RentalReceives'] = [];
         $rentalReceiveHeaders = $this->paginate($this->RentalReceiveHeaders);
 
-        $this->set(compact('rentalReceiveHeaders'));
-        $this->set('_serialize', ['rentalReceiveHeaders']);
+        $projects = $this->RentalReceiveHeaders->RentalReceiveDetails->RentalRequestDetails->RentalRequestHeaders->Projects->find('list')->toArray();
+        $suppliers = $this->RentalReceiveHeaders->RentalReceiveDetails->RentalRequestDetails->RentalRequestHeaders->Suppliers->find('list')->toArray();
+        $equipment = TableRegistry::get('Equipment')->find('list')->toArray();
+        $this->set(compact('rentalReceiveHeaders', 'projects', 'suppliers', 'equipment'));
+        $this->set('_serialize', ['rentalReceiveHeaders', 'projects', 'suppliers', 'equipment']);
     }
 
     /**
@@ -40,7 +46,7 @@ class RentalReceiveHeadersController extends AppController
     public function view($id = null)
     {
         $rentalReceiveHeader = $this->RentalReceiveHeaders->get($id, [
-            'contain' => ['RentalRequestHeaders', 'RentalReceiveDetails']
+            'contain' => ['RentalReceiveDetails.RentalRequestDetails.RentalRequestHeaders']
         ]);
 
         $this->set('rentalReceiveHeader', $rentalReceiveHeader);
@@ -74,9 +80,32 @@ class RentalReceiveHeadersController extends AppController
                 $this->Flash->error(__('The rental receive header could not be saved. Please, try again.'));
             }
         }
-        $equipment = TableRegistry::get('Equipment')->find('list', ['limit' => 200])->toArray();
-        $rentalRequestHeaders = $this->RentalReceiveHeaders->RentalReceiveDetails->RentalRequestDetails->RentalRequestHeaders->find('list', ['limit' => 200])->toArray();
         $equipment = TableRegistry::get('Equipment')->find('list')->toArray();
+
+        // Retrieve incomplete rental requests.
+        $rentalRequestHeaders = $this->RentalReceiveHeaders->RentalReceiveDetails->RentalRequestDetails
+            ->RentalRequestHeaders
+            ->find()
+            ->contain(['Projects', 'Suppliers', 'RentalRequestDetails' => [
+                'Equipment', 'RentalReceiveDetails']
+            ])
+            ->toArray();
+
+        foreach($rentalRequestHeaders as $rentalRequestHeader)
+        {
+            $this->RentalReceiveHeaders->RentalReceiveDetails->RentalRequestDetails->RentalRequestHeaders->computeQuantityRemaining($rentalRequestHeader)
+                ->computeAllQuantityReceived($rentalRequestHeader);
+        }
+
+        $collection = new Collection($rentalRequestHeaders);
+        $incompleteRequests = $collection->filter(function ($request, $key) {
+            return $request->all_quantity_received === false;
+        });
+
+        $rentalRequestHeaders = [];
+        foreach($incompleteRequests as $incompleteRequest)
+            $rentalRequestHeaders[$incompleteRequest->id] = $incompleteRequest->id;
+
         $this->set(compact('rentalReceiveHeader', 'rentalRequestHeaders', 'equipment'));
         $this->set('_serialize', ['rentalReceiveHeader', 'rentalRequestHeaders', 'equipment']);
     }
@@ -102,7 +131,7 @@ class RentalReceiveHeadersController extends AppController
                 $this->Flash->error(__('The rental receive header could not be saved. Please, try again.'));
             }
         }
-        $rentalRequestHeaders = $this->RentalReceiveHeaders->RentalRequestHeaders->find('list', ['limit' => 200]);
+        $rentalRequestHeaders = $this->RentalReceiveHeaders->RentalRequestHeaders->find('list');
         $this->set(compact('rentalReceiveHeader', 'rentalRequestHeaders'));
         $this->set('_serialize', ['rentalReceiveHeader']);
     }

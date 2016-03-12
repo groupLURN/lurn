@@ -67,4 +67,18 @@ class RentalReceiveHeadersTable extends Table
             }
         }
     }
+
+    public function findRentalReceives(Query $query, array $options)
+    {
+        return $query
+            ->select($this)
+            ->select($this->RentalReceiveDetails)
+            ->select($this->RentalReceiveDetails->RentalRequestDetails)
+            ->select($this->RentalReceiveDetails->RentalRequestDetails->RentalRequestHeaders)
+            ->select($this->RentalReceiveDetails->RentalRequestDetails->RentalRequestHeaders->Projects)
+            ->select($this->RentalReceiveDetails->RentalRequestDetails->RentalRequestHeaders->Suppliers)
+            ->leftJoinWith('RentalReceiveDetails.RentalRequestDetails.RentalRequestHeaders.Projects')
+            ->innerJoinWith('RentalReceiveDetails.RentalRequestDetails.RentalRequestHeaders.Suppliers')
+            ->group('RentalReceiveHeaders.id');
+    }
 }

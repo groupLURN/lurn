@@ -1,49 +1,128 @@
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('New Rental Receive Header'), ['action' => 'add']) ?></li>
-        <li><?= $this->Html->link(__('List Rental Request Headers'), ['controller' => 'RentalRequestHeaders', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Rental Request Header'), ['controller' => 'RentalRequestHeaders', 'action' => 'add']) ?></li>
-        <li><?= $this->Html->link(__('List Rental Receive Details'), ['controller' => 'RentalReceiveDetails', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Rental Receive Detail'), ['controller' => 'RentalReceiveDetails', 'action' => 'add']) ?></li>
-    </ul>
-</nav>
-<div class="rentalReceiveHeaders index large-9 medium-8 columns content">
-    <h3><?= __('Rental Receive Headers') ?></h3>
-    <table cellpadding="0" cellspacing="0">
-        <thead>
-            <tr>
-                <th><?= $this->Paginator->sort('id') ?></th>
-                <th><?= $this->Paginator->sort('rental_request_header_id') ?></th>
-                <th><?= $this->Paginator->sort('receive_date') ?></th>
-                <th><?= $this->Paginator->sort('created') ?></th>
-                <th><?= $this->Paginator->sort('modified') ?></th>
-                <th class="actions"><?= __('Actions') ?></th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($rentalReceiveHeaders as $rentalReceiveHeader): ?>
-            <tr>
-                <td><?= $this->Number->format($rentalReceiveHeader->id) ?></td>
-                <td><?= $rentalReceiveHeader->has('rental_request_header') ? $this->Html->link($rentalReceiveHeader->rental_request_header->id, ['controller' => 'RentalRequestHeaders', 'action' => 'view', $rentalReceiveHeader->rental_request_header->id]) : '' ?></td>
-                <td><?= h($rentalReceiveHeader->receive_date) ?></td>
-                <td><?= h($rentalReceiveHeader->created) ?></td>
-                <td><?= h($rentalReceiveHeader->modified) ?></td>
-                <td class="actions">
-                    <?= $this->Html->link(__('View'), ['action' => 'view', $rentalReceiveHeader->id]) ?>
-                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $rentalReceiveHeader->id]) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $rentalReceiveHeader->id], ['confirm' => __('Are you sure you want to delete # {0}?', $rentalReceiveHeader->id)]) ?>
-                </td>
-            </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-    <div class="paginator">
-        <ul class="pagination">
-            <?= $this->Paginator->prev('< ' . __('previous')) ?>
-            <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('next') . ' >') ?>
-        </ul>
-        <p><?= $this->Paginator->counter() ?></p>
+<?= $this->Flash->render() ?>
+<?= $this->assign('title', 'Rental Receives') ?>
+<div class="row mt">
+    <div class="col-xs-12">
+        <?= $this->newButton(__('New Rental Receive'), ['action' => 'add']); ?>
     </div>
 </div>
+<div class="row mt">
+    <div class="col-xs-12">
+        <div class="content-panel">
+            <?= $this->Form->create('Search', ['type' => 'GET']) ?>
+            <h4><i class="fa fa-angle-right"></i> Filters </h4>
+            <hr>
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td style="padding-top: 15px; padding-left: 10px;">
+                        <input type="checkbox" name="receive_date_checked" <?= isset($receive_date_checked)? 'checked': ''?>
+                               onclick="$('input.datetime-picker:text', $(this).closest('tr')).prop('disabled', !$(this).is(':checked'));">
+                        <label>Date Received</label>
+                    </td>
+                    <td>
+                        <?= $this->Form->input('receive_date_from', [
+                            'class' => 'datetime-picker form-control',
+                            'style' => 'display: initial;',
+                            'label' => false,
+                            'disabled' => !isset($receive_date_checked),
+                            'val' => isset($receive_date_from)? $receive_date_from: ''
+                        ]); ?>
+                    </td>
+                    <td colspan="2">
+                        <?= $this->Form->input('receive_date_to', [
+                            'class' => 'datetime-picker form-control advance-1-day',
+                            'style' => 'display: initial;',
+                            'label' => false,
+                            'disabled' => !isset($receive_date_checked),
+                            'val' => isset($receive_date_to)? $receive_date_to: ''
+                        ]); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-top: 15px; padding-left: 10px;">
+                        <?= $this->Form->label("", "Project"); ?>
+                    </td>
+                    <td colspan="3">
+                        <?= $this->Form->input('project_id', [
+                            'options' => ['0' => 'All'] + $projects,
+                            'class' => 'form-control',
+                            'label' => false,
+                            'val' => isset($project_id)? $project_id: 0
+                        ]); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-top: 15px; padding-left: 10px;">
+                        <?= $this->Form->label("", "Supplier"); ?>
+                    </td>
+                    <td colspan="3">
+                        <?= $this->Form->input('supplier_id', [
+                            'options' => ['0' => 'All'] + $suppliers,
+                            'class' => 'form-control',
+                            'label' => false,
+                            'val' => isset($supplier_id)? $supplier_id: 0
+                        ]); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <div class="row mt">
+                            <div class="col-md-1 col-md-offset-11">
+                                <?= $this->Form->button(__('Search'), [
+                                    'id' => 'btn-search',
+                                    'class' => 'btn btn-primary'
+                                ]) ?>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <?= $this->Form->end(); ?>
+        </div><!-- --/content-panel ---->
+    </div>
+</div>
+<div class="row mt">
+    <div class="col-xs-12">
+        <div class="content-panel">
+            <table class="table table-striped table-advance table-hover">
+                <h4><i class="fa fa-angle-right"></i> <?= __('Rental Receives') ?> </h4>
+                <hr>
+                <thead>
+                <tr>
+                    <th><?= $this->Paginator->sort('RentalReceiveHeaders.id', 'Rental Receive Number') ?></th>
+                    <th><?= $this->Paginator->sort('RentalRequestHeaders.id', 'Rental Request Number') ?></th>
+                    <th><?= $this->Paginator->sort('Projects.title', 'Project') ?></th>
+                    <th><?= $this->Paginator->sort('Suppliers.name', 'Supplier') ?></th>
+                    <th><?= $this->Paginator->sort('RentalRequestHeaders.created', 'Date Requested') ?></th>
+                    <th><?= $this->Paginator->sort('RentalReceiveHeaders.created', 'Date Received') ?></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($rentalReceiveHeaders as $rentalReceiveHeader): ?>
+                    <tr>
+                        <td><?= h($rentalReceiveHeader->id) ?></td>
+                        <td><?= $this->Html->link($rentalReceiveHeader->_matchingData['RentalRequestHeaders']['id'], ['controller' => 'RentalRequestHeaders', 'action' => 'view', $rentalReceiveHeader->_matchingData['RentalRequestHeaders']['id']])?></td>
+                        <td><?= $rentalReceiveHeader->_matchingData['Projects']['id']? $this->Html->link($rentalReceiveHeader->_matchingData['Projects']['title'], ['controller' => 'RentalReceiveHeaders', 'action' => 'view', $rentalReceiveHeader->_matchingData['Projects']['id']]): '' ?></td>
+                        <td><?= $this->Html->link($rentalReceiveHeader->_matchingData['Suppliers']['name'], ['controller' => 'RentalReceiveHeaders', 'action' => 'view', $this->Html->link($rentalReceiveHeader->_matchingData['Suppliers']['id'])]) ?></td>
+                        <td><?= h($rentalReceiveHeader->receive_date) ?></td>
+                        <td><?= h($rentalReceiveHeader->created) ?></td>
+                        <td class="actions">
+                            <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $rentalReceiveHeader->id]); ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+            <div class="paginator">
+                <ul class="pagination">
+                    <?= $this->Paginator->prev('< ' . __('previous')) ?>
+                    <?= $this->Paginator->numbers() ?>
+                    <?= $this->Paginator->next(__('next') . ' >') ?>
+                </ul>
+                <p><?= $this->Paginator->counter() ?></p>
+            </div>
+        </div><!-- /content-panel -->
+    </div><!-- /col-md-12 -->
+</div><!-- /row -->

@@ -48,18 +48,7 @@ class RentalRequestHeadersController extends AppController
             ]
         ]);
 
-        foreach($rentalRequestHeader->rental_request_details as &$rentalRequestDetail)
-        {
-            $collection = new Collection($rentalRequestDetail->rental_receive_details);
-            $rentalRequestDetail->quantity_received = $collection->reduce(function($accumulated, $rentalReceiveDetail)
-            {
-                return $accumulated += $rentalReceiveDetail->quantity;
-            }, 0);
-            $rentalRequestDetail->quantity_remaining = $rentalRequestDetail->quantity - $rentalRequestDetail->quantity_received;
-        }
-        unset($rentalRequestDetail);
-
-        
+        $this->RentalRequestHeaders->computeQuantityRemaining($rentalRequestHeader);
         $this->set('rentalRequestHeader', $rentalRequestHeader);
         $this->set('_serialize', ['rentalRequestHeader']);
     }

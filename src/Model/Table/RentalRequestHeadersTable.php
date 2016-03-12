@@ -2,6 +2,7 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\RentalRequestHeader;
+use Cake\Collection\Collection;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -102,4 +103,20 @@ class RentalRequestHeadersTable extends Table
             $query->newExpr()->lt('RentalRequestHeaders.created', $options['request_date_to'], 'datetime')
         ]);
     }
+
+    public function computeQuantityRemaining($rentalRequestHeader)
+    {
+        foreach($rentalRequestHeader->rental_request_details as &$rentalRequestDetail)
+        {
+            $collection = new Collection($rentalRequestDetail->rental_receive_details);
+            $rentalRequestDetail->quantity_received = $collection->reduce(function($accumulated, $rentalReceiveDetail)
+            {
+                return $accumulated + $rentalReceiveDetail->quantity;
+            }, 0);
+            $rentalRequestDetail->quantity_remaining = $rentalRequestDetail->quantity - $rentalRequestDetail->quantity_received;
+        }
+        unset($rentalRequestDetail);
+        return $this;
+    }
+
 }

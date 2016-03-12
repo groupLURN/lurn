@@ -90,9 +90,7 @@ class EquipmentController extends AppController
      */
     public function edit($id = null)
     {
-        $equipment = $this->Equipment->get($id, [
-            'contain' => []
-        ]);
+        $equipment = $this->Equipment->get($id);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $equipment = $this->Equipment->patchEntity($equipment, $this->request->data);
             if ($this->Equipment->save($equipment)) {

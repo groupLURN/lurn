@@ -105,4 +105,32 @@ class RentalReceiveHeadersTable extends Table
             ->group('RentalReceiveHeaders.id');
     }
 
+    public function findByProjectId(Query $query, array $options)
+    {
+        if($options['project_id'] > 0)
+            return $query->where(['RentalRequestHeaders.project_id' => $options['project_id']]);
+        return $query;
+    }
+
+    public function findBySupplierId(Query $query, array $options)
+    {
+        if($options['supplier_id'] > 0)
+            return $query->where(['RentalRequestHeaders.supplier_id' => $options['supplier_id']]);
+        return $query;
+    }
+
+    public function findByReceiveDateFrom(Query $query, array $options)
+    {
+        return $query->where([
+            $query->newExpr()->gte('RentalReceiveHeaders.created', $options['receive_date_from'], 'datetime'),
+        ]);
+    }
+
+    public function findByReceiveDateTo(Query $query, array $options)
+    {
+        return $query->where([
+            $query->newExpr()->lt('RentalReceiveHeaders.created', $options['receive_date_to'], 'datetime')
+        ]);
+    }
+
 }

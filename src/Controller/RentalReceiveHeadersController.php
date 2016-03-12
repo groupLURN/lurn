@@ -33,6 +33,7 @@ class RentalReceiveHeadersController extends AppController
         $suppliers = $this->RentalReceiveHeaders->RentalReceiveDetails->RentalRequestDetails->RentalRequestHeaders->Suppliers->find('list')->toArray();
         $equipment = TableRegistry::get('Equipment')->find('list')->toArray();
         $this->set(compact('rentalReceiveHeaders', 'projects', 'suppliers', 'equipment'));
+        $this->set($this->request->query);
         $this->set('_serialize', ['rentalReceiveHeaders', 'projects', 'suppliers', 'equipment']);
     }
 

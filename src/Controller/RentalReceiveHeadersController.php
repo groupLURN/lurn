@@ -2,6 +2,9 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Collection\Collection;
+use Cake\I18n\Time;
+use Cake\ORM\TableRegistry;
 
 /**
  * RentalReceiveHeaders Controller
@@ -73,6 +76,7 @@ class RentalReceiveHeadersController extends AppController
         }
         $equipment = TableRegistry::get('Equipment')->find('list', ['limit' => 200])->toArray();
         $rentalRequestHeaders = $this->RentalReceiveHeaders->RentalReceiveDetails->RentalRequestDetails->RentalRequestHeaders->find('list', ['limit' => 200])->toArray();
+        $equipment = TableRegistry::get('Equipment')->find('list')->toArray();
         $this->set(compact('rentalReceiveHeader', 'rentalRequestHeaders', 'equipment'));
         $this->set('_serialize', ['rentalReceiveHeader', 'rentalRequestHeaders', 'equipment']);
     }

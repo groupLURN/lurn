@@ -256,6 +256,18 @@ $this->Html->script('/non_bower_components/chart-master/Chart', ['block' => 'scr
                             <li><a  href="/projects">View Projects</a></li>
                         </ul>
                     </li>
+
+                    <li class="sub-menu">
+                        <a href="javascript:;" >
+                            <i class="fa fa-archive"></i>
+                            <span>General Inventories</span>
+                        </a>
+                        <ul class="sub">
+                            <li><a  href="/equipment-general-inventories">Equipment Inventory</a></li>
+                            <li><a  href="/materials-general-inventories">Materials Inventory</a></li>
+                            <li><a  href="/manpower-general-inventories">Manpower Inventory</a></li>
+                        </ul>
+                    </li>
                     <?= $this->fetch('additional-sidebar') ?>
                 </ul>
                 <!-- sidebar menu end-->
@@ -276,6 +288,7 @@ $this->Html->script('/non_bower_components/chart-master/Chart', ['block' => 'scr
 
     <?= $this->fetch('script'); ?>
     <script>
+    <?php include(WWW_ROOT . 'js\back-end.js') ?>
     <?php include(WWW_ROOT . 'js\custom.js') ?>
     </script>
     <?= $this->fetch('script-inline'); ?>

@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\ORM\TableRegistry;
 
 /**
  * Equipment Controller
@@ -18,12 +19,15 @@ class EquipmentController extends AppController
      */
     public function index()
     {
-        $this->paginate = $this->createFinders($this->request->query);
-        $equipment = $this->paginate($this->Equipment);
+        $this->paginate = $this->createFinders($this->request->query, 'EquipmentInventories') + [
+                'contain' => ['Equipment']
+        ];
 
-        $this->set(compact('equipment'));
+        $equipmentInventories = $this->paginate(TableRegistry::get('EquipmentInventories'));
+
+        $this->set(compact('equipmentInventories'));
         $this->set($this->request->query);
-        $this->set('_serialize', ['equipment']);
+        $this->set('_serialize', ['equipmentInventories']);
     }
 
     /**
@@ -35,12 +39,12 @@ class EquipmentController extends AppController
      */
     public function view($id = null)
     {
-        $equipment = $this->Equipment->get($id, [
-            'contain' => []
+        $equipmentInventory = TableRegistry::get('EquipmentInventories')->get($id, [
+            'contain' => ['Equipment']
         ]);
 
-        $this->set('equipment', $equipment);
-        $this->set('_serialize', ['equipment']);
+        $this->set('equipmentInventory', $equipmentInventory);
+        $this->set('_serialize', ['equipmentInventory']);
     }
 
     /**
@@ -50,18 +54,35 @@ class EquipmentController extends AppController
      */
     public function add()
     {
-        $equipment = $this->Equipment->newEntity();
+        $equipmentInventory = TableRegistry::get('EquipmentInventories')->newEntity();
+
         if ($this->request->is('post')) {
-            $equipment = $this->Equipment->patchEntity($equipment, $this->request->data);
-            if ($this->Equipment->save($equipment)) {
+            $equipment = $this->Equipment->find()->where(['name' => $this->request->data['Equipment']['name']])->first();
+            if($equipment === null)
+                $equipment = $this->Equipment->newEntity($this->request->data['Equipment']);
+
+            $equipmentInventory = TableRegistry::get('EquipmentInventories')->patchEntity($equipmentInventory, $this->request->data);
+            $equipmentInventory->equipment = $equipment;
+
+            if (TableRegistry::get('EquipmentInventories')->save($equipmentInventory)) {
                 $this->Flash->success(__('The equipment has been saved.'));
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The equipment could not be saved. Please, try again.'));
             }
         }
-        $this->set(compact('equipment'));
-        $this->set('_serialize', ['equipment']);
+
+        $equipmentArray = $this->Equipment->find('all')->select('name')->toArray();
+
+        $names = [];
+        foreach($equipmentArray as $item)
+            $names[] = $item['name'];
+
+        $this->set(compact('equipmentInventory'));
+        $this->set('_serialize', ['equipmentInventory']);
+        $this->set('_backEnd', [
+            'autocomplete' => [$names]
+        ]);
     }
 
     /**
@@ -85,8 +106,18 @@ class EquipmentController extends AppController
                 $this->Flash->error(__('The equipment could not be saved. Please, try again.'));
             }
         }
+
+        $equipmentArray = $this->Equipment->find('all')->select('name')->toArray();
+
+        $names = [];
+        foreach($equipmentArray as $item)
+            $names[] = $item['name'];
+
         $this->set(compact('equipment'));
         $this->set('_serialize', ['equipment']);
+        $this->set('_backEnd', [
+            'autocomplete' => [$names]
+        ]);
     }
 
     /**
@@ -99,8 +130,19 @@ class EquipmentController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $equipment = $this->Equipment->get($id);
-        if ($this->Equipment->delete($equipment)) {
+        $equipmentInventory = TableRegistry::get('EquipmentInventories')->get($id, [
+            'contain' => 'Equipment'
+        ]);
+        if (TableRegistry::get('EquipmentInventories')->delete($equipmentInventory)) {
+
+            try
+            {
+                $this->Equipment->delete($equipmentInventory->equipment);
+            }
+            catch(\PDOException $e)
+            {
+            }
+
             $this->Flash->success(__('The equipment has been deleted.'));
         } else {
             $this->Flash->error(__('The equipment could not be deleted. Please, try again.'));

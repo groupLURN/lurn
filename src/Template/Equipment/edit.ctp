@@ -9,7 +9,7 @@
             echo $this->Form->input('name', [
                 'class' => 'form-control',
                 'label' => [
-                    'class' => 'mt'
+                    'class' => 'mt autocomplete'
                 ]
             ]);
 

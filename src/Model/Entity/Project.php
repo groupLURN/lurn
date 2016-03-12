@@ -14,11 +14,17 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\ProjectStatus $project_status
  * @property string $title
  * @property string $description
+ * @property string $location
  * @property \Cake\I18n\Time $start_date
  * @property \Cake\I18n\Time $end_date
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
  * @property \App\Model\Entity\Employee[] $employees
+ * @property \App\Model\Entity\EquipmentProjectInventory[] $equipment_project_inventories
+ * @property \App\Model\Entity\EquipmentTaskInventory[] $equipment_task_inventories
+ * @property \App\Model\Entity\Manpower[] $manpower
+ * @property \App\Model\Entity\MaterialsProjectInventory[] $materials_project_inventories
+ * @property \App\Model\Entity\MaterialsTaskInventory[] $materials_task_inventories
  * @property \App\Model\Entity\Milestone[] $milestones
  */
 class Project extends Entity

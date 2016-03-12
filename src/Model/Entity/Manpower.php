@@ -7,6 +7,10 @@ use Cake\ORM\Entity;
  * Manpower Entity.
  *
  * @property int $id
+ * @property int $project_id
+ * @property \App\Model\Entity\Project $project
+ * @property string $task_id
+ * @property \App\Model\Entity\Task $task_inventory
  * @property int $manpower_type_id
  * @property \App\Model\Entity\ManpowerType $manpower_type
  * @property string $name

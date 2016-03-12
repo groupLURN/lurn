@@ -17,7 +17,7 @@ class ProjectOverviewController extends AppController
             return $this->redirect(['controller' => 'dashboard']);
 
         $this->viewBuilder()->layout('project_management');
-        $this->set('project_id', $this->request->params['pass'][0]);
+        $this->set('projectId', $this->request->params['pass'][0]);
         return parent::beforeFilter($event);
     }
 

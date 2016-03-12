@@ -19,7 +19,6 @@ class TasksController extends AppController
             return $this->redirect(['controller' => 'dashboard']);
 
         $this->viewBuilder()->layout('project_management');
-        $this->set('project_id', $this->request->query['project_id']);
         $this->__projectId = (int) $this->request->query['project_id'];
 
         $this->set('projectId', $this->__projectId);
@@ -116,16 +115,30 @@ class TasksController extends AppController
      */
     public function edit($id = null)
     {
-        $task = $this->Tasks->get($id, [
-            'contain' => ['Equipment', 'Manpower', 'Materials']
-        ]);
-
         if ($this->request->is(['patch', 'post', 'put'])) {
 
+            $task = $this->Tasks->get($id);
+
+            $nullSet = [
+                'manpower' => [],
+                'equipment' => [],
+                'materials' => []
+            ];
+
+            if(isset($this->request->data['resources']))
+                $this->request->data['resources'] += $nullSet;
+            else
+                $this->request->data['resources'] = $nullSet;
+
             $this->request->data += $this->_resourcesAdapter($this->request->data['resources']);
+
             $task = $this->Tasks->patchEntity($task, $this->request->data, [
                 'associated' => ['Equipment', 'Manpower', 'Materials']
             ]);
+
+            $task->dirty('manpower', true);
+            $task->dirty('equipment', true);
+            $task->dirty('materials', true);
 
             if ($this->Tasks->save($task)) {
                 $this->Flash->success(__('The task has been saved.'));
@@ -135,27 +148,45 @@ class TasksController extends AppController
             }
         }
 
+        $task = $this->Tasks->get($id, [
+            'contain' => ['Equipment', 'Manpower', 'Materials']
+        ]);
+
         $milestones = $this->Tasks->Milestones->find('list', ['limit' => 200]);
         $equipment = $this->Tasks->Equipment->find('list', ['limit' => 200]);
-        $manpower = $this->Tasks->Manpower->find('list', ['limit' => 200])
-            ->leftJoinWith('ManpowerTasks.Tasks', function($query) use ($task)
-            {
-                return $query
-                    ->where(
-                        [
-                            'Tasks.start_date <=' => $task->start_date,
-                            'Tasks.end_date >=' => $task->start_date,
-                            'Tasks.id !=' => $task->id
-                        ]
-                    )
-                    ->orWhere(
-                        [
-                            'Tasks.start_date <=' => $task->end_date,
-                            'Tasks.end_date >=' => $task->end_date,
-                            'Tasks.id !=' => $task->id
-                        ]
-                    );
-            })->where(['Tasks.id IS' => null]);
+        $manpower = $this->Tasks->Manpower->find('list', ['limit' => 200]);
+//        $manpower
+//            ->select(['__violation' =>
+//                $manpower->func()->coalesce([
+//                    $manpower->func()->sum(
+//                        $manpower->newExpr()->addCase([
+//                            $manpower->newExpr()->add(["Tasks.id IS NOT" => null])
+//                        ], 1
+//                        )
+//                    ), 0
+//                ])
+//            ])
+//            ->select($this->Tasks->Manpower)
+//            ->leftJoinWith('ManpowerTasks.Tasks', function($query) use ($task)
+//            {
+//                return $query
+//                    ->where(
+//                        [
+//                            'Tasks.start_date <=' => $task->start_date,
+//                            'Tasks.end_date >=' => $task->start_date,
+//                            'Tasks.id !=' => $task->id
+//                        ]
+//                    )
+//                    ->orWhere(
+//                        [
+//                            'Tasks.start_date <=' => $task->end_date,
+//                            'Tasks.end_date >=' => $task->end_date,
+//                            'Tasks.id !=' => $task->id
+//                        ]
+//                    );
+//            })
+//            ->group(['Manpower.id'])
+//            ->having(['__violation' => 0]);
 
         $materials = $this->Tasks->Materials->find('list', ['limit' => 200]);
 

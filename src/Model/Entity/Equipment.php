@@ -10,6 +10,10 @@ use Cake\ORM\Entity;
  * @property string $name
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
+ * @property \App\Model\Entity\EquipmentGeneralInventory[] $equipment_general_inventories
+ * @property \App\Model\Entity\EquipmentInventory[] $equipment_inventories
+ * @property \App\Model\Entity\EquipmentProjectInventory[] $equipment_project_inventories
+ * @property \App\Model\Entity\EquipmentTaskInventory[] $equipment_task_inventories
  * @property \App\Model\Entity\Task[] $tasks
  */
 class Equipment extends Entity

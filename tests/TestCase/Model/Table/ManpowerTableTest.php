@@ -25,9 +25,6 @@ class ManpowerTableTest extends TestCase
      */
     public $fixtures = [
         'app.manpower',
-        'app.manpower_types',
-        'app.tasks',
-        'app.milestones',
         'app.projects',
         'app.clients',
         'app.users',
@@ -36,8 +33,23 @@ class ManpowerTableTest extends TestCase
         'app.employee_types',
         'app.employees_projects',
         'app.project_statuses',
+        'app.equipment_project_inventories',
+        'app.equipment_task_inventories',
+        'app.materials_project_inventories',
+        'app.materials',
+        'app.materials_general_inventories',
+        'app.materials_task_inventories',
+        'app.tasks',
+        'app.milestones',
+        'app.equipment',
+        'app.equipment_general_inventories',
+        'app.equipment_inventories',
+        'app.equipment_tasks',
+        'app.manpower_tasks',
+        'app.materials_tasks',
         'app.employees_join',
-        'app.manpower_tasks'
+        'app.manpower_types',
+        'app.task_inventory'
     ];
 
     /**
@@ -90,6 +102,46 @@ class ManpowerTableTest extends TestCase
      * @return void
      */
     public function testBuildRules()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test findByName method
+     *
+     * @return void
+     */
+    public function testFindByName()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test findByManpowerTypeId method
+     *
+     * @return void
+     */
+    public function testFindByManpowerTypeId()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test findGeneralInventorySummary method
+     *
+     * @return void
+     */
+    public function testFindGeneralInventorySummary()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test findProjectInventorySummary method
+     *
+     * @return void
+     */
+    public function testFindProjectInventorySummary()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

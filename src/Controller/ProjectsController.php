@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Collection\Collection;
 
 /**
  * Projects Controller
@@ -19,7 +20,7 @@ class ProjectsController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['Clients', 'Employees', 'ProjectStatuses']
+            'contain' => ['Clients', 'Employees', 'ProjectStatuses', 'Milestones' => ['Tasks']]
         ];
 
         $this->paginate += array_merge($this->createFinders($this->request->query), [
@@ -29,6 +30,23 @@ class ProjectsController extends AppController
         ]);
 
         $projects = $this->paginate($this->Projects);
+        foreach($projects as $project)
+        {
+            $milestones = new Collection($project->milestones);
+            list($finishedTasks, $totalTasks) = $milestones->reduce(function($accumulated, $milestone)
+            {
+                $tasks = new Collection($milestone->tasks);
+
+                list($finishedTasks, $totalTasks) = $tasks->reduce(function($accumulated, $task)
+                {
+                    return [$accumulated[0] + $task->is_finished, $accumulated[1] + 1];
+                }, [0, 0]);
+
+                return [$accumulated[0] + $finishedTasks, $accumulated[1] + $totalTasks];
+            }, [0, 0]);
+            $project->progress = $finishedTasks / $totalTasks * 100;
+        }
+
         $projectStatuses = $this->Projects->ProjectStatuses->find('list', ['limit' => 200])->toArray();
 
         $this->set(compact('projects', 'projectStatuses'));

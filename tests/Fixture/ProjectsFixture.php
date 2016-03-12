@@ -23,6 +23,7 @@ class ProjectsFixture extends TestFixture
         'project_status_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
         'title' => ['type' => 'string', 'length' => 255, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'fixed' => null],
         'description' => ['type' => 'text', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
+        'location' => ['type' => 'string', 'length' => 255, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'fixed' => null],
         'start_date' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         'end_date' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         'created' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
@@ -61,10 +62,11 @@ class ProjectsFixture extends TestFixture
             'project_status_id' => 1,
             'title' => 'Lorem ipsum dolor sit amet',
             'description' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
-            'start_date' => '2016-02-20 17:04:58',
-            'end_date' => '2016-02-20 17:04:58',
-            'created' => '2016-02-20 17:04:58',
-            'modified' => '2016-02-20 17:04:58'
+            'location' => 'Lorem ipsum dolor sit amet',
+            'start_date' => '2016-03-03 18:04:28',
+            'end_date' => '2016-03-03 18:04:28',
+            'created' => '2016-03-03 18:04:28',
+            'modified' => '2016-03-03 18:04:28'
         ],
     ];
 }

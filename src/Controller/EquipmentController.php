@@ -37,12 +37,10 @@ class EquipmentController extends AppController
      */
     public function view($id = null)
     {
-        $equipmentInventory = TableRegistry::get('EquipmentInventories')->get($id, [
-            'contain' => ['Equipment']
-        ]);
+        $equipment = $this->Equipment->get($id);
 
-        $this->set('equipmentInventory', $equipmentInventory);
-        $this->set('_serialize', ['equipmentInventory']);
+        $this->set('equipment', $equipment);
+        $this->set('_serialize', ['equipment']);
     }
 
     /**

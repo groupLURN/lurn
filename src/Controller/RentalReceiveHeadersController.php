@@ -46,7 +46,9 @@ class RentalReceiveHeadersController extends AppController
     public function view($id = null)
     {
         $rentalReceiveHeader = $this->RentalReceiveHeaders->get($id, [
-            'contain' => ['RentalReceiveDetails.RentalRequestDetails.RentalRequestHeaders']
+            'contain' => ['RentalReceiveDetails.RentalRequestDetails.RentalRequestHeaders' => [
+                'Projects', 'Suppliers'
+            ], 'RentalReceiveDetails.RentalRequestDetails.Equipment']
         ]);
 
         $this->set('rentalReceiveHeader', $rentalReceiveHeader);

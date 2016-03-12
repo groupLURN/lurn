@@ -52,10 +52,10 @@ class RentalReceiveDetailsFixture extends TestFixture
             'rental_receive_header_id' => 1,
             'rental_request_detail_id' => 1,
             'quantity' => 1,
-            'start_date' => '2016-03-11 22:18:19',
-            'end_date' => '2016-03-11 22:18:19',
-            'created' => '2016-03-11 22:18:19',
-            'modified' => '2016-03-11 22:18:19'
+            'start_date' => '2016-03-12 23:04:35',
+            'end_date' => '2016-03-12 23:04:35',
+            'created' => '2016-03-12 23:04:35',
+            'modified' => '2016-03-12 23:04:35'
         ],
     ];
 }

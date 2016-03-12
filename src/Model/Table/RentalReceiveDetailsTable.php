@@ -15,6 +15,7 @@ use Cake\Validation\Validator;
  *
  * @property \Cake\ORM\Association\BelongsTo $RentalReceiveHeaders
  * @property \Cake\ORM\Association\BelongsTo $RentalRequestDetails
+ * @property \Cake\ORM\Association\HasMany $EquipmentInventories
  */
 class RentalReceiveDetailsTable extends Table
 {
@@ -42,6 +43,9 @@ class RentalReceiveDetailsTable extends Table
         $this->belongsTo('RentalRequestDetails', [
             'foreignKey' => 'rental_request_detail_id',
             'joinType' => 'INNER'
+        ]);
+        $this->hasMany('EquipmentInventories', [
+            'foreignKey' => 'rental_receive_detail_id'
         ]);
     }
 

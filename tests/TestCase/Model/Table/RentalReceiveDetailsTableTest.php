@@ -26,6 +26,7 @@ class RentalReceiveDetailsTableTest extends TestCase
     public $fixtures = [
         'app.rental_receive_details',
         'app.rental_receive_headers',
+        'app.rental_request_details',
         'app.rental_request_headers',
         'app.projects',
         'app.clients',
@@ -53,8 +54,7 @@ class RentalReceiveDetailsTableTest extends TestCase
         'app.manpower_general_inventories',
         'app.manpower_types_tasks',
         'app.employees_join',
-        'app.suppliers',
-        'app.rental_request_details'
+        'app.suppliers'
     ];
 
     /**

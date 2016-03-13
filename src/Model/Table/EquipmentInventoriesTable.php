@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Table;
 
+use App\Model\Entity\Equipment;
 use App\Model\Entity\EquipmentInventory;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
@@ -97,6 +98,47 @@ class EquipmentInventoriesTable extends Table
         if(!empty($options['milestone_id']))
             return $query->select('Tasks.milestone_id')->leftJoinWith('Tasks')
                 ->having(['Tasks.milestone_id' => $options['milestone_id']]);
+        return $query;
+    }
+
+    public function findBySupplierId(Query $query, array $options)
+    {
+        if($options['supplier_id'] > 0)
+        {
+            $hasSupplier = $query->func()->sum(
+                $query->newExpr()->addCase(
+                    $query->newExpr()->add(['RentalRequestHeaders.supplier_id' => $options['supplier_id']]), 1
+                )
+            );
+
+            $query->select(['_hasSupplier' => $hasSupplier])
+                ->leftJoinWith('RentalReceiveDetails.RentalRequestDetails.RentalRequestHeaders')
+                ->having('_hasSupplier > 0');
+        }
+        return $query;
+    }
+
+    public function findByEquipmentType(Query $query, array $options)
+    {
+        $equipmentTypes = array_flip(Equipment::getTypes());
+
+        $hasInHouse = $query->func()->sum(
+            $query->newExpr()->addCase(
+                $query->newExpr()->add('rental_receive_detail_id IS NULL'), 1
+            )
+        );
+
+        $hasRented = $query->func()->sum(
+            $query->newExpr()->addCase(
+                $query->newExpr()->add('rental_receive_detail_id IS NOT NULL'), 1
+            )
+        );
+
+        $query->select(['_hasInHouse' => $hasInHouse, '_hasRented' => $hasRented]);
+        if((int)$options['equipment_type'] === $equipmentTypes['In-House'])
+            $query->having(['_hasInHouse > 0']);
+        else if((int)$options['equipment_type'] === $equipmentTypes['Rented'])
+            $query->having(['_hasRented > 0']);
         return $query;
     }
 

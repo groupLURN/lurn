@@ -24,9 +24,10 @@ class EquipmentGeneralInventoriesController extends AppController
     {
         $this->paginate = [
             'sortWhitelist' => [
-                'available_quantity',
-                'unavailable_quantity',
-                'total_quantity',
+                'available_in_house_quantity',
+                'available_rented_quantity',
+                'unavailable_in_house_quantity',
+                'unavailable_rented_quantity',
                 'last_modified'
             ]
         ];
@@ -86,14 +87,20 @@ class EquipmentGeneralInventoriesController extends AppController
             return $equipmentInventory->has('project');
         });
 
+        $availableRentedEquipment = $collection->filter(function($equipmentInventory)
+        {
+            return !$equipmentInventory->has('project');
+        });
+
         // Group By project id
         $unavailableInHouseEquipmentByProject = $unavailableInHouseEquipment->groupBy('project_id');
         $unavailableRentedEquipmentByProject = $unavailableRentedEquipment->groupBy('project_id');
+        $availableRentedEquipmentByRental = $availableRentedEquipment->groupBy('rental_receive_detail_id');
 
-        $inHouseEquipment = $rentedEquipment = [];
+        $unavailableInHouseEquipment = $unavailableRentedEquipment = [];
         foreach($unavailableInHouseEquipmentByProject as $row)
         {
-            $inHouseEquipment[] = [
+            $unavailableInHouseEquipment[] = [
                 'quantity' => count($row),
                 'project' => $row[0]->project
             ];
@@ -103,7 +110,7 @@ class EquipmentGeneralInventoriesController extends AppController
         {
             $collection = new Collection($row);
             $details = $collection->groupBy('rental_receive_detail_id');
-            $rentedEquipment[] = [
+            $unavailableRentedEquipment[] = [
                 'quantity' => count($row),
                 'project' => $row[0]->project,
                 'details' => $details->toList()
@@ -111,8 +118,8 @@ class EquipmentGeneralInventoriesController extends AppController
         }
 
         // Complete the collapsible feature to display the breakdown of the rental equipment detail.
-        $this->set(compact('inHouseEquipment', 'rentedEquipment', 'summary'));
-        $this->set('_serialize', ['inHouseEquipment', 'rentedEquipment', 'summary']);
+        $this->set(compact('unavailableInHouseEquipment', 'unavailableRentedEquipment', 'availableRentedEquipmentByRental', 'summary'));
+        $this->set('_serialize', ['unavailableInHouseEquipment', 'unavailableRentedEquipment', 'availableRentedEquipmentByRental', 'summary']);
     }
 
     /**
@@ -146,30 +153,19 @@ class EquipmentGeneralInventoriesController extends AppController
      */
     public function edit($id = null)
     {
-        try
-        {
-            $equipmentGeneralInventory = $this->EquipmentGeneralInventories->get($id);
-        }
-        catch(RecordNotFoundException $e)
-        {
-            $equipmentGeneralInventory = $this->EquipmentGeneralInventories->newEntity([
-                'equipment_id' => $id,
-                'quantity' => 0
-            ]);
-        }
+        $equipment = TableRegistry::get('Equipment')->get($id);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $equipmentGeneralInventory = $this->EquipmentGeneralInventories->patchEntity($equipmentGeneralInventory, $this->request->data);
-            if ($this->EquipmentGeneralInventories->save($equipmentGeneralInventory)) {
-                $this->Flash->success(__('The equipment general inventory has been saved.'));
+            if (TableRegistry::get('Equipment')->adjustInHouseInventory($equipment, $this->request->data['quantity'])) {
+                $this->Flash->success(__('The equipment general inventory has been adjusted.'));
                 return $this->redirect(['action' => 'index']);
             } else {
-                $this->Flash->error(__('The equipment general inventory could not be saved. Please, try again.'));
+                $this->Flash->error(__('The equipment general inventory could not be adjusted. Please, try again.'));
             }
         }
-        $equipment = $this->EquipmentGeneralInventories->Equipment->find('list', ['limit' => 200]);
-        $this->set(compact('equipmentGeneralInventory', 'equipment'));
-        $this->set('_serialize', ['equipmentGeneralInventory']);
+
+        $this->set(compact('equipment'));
+        $this->set('_serialize', ['equipment']);
     }
 
     /**

@@ -149,19 +149,13 @@ class EquipmentInventoriesTable extends Table
 
     public function findGeneralInventorySummary(Query $query, array $options)
     {
-        $available_quantity = $query->func()->sum(
+        $available_in_house_quantity = $query->func()->sum(
             $query->newExpr()->addCase(
                 $query->newExpr()->add([
                     'AND' =>
                     [
                         'EquipmentInventories.project_id IS' => null,
-                        'OR' => [
-                            'EquipmentInventories.rental_receive_detail_id IS' => null,
-                            'AND' => [
-                                'EquipmentInventories.rental_receive_detail_id IS NOT' => null,
-                                'RentalReceiveDetails.id IS NOT' => null
-                            ]
-                        ]
+                        'EquipmentInventories.rental_receive_detail_id IS' => null,
                     ]
                 ]),
                 1,
@@ -169,18 +163,59 @@ class EquipmentInventoriesTable extends Table
             )
         );
 
-        $unavailable_quantity = $query->func()->sum(
+        $available_rented_quantity = $query->func()->sum(
+            $query->newExpr()->addCase(
+                $query->newExpr()->add([
+                    'AND' =>
+                        [
+                            'EquipmentInventories.project_id IS' => null,
+                            'EquipmentInventories.rental_receive_detail_id IS NOT' => null,
+                            'RentalReceiveDetails.id IS NOT' => null
+                        ]
+                ]),
+                1,
+                'integer'
+            )
+        );
+
+        $unavailable_in_house_quantity = $query->func()->sum(
             $query->newExpr()->addCase(
                 $query->newExpr()->add([
                     'AND' =>
                         [
                             'EquipmentInventories.project_id IS NOT' => null,
-                            'OR' => [
-                                'EquipmentInventories.rental_receive_detail_id IS' => null,
-                                'AND' => [
-                                    'EquipmentInventories.rental_receive_detail_id IS NOT' => null,
-                                    'RentalReceiveDetails.id IS NOT' => null
-                                ]
+                            'EquipmentInventories.rental_receive_detail_id IS' => null,
+                        ]
+                ]),
+                1,
+                'integer'
+            )
+        );
+
+        $unavailable_rented_quantity = $query->func()->sum(
+            $query->newExpr()->addCase(
+                $query->newExpr()->add([
+                    'AND' =>
+                        [
+                            'EquipmentInventories.project_id IS NOT' => null,
+                            'EquipmentInventories.rental_receive_detail_id IS NOT' => null,
+                            'RentalReceiveDetails.id IS NOT' => null
+                        ]
+                ]),
+                1,
+                'integer'
+            )
+        );
+
+        $total_quantity = $query->func()->sum(
+            $query->newExpr()->addCase(
+                $query->newExpr()->add([
+                    'OR' =>
+                        [
+                            'EquipmentInventories.rental_receive_detail_id IS' => null,
+                            'AND' => [
+                                'EquipmentInventories.rental_receive_detail_id IS NOT' => null,
+                                'RentalReceiveDetails.id IS NOT' => null
                             ]
                         ]
                 ]),
@@ -189,14 +224,14 @@ class EquipmentInventoriesTable extends Table
             )
         );
 
-        $total_quantity = $query->func()->count('EquipmentInventories.id');
-
         if(isset($options['id']))
             $query = $query->where(['Equipment.id' => $options['id']]);
 
         return $query->select(['Equipment.id', 'Equipment.name', 'last_modified' => 'EquipmentInventories.modified',
-            'available_quantity' => $available_quantity,
-            'unavailable_quantity' => $unavailable_quantity,
+            'available_in_house_quantity' => $available_in_house_quantity,
+            'available_rented_quantity' => $available_rented_quantity,
+            'unavailable_in_house_quantity' => $unavailable_in_house_quantity,
+            'unavailable_rented_quantity' => $unavailable_rented_quantity,
             'total_quantity' => $total_quantity])
             ->leftJoinWith('RentalReceiveDetails')
             ->contain(['Equipment'])

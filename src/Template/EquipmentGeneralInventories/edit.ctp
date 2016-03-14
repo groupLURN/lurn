@@ -2,18 +2,29 @@
 <?= $this->assign('title', 'Equipment General Inventory') ?>
 <div class="row mt">
     <div class="col-md-12">
-        <?= $this->Form->create($equipmentGeneralInventory) ?>
+        <?= $this->Form->create($equipment) ?>
         <fieldset>
             <legend><h3><i class="fa fa-angle-right"></i> <?= __('Adjust Inventory') ?></h3></legend>
             <?php
+
+            echo $this->Form->input('Equipment.name', [
+                'type' => 'text',
+                'class' => 'form-control number-only',
+                'label' => [
+                    'class' => 'mt',
+                    'text' => 'Equipment'
+                ],
+                'disabled' => true
+            ]);
 
             echo $this->Form->input('quantity', [
                 'type' => 'text',
                 'class' => 'form-control number-only',
                 'label' => [
                     'class' => 'mt',
-                    'text' => 'Available Quantity'
+                    'text' => 'Available In-house Quantity'
                 ],
+                'required' => true
             ]);
 
             ?>

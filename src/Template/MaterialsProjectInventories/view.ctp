@@ -26,7 +26,7 @@
 </div>
 
 <div class="related">
-    <h3><?= __('Track Materials') ?></h3>
+    <h3><?= __('Track Unavailable Materials') ?></h3>
     <?php if (!empty($material->materials_task_inventories)): ?>
         <table cellpadding="0" cellspacing="0" class="table table-striped">
             <tr>

@@ -131,11 +131,15 @@ class EquipmentInventoriesTable extends Table
 
         $hasRented = $query->func()->sum(
             $query->newExpr()->addCase(
-                $query->newExpr()->add('rental_receive_detail_id IS NOT NULL'), 1
+                $query->newExpr()->add([
+                    'rental_receive_detail_id IS NOT NULL',
+                    'RentalReceiveDetails.id IS NOT NULL'
+                ]), 1
             )
         );
 
         $query->select(['_hasInHouse' => $hasInHouse, '_hasRented' => $hasRented]);
+        $query->leftJoinWith('RentalReceiveDetails');
         if((int)$options['equipment_type'] === $equipmentTypes['In-House'])
             $query->having(['_hasInHouse > 0']);
         else if((int)$options['equipment_type'] === $equipmentTypes['Rented'])

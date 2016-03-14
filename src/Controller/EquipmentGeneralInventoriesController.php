@@ -28,6 +28,7 @@ class EquipmentGeneralInventoriesController extends AppController
                 'available_rented_quantity',
                 'unavailable_in_house_quantity',
                 'unavailable_rented_quantity',
+                'total_quantity',
                 'last_modified'
             ]
         ];

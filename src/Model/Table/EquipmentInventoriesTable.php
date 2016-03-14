@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Table;
 
+use App\Model\Entity\Equipment;
 use App\Model\Entity\EquipmentInventory;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
@@ -13,6 +14,7 @@ use Cake\Validation\Validator;
  * @property \Cake\ORM\Association\BelongsTo $Projects
  * @property \Cake\ORM\Association\BelongsTo $Tasks
  * @property \Cake\ORM\Association\BelongsTo $Equipment
+ * @property \Cake\ORM\Association\BelongsTo $RentalReceiveDetails
  */
 class EquipmentInventoriesTable extends Table
 {
@@ -43,6 +45,10 @@ class EquipmentInventoriesTable extends Table
             'foreignKey' => 'equipment_id',
             'joinType' => 'INNER'
         ]);
+        $this->belongsTo('RentalReceiveDetails', [
+            'foreignKey' => 'rental_receive_detail_id',
+            'conditions' => ['RentalReceiveDetails.end_date >= CURDATE()']
+        ]);
     }
 
     /**
@@ -72,6 +78,7 @@ class EquipmentInventoriesTable extends Table
         $rules->add($rules->existsIn(['project_id'], 'Projects'));
         $rules->add($rules->existsIn(['task_id'], 'Tasks'));
         $rules->add($rules->existsIn(['equipment_id'], 'Equipment'));
+        $rules->add($rules->existsIn(['rental_receive_detail_id'], 'RentalReceiveDetails'));
         return $rules;
     }
 
@@ -95,11 +102,68 @@ class EquipmentInventoriesTable extends Table
         return $query;
     }
 
+    public function findBySupplierId(Query $query, array $options)
+    {
+        if($options['supplier_id'] > 0)
+        {
+            $hasSupplier = $query->func()->sum(
+                $query->newExpr()->addCase(
+                    $query->newExpr()->add(['RentalRequestHeaders.supplier_id' => $options['supplier_id']]), 1
+                )
+            );
+
+            $query->select(['_hasSupplier' => $hasSupplier])
+                ->leftJoinWith('RentalReceiveDetails.RentalRequestDetails.RentalRequestHeaders')
+                ->having('_hasSupplier > 0');
+        }
+        return $query;
+    }
+
+    public function findByEquipmentType(Query $query, array $options)
+    {
+        $equipmentTypes = array_flip(Equipment::getTypes());
+
+        $hasInHouse = $query->func()->sum(
+            $query->newExpr()->addCase(
+                $query->newExpr()->add('rental_receive_detail_id IS NULL'), 1
+            )
+        );
+
+        $hasRented = $query->func()->sum(
+            $query->newExpr()->addCase(
+                $query->newExpr()->add([
+                    'rental_receive_detail_id IS NOT NULL',
+                    'RentalReceiveDetails.id IS NOT NULL'
+                ]), 1
+            )
+        );
+
+        $query->select(['_hasInHouse' => $hasInHouse, '_hasRented' => $hasRented]);
+        $query->leftJoinWith('RentalReceiveDetails');
+        if((int)$options['equipment_type'] === $equipmentTypes['In-House'])
+            $query->having(['_hasInHouse > 0']);
+        else if((int)$options['equipment_type'] === $equipmentTypes['Rented'])
+            $query->having(['_hasRented > 0']);
+        return $query;
+    }
+
     public function findGeneralInventorySummary(Query $query, array $options)
     {
         $available_quantity = $query->func()->sum(
             $query->newExpr()->addCase(
-                $query->newExpr()->add(['EquipmentInventories.project_id IS' => null]),
+                $query->newExpr()->add([
+                    'AND' =>
+                    [
+                        'EquipmentInventories.project_id IS' => null,
+                        'OR' => [
+                            'EquipmentInventories.rental_receive_detail_id IS' => null,
+                            'AND' => [
+                                'EquipmentInventories.rental_receive_detail_id IS NOT' => null,
+                                'RentalReceiveDetails.id IS NOT' => null
+                            ]
+                        ]
+                    ]
+                ]),
                 1,
                 'integer'
             )
@@ -107,7 +171,19 @@ class EquipmentInventoriesTable extends Table
 
         $unavailable_quantity = $query->func()->sum(
             $query->newExpr()->addCase(
-                $query->newExpr()->add(['EquipmentInventories.project_id IS NOT' => null]),
+                $query->newExpr()->add([
+                    'AND' =>
+                        [
+                            'EquipmentInventories.project_id IS NOT' => null,
+                            'OR' => [
+                                'EquipmentInventories.rental_receive_detail_id IS' => null,
+                                'AND' => [
+                                    'EquipmentInventories.rental_receive_detail_id IS NOT' => null,
+                                    'RentalReceiveDetails.id IS NOT' => null
+                                ]
+                            ]
+                        ]
+                ]),
                 1,
                 'integer'
             )
@@ -122,6 +198,7 @@ class EquipmentInventoriesTable extends Table
             'available_quantity' => $available_quantity,
             'unavailable_quantity' => $unavailable_quantity,
             'total_quantity' => $total_quantity])
+            ->leftJoinWith('RentalReceiveDetails')
             ->contain(['Equipment'])
             ->group('Equipment.id');
     }

@@ -10,6 +10,37 @@
                 <tbody>
                 <tr>
                     <td style="padding-top: 15px; padding-left: 10px;">
+                        <?= $this->Form->label("", "Equipment Type"); ?>
+                    </td>
+                    <td colspan="3">
+                        <?= $this->Form->input('equipment_type', [
+                            'options' => ['0' => 'All'] + $equipmentTypes,
+                            'class' => 'form-control',
+                            'label' => false,
+                            'val' => isset($equipment_type)? $equipment_type: 0,
+                            'onchange' => sprintf("
+                                $('#supplier-id-filter').prop('disabled', Number($(this).val()) !== %d);
+                            ", array_flip($equipmentTypes)['Rented'])
+                        ]); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-top: 15px; padding-left: 10px;">
+                        <?= $this->Form->label("", "Supplier"); ?>
+                    </td>
+                    <td colspan="3">
+                        <?= $this->Form->input('supplier_id', [
+                            'options' => ['0' => 'All'] + $suppliers,
+                            'class' => 'form-control',
+                            'label' => false,
+                            'val' => isset($supplier_id)? $supplier_id: 0,
+                            'id' => 'supplier-id-filter',
+                            'disabled' => isset($equipment_type)? $equipment_type != array_flip($equipmentTypes)['Rented']: true
+                        ]); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-top: 15px; padding-left: 10px;">
                         <?= $this->Form->label("", "Project"); ?>
                     </td>
                     <td colspan="3">

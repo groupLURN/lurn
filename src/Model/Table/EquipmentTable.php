@@ -16,6 +16,8 @@ use Cake\Validation\Validator;
  *
  * @property \Cake\ORM\Association\HasMany $EquipmentGeneralInventories
  * @property \Cake\ORM\Association\HasMany $EquipmentInventories
+ * @property \Cake\ORM\Association\HasMany $InHouseEquipmentInventories
+ * @property \Cake\ORM\Association\HasMany $RentedEquipmentInventories
  * @property \Cake\ORM\Association\BelongsToMany $Tasks
  */
 class EquipmentTable extends Table
@@ -45,6 +47,18 @@ class EquipmentTable extends Table
 
         $this->hasMany('EquipmentInventories', [
             'foreignKey' => 'equipment_id'
+        ]);
+
+        $this->hasMany('InHouseEquipmentInventories', [
+            'className' => 'EquipmentInventories',
+            'foreignKey' => 'equipment_id',
+            'conditions' => ['InHouseEquipmentInventories.rental_receive_detail_id IS' => null]
+        ]);
+
+        $this->hasMany('RentedEquipmentInventories', [
+            'className' => 'EquipmentInventories',
+            'foreignKey' => 'equipment_id',
+            'conditions' => ['RentedEquipmentInventories.rental_receive_detail_id IS NOT' => null]
         ]);
 
         $this->belongsToMany('Tasks', [

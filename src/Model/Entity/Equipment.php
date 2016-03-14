@@ -19,6 +19,14 @@ use Cake\ORM\Entity;
 class Equipment extends Entity
 {
 
+    public static function getTypes()
+    {
+        return [
+            1 => 'In-House',
+            2 => 'Rented'
+        ];
+    }
+
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *

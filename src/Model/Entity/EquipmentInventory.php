@@ -13,6 +13,8 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\Task $task
  * @property int $equipment_id
  * @property \App\Model\Entity\Equipment $equipment
+ * @property int $rental_receive_detail_id
+ * @property \App\Model\Entity\RentalReceiveDetail $rental_receive_detail
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
  */

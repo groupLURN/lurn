@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use App\Model\Entity\Equipment;
 use Cake\Collection\Collection;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
@@ -37,8 +38,10 @@ class EquipmentProjectInventoriesController extends AppController
     {
         $this->paginate = [
             'sortWhitelist' => [
-                'available_quantity',
-                'unavailable_quantity',
+                'available_in_house_quantity',
+                'available_rented_quantity',
+                'unavailable_in_house_quantity',
+                'unavailable_rented_quantity',
                 'total_quantity',
                 'last_modified'
             ]
@@ -52,9 +55,11 @@ class EquipmentProjectInventoriesController extends AppController
             ->where(['project_id' => $this->_projectId])
             ->toArray();
 
-        $this->set(compact('equipmentInventories', 'milestones'));
+        $suppliers = TableRegistry::get('Suppliers')->find('list')->toArray();
+        $equipmentTypes = Equipment::getTypes();
+        $this->set(compact('equipmentInventories', 'milestones', 'suppliers', 'equipmentTypes'));
         $this->set($this->request->query);
-        $this->set('_serialize', ['equipmentInventories', 'milestones']);
+        $this->set('_serialize', ['equipmentInventories', 'milestones', 'suppliers', 'equipmentTypes']);
     }
 
     /**
@@ -71,34 +76,77 @@ class EquipmentProjectInventoriesController extends AppController
             'project_id' => $this->_projectId
         ])->first();
 
-        $equipmentInventories = TableRegistry::get('EquipmentInventories')->find()
-            ->contain(['Equipment', 'Tasks' => ['Milestones']])
-            ->matching('Equipment', function($query) use ($id)
-            {
-                return $query->where(['Equipment.id' => $id]);
-            })
-            ->where(['EquipmentInventories.project_id' => $this->_projectId])
-            ->orderAsc('Milestones.title')
-            ->toArray();
+        $rentedEquipmentInventories = TableRegistry::get('Equipment')->get($id, [
+            'contain' => [
+                'RentedEquipmentInventories' => [
+                    'Tasks' => ['Milestones'],
+                    'Projects',
+                    'RentalReceiveDetails.RentalRequestDetails.RentalRequestHeaders.Suppliers',
+                    'RentalReceiveDetails.RentalReceiveHeaders'
+                ]
+            ]
+        ])->rented_equipment_inventories;
 
-        $collection = new Collection($equipmentInventories);
+        $inHouseEquipmentInventories = TableRegistry::get('Equipment')->get($id, [
+            'contain' => [
+                'InHouseEquipmentInventories' => [
+                    'Tasks' => ['Milestones'],
+                    'Projects'
+                ]
+            ]
+        ])->in_house_equipment_inventories;
 
-        $unavailableEquipment = $collection->filter(function($equipmentInventories)
+        // Filter all task inventories.
+        $collection = new Collection($inHouseEquipmentInventories);
+        $unavailableInHouseEquipment = $collection->filter(function($equipmentInventory)
         {
-            return $equipmentInventories->has('task');
+            return $equipmentInventory->has('project') &&
+            $equipmentInventory->project->id === $this->_projectId &&
+            $equipmentInventory->has('task');
         });
 
-        $unavailableEquipmentByTask = $unavailableEquipment->groupBy('task_id');
+        $collection = new Collection($rentedEquipmentInventories);
+        $unavailableRentedEquipment = $collection->filter(function($equipmentInventory)
+        {
+            return $equipmentInventory->has('project') &&
+            $equipmentInventory->project->id === $this->_projectId &&
+            $equipmentInventory->has('task');
+        });
 
-        $details = [];
-        foreach($unavailableEquipmentByTask as $row)
-            $details[] = [
+        $availableRentedEquipment = $collection->filter(function($equipmentInventory)
+        {
+            return $equipmentInventory->has('project') &&
+            $equipmentInventory->project->id === $this->_projectId &&
+            !$equipmentInventory->has('task');
+        });
+
+        // Group By task id
+        $unavailableInHouseEquipmentByTask = $unavailableInHouseEquipment->groupBy('task_id');
+        $unavailableRentedEquipmentByTask = $unavailableRentedEquipment->groupBy('task_id');
+        $availableRentedEquipmentByRental = $availableRentedEquipment->groupBy('rental_receive_detail_id');
+
+        $unavailableInHouseEquipment = $unavailableRentedEquipment = [];
+        foreach($unavailableInHouseEquipmentByTask as $row)
+        {
+            $unavailableInHouseEquipment[] = [
                 'quantity' => count($row),
                 'task' => $row[0]->task
             ];
+        }
 
-        $this->set(compact('details', 'summary'));
-        $this->set('_serialize', ['details', 'summary']);
+        foreach($unavailableRentedEquipmentByTask as $row)
+        {
+            $collection = new Collection($row);
+            $details = $collection->groupBy('rental_receive_detail_id');
+            $unavailableRentedEquipment[] = [
+                'quantity' => count($row),
+                'task' => $row[0]->task,
+                'details' => $details->toList()
+            ];
+        }
+
+        $this->set(compact('unavailableInHouseEquipment', 'unavailableRentedEquipment', 'availableRentedEquipmentByRental', 'summary'));
+        $this->set('_serialize', ['unavailableInHouseEquipment', 'unavailableRentedEquipment', 'availableRentedEquipmentByRental', 'summary']);
     }
 
     /**

@@ -49,7 +49,7 @@ class TasksTable extends Table
 
         $this->belongsTo('Milestones', [
             'foreignKey' => 'milestone_id',
-            'joinType' => 'INNER'
+            'joinType' => 'LEFT'
         ]);
         $this->hasMany('EquipmentInventories', [
             'foreignKey' => 'task_id'

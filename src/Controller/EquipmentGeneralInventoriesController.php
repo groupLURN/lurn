@@ -28,6 +28,7 @@ class EquipmentGeneralInventoriesController extends AppController
                 'available_rented_quantity',
                 'unavailable_in_house_quantity',
                 'unavailable_rented_quantity',
+                'total_quantity',
                 'last_modified'
             ]
         ];
@@ -117,7 +118,6 @@ class EquipmentGeneralInventoriesController extends AppController
             ];
         }
 
-        // Complete the collapsible feature to display the breakdown of the rental equipment detail.
         $this->set(compact('unavailableInHouseEquipment', 'unavailableRentedEquipment', 'availableRentedEquipmentByRental', 'summary'));
         $this->set('_serialize', ['unavailableInHouseEquipment', 'unavailableRentedEquipment', 'availableRentedEquipmentByRental', 'summary']);
     }

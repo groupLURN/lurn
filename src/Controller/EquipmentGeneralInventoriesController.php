@@ -118,7 +118,6 @@ class EquipmentGeneralInventoriesController extends AppController
             ];
         }
 
-        // Complete the collapsible feature to display the breakdown of the rental equipment detail.
         $this->set(compact('unavailableInHouseEquipment', 'unavailableRentedEquipment', 'availableRentedEquipmentByRental', 'summary'));
         $this->set('_serialize', ['unavailableInHouseEquipment', 'unavailableRentedEquipment', 'availableRentedEquipmentByRental', 'summary']);
     }

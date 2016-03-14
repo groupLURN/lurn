@@ -24,9 +24,10 @@ class EquipmentGeneralInventoriesController extends AppController
     {
         $this->paginate = [
             'sortWhitelist' => [
-                'available_quantity',
-                'unavailable_quantity',
-                'total_quantity',
+                'available_in_house_quantity',
+                'available_rented_quantity',
+                'unavailable_in_house_quantity',
+                'unavailable_rented_quantity',
                 'last_modified'
             ]
         ];
@@ -86,14 +87,20 @@ class EquipmentGeneralInventoriesController extends AppController
             return $equipmentInventory->has('project');
         });
 
+        $availableRentedEquipment = $collection->filter(function($equipmentInventory)
+        {
+            return !$equipmentInventory->has('project');
+        });
+
         // Group By project id
         $unavailableInHouseEquipmentByProject = $unavailableInHouseEquipment->groupBy('project_id');
         $unavailableRentedEquipmentByProject = $unavailableRentedEquipment->groupBy('project_id');
+        $availableRentedEquipmentByRental = $availableRentedEquipment->groupBy('rental_receive_detail_id');
 
-        $inHouseEquipment = $rentedEquipment = [];
+        $unavailableInHouseEquipment = $unavailableRentedEquipment = [];
         foreach($unavailableInHouseEquipmentByProject as $row)
         {
-            $inHouseEquipment[] = [
+            $unavailableInHouseEquipment[] = [
                 'quantity' => count($row),
                 'project' => $row[0]->project
             ];
@@ -103,7 +110,7 @@ class EquipmentGeneralInventoriesController extends AppController
         {
             $collection = new Collection($row);
             $details = $collection->groupBy('rental_receive_detail_id');
-            $rentedEquipment[] = [
+            $unavailableRentedEquipment[] = [
                 'quantity' => count($row),
                 'project' => $row[0]->project,
                 'details' => $details->toList()
@@ -111,8 +118,8 @@ class EquipmentGeneralInventoriesController extends AppController
         }
 
         // Complete the collapsible feature to display the breakdown of the rental equipment detail.
-        $this->set(compact('inHouseEquipment', 'rentedEquipment', 'summary'));
-        $this->set('_serialize', ['inHouseEquipment', 'rentedEquipment', 'summary']);
+        $this->set(compact('unavailableInHouseEquipment', 'unavailableRentedEquipment', 'availableRentedEquipmentByRental', 'summary'));
+        $this->set('_serialize', ['unavailableInHouseEquipment', 'unavailableRentedEquipment', 'availableRentedEquipmentByRental', 'summary']);
     }
 
     /**

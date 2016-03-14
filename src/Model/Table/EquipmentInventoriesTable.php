@@ -147,7 +147,19 @@ class EquipmentInventoriesTable extends Table
     {
         $available_quantity = $query->func()->sum(
             $query->newExpr()->addCase(
-                $query->newExpr()->add(['EquipmentInventories.project_id IS' => null]),
+                $query->newExpr()->add([
+                    'AND' =>
+                    [
+                        'EquipmentInventories.project_id IS' => null,
+                        'OR' => [
+                            'EquipmentInventories.rental_receive_detail_id IS' => null,
+                            'AND' => [
+                                'EquipmentInventories.rental_receive_detail_id IS NOT' => null,
+                                'RentalReceiveDetails.id IS NOT' => null
+                            ]
+                        ]
+                    ]
+                ]),
                 1,
                 'integer'
             )
@@ -155,7 +167,19 @@ class EquipmentInventoriesTable extends Table
 
         $unavailable_quantity = $query->func()->sum(
             $query->newExpr()->addCase(
-                $query->newExpr()->add(['EquipmentInventories.project_id IS NOT' => null]),
+                $query->newExpr()->add([
+                    'AND' =>
+                        [
+                            'EquipmentInventories.project_id IS NOT' => null,
+                            'OR' => [
+                                'EquipmentInventories.rental_receive_detail_id IS' => null,
+                                'AND' => [
+                                    'EquipmentInventories.rental_receive_detail_id IS NOT' => null,
+                                    'RentalReceiveDetails.id IS NOT' => null
+                                ]
+                            ]
+                        ]
+                ]),
                 1,
                 'integer'
             )
@@ -170,6 +194,7 @@ class EquipmentInventoriesTable extends Table
             'available_quantity' => $available_quantity,
             'unavailable_quantity' => $unavailable_quantity,
             'total_quantity' => $total_quantity])
+            ->leftJoinWith('RentalReceiveDetails')
             ->contain(['Equipment'])
             ->group('Equipment.id');
     }

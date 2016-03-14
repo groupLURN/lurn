@@ -104,7 +104,7 @@
             <?php foreach ($unavailableRentedEquipment as $detail): ?>
                 <tr>
                     <td>
-                        <button data-toggle="collapse" data-target="#project-<?=$detail['project']->id?>"
+                        <button data-toggle="collapse" data-target="#task-<?=$detail['task']->id?>"
                                 class="btn btn-info btn-xs collapsable-button">
                             <i class="fa fa-arrow-right"></i>
                         </button>
@@ -120,7 +120,7 @@
                     </td>
                     <td><?= $this->Number->format($detail['quantity']) ?> </td>
                 </tr>
-                <tr id="project-<?=$detail['project']->id?>" class="collapse">
+                <tr id="task-<?=$detail['task']->id?>" class="collapse">
                     <td colspan="3" style="padding-left: 30px">
                         <table class="table table-striped table-advance table-hover">
                             <thead>

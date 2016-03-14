@@ -100,20 +100,23 @@ class EquipmentProjectInventoriesController extends AppController
         $collection = new Collection($inHouseEquipmentInventories);
         $unavailableInHouseEquipment = $collection->filter(function($equipmentInventory)
         {
-            return $equipmentInventory->project->id === $this->_projectId &&
+            return $equipmentInventory->has('project') &&
+            $equipmentInventory->project->id === $this->_projectId &&
             $equipmentInventory->has('task');
         });
 
         $collection = new Collection($rentedEquipmentInventories);
         $unavailableRentedEquipment = $collection->filter(function($equipmentInventory)
         {
-            return $equipmentInventory->project->id === $this->_projectId &&
+            return $equipmentInventory->has('project') &&
+            $equipmentInventory->project->id === $this->_projectId &&
             $equipmentInventory->has('task');
         });
 
         $availableRentedEquipment = $collection->filter(function($equipmentInventory)
         {
-            return $equipmentInventory->project->id === $this->_projectId &&
+            return $equipmentInventory->has('project') &&
+            $equipmentInventory->project->id === $this->_projectId &&
             !$equipmentInventory->has('task');
         });
 

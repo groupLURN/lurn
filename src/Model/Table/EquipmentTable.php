@@ -88,6 +88,28 @@ class EquipmentTable extends Table
         return $validator;
     }
 
+    public function adjustInHouseInventory(Equipment $equipment, $quantity)
+    {
+        return $this->connection()->transactional(function() use ($equipment, $quantity)
+        {
+            $this->EquipmentInventories->deleteAll([
+                'rental_receive_detail_id IS' => null,
+                'equipment_id' => $equipment->id
+            ]);
+
+            $datum = [
+                'equipment_id' => $equipment->id
+            ];
+
+            $data = array_fill(0, $quantity, $datum);
+            $equipmentInventories = $this->EquipmentInventories->newEntities($data);
+
+            foreach($equipmentInventories as $equipmentInventory)
+                $this->EquipmentInventories->save($equipmentInventory, ['atomic' => false]);
+            return true;
+        });
+    }
+
     public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
     {
         foreach (['created', 'modified'] as $key) {

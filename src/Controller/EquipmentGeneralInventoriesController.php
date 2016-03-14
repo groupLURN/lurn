@@ -153,30 +153,19 @@ class EquipmentGeneralInventoriesController extends AppController
      */
     public function edit($id = null)
     {
-        try
-        {
-            $equipmentGeneralInventory = $this->EquipmentGeneralInventories->get($id);
-        }
-        catch(RecordNotFoundException $e)
-        {
-            $equipmentGeneralInventory = $this->EquipmentGeneralInventories->newEntity([
-                'equipment_id' => $id,
-                'quantity' => 0
-            ]);
-        }
+        $equipment = TableRegistry::get('Equipment')->get($id);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $equipmentGeneralInventory = $this->EquipmentGeneralInventories->patchEntity($equipmentGeneralInventory, $this->request->data);
-            if ($this->EquipmentGeneralInventories->save($equipmentGeneralInventory)) {
-                $this->Flash->success(__('The equipment general inventory has been saved.'));
+            if (TableRegistry::get('Equipment')->adjustInHouseInventory($equipment, $this->request->data['quantity'])) {
+                $this->Flash->success(__('The equipment general inventory has been adjusted.'));
                 return $this->redirect(['action' => 'index']);
             } else {
-                $this->Flash->error(__('The equipment general inventory could not be saved. Please, try again.'));
+                $this->Flash->error(__('The equipment general inventory could not be adjusted. Please, try again.'));
             }
         }
-        $equipment = $this->EquipmentGeneralInventories->Equipment->find('list', ['limit' => 200]);
-        $this->set(compact('equipmentGeneralInventory', 'equipment'));
-        $this->set('_serialize', ['equipmentGeneralInventory']);
+
+        $this->set(compact('equipment'));
+        $this->set('_serialize', ['equipment']);
     }
 
     /**

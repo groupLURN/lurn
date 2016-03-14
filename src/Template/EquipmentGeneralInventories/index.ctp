@@ -102,6 +102,7 @@
                         <td><?= $this->Number->format($equipmentInventory->total_quantity) ?></td>
                         <td class="actions">
                             <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $equipmentInventory->equipment->id]); ?>
+                            <?= $this->dataTableEditButton(__('Adjust'), ['action' => 'edit', $equipmentInventory->equipment->id]); ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>

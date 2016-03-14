@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use App\Model\Entity\Equipment;
 use Cake\Collection\Collection;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
@@ -52,9 +53,11 @@ class EquipmentProjectInventoriesController extends AppController
             ->where(['project_id' => $this->_projectId])
             ->toArray();
 
-        $this->set(compact('equipmentInventories', 'milestones'));
+        $suppliers = TableRegistry::get('Suppliers')->find('list')->toArray();
+        $equipmentTypes = Equipment::getTypes();
+        $this->set(compact('equipmentInventories', 'milestones', 'suppliers', 'equipmentTypes'));
         $this->set($this->request->query);
-        $this->set('_serialize', ['equipmentInventories', 'milestones']);
+        $this->set('_serialize', ['equipmentInventories', 'milestones', 'suppliers', 'equipmentTypes']);
     }
 
     /**

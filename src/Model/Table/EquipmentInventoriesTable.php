@@ -46,7 +46,8 @@ class EquipmentInventoriesTable extends Table
             'joinType' => 'INNER'
         ]);
         $this->belongsTo('RentalReceiveDetails', [
-            'foreignKey' => 'rental_receive_detail_id'
+            'foreignKey' => 'rental_receive_detail_id',
+            'conditions' => ['RentalReceiveDetails.end_date >= CURDATE()']
         ]);
     }
 

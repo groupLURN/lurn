@@ -55,32 +55,64 @@ class EquipmentGeneralInventoriesController extends AppController
         $summary = TableRegistry::get('EquipmentInventories')->find('generalInventorySummary', ['id' => $id])
             ->first();
 
-        $equipmentInventories = TableRegistry::get('Equipment')->get($id, [
+        $rentedEquipmentInventories = TableRegistry::get('Equipment')->get($id, [
             'contain' => [
-                'EquipmentInventories' => [
+                'RentedEquipmentInventories' => [
+                    'Projects' => ['Employees', 'Clients', 'ProjectStatuses'],
+                    'RentalReceiveDetails.RentalRequestDetails.RentalRequestHeaders.Suppliers',
+                    'RentalReceiveDetails.RentalReceiveHeaders'
+                ]
+            ]
+        ])->rented_equipment_inventories;
+
+        $inHouseEquipmentInventories = TableRegistry::get('Equipment')->get($id, [
+            'contain' => [
+                'InHouseEquipmentInventories' => [
                     'Projects' => ['Employees', 'Clients', 'ProjectStatuses']
                 ]
             ]
-        ])->equipment_inventories;
+        ])->in_house_equipment_inventories;
 
-        $collection = new Collection($equipmentInventories);
-
-        $unavailableEquipment = $collection->filter(function($equipmentInventories)
+        // Filter all project inventories.
+        $collection = new Collection($inHouseEquipmentInventories);
+        $unavailableInHouseEquipment = $collection->filter(function($equipmentInventory)
         {
-            return $equipmentInventories->has('project');
+            return $equipmentInventory->has('project');
         });
 
-        $unavailableEquipmentByProject = $unavailableEquipment->groupBy('project_id');
+        $collection = new Collection($rentedEquipmentInventories);
+        $unavailableRentedEquipment = $collection->filter(function($equipmentInventory)
+        {
+            return $equipmentInventory->has('project');
+        });
 
-        $details = [];
-        foreach($unavailableEquipmentByProject as $row)
-            $details[] = [
+        // Group By project id
+        $unavailableInHouseEquipmentByProject = $unavailableInHouseEquipment->groupBy('project_id');
+        $unavailableRentedEquipmentByProject = $unavailableRentedEquipment->groupBy('project_id');
+
+        $inHouseEquipment = $rentedEquipment = [];
+        foreach($unavailableInHouseEquipmentByProject as $row)
+        {
+            $inHouseEquipment[] = [
                 'quantity' => count($row),
                 'project' => $row[0]->project
             ];
+        }
 
-        $this->set(compact('details', 'summary'));
-        $this->set('_serialize', ['details', 'summary']);
+        foreach($unavailableRentedEquipmentByProject as $row)
+        {
+            $collection = new Collection($row);
+            $details = $collection->groupBy('rental_receive_detail_id');
+            $rentedEquipment[] = [
+                'quantity' => count($row),
+                'project' => $row[0]->project,
+                'details' => $details->toList()
+            ];
+        }
+
+        // Complete the collapsible feature to display the breakdown of the rental equipment detail.
+        $this->set(compact('inHouseEquipment', 'rentedEquipment', 'summary'));
+        $this->set('_serialize', ['inHouseEquipment', 'rentedEquipment', 'summary']);
     }
 
     /**

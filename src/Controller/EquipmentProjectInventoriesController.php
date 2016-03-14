@@ -38,8 +38,10 @@ class EquipmentProjectInventoriesController extends AppController
     {
         $this->paginate = [
             'sortWhitelist' => [
-                'available_quantity',
-                'unavailable_quantity',
+                'available_in_house_quantity',
+                'available_rented_quantity',
+                'unavailable_in_house_quantity',
+                'unavailable_rented_quantity',
                 'total_quantity',
                 'last_modified'
             ]

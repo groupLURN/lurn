@@ -84,8 +84,10 @@
                 <thead>
                 <tr>
                     <th><?= $this->Paginator->sort('name') ?></th>
-                    <th><?= $this->Paginator->sort('available_quantity') ?></th>
-                    <th><?= $this->Paginator->sort('unavailable_quantity') ?></th>
+                    <th><?= $this->Paginator->sort('available_in_house_quantity') ?></th>
+                    <th><?= $this->Paginator->sort('available_rented_quantity') ?></th>
+                    <th><?= $this->Paginator->sort('unavailable_in_house_quantity') ?></th>
+                    <th><?= $this->Paginator->sort('unavailable_rented_quantity') ?></th>
                     <th><?= $this->Paginator->sort('total_quantity') ?></th>
                     <th></th>
                 </tr>
@@ -94,8 +96,10 @@
                 <?php foreach ($equipmentInventories as $equipmentInventory): ?>
                     <tr>
                         <td><?= $this->Html->link($equipmentInventory->equipment->name, ['controller' => 'Equipment', 'action' => 'view', $equipmentInventory->id]) ?></td>
-                        <td><?= $this->Number->format($equipmentInventory->available_quantity) ?></td>
-                        <td><?= $this->Number->format($equipmentInventory->unavailable_quantity) ?></td>
+                        <td><?= $this->Number->format($equipmentInventory->available_in_house_quantity) ?></td>
+                        <td><?= $this->Number->format($equipmentInventory->available_rented_quantity) ?></td>
+                        <td><?= $this->Number->format($equipmentInventory->unavailable_in_house_quantity) ?></td>
+                        <td><?= $this->Number->format($equipmentInventory->unavailable_rented_quantity) ?></td>
                         <td><?= $this->Number->format($equipmentInventory->total_quantity) ?></td>
                         <td class="actions">
                             <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $equipmentInventory->equipment->id, '?' => ['project_id' => $projectId]]); ?>

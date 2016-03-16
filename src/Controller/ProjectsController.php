@@ -23,11 +23,13 @@ class ProjectsController extends AppController
             'contain' => ['Clients', 'Employees', 'ProjectStatuses', 'Milestones' => ['Tasks']]
         ];
 
-        $this->paginate += array_merge($this->createFinders($this->request->query), [
-            'finder' => [
-                'ByAuthorization' => ['user_id' => $this->Auth->user('id')]
-            ]
-        ]);
+        $this->paginate += [
+            'finder' =>
+                array_merge(
+                    $this->createFinders($this->request->query)['finder'],
+                    ['ByAuthorization' => ['user_id' => $this->Auth->user('id')]]
+                )
+        ];
 
         $projects = $this->paginate($this->Projects);
         foreach($projects as $project)

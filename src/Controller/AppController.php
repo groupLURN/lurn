@@ -53,11 +53,24 @@ class AppController extends Controller
                         'username' => 'username',
                         'password' => 'password'
                     ]
-                ]],
+                ]
+            ],
             'loginAction' => ['controller' => 'Users', 'action' => 'login'],
             'unauthorizedRedirect' => $this->referer()
         ]);
 
+    }
+
+    public function beforeFilter(Event $event)
+    {
+        if($this->request->params['_ext'] === 'json')
+        {
+            $this->Auth->config('authenticate', ['Basic' => ['userModel' => 'Users']]);
+            $this->Auth->config('storage', 'Memory');
+            $this->Auth->config('unauthorizedRedirect', false);
+        }
+
+        return parent::beforeFilter($event);
     }
 
     /**

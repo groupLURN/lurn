@@ -8,15 +8,15 @@
             <td><?= h($summary->manpower_type->title) ?></td>
         </tr>
         <tr>
-            <th><?= __('Available Pax') ?></th>
+            <th><?= __('Available') ?></th>
             <td><?= $this->Number->format($summary->available_quantity) ?></td>
         </tr>
         <tr>
-            <th><?= __('Unavailable Pax') ?></th>
+            <th><?= __('Unavailable') ?></th>
             <td><?= $this->Number->format($summary->unavailable_quantity) ?></td>
         </tr>
         <tr>
-            <th><?= __('Total Pax') ?></th>
+            <th><?= __('Total') ?></th>
             <td><?= $this->Number->format($summary->available_quantity + $summary->unavailable_quantity) ?></td>
         </tr>
     </table>
@@ -42,33 +42,35 @@
         <table cellpadding="0" cellspacing="0" class="table table-striped">
             <tr>
                 <th></th>
+                <th><?= h('Milestone') ?></th>
                 <th><?= h('Task') ?></th>
-                <th><?= h('start_date') ?></th>
-                <th><?= h('end_date') ?></th>
+                <th><?= h('Start Date') ?></th>
+                <th><?= h('End Date') ?></th>
                 <th><?= h('Status') ?></th>
-                <th><?= h('Quantity Assigned') ?></th>
+                <th><?= h('Assigned') ?></th>
             </tr>
             <?php foreach ($unavailableManpowerByTask as $unavailableManpower): ?>
                 <?php foreach ($unavailableManpower as $key => $manpower): ?>
                     <?php if($key === 0) : ?>
                         <tr>
                             <td>
-                                <button data-toggle="collapse" data-target="#task-<?=$manpower->task_inventory->id?>"
+                                <button data-toggle="collapse" data-target="#task-<?=$manpower->task->id?>"
                                         class="btn btn-info btn-xs collapsable-button">
                                     <i class="fa fa-arrow-right"></i>
                                 </button>
                             </td>
-                            <td><?= h($manpower->task_inventory->title) ?></td>
-                            <td><?= h($manpower->task_inventory->start_date) ?></td>
-                            <td><?= h($manpower->task_inventory->end_date) ?></td>
+                            <td><?= h($manpower->task->milestone->title) ?></td>
+                            <td><?= h($manpower->task->title) ?></td>
+                            <td><?= h($manpower->task->start_date) ?></td>
+                            <td><?= h($manpower->task->end_date) ?></td>
                             <td>
-                                <span class='task-status <?=str_replace(' ', '-', strtolower($manpower->task_inventory->status))?>'>
-                                    <?= h($manpower->task_inventory->status) ?>
+                                <span class='task-status <?=str_replace(' ', '-', strtolower($manpower->task->status))?>'>
+                                    <?= h($manpower->task->status) ?>
                                 </span>
                             </td>
                             <td><?= $this->Number->format(count($unavailableManpower)) ?> </td>
                         </tr>
-                        <tr id="task-<?=$manpower->task_inventory->id?>" class="collapse">
+                        <tr id="task-<?=$manpower->task->id?>" class="collapse">
                         <td colspan="10" style="padding-left: 30px">
                         <table class="table table-striped table-advance table-hover">
                         <thead>

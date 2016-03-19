@@ -10,6 +10,50 @@
             <table class="table">
                 <tbody>
                 <tr>
+                    <td style="padding-top: 15px; padding-left: 10px;">
+                        <?= $this->Form->label("", "Equipment Type"); ?>
+                    </td>
+                    <td colspan="3">
+                        <?= $this->Form->input('equipment_type', [
+                            'options' => ['0' => 'All'] + $equipmentTypes,
+                            'class' => 'form-control',
+                            'label' => false,
+                            'val' => isset($equipment_type)? $equipment_type: 0,
+                            'onchange' => sprintf("
+                                $('#supplier-id-filter').prop('disabled', Number($(this).val()) !== %d);
+                            ", array_flip($equipmentTypes)['Rented'])
+                        ]); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-top: 15px; padding-left: 10px;">
+                        <?= $this->Form->label("", "Supplier"); ?>
+                    </td>
+                    <td colspan="3">
+                        <?= $this->Form->input('supplier_id', [
+                            'options' => ['0' => 'All'] + $suppliers,
+                            'class' => 'form-control',
+                            'label' => false,
+                            'val' => isset($supplier_id)? $supplier_id: 0,
+                            'id' => 'supplier-id-filter',
+                            'disabled' => isset($equipment_type)? $equipment_type != array_flip($equipmentTypes)['Rented']: true
+                        ]); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-top: 15px; padding-left: 10px;">
+                        <?= $this->Form->label("", "Milestone"); ?>
+                    </td>
+                    <td colspan="3">
+                        <?= $this->Form->input('milestone_id', [
+                            'options' => ['0' => 'All'] + $milestones,
+                            'class' => 'form-control',
+                            'label' => false,
+                            'val' => isset($milestone_id)? $milestone_id: 0
+                        ]); ?>
+                    </td>
+                </tr>
+                <tr>
                     <td colspan="4">
                         <div class="row mt">
                             <div class="col-md-10">
@@ -40,10 +84,11 @@
                 <thead>
                 <tr>
                     <th><?= $this->Paginator->sort('name') ?></th>
-                    <th><?= $this->Paginator->sort('available_quantity') ?></th>
-                    <th><?= $this->Paginator->sort('unavailable_quantity') ?></th>
+                    <th><?= $this->Paginator->sort('available_in_house_quantity') ?></th>
+                    <th><?= $this->Paginator->sort('available_rented_quantity') ?></th>
+                    <th><?= $this->Paginator->sort('unavailable_in_house_quantity') ?></th>
+                    <th><?= $this->Paginator->sort('unavailable_rented_quantity') ?></th>
                     <th><?= $this->Paginator->sort('total_quantity') ?></th>
-                    <th><?= $this->Paginator->sort('last_modified', 'Last Modified') ?></th>
                     <th></th>
                 </tr>
                 </thead>
@@ -51,10 +96,11 @@
                 <?php foreach ($equipmentInventories as $equipmentInventory): ?>
                     <tr>
                         <td><?= $this->Html->link($equipmentInventory->equipment->name, ['controller' => 'Equipment', 'action' => 'view', $equipmentInventory->id]) ?></td>
-                        <td><?= $this->Number->format($equipmentInventory->available_quantity) ?></td>
-                        <td><?= $this->Number->format($equipmentInventory->unavailable_quantity) ?></td>
+                        <td><?= $this->Number->format($equipmentInventory->available_in_house_quantity) ?></td>
+                        <td><?= $this->Number->format($equipmentInventory->available_rented_quantity) ?></td>
+                        <td><?= $this->Number->format($equipmentInventory->unavailable_in_house_quantity) ?></td>
+                        <td><?= $this->Number->format($equipmentInventory->unavailable_rented_quantity) ?></td>
                         <td><?= $this->Number->format($equipmentInventory->total_quantity) ?></td>
-                        <td><?= h($equipmentInventory->last_modified) ?></td>
                         <td class="actions">
                             <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $equipmentInventory->equipment->id, '?' => ['project_id' => $projectId]]); ?>
                         </td>

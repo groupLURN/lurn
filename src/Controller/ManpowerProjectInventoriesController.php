@@ -25,6 +25,7 @@ class ManpowerProjectInventoriesController extends AppController
         $this->_projectId = (int) $this->request->query['project_id'];
 
         $this->set('projectId', $this->_projectId);
+        unset($this->request->query['project_id']);
         return parent::beforeFilter($event);
     }
 
@@ -49,9 +50,13 @@ class ManpowerProjectInventoriesController extends AppController
         $manpower = $this->paginate(TableRegistry::get('Manpower'));
         $manpowerTypes = $this->Manpower->ManpowerTypes->find('list', ['limit' => 200])->toArray();
 
-        $this->set(compact('manpower', 'manpowerTypes'));
+        $milestones = TableRegistry::get('Milestones')->find('list')
+            ->where(['project_id' => $this->_projectId])
+            ->toArray();
+
+        $this->set(compact('manpower', 'manpowerTypes', 'milestones'));
         $this->set($this->request->query);
-        $this->set('_serialize', ['manpower', 'manpowerTypes']);
+        $this->set('_serialize', ['manpower', 'manpowerTypes', 'milestones']);
     }
 
     /**
@@ -69,24 +74,25 @@ class ManpowerProjectInventoriesController extends AppController
         ])->first();
 
         $manpower = TableRegistry::get('Manpower')->find()
-            ->contain(['TaskInventory'])
+            ->contain(['Tasks' => ['Milestones']])
             ->matching('ManpowerTypes', function($query) use ($id)
             {
                 return $query->where(['ManpowerTypes.id' => $id]);
             })
             ->where(['Manpower.project_id' => $this->_projectId])
+            ->orderAsc('Milestones.title')
             ->all();
 
         $collection = new Collection($manpower);
 
         $availableManpower = $collection->filter(function($manpower)
         {
-            return !$manpower->has('task_inventory');
+            return !$manpower->has('task');
         });
 
         $unavailableManpower = $collection->filter(function($manpower)
         {
-            return $manpower->has('task_inventory');
+            return $manpower->has('task');
         });
 
         $unavailableManpowerByTask = $unavailableManpower->groupBy('task_id');

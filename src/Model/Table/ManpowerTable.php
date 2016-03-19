@@ -11,9 +11,8 @@ use Cake\Validation\Validator;
  * Manpower Model
  *
  * @property \Cake\ORM\Association\BelongsTo $Projects
+ * @property \Cake\ORM\Association\BelongsTo $Tasks
  * @property \Cake\ORM\Association\BelongsTo $ManpowerTypes
- * @property \Cake\ORM\Association\BelongsTo $TaskInventory
- * @property \Cake\ORM\Association\BelongsToMany $Tasks
  */
 class ManpowerTable extends Table
 {
@@ -37,18 +36,12 @@ class ManpowerTable extends Table
         $this->belongsTo('Projects', [
             'foreignKey' => 'project_id'
         ]);
+        $this->belongsTo('Tasks', [
+            'foreignKey' => 'task_id'
+        ]);
         $this->belongsTo('ManpowerTypes', [
             'foreignKey' => 'manpower_type_id',
             'joinType' => 'INNER'
-        ]);
-        $this->belongsTo('TaskInventory', [
-            'className' => 'Tasks',
-            'foreignKey' => 'task_id'
-        ]);
-        $this->belongsToMany('Tasks', [
-            'foreignKey' => 'manpower_id',
-            'targetForeignKey' => 'task_id',
-            'joinTable' => 'manpower_tasks'
         ]);
     }
 
@@ -95,12 +88,27 @@ class ManpowerTable extends Table
         });
     }
 
+    public function findByProjectId(Query $query, array $options)
+    {
+        if($options['project_id'] > 0)
+            return $query->where(['project_id' => $options['project_id']]);
+        return $query;
+    }
+
     public function findByManpowerTypeId(Query $query, array $options)
     {
         if((int)$options['manpower_type_id'] > 0)
             return $query->where(['manpower_type_id' => $options['manpower_type_id']]);
         else
             return $query;
+    }
+
+    public function findByMilestoneId(Query $query, array $options)
+    {
+        if(!empty($options['milestone_id']))
+            return $query->select('Tasks.milestone_id')->leftJoinWith('Tasks')
+                ->having(['Tasks.milestone_id' => $options['milestone_id']]);
+        return $query;
     }
 
     public function findGeneralInventorySummary(Query $query, array $options)

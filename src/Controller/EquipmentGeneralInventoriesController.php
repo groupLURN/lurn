@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use App\Model\Entity\Equipment;
 use Cake\Collection\Collection;
 use Cake\Core\Exception\Exception;
 use Cake\Datasource\Exception\RecordNotFoundException;
@@ -23,8 +24,10 @@ class EquipmentGeneralInventoriesController extends AppController
     {
         $this->paginate = [
             'sortWhitelist' => [
-                'available_quantity',
-                'unavailable_quantity',
+                'available_in_house_quantity',
+                'available_rented_quantity',
+                'unavailable_in_house_quantity',
+                'unavailable_rented_quantity',
                 'total_quantity',
                 'last_modified'
             ]
@@ -34,9 +37,12 @@ class EquipmentGeneralInventoriesController extends AppController
         $this->paginate['finder']['generalInventorySummary'] = [];
         $equipmentInventories = $this->paginate(TableRegistry::get('EquipmentInventories'));
 
-        $this->set(compact('equipmentInventories'));
+        $projects = TableRegistry::get('Projects')->find('list')->toArray();
+        $suppliers = TableRegistry::get('Suppliers')->find('list')->toArray();
+        $equipmentTypes = Equipment::getTypes();
+        $this->set(compact('equipmentInventories', 'projects', 'equipmentTypes', 'suppliers'));
         $this->set($this->request->query);
-        $this->set('_serialize', ['equipmentInventories']);
+        $this->set('_serialize', ['equipmentInventories', 'projects', 'equipmentTypes', 'suppliers']);
     }
 
     /**
@@ -51,32 +57,69 @@ class EquipmentGeneralInventoriesController extends AppController
         $summary = TableRegistry::get('EquipmentInventories')->find('generalInventorySummary', ['id' => $id])
             ->first();
 
-        $equipmentInventories = TableRegistry::get('Equipment')->get($id, [
+        $rentedEquipmentInventories = TableRegistry::get('Equipment')->get($id, [
             'contain' => [
-                'EquipmentInventories' => [
+                'RentedEquipmentInventories' => [
+                    'Projects' => ['Employees', 'Clients', 'ProjectStatuses'],
+                    'RentalReceiveDetails.RentalRequestDetails.RentalRequestHeaders.Suppliers',
+                    'RentalReceiveDetails.RentalReceiveHeaders'
+                ]
+            ]
+        ])->rented_equipment_inventories;
+
+        $inHouseEquipmentInventories = TableRegistry::get('Equipment')->get($id, [
+            'contain' => [
+                'InHouseEquipmentInventories' => [
                     'Projects' => ['Employees', 'Clients', 'ProjectStatuses']
                 ]
             ]
-        ])->equipment_inventories;
+        ])->in_house_equipment_inventories;
 
-        $collection = new Collection($equipmentInventories);
-
-        $unavailableEquipment = $collection->filter(function($equipmentInventories)
+        // Filter all project inventories.
+        $collection = new Collection($inHouseEquipmentInventories);
+        $unavailableInHouseEquipment = $collection->filter(function($equipmentInventory)
         {
-            return $equipmentInventories->has('project');
+            return $equipmentInventory->has('project');
         });
 
-        $unavailableEquipmentByProject = $unavailableEquipment->groupBy('project_id');
+        $collection = new Collection($rentedEquipmentInventories);
+        $unavailableRentedEquipment = $collection->filter(function($equipmentInventory)
+        {
+            return $equipmentInventory->has('project');
+        });
 
-        $details = [];
-        foreach($unavailableEquipmentByProject as $row)
-            $details[] = [
+        $availableRentedEquipment = $collection->filter(function($equipmentInventory)
+        {
+            return !$equipmentInventory->has('project');
+        });
+
+        // Group By project id
+        $unavailableInHouseEquipmentByProject = $unavailableInHouseEquipment->groupBy('project_id');
+        $unavailableRentedEquipmentByProject = $unavailableRentedEquipment->groupBy('project_id');
+        $availableRentedEquipmentByRental = $availableRentedEquipment->groupBy('rental_receive_detail_id');
+
+        $unavailableInHouseEquipment = $unavailableRentedEquipment = [];
+        foreach($unavailableInHouseEquipmentByProject as $row)
+        {
+            $unavailableInHouseEquipment[] = [
                 'quantity' => count($row),
                 'project' => $row[0]->project
             ];
+        }
 
-        $this->set(compact('details', 'summary'));
-        $this->set('_serialize', ['details', 'summary']);
+        foreach($unavailableRentedEquipmentByProject as $row)
+        {
+            $collection = new Collection($row);
+            $details = $collection->groupBy('rental_receive_detail_id');
+            $unavailableRentedEquipment[] = [
+                'quantity' => count($row),
+                'project' => $row[0]->project,
+                'details' => $details->toList()
+            ];
+        }
+
+        $this->set(compact('unavailableInHouseEquipment', 'unavailableRentedEquipment', 'availableRentedEquipmentByRental', 'summary'));
+        $this->set('_serialize', ['unavailableInHouseEquipment', 'unavailableRentedEquipment', 'availableRentedEquipmentByRental', 'summary']);
     }
 
     /**
@@ -110,30 +153,19 @@ class EquipmentGeneralInventoriesController extends AppController
      */
     public function edit($id = null)
     {
-        try
-        {
-            $equipmentGeneralInventory = $this->EquipmentGeneralInventories->get($id);
-        }
-        catch(RecordNotFoundException $e)
-        {
-            $equipmentGeneralInventory = $this->EquipmentGeneralInventories->newEntity([
-                'equipment_id' => $id,
-                'quantity' => 0
-            ]);
-        }
+        $equipment = TableRegistry::get('Equipment')->get($id);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $equipmentGeneralInventory = $this->EquipmentGeneralInventories->patchEntity($equipmentGeneralInventory, $this->request->data);
-            if ($this->EquipmentGeneralInventories->save($equipmentGeneralInventory)) {
-                $this->Flash->success(__('The equipment general inventory has been saved.'));
+            if (TableRegistry::get('Equipment')->adjustInHouseInventory($equipment, $this->request->data['quantity'])) {
+                $this->Flash->success(__('The equipment general inventory has been adjusted.'));
                 return $this->redirect(['action' => 'index']);
             } else {
-                $this->Flash->error(__('The equipment general inventory could not be saved. Please, try again.'));
+                $this->Flash->error(__('The equipment general inventory could not be adjusted. Please, try again.'));
             }
         }
-        $equipment = $this->EquipmentGeneralInventories->Equipment->find('list', ['limit' => 200]);
-        $this->set(compact('equipmentGeneralInventory', 'equipment'));
-        $this->set('_serialize', ['equipmentGeneralInventory']);
+
+        $this->set(compact('equipment'));
+        $this->set('_serialize', ['equipment']);
     }
 
     /**

@@ -32,12 +32,19 @@ class MaterialsGeneralInventoriesController extends AppController
         ];
 
         $this->paginate += $this->createFinders($this->request->query, 'Materials');
-        $this->paginate['finder']['generalInventorySummary'] = [];
+
+        if(!empty($this->request->query['project_id']))
+            $this->paginate['finder']['generalInventorySummary'] = ['project_id' => $this->request->query['project_id']];
+        else
+            $this->paginate['finder']['generalInventorySummary'] = [];
+
         $materials = $this->paginate(TableRegistry::get('Materials'));
 
-        $this->set(compact('materials'));
+        $projects = TableRegistry::get('Projects')->find('list')->toArray();
+
+        $this->set(compact('materials', 'projects'));
         $this->set($this->request->query);
-        $this->set('_serialize', ['materials']);
+        $this->set('_serialize', ['materials', 'projects']);
     }
 
     /**

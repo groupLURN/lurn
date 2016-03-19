@@ -24,6 +24,7 @@ class MaterialsProjectInventoriesController extends AppController
         $this->_projectId = (int) $this->request->query['project_id'];
 
         $this->set('projectId', $this->_projectId);
+        unset($this->request->query['project_id']);
         return parent::beforeFilter($event);
     }
 
@@ -45,12 +46,24 @@ class MaterialsProjectInventoriesController extends AppController
         ];
 
         $this->paginate += $this->createFinders($this->request->query, 'Materials');
-        $this->paginate['finder']['projectInventorySummary'] = ['project_id' => $this->_projectId];
+
+        if(!isset($this->request->query['milestone_id']))
+            $this->request->query['milestone_id'] = 0;
+
+        $this->paginate['finder']['projectInventorySummary'] = [
+            'project_id' => $this->_projectId,
+            'milestone_id' => $this->request->query['milestone_id']
+        ];
+
         $materials = $this->paginate(TableRegistry::get('Materials'));
 
-        $this->set(compact('materials'));
+        $milestones = TableRegistry::get('Milestones')->find('list')
+            ->where(['project_id' => $this->_projectId])
+            ->toArray();
+
+        $this->set(compact('materials', 'milestones'));
         $this->set($this->request->query);
-        $this->set('_serialize', ['materials']);
+        $this->set('_serialize', ['materials', 'milestones']);
     }
 
     /**
@@ -70,7 +83,7 @@ class MaterialsProjectInventoriesController extends AppController
         $material = TableRegistry::get('Materials')->get($id, [
             'contain' => [
                 'MaterialsTaskInventories' => [
-                    'Tasks'
+                    'Tasks' => ['Milestones']
                 ]
             ]
         ]);

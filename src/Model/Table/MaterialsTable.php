@@ -5,6 +5,7 @@ use App\Model\Entity\Material;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
 
 /**
@@ -108,6 +109,9 @@ class MaterialsTable extends Table
         if(isset($options['id']))
             $query = $query->where(['Materials.id' => $options['id']]);
 
+        if(isset($options['project_id']) && $options['project_id'] > 0)
+            $query = $query->where(['MaterialsProjectInventories.project_id' => $options['project_id']]);
+
         return $query->select(['Materials.id', 'Materials.name', 'Materials.unit_measure',
             'last_modified' => 'MaterialsGeneralInventories.modified', 'available_quantity' => $available_quantity,
             'unavailable_quantity' => $unavailable_quantity, 'total_quantity' => $total_quantity])
@@ -120,6 +124,7 @@ class MaterialsTable extends Table
             ->leftJoin(['MaterialsTaskInventories' => 'materials_task_inventories'], [
                 'MaterialsTaskInventories.material_id = Materials.id'
             ])
+            ->leftJoin(['Projects' => 'projects'], ['Projects.id = MaterialsProjectInventories.project_id'])
             ->group('Materials.id');
     }
 
@@ -136,7 +141,12 @@ class MaterialsTable extends Table
         ]);
 
         if(isset($options['id']))
-            $query = $query->where(['Materials.id' => $options['id']]);
+            $query->where(['Materials.id' => $options['id']]);
+
+        if(isset($options['milestone_id']) && $options['milestone_id'] > 0)
+            $query
+                ->leftJoinWith('MaterialsTaskInventories.Tasks')
+                ->where(['Tasks.milestone_id' => $options['milestone_id']]);
 
         return $query->select(['Materials.id', 'Materials.name', 'Materials.unit_measure',
             'last_modified' => 'MaterialsProjectInventories.modified', 'available_quantity' => $available_quantity,
@@ -151,4 +161,43 @@ class MaterialsTable extends Table
             ])
             ->group(['MaterialsProjectInventories.project_id', 'Materials.id']);
     }
+
+    public function findByProjectId(Query $query, array $options)
+    {
+        if($options['project_id'] > 0)
+            return $query->where(['Projects.id' => $options['project_id']]);
+        return $query;
+    }
+
+    public function findByScheduleDateFrom(Query $query, array $options)
+    {
+        return $query->where([
+            $query->newExpr()->gte('Tasks.start_date', $options['schedule_date_from'], 'datetime'),
+        ]);
+    }
+
+    public function findByScheduleDateTo(Query $query, array $options)
+    {
+        return $query->where([
+            $query->newExpr()->lt('Tasks.end_date', $options['schedule_date_to'], 'datetime')
+        ]);
+    }
+
+    public function findMaterialsSchedule(Query $query, array $options)
+    {
+        return $query
+            ->hydrate(false)
+            ->select(TableRegistry::get('Materials'))
+            ->select(TableRegistry::get('Tasks'))
+            ->select(TableRegistry::get('MaterialsTasks'))
+            ->select(TableRegistry::get('Projects'))
+            ->select(TableRegistry::get('Milestones'))
+            ->select(['quantity_available' => $query->func()->coalesce(['MaterialsGeneralInventories.quantity' => 'literal', 0])])
+            ->innerJoin(['MaterialsTasks' => 'materials_tasks'], ['MaterialsTasks.material_id = Materials.id'])
+            ->innerJoin(['Tasks' => 'tasks'], ['Tasks.id = MaterialsTasks.task_id'])
+            ->leftJoin(['Milestones' => 'milestones'], ['Milestones.id = Tasks.milestone_id'])
+            ->leftJoin(['Projects' => 'projects'], ['Projects.id = Milestones.project_id'])
+            ->leftJoinWith('MaterialsGeneralInventories');
+    }
+
 }

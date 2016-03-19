@@ -8,15 +8,15 @@
             <td><?= h($summary->manpower_type->title) ?></td>
         </tr>
         <tr>
-            <th><?= __('Available Pax') ?></th>
+            <th><?= __('Available') ?></th>
             <td><?= $this->Number->format($summary->available_quantity) ?></td>
         </tr>
         <tr>
-            <th><?= __('Unavailable Pax') ?></th>
+            <th><?= __('Unavailable') ?></th>
             <td><?= $this->Number->format($summary->unavailable_quantity) ?></td>
         </tr>
         <tr>
-            <th><?= __('Total Pax') ?></th>
+            <th><?= __('Total') ?></th>
             <td><?= $this->Number->format($summary->available_quantity + $summary->unavailable_quantity) ?></td>
         </tr>
     </table>
@@ -49,7 +49,7 @@
                 <th><?= __('Start Date') ?></th>
                 <th><?= __('End Date') ?></th>
                 <th><?= __('Project Status') ?></th>
-                <th><?= __('Pax Assigned') ?></th>
+                <th><?= __('Assigned') ?></th>
             </tr>
             <?php foreach ($unavailableManpowerByProject as $unavailableManpower): ?>
                 <?php foreach ($unavailableManpower as $key => $manpower): ?>

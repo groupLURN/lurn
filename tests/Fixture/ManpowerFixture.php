@@ -62,8 +62,8 @@ class ManpowerFixture extends TestFixture
             'task_id' => 'Lorem ipsum dolor sit amet',
             'manpower_type_id' => 1,
             'name' => 'Lorem ipsum dolor sit amet',
-            'created' => '2016-03-07 19:11:28',
-            'modified' => '2016-03-07 19:11:28'
+            'created' => '2016-03-08 23:26:26',
+            'modified' => '2016-03-08 23:26:26'
         ],
     ];
 }

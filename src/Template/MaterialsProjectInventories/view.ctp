@@ -26,19 +26,21 @@
 </div>
 
 <div class="related">
-    <h3><?= __('Track Materials') ?></h3>
+    <h3><?= __('Track Unavailable Materials') ?></h3>
     <?php if (!empty($material->materials_task_inventories)): ?>
         <table cellpadding="0" cellspacing="0" class="table table-striped">
             <tr>
-                <th><?= $this->Paginator->sort('title', 'Task') ?></th>
-                <th><?= $this->Paginator->sort('start_date') ?></th>
-                <th><?= $this->Paginator->sort('end_date') ?></th>
+                <th><?= h('Milestone') ?></th>
+                <th><?= h('Task') ?></th>
+                <th><?= h('Start Date') ?></th>
+                <th><?= h('End Date') ?></th>
                 <th>Status</th>
                 <th><?= __('Quantity Assigned') ?></th>
             </tr>
             <?php foreach ($material->materials_task_inventories as $taskInventory): ?>
                 <tr>
-                    <td><?= $this->Html->link($taskInventory->task->title, ['controller' => 'tasks', 'action' => 'view', $taskInventory->task->id]) ?></td>
+                    <td><?= h($taskInventory->task->milestone->title) ?></td>
+                    <td><?= h($taskInventory->task->title) ?></td>
                     <td><?= h($taskInventory->task->start_date) ?></td>
                     <td><?= h($taskInventory->task->end_date) ?></td>
                     <td>

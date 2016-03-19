@@ -5,10 +5,23 @@
         <div class="content-panel">
             <?= $this->Form->create('Search', ['type' => 'GET']) ?>
             <h4><i class="fa fa-angle-right"></i> Filters </h4>
-            <?= $this->Form->input('project_id', ['type' => 'hidden', 'value' => $project_id]); ?>
+            <?= $this->Form->input('project_id', ['type' => 'hidden', 'value' => $projectId]); ?>
             <hr>
             <table class="table">
                 <tbody>
+                <tr>
+                    <td style="padding-top: 15px; padding-left: 10px;">
+                        <?= $this->Form->label("", "Milestone"); ?>
+                    </td>
+                    <td colspan="3">
+                        <?= $this->Form->input('milestone_id', [
+                            'options' => ['0' => 'All'] + $milestones,
+                            'class' => 'form-control',
+                            'label' => false,
+                            'val' => isset($milestone_id)? $milestone_id: 0
+                        ]); ?>
+                    </td>
+                </tr>
                 <tr>
                     <td colspan="4">
                         <div class="row mt">

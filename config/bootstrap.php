@@ -210,3 +210,18 @@ Type::build('date')
 Type::build('datetime')
     ->useImmutable()
     ->useLocaleParser();
+
+Plugin::load('CakePdf', ['bootstrap' => true, 'routes' => true]);
+Configure::write('CakePdf', [
+    'engine' => [
+        'className' => 'CakePdf.WkHtmlToPdf',
+        'binary' => dirname(Configure::read('App.wwwRoot')) . '\\bin\\wkhtmltopdf\\bin\\wkhtmltopdf.exe',
+        'options' => [
+            'print-media-type' => false,
+            'outline' => true,
+            'dpi' => 96
+        ],
+    ],
+    'orientation' => 'portrait',
+    'pageSize' => 'Letter'
+]);

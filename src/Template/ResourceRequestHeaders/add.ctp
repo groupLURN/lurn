@@ -64,7 +64,11 @@
             </div>
         </div>
         <?= $this->Form->button(__('Submit'), [
-            'class' => 'btn btn-primary btn-submit'
+            'class' => 'btn btn-primary btn-submit',
+            'onclick' => "
+            if(!confirm('Once the resources request is submitted, the resources request cannot be edited or deleted. Are you sure with your resources request?'))
+                event.preventDefault();
+            "
         ]) ?>
         <?= $this->Form->end() ?>
     </div>

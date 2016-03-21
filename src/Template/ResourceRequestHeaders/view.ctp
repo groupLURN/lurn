@@ -24,8 +24,8 @@
         </tr>
     </table>
     <div class="related">
-        <h4><?= __('Equipment Requests') ?></h4>
         <?php if (!empty($resourceRequestHeader->equipment)): ?>
+            <h4><?= __('Equipment Requested') ?></h4>
             <table cellpadding="0" cellspacing="0" class="table table-striped">
                 <tr>
                     <th><?= __('Equipment Name') ?></th>
@@ -41,8 +41,8 @@
         <?php endif; ?>
     </div>
     <div class="related">
-        <h4><?= __('Manpower Requested') ?></h4>
         <?php if (!empty($resourceRequestHeader->manpower_types)): ?>
+            <h4><?= __('Manpower Requested') ?></h4>
             <table cellpadding="0" cellspacing="0" class="table table-striped">
                 <tr>
                     <th><?= __('Manpower Types') ?></th>
@@ -58,8 +58,8 @@
         <?php endif; ?>
     </div>
     <div class="related">
-        <h4><?= __('Materials Requested') ?></h4>
         <?php if (!empty($resourceRequestHeader->materials)): ?>
+            <h4><?= __('Materials Requested') ?></h4>
             <table cellpadding="0" cellspacing="0" class="table table-striped">
                 <tr>
                     <th><?= __('Materials Name') ?></th>

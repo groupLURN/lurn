@@ -72,7 +72,7 @@ class ResourceRequestHeadersController extends AppController
             }
         }
 
-        $projects = $this->ResourceRequestHeaders->ProjectsTo->find('list', ['limit' => 200])
+        $projects = $this->ResourceRequestHeaders->ProjectTo->find('list', ['limit' => 200])
             ->matching('EmployeesJoin.Users', function($query)
             {
                 return $query->where(['Users.id' => $this->userId]);

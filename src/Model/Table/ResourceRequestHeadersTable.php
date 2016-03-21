@@ -108,8 +108,8 @@ class ResourceRequestHeadersTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['from_project_id'], 'ProjectsFrom'));
-        $rules->add($rules->existsIn(['to_project_id'], 'ProjectsTo'));
+        $rules->add($rules->existsIn(['from_project_id'], 'ProjectFrom'));
+        $rules->add($rules->existsIn(['to_project_id'], 'ProjectTo'));
         return $rules;
     }
 

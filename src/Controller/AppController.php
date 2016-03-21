@@ -132,8 +132,11 @@ class AppController extends Controller
     protected function transpose(&$data, $key)
     {
         // Subject consists of N parallel arrays where its keys are the properties of the entity.
-        $subject = $data[$key];
+        $subject = isset($data[$key])?$data[$key]: null;
         $data[$key] = [];
+
+        if($subject === null)
+            return;
 
         $index = 0;
         foreach($subject as $property => $parallelArrays)

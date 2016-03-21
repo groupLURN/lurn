@@ -42,7 +42,7 @@ class ResourceRequestHeadersController extends AppController
     public function view($id = null)
     {
         $resourceRequestHeader = $this->ResourceRequestHeaders->get($id, [
-            'contain' => ['Projects', 'ResourceRequestDetails']
+            'contain' => ['ProjectFrom', 'ProjectTo', 'Equipment', 'ManpowerTypes', 'Materials']
         ]);
 
         $this->set('resourceRequestHeader', $resourceRequestHeader);

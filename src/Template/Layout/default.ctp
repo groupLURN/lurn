@@ -291,6 +291,16 @@ $this->Html->script('/non_bower_components/chart-master/Chart', ['block' => 'scr
                             <li><a href=<?= $this->Url->build(['controller' => 'PurchaseReceiveHeaders', 'action' => 'index']) ?>>Purchase Receives</a></li>
                         </ul>
                     </li>
+                    <li class="sub-menu">
+                        <a href="javascript:;" >
+                            <i class="fa fa-recycle"></i>
+                            <span>Resources Management</span>
+                        </a>
+                        <ul class="sub">
+                            <li><a href=<?= $this->Url->build(['controller' => 'ResourceRequestHeaders', 'action' => 'index']) ?>>Create Resources Request</a></li>
+                            <li><a href=<?= $this->Url->build(['controller' => 'ResourceTransferHeaders', 'action' => 'index']) ?>>Create Resources Transfer</a></li>
+                        </ul>
+                    </li>
                     <?= $this->fetch('additional-sidebar') ?>
                 </ul>
                 <!-- sidebar menu end-->

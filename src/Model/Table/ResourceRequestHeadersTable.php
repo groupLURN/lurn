@@ -10,8 +10,8 @@ use Cake\Validation\Validator;
 /**
  * ResourceRequestHeaders Model
  *
- * @property \Cake\ORM\Association\BelongsTo $Projects
- * @property \Cake\ORM\Association\BelongsTo $Projects
+ * @property \Cake\ORM\Association\BelongsTo $ProjectsFrom
+ * @property \Cake\ORM\Association\BelongsTo $ProjectsTo
  * @property \Cake\ORM\Association\HasMany $ResourceRequestDetails
  */
 class ResourceRequestHeadersTable extends Table
@@ -33,10 +33,12 @@ class ResourceRequestHeadersTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Projects', [
+        $this->belongsTo('ProjectsFrom', [
+            'className' => 'Projects',
             'foreignKey' => 'from_project_id'
         ]);
-        $this->belongsTo('Projects', [
+        $this->belongsTo('ProjectsTo', [
+            'className' => 'Projects',
             'foreignKey' => 'to_project_id'
         ]);
         $this->hasMany('ResourceRequestDetails', [

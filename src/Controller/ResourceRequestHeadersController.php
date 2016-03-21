@@ -20,7 +20,7 @@ class ResourceRequestHeadersController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['Projects']
+            'contain' => ['ProjectsFrom', 'ProjectsTo']
         ];
 
         $this->paginate += $this->createFinders($this->request->query);

@@ -12,6 +12,9 @@ use Cake\Validation\Validator;
  *
  * @property \Cake\ORM\Association\BelongsTo $ProjectsFrom
  * @property \Cake\ORM\Association\BelongsTo $ProjectsTo
+ * @property \Cake\ORM\Association\BelongsToMany $Equipment
+ * @property \Cake\ORM\Association\BelongsToMany $ManpowerTypes
+ * @property \Cake\ORM\Association\BelongsToMany $Materials
  * @property \Cake\ORM\Association\HasMany $EquipmentRequestDetails
  * @property \Cake\ORM\Association\HasMany $ManpowerRequestDetails
  * @property \Cake\ORM\Association\HasMany $MaterialRequestDetails
@@ -43,6 +46,21 @@ class ResourceRequestHeadersTable extends Table
         $this->belongsTo('ProjectsTo', [
             'className' => 'Projects',
             'foreignKey' => 'to_project_id'
+        ]);
+        $this->belongsToMany('Equipment', [
+            'foreignKey' => 'resource_request_header_id',
+            'targetForeignKey' => 'equipment_id',
+            'joinTable' => 'equipment_request_details'
+        ]);
+        $this->belongsToMany('ManpowerTypes', [
+            'foreignKey' => 'resource_request_header_id',
+            'targetForeignKey' => 'manpower_type_id',
+            'joinTable' => 'manpower_request_details'
+        ]);
+        $this->belongsToMany('Materials', [
+            'foreignKey' => 'resource_request_header_id',
+            'targetForeignKey' => 'material_id',
+            'joinTable' => 'material_request_details'
         ]);
         $this->hasMany('EquipmentRequestDetails', [
             'foreignKey' => 'resource_request_header_id'

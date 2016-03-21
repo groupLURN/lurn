@@ -43,24 +43,21 @@
                         <legend><h4><i class="fa fa-angle-right"></i> <?= __('Assign Equipment Needed') ?></h4></legend>
                         <?= $this->element('multi_select_with_input', [
                             'options' => $equipment,
-                            'resource' => 'equipment',
-                            'namespaces' => ['equipment_request_details']
+                            'resource' => 'equipment'
                         ]) ?>
                     </div>
                     <div class="col-xs-4">
                         <legend><h4><i class="fa fa-angle-right"></i> <?= __('Assign Manpower Needed') ?></h4></legend>
                         <?= $this->element('multi_select_with_input', [
                             'options' => $manpowerTypes,
-                            'resource' => 'manpower_types',
-                            'namespaces' => ['manpower_request_details']
+                            'resource' => 'manpower_types'
                         ]) ?>
                     </div>
                     <div class="col-xs-4">
                         <legend><h4><i class="fa fa-angle-right"></i> <?= __('Assign Materials Needed') ?></h4></legend>
                         <?= $this->element('multi_select_with_input', [
                             'options' => $materials,
-                            'resource' => 'materials',
-                            'namespaces' => ['material_request_details']
+                            'resource' => 'materials'
                         ]) ?>
                     </div>
                 </div>

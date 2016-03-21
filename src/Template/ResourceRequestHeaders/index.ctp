@@ -40,7 +40,7 @@
                 </tr>
                 <tr>
                     <td style="padding-top: 15px; padding-left: 10px;">
-                        <?= $this->Form->label("", "Project"); ?>
+                        <?= $this->Form->label("", "Request From"); ?>
                     </td>
                     <td colspan="3">
                         <?= $this->Form->input('project_id', [
@@ -88,15 +88,13 @@
                 <tbody>
                 <?php foreach ($resourceRequestHeaders as $resourceRequestHeader): ?>
                     <tr>
-                        <td><?= h($resourceRequestHeader->id) ?></td>
+                        <td><?= h($resourceRequestHeader->number) ?></td>
                         <td><?= $resourceRequestHeader->has('project_from') ? $this->Html->link($resourceRequestHeader->project_from->title, ['controller' => 'Projects', 'action' => 'view', $resourceRequestHeader->project_from->id]) : 'General' ?></td>
                         <td><?= $resourceRequestHeader->has('project_to') ? $this->Html->link($resourceRequestHeader->project_to->title, ['controller' => 'Projects', 'action' => 'view', $resourceRequestHeader->project_to->id]) : 'General' ?></td>
                         <td><?= h($resourceRequestHeader->required_date) ?></td>
                         <td><?= h($resourceRequestHeader->created) ?></td>
-                        <td><?= h($resourceRequestHeader->modified) ?></td>
                         <td class="actions">
                             <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $resourceRequestHeader->id]); ?>
-                            <?= $this->dataTablePrintButton(__('Print'), ['action' => 'view', $resourceRequestHeader->id, '_ext' => 'pdf']); ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>

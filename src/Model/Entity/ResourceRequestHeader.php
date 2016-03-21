@@ -31,7 +31,11 @@ class ResourceRequestHeader extends Entity
      * @var array
      */
     protected $_accessible = [
-        '*' => true,
-        'id' => false,
+        '*' => true
     ];
+
+    protected function _getNumber()
+    {
+        return $this->_properties['id'] . '-A';
+    }
 }

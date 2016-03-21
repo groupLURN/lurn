@@ -13,8 +13,8 @@ use Cake\Validation\Validator;
 /**
  * ResourceRequestHeaders Model
  *
- * @property \Cake\ORM\Association\BelongsTo $ProjectsFrom
- * @property \Cake\ORM\Association\BelongsTo $ProjectsTo
+ * @property \Cake\ORM\Association\BelongsTo $ProjectFrom
+ * @property \Cake\ORM\Association\BelongsTo $ProjectTo
  * @property \Cake\ORM\Association\BelongsToMany $Equipment
  * @property \Cake\ORM\Association\BelongsToMany $ManpowerTypes
  * @property \Cake\ORM\Association\BelongsToMany $Materials
@@ -42,11 +42,11 @@ class ResourceRequestHeadersTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('ProjectsFrom', [
+        $this->belongsTo('ProjectFrom', [
             'className' => 'Projects',
             'foreignKey' => 'from_project_id'
         ]);
-        $this->belongsTo('ProjectsTo', [
+        $this->belongsTo('ProjectTo', [
             'className' => 'Projects',
             'foreignKey' => 'to_project_id'
         ]);
@@ -111,6 +111,27 @@ class ResourceRequestHeadersTable extends Table
         $rules->add($rules->existsIn(['from_project_id'], 'ProjectsFrom'));
         $rules->add($rules->existsIn(['to_project_id'], 'ProjectsTo'));
         return $rules;
+    }
+
+    public function findByProjectId(Query $query, array $options)
+    {
+        if($options['project_id'] > 0)
+            return $query->where(['ResourceRequestHeaders.from_project_id' => $options['project_id']]);
+        return $query;
+    }
+
+    public function findByRequestDateFrom(Query $query, array $options)
+    {
+        return $query->where([
+            $query->newExpr()->gte('ResourceRequestHeaders.created', $options['request_date_from'], 'datetime'),
+        ]);
+    }
+
+    public function findByRequestDateTo(Query $query, array $options)
+    {
+        return $query->where([
+            $query->newExpr()->lt('ResourceRequestHeaders.created', $options['request_date_to'], 'datetime')
+        ]);
     }
 
     public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)

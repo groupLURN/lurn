@@ -29,6 +29,8 @@ use Cake\Utility\Inflector;
 class AppController extends Controller
 {
 
+    protected $userId;
+
     /**
      * Initialization hook method.
      *
@@ -59,6 +61,7 @@ class AppController extends Controller
             'unauthorizedRedirect' => $this->referer()
         ]);
 
+        $this->userId = $this->Auth->user('id');
     }
 
     public function beforeFilter(Event $event)

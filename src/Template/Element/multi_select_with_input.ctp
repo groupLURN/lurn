@@ -1,4 +1,12 @@
-<?php $quantity = isset($quantity)? $quantity: true; ?>
+<?php
+
+$defaults = [
+    'quantity' => 'true',
+    'values' => []
+];
+
+extract($defaults, EXTR_SKIP);
+?>
 
 <div class="content-panel multi-select-with-input">
     <table>

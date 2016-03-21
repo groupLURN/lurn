@@ -66,9 +66,19 @@ class ResourceRequestHeadersController extends AppController
                 $this->Flash->error(__('The resource request header could not be saved. Please, try again.'));
             }
         }
-        $projects = $this->ResourceRequestHeaders->Projects->find('list', ['limit' => 200]);
-        $this->set(compact('resourceRequestHeader', 'projects'));
-        $this->set('_serialize', ['resourceRequestHeader']);
+
+        $projects = $this->ResourceRequestHeaders->ProjectsTo->find('list', ['limit' => 200])
+            ->matching('EmployeesJoin.Users', function($query)
+            {
+                return $query->where(['Users.id' => $this->userId]);
+            })
+            ->toArray();
+
+        $materials = TableRegistry::get('Materials')->find('list', ['limit' => 200]);
+        $equipment = TableRegistry::get('Equipment')->find('list', ['limit' => 200]);
+        $manpowerTypes = TableRegistry::get('ManpowerTypes')->find('list', ['limit' => 200]);
+        $this->set(compact('resourceRequestHeader', 'projects', 'materials', 'equipment', 'manpowerTypes'));
+        $this->set('_serialize', ['resourceRequestHeader', 'projects', 'materials', 'equipment', 'manpowerTypes']);
     }
 
     /**

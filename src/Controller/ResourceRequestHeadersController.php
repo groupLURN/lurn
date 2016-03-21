@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\ORM\TableRegistry;
 
 /**
  * ResourceRequestHeaders Controller
@@ -21,10 +22,14 @@ class ResourceRequestHeadersController extends AppController
         $this->paginate = [
             'contain' => ['Projects']
         ];
-        $resourceRequestHeaders = $this->paginate($this->ResourceRequestHeaders);
 
-        $this->set(compact('resourceRequestHeaders'));
-        $this->set('_serialize', ['resourceRequestHeaders']);
+        $this->paginate += $this->createFinders($this->request->query);
+        $resourceRequestHeaders = $this->paginate($this->ResourceRequestHeaders);
+        $projects = TableRegistry::get('Projects')->find('list')->toArray();
+
+        $this->set(compact('resourceRequestHeaders', 'projects'));
+        $this->set($this->request->query);
+        $this->set('_serialize', ['resourceRequestHeaders', 'projects']);
     }
 
     /**

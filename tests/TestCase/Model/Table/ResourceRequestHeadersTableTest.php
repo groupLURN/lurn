@@ -58,7 +58,14 @@ class ResourceRequestHeadersTableTest extends TestCase
         'app.manpower_general_inventories',
         'app.manpower_types_tasks',
         'app.employees_join',
-        'app.resource_request_details'
+        'app.equipment_request_details',
+        'app.manpower_request_details',
+        'app.material_request_details',
+        'app.resource_request_details',
+        'app.equipment_transfer_details',
+        'app.manpower_transfer_details',
+        'app.material_transfer_details',
+        'app.resource_transfer_headers'
     ];
 
     /**

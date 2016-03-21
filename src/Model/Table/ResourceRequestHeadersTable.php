@@ -12,7 +12,10 @@ use Cake\Validation\Validator;
  *
  * @property \Cake\ORM\Association\BelongsTo $ProjectsFrom
  * @property \Cake\ORM\Association\BelongsTo $ProjectsTo
- * @property \Cake\ORM\Association\HasMany $ResourceRequestDetails
+ * @property \Cake\ORM\Association\HasMany $EquipmentRequestDetails
+ * @property \Cake\ORM\Association\HasMany $ManpowerRequestDetails
+ * @property \Cake\ORM\Association\HasMany $MaterialRequestDetails
+ * @property \Cake\ORM\Association\HasMany $ResourceTransferHeaders
  */
 class ResourceRequestHeadersTable extends Table
 {
@@ -41,7 +44,16 @@ class ResourceRequestHeadersTable extends Table
             'className' => 'Projects',
             'foreignKey' => 'to_project_id'
         ]);
-        $this->hasMany('ResourceRequestDetails', [
+        $this->hasMany('EquipmentRequestDetails', [
+            'foreignKey' => 'resource_request_header_id'
+        ]);
+        $this->hasMany('ManpowerRequestDetails', [
+            'foreignKey' => 'resource_request_header_id'
+        ]);
+        $this->hasMany('MaterialRequestDetails', [
+            'foreignKey' => 'resource_request_header_id'
+        ]);
+        $this->hasMany('ResourceTransferHeaders', [
             'foreignKey' => 'resource_request_header_id'
         ]);
     }

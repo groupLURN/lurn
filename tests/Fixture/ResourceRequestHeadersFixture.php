@@ -49,9 +49,9 @@ class ResourceRequestHeadersFixture extends TestFixture
             'id' => 1,
             'from_project_id' => 1,
             'to_project_id' => 1,
-            'required_date' => '2016-03-21 14:40:21',
-            'created' => '2016-03-21 14:40:21',
-            'modified' => '2016-03-21 14:40:21'
+            'required_date' => '2016-03-21 17:52:12',
+            'created' => '2016-03-21 17:52:12',
+            'modified' => '2016-03-21 17:52:12'
         ],
     ];
 }

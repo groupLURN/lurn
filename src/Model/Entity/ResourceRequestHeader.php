@@ -13,7 +13,10 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\Time $required_date
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
- * @property \App\Model\Entity\ResourceRequestDetail[] $resource_request_details
+ * @property \App\Model\Entity\EquipmentRequestDetail[] $equipment_request_details
+ * @property \App\Model\Entity\ManpowerRequestDetail[] $manpower_request_details
+ * @property \App\Model\Entity\MaterialRequestDetail[] $material_request_details
+ * @property \App\Model\Entity\ResourceTransferHeader[] $resource_transfer_headers
  */
 class ResourceRequestHeader extends Entity
 {

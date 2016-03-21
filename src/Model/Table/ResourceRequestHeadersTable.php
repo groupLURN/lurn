@@ -37,7 +37,7 @@ class ResourceRequestHeadersTable extends Table
         parent::initialize($config);
 
         $this->table('resource_request_headers');
-        $this->displayField('id');
+        $this->displayField('number');
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');

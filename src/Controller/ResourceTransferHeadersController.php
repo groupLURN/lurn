@@ -61,7 +61,8 @@ class ResourceTransferHeadersController extends AppController
                 $this->Flash->error(__('The resource transfer header could not be saved. Please, try again.'));
             }
         }
-        $resourceRequestHeaders = $this->ResourceTransferHeaders->ResourceRequestHeaders->find('list', ['limit' => 200]);
+        $resourceRequestHeaders = $this->ResourceTransferHeaders->ResourceRequestHeaders
+            ->find('list', ['limit' => 200])->toArray();
         $projects = $this->ResourceTransferHeaders->Projects->find('list', ['limit' => 200]);
         $this->set(compact('resourceTransferHeader', 'resourceRequestHeaders', 'projects'));
         $this->set('_serialize', ['resourceTransferHeader']);

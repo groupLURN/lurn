@@ -1,4 +1,21 @@
-<?php $quantity = isset($quantity)? $quantity: true; ?>
+<?php
+
+$defaults = [
+    'quantity' => 'true',
+    'values' => [],
+    'namespaces' => []
+];
+
+extract($defaults, EXTR_SKIP);
+
+$namespaces[] = $resource;
+
+for ($i = 0; $i < count($namespaces); $i++)
+    if($i === 0)
+        $nameHolder = $namespaces[$i];
+    else
+        $nameHolder .= '[' . $namespaces[$i] . ']';
+?>
 
 <div class="content-panel multi-select-with-input">
     <table>
@@ -25,9 +42,9 @@
     <?php foreach($values as $value) : ?>
         <li onclick="$(this).remove();">
             <?php if ($quantity) : ?>
-            <input type="hidden" name="resources[<?= $resource ?>][_joinData][][quantity]" value="<?= $value['_joinData']['quantity'] ?>">
+            <input type="hidden" name="<?= $nameHolder ?>[_joinData][][quantity]" value="<?= $value['_joinData']['quantity'] ?>">
             <?php endif; ?>
-            <input type="hidden" class="id" name="resources[<?= $resource ?>][id][]" value="<?= $value['id'] ?>">
+            <input type="hidden" class="id" name="<?= $nameHolder ?>[id][]" value="<?= $value['id'] ?>">
             <?php if ($quantity) : ?> <?= $value['_joinData']['quantity'] ?>x  <?php endif; ?>
             <?= isset($value['name'])? $value['name']: $value['title'] ?>
         </li>
@@ -52,10 +69,10 @@
 
         <?php if($quantity) : ?>
         selectedObject.quantity = $(".resource-quantity", $context).val();
-        $li.append($("<input>", {type: "hidden"}).attr("name", "resources[<?=$resource ?>][_joinData][][quantity]").val(selectedObject.quantity));
+        $li.append($("<input>", {type: "hidden"}).attr("name", "<?=$nameHolder ?>[_joinData][][quantity]").val(selectedObject.quantity));
         <?php endif; ?>
 
-        $li.append($("<input>", {type: "hidden", class:'id'}).attr("name", "resources[<?=$resource ?>][id][]").val(selectedObject.id));
+        $li.append($("<input>", {type: "hidden", class:'id'}).attr("name", "<?=$nameHolder ?>[id][]").val(selectedObject.id));
 
         $li.append(
             <?php if($quantity) : ?>

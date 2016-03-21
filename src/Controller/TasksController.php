@@ -119,18 +119,9 @@ class TasksController extends AppController
 
             $task = $this->Tasks->get($id);
 
-            $nullSet = [
-                'manpower_types' => [],
-                'equipment' => [],
-                'materials' => []
-            ];
-
-            if(isset($this->request->data['resources']))
-                $this->request->data['resources'] += $nullSet;
-            else
-                $this->request->data['resources'] = $nullSet;
-
-            $this->request->data += $this->_resourcesAdapter($this->request->data['resources']);
+            $this->transpose($this->request->data, 'equipment');
+            $this->transpose($this->request->data, 'manpower_types');
+            $this->transpose($this->request->data, 'materials');
 
             $task = $this->Tasks->patchEntity($task, $this->request->data, [
                 'associated' => ['Equipment', 'ManpowerTypes', 'Materials']
@@ -216,17 +207,5 @@ class TasksController extends AppController
             $this->Flash->error(__('The task could not be deleted. Please, try again.'));
         }
         return $this->redirect(['action' => 'index']);
-    }
-
-    private function _resourcesAdapter($input)
-    {
-        $output = [];
-        // resource (e.g. ['materials', 'manpower']
-        foreach($input as $resource => $resourceElement)
-            // Key (e.g. ['id', '_joinData']
-            foreach($resourceElement as $key => $array)
-                foreach($array as $index => $value)
-                    $output[$resource][$index][$key] = $value;
-        return $output;
     }
 }

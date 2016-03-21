@@ -29,6 +29,8 @@ use Cake\Utility\Inflector;
 class AppController extends Controller
 {
 
+    protected $userId;
+
     /**
      * Initialization hook method.
      *
@@ -59,6 +61,7 @@ class AppController extends Controller
             'unauthorizedRedirect' => $this->referer()
         ]);
 
+        $this->userId = $this->Auth->user('id');
     }
 
     public function beforeFilter(Event $event)
@@ -129,8 +132,11 @@ class AppController extends Controller
     protected function transpose(&$data, $key)
     {
         // Subject consists of N parallel arrays where its keys are the properties of the entity.
-        $subject = $data[$key];
+        $subject = isset($data[$key])?$data[$key]: null;
         $data[$key] = [];
+
+        if($subject === null)
+            return;
 
         $index = 0;
         foreach($subject as $property => $parallelArrays)

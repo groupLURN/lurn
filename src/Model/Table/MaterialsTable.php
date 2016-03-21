@@ -30,7 +30,7 @@ class MaterialsTable extends Table
         parent::initialize($config);
 
         $this->table('materials');
-        $this->displayField('name');
+        $this->displayField('full_name');
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');

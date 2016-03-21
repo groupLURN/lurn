@@ -1,9 +1,10 @@
 <?php
 use Migrations\AbstractMigration;
 
-class CreateManpowerTransferDetails extends AbstractMigration
+class CreateEquipmentRequestDetails extends AbstractMigration
 {
     public $autoId = false;
+
     /**
      * Change Method.
      *
@@ -13,13 +14,18 @@ class CreateManpowerTransferDetails extends AbstractMigration
      */
     public function change()
     {
-        $table = $this->table('manpower_transfer_details');
-        $table->addColumn('resource_transfer_header_id', 'integer', [
+        $table = $this->table('equipment_request_details');
+        $table->addColumn('resource_request_header_id', 'integer', [
             'default' => null,
             'limit' => 11,
             'null' => false,
         ]);
-        $table->addColumn('manpower_id', 'integer', [
+        $table->addColumn('equipment_id', 'integer', [
+            'default' => null,
+            'limit' => 11,
+            'null' => false,
+        ]);
+        $table->addColumn('quantity', 'integer', [
             'default' => null,
             'limit' => 11,
             'null' => false,
@@ -34,11 +40,12 @@ class CreateManpowerTransferDetails extends AbstractMigration
         ]);
 
         $table->addPrimaryKey([
-            'resource_transfer_header_id',
-            'manpower_id',
+            'resource_request_header_id',
+            'equipment_id',
         ]);
-        $table->addForeignKey('resource_transfer_header_id', 'resource_transfer_headers');
-        $table->addForeignKey('manpower_id', 'manpower');
+
+        $table->addForeignKey('resource_request_header_id', 'resource_request_headers');
+        $table->addForeignKey('equipment_id', 'equipment');
         $table->create();
     }
 }

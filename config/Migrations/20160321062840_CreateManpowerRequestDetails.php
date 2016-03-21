@@ -1,8 +1,9 @@
 <?php
 use Migrations\AbstractMigration;
 
-class CreateResourceTransferHeaders extends AbstractMigration
+class CreateManpowerRequestDetails extends AbstractMigration
 {
+    public $autoId = false;
     /**
      * Change Method.
      *
@@ -12,19 +13,20 @@ class CreateResourceTransferHeaders extends AbstractMigration
      */
     public function change()
     {
-        $table = $this->table('resource_transfer_headers');
-        $table->addColumn('from_project_id', 'integer', [
+        $table = $this->table('manpower_request_details');
+        $table->addColumn('resource_request_header_id', 'integer', [
             'default' => null,
             'limit' => 11,
-            'null' => true,
+            'null' => false,
         ]);
-        $table->addColumn('to_project_id', 'integer', [
+        $table->addColumn('manpower_type_id', 'integer', [
             'default' => null,
             'limit' => 11,
-            'null' => true,
+            'null' => false,
         ]);
-        $table->addColumn('receive_date', 'datetime', [
+        $table->addColumn('quantity', 'integer', [
             'default' => null,
+            'limit' => 11,
             'null' => false,
         ]);
         $table->addColumn('created', 'datetime', [
@@ -36,10 +38,12 @@ class CreateResourceTransferHeaders extends AbstractMigration
             'null' => false,
         ]);
 
-        $table->addForeignKey('from_project_id', 'projects');
-        $table->addForeignKey('to_project_id', 'projects');
+        $table->addPrimaryKey([
+            'resource_request_header_id',
+            'manpower_type_id',
+        ]);
+        $table->addForeignKey('resource_request_header_id', 'resource_request_headers');
+        $table->addForeignKey('manpower_type_id', 'manpower_types');
         $table->create();
-
-        $this->execute('ALTER TABLE resource_request_headers AUTO_INCREMENT = 3000000');
     }
 }

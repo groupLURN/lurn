@@ -1,7 +1,7 @@
 <?php
 use Migrations\AbstractMigration;
 
-class CreateResourceRequestDetails extends AbstractMigration
+class CreateResourceTransferHeaders extends AbstractMigration
 {
     /**
      * Change Method.
@@ -12,30 +12,25 @@ class CreateResourceRequestDetails extends AbstractMigration
      */
     public function change()
     {
-        $table = $this->table('resource_request_details');
+        $table = $this->table('resource_transfer_headers');
+
         $table->addColumn('resource_request_header_id', 'integer', [
             'default' => null,
             'limit' => 11,
             'null' => false,
         ]);
-        $table->addColumn('equipment_id', 'integer', [
+        $table->addColumn('from_project_id', 'integer', [
             'default' => null,
             'limit' => 11,
             'null' => true,
         ]);
-        $table->addColumn('material_id', 'integer', [
+        $table->addColumn('to_project_id', 'integer', [
             'default' => null,
             'limit' => 11,
             'null' => true,
         ]);
-        $table->addColumn('manpower_type_id', 'integer', [
+        $table->addColumn('received_date', 'datetime', [
             'default' => null,
-            'limit' => 11,
-            'null' => true,
-        ]);
-        $table->addColumn('quantity', 'integer', [
-            'default' => null,
-            'limit' => 11,
             'null' => false,
         ]);
         $table->addColumn('created', 'datetime', [
@@ -48,11 +43,10 @@ class CreateResourceRequestDetails extends AbstractMigration
         ]);
 
         $table->addForeignKey('resource_request_header_id', 'resource_request_headers');
-        $table->addForeignKey('equipment_id', 'equipment');
-        $table->addForeignKey('material_id', 'materials');
-        $table->addForeignKey('manpower_type_id', 'manpower_types');
-
+        $table->addForeignKey('from_project_id', 'projects');
+        $table->addForeignKey('to_project_id', 'projects');
         $table->create();
 
+        $this->execute('ALTER TABLE resource_request_headers AUTO_INCREMENT = 3000000');
     }
 }

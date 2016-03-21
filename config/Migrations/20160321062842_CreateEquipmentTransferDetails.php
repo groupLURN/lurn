@@ -3,6 +3,7 @@ use Migrations\AbstractMigration;
 
 class CreateEquipmentTransferDetails extends AbstractMigration
 {
+    public $autoId = false;
     /**
      * Change Method.
      *
@@ -14,11 +15,6 @@ class CreateEquipmentTransferDetails extends AbstractMigration
     {
         $table = $this->table('equipment_transfer_details');
         $table->addColumn('resource_transfer_header_id', 'integer', [
-            'default' => null,
-            'limit' => 11,
-            'null' => false,
-        ]);
-        $table->addColumn('resource_request_detail_id', 'integer', [
             'default' => null,
             'limit' => 11,
             'null' => false,
@@ -37,8 +33,12 @@ class CreateEquipmentTransferDetails extends AbstractMigration
             'null' => false,
         ]);
 
+        $table->addPrimaryKey([
+            'resource_transfer_header_id',
+            'equipment_inventory_id',
+        ]);
+
         $table->addForeignKey('resource_transfer_header_id', 'resource_transfer_headers');
-        $table->addForeignKey('resource_request_detail_id', 'resource_request_details');
         $table->addForeignKey('equipment_inventory_id', 'equipment_inventories');
         $table->create();
     }

@@ -3,6 +3,7 @@ use Migrations\AbstractMigration;
 
 class CreateMaterialTransferDetails extends AbstractMigration
 {
+    public $autoId = false;
     /**
      * Change Method.
      *
@@ -14,11 +15,6 @@ class CreateMaterialTransferDetails extends AbstractMigration
     {
         $table = $this->table('material_transfer_details');
         $table->addColumn('resource_transfer_header_id', 'integer', [
-            'default' => null,
-            'limit' => 11,
-            'null' => false,
-        ]);
-        $table->addColumn('resource_request_detail_id', 'integer', [
             'default' => null,
             'limit' => 11,
             'null' => false,
@@ -42,8 +38,12 @@ class CreateMaterialTransferDetails extends AbstractMigration
             'null' => false,
         ]);
 
+        $table->addPrimaryKey([
+            'resource_transfer_header_id',
+            'material_id',
+        ]);
+
         $table->addForeignKey('resource_transfer_header_id', 'resource_transfer_headers');
-        $table->addForeignKey('resource_request_detail_id', 'resource_request_details');
         $table->addForeignKey('material_id', 'materials');
 
         $table->create();

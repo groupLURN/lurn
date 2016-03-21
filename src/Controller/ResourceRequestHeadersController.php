@@ -61,14 +61,15 @@ class ResourceRequestHeadersController extends AppController
             $this->transpose($this->request->data, 'equipment');
             $this->transpose($this->request->data, 'manpower_types');
             $this->transpose($this->request->data, 'materials');
-            debug($this->request->data);
-//            $resourceRequestHeader = $this->ResourceRequestHeaders->patchEntity($resourceRequestHeader, $this->request->data);
-//            if ($this->ResourceRequestHeaders->save($resourceRequestHeader)) {
-//                $this->Flash->success(__('The resource request number ' . $resourceRequestHeader->id .'has been saved.'));
-//                return $this->redirect(['action' => 'index']);
-//            } else {
-//                $this->Flash->error(__('The resource request header could not be saved. Please, try again.'));
-//            }
+            $resourceRequestHeader = $this->ResourceRequestHeaders->patchEntity($resourceRequestHeader, $this->request->data, [
+                'associated' => ['Equipment', 'ManpowerTypes', 'Materials']
+            ]);
+            if ($this->ResourceRequestHeaders->save($resourceRequestHeader)) {
+                $this->Flash->success(__('The resource request number ' . $resourceRequestHeader->id .' has been saved.'));
+                return $this->redirect(['action' => 'index']);
+            } else {
+                $this->Flash->error(__('The resource request header could not be saved. Please, try again.'));
+            }
         }
 
         $projects = $this->ResourceRequestHeaders->ProjectsTo->find('list', ['limit' => 200])

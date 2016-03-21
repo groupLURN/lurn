@@ -2,6 +2,9 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\ResourceRequestHeader;
+use ArrayObject;
+use Cake\Event\Event;
+use Cake\I18n\Time;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -105,8 +108,17 @@ class ResourceRequestHeadersTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['from_project_id'], 'Projects'));
-        $rules->add($rules->existsIn(['to_project_id'], 'Projects'));
+        $rules->add($rules->existsIn(['from_project_id'], 'ProjectsFrom'));
+        $rules->add($rules->existsIn(['to_project_id'], 'ProjectsTo'));
         return $rules;
+    }
+
+    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
+    {
+        foreach (['required_date'] as $key) {
+            if (isset($data[$key]) && is_string($data[$key])) {
+                $data[$key] = Time::parseDateTime($data[$key], 'yyyy/MM/dd');
+            }
+        }
     }
 }

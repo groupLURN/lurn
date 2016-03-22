@@ -6,24 +6,24 @@
     <fieldset>
         <legend><?= __('Create Resources Transfer') ?></legend>
         <?php
-            echo $this->Form->input('resource_request_header_id', [
-                'class' => 'form-control chosen',
-                'label' => [
-                    'class' => 'mt',
-                    'text' => 'Resources Request Number'
-                ],
-                'options' => [null => '-'] + $resourceRequestHeadersHash,
-                'onchange' => sprintf("
-                    if(!confirm('Are you sure you want to change resource request number? This will erase the details below.'))
-                    {
-                        event.preventDefault();
-                        return;
-                    }
-                    window.location = '%s' + '?resources_request_number=' + $(this).val();
-                ", $this->Url->build(['controller' => 'ResourceTransferHeaders', 'action' => 'add'])),
-                'val' => isset($resources_request_number)? $resources_request_number: 0
-            ]);
 
+        echo $this->Form->input('resource_request_header_id', [
+            'class' => 'form-control chosen',
+            'label' => [
+                'class' => 'mt',
+                'text' => 'Resources Request Number'
+            ],
+            'options' => [null => '-'] + $resourceRequestHeadersHash,
+            'val' => isset($resources_request_number)? $resources_request_number: 0,
+            'onchange' => sprintf("
+                if(!confirm('Are you sure you want to change resource request number? This will erase the details below.'))
+                {
+                    event.preventDefault();
+                    return;
+                }
+                window.location = '%s' + '?resources_request_number=' + $(this).val();
+            ", $this->Url->build(['controller' => 'ResourceTransferHeaders', 'action' => 'add']))
+        ]);
 
         echo $this->Form->input('from_project_id', [
             'class' => 'form-control chosen',
@@ -46,9 +46,16 @@
         ?>
     </fieldset>
     <?= $this->element('paned_multi_select', [
-        'id' => 'equipment-paned-multi-select',
-        'multiSelectOptions' => [
-            'quantity' => false
+        'leftPane' => [
+            'title' => 'Equipment Requested',
+            'enableInitialization' => true
+        ],
+        'rightPane' => [
+            'title' => 'Transfer Equipment',
+            'options' => [
+                'quantity' => false,
+                'resource' => 'equipment'
+            ]
         ],
         'data' => array_map(function($equipment_request_detail)
         {
@@ -67,13 +74,12 @@
                     }, $equipment_request_detail->equipment['equipment_general_inventories'])
             ];
         }, $selectedResourceRequestHeader->equipment_request_details)
-
     ]) ?>
+
     <?= $this->Form->button(__('Submit'), [
         'class' => 'btn btn-primary btn-submit'
     ]) ?>
+
     <?= $this->Form->end() ?>
-
-
     </div>
 </div>

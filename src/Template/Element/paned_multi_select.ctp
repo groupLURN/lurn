@@ -2,7 +2,6 @@
 <?php
 $defaults = [
     'leftPane' => [
-        'id' => 'equipment-paned-multi-select',
         'title' => 'Equipment Requested',
         'enableInitialization' => true
     ],
@@ -33,15 +32,16 @@ $defaults = [
 extract($defaults, EXTR_SKIP);
 ?>
 
-<div class="row mt">
-    <div class="col-xs-6">
+<div class="row mt panel-group">
+    <div class="col-xs-6 left-pane">
         <legend><h4><i class="fa fa-angle-right"></i> <?= h($leftPane['title']) ?></h4></legend>
-        <ul class="nav nav-pills nav-stacked" id="<?= $leftPane['id'] ?>">
+        <ul class="nav nav-pills nav-stacked">
             <?php if ($leftPane['enableInitialization'] === true) : ?>
                 <?php $i = 0;
                 foreach ($data as $value) : ?>
                     <li <?= $i++ === 0 ? 'class="active"' : '' ?>>
-                        <a onclick="javascript:selectCurrentPill(this)" style="cursor: pointer;">
+                        <a onclick="javascript:selectCurrentPill(this)" style="cursor: pointer;"
+                           id="<?= $rightPane['options']['resource'] . '-' . $value['id'] ?>">
                             <?= $value['quantity'] . 'x ' . $value['name'] ?>
                         </a>
                     </li>
@@ -49,14 +49,17 @@ extract($defaults, EXTR_SKIP);
             <?php endif; ?>
         </ul>
     </div>
-    <div class="col-xs-6">
+    <div class="col-xs-6 right-pane">
         <legend><h4><i class="fa fa-angle-right"></i> <?= h($rightPane['title']) ?></h4></legend>
-        <?php foreach ($data as $value) : ?>
-        <?= $this->element('multi_select_with_input', [
-            'options' => $value['list'],
-            'resource' => $rightPane['options']['resource'],
-            'quantity' => $rightPane['options']['quantity'],
-        ]) ?>
+        <?php $i = 0;
+        foreach ($data as $value) : ?>
+            <?= $this->element('multi_select_with_input', [
+                'id' => $rightPane['options']['resource'] . '-' . $value['id'],
+                'options' => $value['list'],
+                'resource' => $rightPane['options']['resource'],
+                'quantity' => $rightPane['options']['quantity'],
+                'hidden' => $i++ === 0 ? false : true
+            ]) ?>
         <?php endforeach; ?>
     </div>
 </div>

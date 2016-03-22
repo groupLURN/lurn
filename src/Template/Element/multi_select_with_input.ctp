@@ -1,9 +1,13 @@
 <?php
 
 $defaults = [
-    'quantity' => 'true',
-    'values' => [],
-    'namespaces' => []
+    'resource' => 'equipment',
+    'quantity' => 'true', // Shows/Hides the quantity text field.
+    'namespaces' => [], // Namespaces for the fields.
+    'values' => [], // Pre-set values.
+
+    'id' => '', // To be used in paned_multi_select.js
+    'hidden' => false, // Shows/Hides this element
 ];
 
 extract($defaults, EXTR_SKIP);
@@ -11,13 +15,13 @@ extract($defaults, EXTR_SKIP);
 $namespaces[] = $resource;
 
 for ($i = 0; $i < count($namespaces); $i++)
-    if($i === 0)
+    if ($i === 0)
         $nameHolder = $namespaces[$i];
     else
         $nameHolder .= '[' . $namespaces[$i] . ']';
 ?>
 
-<div class="content-panel multi-select-with-input">
+<div class="content-panel multi-select-with-input" id="<?= $id ?>" <?= $hidden ? 'hidden' : '' ?>>
     <div class="mt parent-center">
         <div class="child-center" style="width: 40%;">
             <?= $this->Form->input('list', [
@@ -29,7 +33,7 @@ for ($i = 0; $i < count($namespaces); $i++)
             ]) ?>
         </div>
         <div class="child-center">
-            <?php if($quantity) : ?>
+            <?php if ($quantity) : ?>
                 <input type="text" class='number-only resource-quantity' style="text-align: center;">
                 Quantity
             <?php endif; ?>
@@ -37,21 +41,22 @@ for ($i = 0; $i < count($namespaces); $i++)
         </div>
     </div>
     <ul class="options">
-    <?php foreach($values as $value) : ?>
-        <li onclick="$(this).remove();">
-            <?php if ($quantity) : ?>
-            <input type="hidden" name="<?= $nameHolder ?>[_joinData][][quantity]" value="<?= $value['_joinData']['quantity'] ?>">
-            <?php endif; ?>
-            <input type="hidden" class="id" name="<?= $nameHolder ?>[id][]" value="<?= $value['id'] ?>">
-            <?php if ($quantity) : ?> <?= $value['_joinData']['quantity'] ?>x  <?php endif; ?>
-            <?= isset($value['name'])? $value['name']: $value['title'] ?>
-        </li>
-    <?php endforeach; ?>
+        <?php foreach ($values as $value) : ?>
+            <li onclick="$(this).remove();">
+                <?php if ($quantity) : ?>
+                    <input type="hidden" name="<?= $nameHolder ?>[_joinData][][quantity]"
+                           value="<?= $value['_joinData']['quantity'] ?>">
+                <?php endif; ?>
+                <input type="hidden" class="id" name="<?= $nameHolder ?>[id][]" value="<?= $value['id'] ?>">
+                <?php if ($quantity) : ?> <?= $value['_joinData']['quantity'] ?>x  <?php endif; ?>
+                <?= isset($value['name']) ? $value['name'] : $value['title'] ?>
+            </li>
+        <?php endforeach; ?>
     </ul>
 </div>
 
 <script>
-    function add_<?= $resource ?>(object){
+    function add_<?= $resource ?>(object) {
         var $context = $(object).closest("div.multi-select-with-input");
         var $select = $("select.chosen", $context);
         var $ul = $("ul.options", $context);
@@ -70,15 +75,18 @@ for ($i = 0; $i < count($namespaces); $i++)
         $li.append($("<input>", {type: "hidden"}).attr("name", "<?=$nameHolder ?>[_joinData][][quantity]").val(selectedObject.quantity));
         <?php endif; ?>
 
-        $li.append($("<input>", {type: "hidden", class:'id'}).attr("name", "<?=$nameHolder ?>[id][]").val(selectedObject.id));
+        $li.append($("<input>", {
+            type: "hidden",
+            class: 'id'
+        }).attr("name", "<?=$nameHolder ?>[id][]").val(selectedObject.id));
 
         $li.append(
             <?php if($quantity) : ?>
-                selectedObject.quantity + 'x ' +
+            selectedObject.quantity + 'x ' +
             <?php endif; ?>
             selectedObject.name);
 
-        if($ul.find('input.id[value=' + selectedObject.id + ']').length === 0
+        if ($ul.find('input.id[value=' + selectedObject.id + ']').length === 0
             <?php if($quantity) : ?> && selectedObject.quantity.trim() !== "" <?php endif; ?>
         )
             $ul.append($li);

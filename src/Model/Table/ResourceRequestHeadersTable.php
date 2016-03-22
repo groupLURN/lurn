@@ -214,9 +214,9 @@ class ResourceRequestHeadersTable extends Table
         $resourceRequestHeaders = $this
             ->find()
             ->contain([
-                'EquipmentRequestDetails',
-                'ManpowerRequestDetails',
-                'MaterialRequestDetails',
+                'EquipmentRequestDetails' => ['Equipment'],
+                'ManpowerRequestDetails' => ['ManpowerTypes'],
+                'MaterialRequestDetails' => ['Materials'],
                 'ResourceTransferHeaders' => [
                     'EquipmentTransferDetails' => ['EquipmentInventories'],
                     'ManpowerTransferDetails' => ['Manpower'],
@@ -233,10 +233,15 @@ class ResourceRequestHeadersTable extends Table
             return $request->all_quantity_transferred === false;
         });
 
-        $resourceRequestHeaders = [];
-        foreach($incompleteRequests as $incompleteRequest)
-            $resourceRequestHeaders[$incompleteRequest->number] = $incompleteRequest->number;
+        return $incompleteRequests->toArray();
+    }
 
-        return $resourceRequestHeaders;
+    public function createHash($resourceRequestHeaders)
+    {
+        $hash = [];
+        foreach($resourceRequestHeaders as $resourceRequestHeader)
+            $hash[$resourceRequestHeader->id] = $resourceRequestHeader->number;
+
+        return $hash;
     }
 }

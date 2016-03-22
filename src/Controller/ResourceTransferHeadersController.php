@@ -64,17 +64,24 @@ class ResourceTransferHeadersController extends AppController
             }
         }
 
-        $materials = TableRegistry::get('Materials')->find('list', ['limit' => 200])->toArray();
-        $equipment = TableRegistry::get('Equipment')->find('list', ['limit' => 200])->toArray();
-        $manpowerTypes = TableRegistry::get('ManpowerTypes')->find('list', ['limit' => 200])->toArray();
-        $projects = $this->ResourceTransferHeaders->Projects->find('list', ['limit' => 200]);
-
         // Retrieve incomplete resource requests.
         $resourceRequestHeaders = $this->ResourceTransferHeaders->ResourceRequestHeaders
             ->findIncompleteRequestHeaders();
+        $resourceRequestHeadersHash = $this->ResourceTransferHeaders->ResourceRequestHeaders
+            ->createHash($resourceRequestHeaders);
+        $projects = $this->ResourceTransferHeaders->Projects->find('list');
 
-        $this->set(compact('resourceTransferHeader', 'resourceRequestHeaders', 'projects', 'equipment'));
-        $this->set('_serialize', ['resourceTransferHeader', 'resourceRequestHeaders', 'projects', 'equipment']);
+        $equipment = TableRegistry::get('Equipment')->find('list')->toArray();
+        $materials = TableRegistry::get('Materials')->find('list')->toArray();
+        $manpowerTypes = TableRegistry::get('ManpowerTypes')->find('list')->toArray();
+
+//        foreach($resourceRequestHeaders as $resourceRequestHeader)
+//            $equipmentRequestHash[$resourceRequestHeader->id] =
+//                (new Collection($resourceRequestHeader->equipment_request_details))->groupBy('id');
+
+        $this->set(compact('resourceTransferHeader', 'resourceRequestHeaders', 'resourceRequestHeadersHash', 'projects', 'equipment'));
+        $this->set('_serialize', ['resourceTransferHeader', 'resourceRequestHeaders', 'resourceRequestHeadersHash', 'projects', 'equipment']);
+        $this->set('_backEnd', compact('equipmentRequestHash'));
     }
 
     /**

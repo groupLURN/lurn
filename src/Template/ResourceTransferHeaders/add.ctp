@@ -12,7 +12,7 @@
                     'class' => 'mt',
                     'text' => 'Resources Request Number'
                 ],
-                'options' => [null => '-'] + $resourceRequestHeaders
+                'options' => [null => '-'] + $resourceRequestHeadersHash
             ]);
 
 
@@ -39,14 +39,9 @@
     <div class="row mt">
         <div class="col-xs-6">
             <legend><h4><i class="fa fa-angle-right"></i> <?= __('Equipment Requested') ?></h4></legend>
+            <?= $this->element('paned_multi_select', [
 
-            <ul class="nav nav-pills nav-stacked">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#">Menu 1</a></li>
-                <li><a href="#">Menu 2</a></li>
-                <li><a href="#">Menu 3</a></li>
-            </ul>
-
+            ]) ?>
         </div>
         <div class="col-xs-6">
             <legend><h4><i class="fa fa-angle-right"></i> <?= __('Assign Equipment Needed') ?></h4></legend>

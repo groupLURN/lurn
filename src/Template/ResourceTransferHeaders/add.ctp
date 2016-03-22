@@ -54,7 +54,7 @@
             'title' => 'Transfer Equipment',
             'options' => [
                 'quantity' => false,
-                'resource' => 'equipment'
+                'resource' => 'equipment_inventories'
             ]
         ],
         'data' => array_map(function($equipment_request_detail)
@@ -73,11 +73,15 @@
                         return $list;
                     }, $equipment_request_detail->equipment['equipment_general_inventories'])
             ];
-        }, $selectedResourceRequestHeader->equipment_request_details)
+        }, isset($selectedResourceRequestHeader)? $selectedResourceRequestHeader->equipment_request_details: [])
     ]) ?>
 
     <?= $this->Form->button(__('Submit'), [
-        'class' => 'btn btn-primary btn-submit'
+        'class' => 'btn btn-primary btn-submit',
+        'onclick' => "
+            if(!confirm('Once the resources transfer is submitted, the resources transfer cannot be edited or deleted. Are you sure with your resources transfer?'))
+                event.preventDefault();
+            "
     ]) ?>
 
     <?= $this->Form->end() ?>

@@ -21,7 +21,7 @@ class ResourceTransferHeadersController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['ResourceRequestHeaders', 'Projects']
+            'contain' => ['ResourceRequestHeaders', 'ProjectTo', 'ProjectFrom']
         ];
         $resourceTransferHeaders = $this->paginate($this->ResourceTransferHeaders);
 
@@ -55,9 +55,11 @@ class ResourceTransferHeadersController extends AppController
     {
         $resourceTransferHeader = $this->ResourceTransferHeaders->newEntity();
         if ($this->request->is('post')) {
+
+            $this->transpose($this->request->data, 'equipment_inventories');
             $resourceTransferHeader = $this->ResourceTransferHeaders->patchEntity($resourceTransferHeader, $this->request->data);
             if ($this->ResourceTransferHeaders->save($resourceTransferHeader)) {
-                $this->Flash->success(__('The resource transfer header has been saved.'));
+                $this->Flash->success(__('The resource transfer number ' . $resourceTransferHeader-> id . ' has been saved.'));
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The resource transfer header could not be saved. Please, try again.'));
@@ -69,7 +71,8 @@ class ResourceTransferHeadersController extends AppController
             ->findIncompleteRequestHeaders();
         $resourceRequestHeadersHash = $this->ResourceTransferHeaders->ResourceRequestHeaders
             ->createHash($resourceRequestHeaders);
-        $projects = $this->ResourceTransferHeaders->Projects->find('list');
+
+        $projects = $this->ResourceTransferHeaders->ProjectTo->find('list');
 
         $equipment = TableRegistry::get('Equipment')->find('list')->toArray();
         $materials = TableRegistry::get('Materials')->find('list')->toArray();

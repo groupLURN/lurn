@@ -62,7 +62,7 @@
             return [
                 'id' => $equipment_request_detail->equipment_id,
                 'name' => $equipment_request_detail->equipment['name'],
-                'quantity' => $equipment_request_detail->quantity,
+                'quantity' => $equipment_request_detail->quantity_remaining,
                 'list' =>
                     call_user_func(function($equipmentInventories) use ($equipment_request_detail)
                     {

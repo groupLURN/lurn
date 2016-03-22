@@ -182,7 +182,10 @@ class ResourceRequestHeadersTable extends Table
                 $noRemaining = $noRemaining && $equipmentRequestDetail->quantity_remaining === 0;
             }
             else
+            {
+                $equipmentRequestDetail->quantity_remaining = $equipmentRequestDetail->quantity;
                 $noRemaining = false;
+            }
 
         foreach($resourceRequestHeader->manpower_request_details as &$manpowerRequestDetail)
             if(isset($manpowerTypeTransferredHash[$manpowerRequestDetail->manpower_id]))
@@ -192,7 +195,10 @@ class ResourceRequestHeadersTable extends Table
                 $noRemaining = $noRemaining && $manpowerRequestDetail->quantity_remaining === 0;
             }
             else
+            {
+                $manpowerRequestDetail->quantity_remaining = $manpowerRequestDetail->quantity;
                 $noRemaining = false;
+            }
 
         foreach($resourceRequestHeader->material_request_details as &$materialRequestDetail)
             if(isset($materialTransferredHash[$materialRequestDetail->material_id]))
@@ -202,7 +208,10 @@ class ResourceRequestHeadersTable extends Table
                 $noRemaining = $noRemaining && $materialRequestDetail->quantity_remaining === 0;
             }
             else
+            {
+                $materialRequestDetail->quantity_remaining = $materialRequestDetail->quantity;
                 $noRemaining = false;
+            }
 
         $resourceRequestHeader->all_quantity_transferred = $noRemaining;
 

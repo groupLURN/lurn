@@ -224,8 +224,8 @@ class ResourceRequestHeadersTable extends Table
             ->find()
             ->contain([
                 'EquipmentRequestDetails' => ['Equipment' => ['EquipmentGeneralInventories']],
-                'ManpowerRequestDetails' => ['ManpowerTypes'],
-                'MaterialRequestDetails' => ['Materials'],
+                'ManpowerRequestDetails' => ['ManpowerTypes' => ['ManpowerGeneralInventories']],
+                'MaterialRequestDetails' => ['Materials' => ['MaterialsGeneralInventories']],
                 'ResourceTransferHeaders' => [
                     'EquipmentTransferDetails' => ['EquipmentInventories'],
                     'ManpowerTransferDetails' => ['Manpower'],

@@ -57,23 +57,85 @@
                 'resource' => 'equipment_inventories'
             ]
         ],
-        'data' => array_map(function($equipment_request_detail)
+        'data' => array_map(function($request_detail)
         {
             return [
-                'id' => $equipment_request_detail->equipment_id,
-                'name' => $equipment_request_detail->equipment['name'],
-                'quantity' => $equipment_request_detail->quantity_remaining,
+                'id' => $request_detail->equipment_id,
+                'name' => $request_detail->equipment['name'],
+                'quantity' => $request_detail->quantity_remaining,
                 'list' =>
-                    call_user_func(function($equipmentInventories) use ($equipment_request_detail)
+                    call_user_func(function($equipmentInventories) use ($request_detail)
                     {
                         $list = [];
                         foreach($equipmentInventories as $equipmentInventory)
                             $list[$equipmentInventory->id] = $equipmentInventory->id . ' - ' .
-                                $equipment_request_detail->equipment->name;
+                                $request_detail->equipment->name;
                         return $list;
-                    }, $equipment_request_detail->equipment['equipment_general_inventories'])
+                    }, $request_detail->equipment['equipment_general_inventories'])
             ];
         }, isset($selectedResourceRequestHeader)? $selectedResourceRequestHeader->equipment_request_details: [])
+    ]) ?>
+
+    <?= $this->element('paned_multi_select', [
+        'leftPane' => [
+            'title' => 'Manpower Requested',
+            'enableInitialization' => true
+        ],
+        'rightPane' => [
+            'title' => 'Transfer Manpower',
+            'options' => [
+                'quantity' => false,
+                'resource' => 'manpower'
+            ]
+        ],
+        'data' => array_map(function($request_detail)
+        {
+            return [
+                'id' => $request_detail->manpower_type_id,
+                'name' => $request_detail->manpower_type['title'],
+                'quantity' => $request_detail->quantity_remaining,
+                'list' =>
+                    call_user_func(function($manpowerInventories) use ($request_detail)
+                    {
+                        $list = [];
+                        foreach($manpowerInventories as $manpowerInventory)
+                            $list[$manpowerInventory->id] = $manpowerInventory->name;
+                        return $list;
+                    }, $request_detail->manpower_type['manpower_general_inventories'])
+            ];
+        }, isset($selectedResourceRequestHeader)? $selectedResourceRequestHeader->manpower_request_details: [])
+    ]) ?>
+
+
+    <?= $this->element('paned_multi_select', [
+        'leftPane' => [
+            'title' => 'Materials Requested',
+            'enableInitialization' => true
+        ],
+        'rightPane' => [
+            'title' => 'Transfer Materials',
+            'options' => [
+                'quantity' => true,
+                'resource' => 'materials'
+            ]
+        ],
+        'data' => array_map(function($request_detail)
+        {
+            return [
+                'id' => $request_detail->material_id,
+                'name' => $request_detail->material['name'],
+                'quantity' => $request_detail->quantity_remaining,
+                'list' =>
+                    call_user_func(function($materialInventories) use ($request_detail)
+                    {
+                        $list = [];
+                        foreach($materialInventories as $materialInventory)
+                            $list[$materialInventory->id] = $request_detail->material->name . ' ' .
+                                $request_detail->material->unit_measure;
+                        return $list;
+                    }, $request_detail->material['materials_general_inventories'])
+            ];
+        }, isset($selectedResourceRequestHeader)? $selectedResourceRequestHeader->material_request_details: [])
     ]) ?>
 
     <?= $this->Form->button(__('Submit'), [

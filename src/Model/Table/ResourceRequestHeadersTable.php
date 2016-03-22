@@ -223,7 +223,9 @@ class ResourceRequestHeadersTable extends Table
         $resourceRequestHeaders = $this
             ->find()
             ->contain([
-                'EquipmentRequestDetails' => ['Equipment' => ['EquipmentGeneralInventories']],
+                'EquipmentRequestDetails' => ['Equipment' => [
+                    'EquipmentGeneralInventories' => ['RentalReceiveDetails']]
+                ],
                 'ManpowerRequestDetails' => ['ManpowerTypes' => ['ManpowerGeneralInventories']],
                 'MaterialRequestDetails' => ['Materials' => ['MaterialsGeneralInventories']],
                 'ResourceTransferHeaders' => [

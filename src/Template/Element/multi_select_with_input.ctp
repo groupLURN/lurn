@@ -8,7 +8,7 @@ $defaults = [
 
     'id' => '', // To be used in paned_multi_select.js
     'hidden' => false, // Shows/Hides this element,
-    'checker' => "javascript:(function(){})();"
+    'checker' => "(function(){ return true; })()"
 ];
 
 extract($defaults, EXTR_SKIP);

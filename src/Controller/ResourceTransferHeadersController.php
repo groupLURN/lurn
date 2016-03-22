@@ -42,7 +42,11 @@ class ResourceTransferHeadersController extends AppController
     public function view($id = null)
     {
         $resourceTransferHeader = $this->ResourceTransferHeaders->get($id, [
-            'contain' => ['ResourceRequestHeaders', 'Projects', 'EquipmentTransferDetails', 'ManpowerTransferDetails', 'MaterialTransferDetails']
+            'contain' => ['ResourceRequestHeaders', 'ProjectFrom', 'ProjectTo',
+                'EquipmentTransferDetails' => ['EquipmentInventories' => ['Equipment']],
+                'ManpowerTransferDetails' => ['Manpower' => ['ManpowerTypes']],
+                'MaterialTransferDetails' => ['Materials']
+            ]
         ]);
 
         $this->set('resourceTransferHeader', $resourceTransferHeader);
@@ -60,6 +64,8 @@ class ResourceTransferHeadersController extends AppController
         if ($this->request->is('post')) {
 
             $this->transpose($this->request->data, 'equipment_inventories');
+            $this->transpose($this->request->data, 'manpower');
+            $this->transpose($this->request->data, 'materials');
             $resourceTransferHeader = $this->ResourceTransferHeaders->patchEntity($resourceTransferHeader, $this->request->data);
             if ($this->ResourceTransferHeaders->save($resourceTransferHeader)) {
                 $this->Flash->success(__('The resource transfer number ' . $resourceTransferHeader-> id . ' has been saved.'));
@@ -77,11 +83,6 @@ class ResourceTransferHeadersController extends AppController
 
         $projects = $this->ResourceTransferHeaders->ProjectTo->find('list');
 
-        $equipment = TableRegistry::get('Equipment')->find('list')->toArray();
-        $materials = TableRegistry::get('Materials')->find('list')->toArray();
-        $manpowerTypes = TableRegistry::get('ManpowerTypes')->find('list')->toArray();
-
-
         $selectedResourceRequestHeaderId = isset($this->request->query['resources_request_number'])? (int) $this->request->query['resources_request_number']: 0;
 
         $selectedResourceRequestHeader = (new Collection($resourceRequestHeaders))->filter(
@@ -92,8 +93,8 @@ class ResourceTransferHeadersController extends AppController
         )->first();
 
         $this->set($this->request->query);
-        $this->set(compact('resourceTransferHeader', 'selectedResourceRequestHeader', 'resourceRequestHeadersHash', 'projects', 'equipment'));
-        $this->set('_serialize', ['resourceTransferHeader', 'selectedResourceRequestHeader', 'resourceRequestHeadersHash', 'projects', 'equipment']);
+        $this->set(compact('resourceTransferHeader', 'selectedResourceRequestHeader', 'resourceRequestHeadersHash', 'projects'));
+        $this->set('_serialize', ['resourceTransferHeader', 'selectedResourceRequestHeader', 'resourceRequestHeadersHash', 'projects']);
     }
 
     /**

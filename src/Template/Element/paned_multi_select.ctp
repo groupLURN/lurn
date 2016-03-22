@@ -1,5 +1,6 @@
 <?= $this->Html->script('paned-multi-select', ['block' => 'script-end']); ?>
 <?php
+
 $defaults = [
     'leftPane' => [
         'title' => 'Equipment Requested',
@@ -26,7 +27,8 @@ $defaults = [
             'name' => 'Equipment2',
             'quantity' => 2
         ]
-    ]
+    ],
+    'isSingularChecker' => true
 ];
 
 extract($defaults, EXTR_SKIP);
@@ -59,12 +61,33 @@ extract($defaults, EXTR_SKIP);
                 'resource' => $rightPane['options']['resource'],
                 'quantity' => $rightPane['options']['quantity'],
                 'hidden' => $i++ === 0 ? false : true,
-                'checker' => sprintf("(function(object)
+                'checker' => ($isSingularChecker === true)? sprintf("
+                (function(object)
                 {
                     var \$context = $(object).closest('div.multi-select-with-input');
                     var \$ul = \$context.find('ul.options');
 
                     return \$ul.find('li').length < %s;
+                })(this)", $value['quantity']) : sprintf("
+                (function(object)
+                {
+                    var \$context = $(object).closest('div.multi-select-with-input');
+                    var \$select = \$context.find('select');
+                    var inputQuantity = Number(\$context.find('.resource-quantity').val());
+                    var availableQuantity = Number(\$select.find('optgroup').attr('label').match(/\\d+/g));
+
+                    if(inputQuantity > availableQuantity)
+                    {
+                        alert('You cannot transfer more than what is available in your inventory.');
+                        return false;
+                    }
+                    else if (inputQuantity > %s)
+                    {
+                        alert('You cannot transfer more than what is requested.');
+                        return false;
+                    }
+                    else
+                        return true;
                 })(this)", $value['quantity'])
             ]) ?>
         <?php endforeach; ?>

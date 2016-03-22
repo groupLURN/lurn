@@ -77,7 +77,7 @@
                                 (
                                     !$equipmentInventory->has('rental_receive_detail')? 'In-House':
                                     'Rental ' . $equipmentInventory->rental_receive_detail->rental_receive_header_id
-                                ) . ' / ' . $request_detail->equipment->name;
+                                ) . ' / ' . $equipmentInventory->id . ' - ' . $request_detail->equipment->name;
                         return $list;
                     }, $request_detail->equipment['equipment_general_inventories'])
             ];
@@ -127,23 +127,24 @@
                 'resource' => 'materials'
             ]
         ],
+        'isSingularChecker' => false,
         'data' => array_map(function($request_detail)
         {
             return [
                 'id' => $request_detail->material_id,
-                'name' => $request_detail->material['name'],
+                'name' => $request_detail->material['name'] . ' ' . $request_detail->material->unit_measure,
                 'quantity' => $request_detail->quantity_remaining,
                 'list' =>
                     call_user_func(function($materialInventories) use ($request_detail)
                     {
                         $list = [];
                         foreach($materialInventories as $materialInventory)
-                            $list[$materialInventory->id] = $request_detail->material->name . ' ' .
+                            $list['Available Quantity = ' . $materialInventory->quantity][$materialInventory->material_id] = $request_detail->material->name . ' ' .
                                 $request_detail->material->unit_measure;
                         return $list;
                     }, $request_detail->material['materials_general_inventories'])
             ];
-        }, isset($selectedResourceRequestHeader)? $selectedResourceRequestHeader->material_request_details: [])
+        }, isset($selectedResourceRequestHeader->material_request_details)? $selectedResourceRequestHeader->material_request_details: [])
     ]) ?>
 
     <?= $this->Form->button(__('Submit'), [

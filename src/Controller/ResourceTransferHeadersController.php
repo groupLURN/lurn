@@ -23,10 +23,13 @@ class ResourceTransferHeadersController extends AppController
         $this->paginate = [
             'contain' => ['ResourceRequestHeaders', 'ProjectTo', 'ProjectFrom']
         ];
+        $this->paginate += $this->createFinders($this->request->query);
         $resourceTransferHeaders = $this->paginate($this->ResourceTransferHeaders);
+        $projects = TableRegistry::get('Projects')->find('list')->toArray();
 
-        $this->set(compact('resourceTransferHeaders'));
-        $this->set('_serialize', ['resourceTransferHeaders']);
+        $this->set($this->request->query);
+        $this->set(compact('resourceTransferHeaders', 'projects'));
+        $this->set('_serialize', ['resourceTransferHeaders', 'projects']);
     }
 
     /**

@@ -106,4 +106,25 @@ class ResourceTransferHeadersTable extends Table
         $rules->add($rules->existsIn(['to_project_id'], 'ProjectTo'));
         return $rules;
     }
+
+    public function findByProjectId(Query $query, array $options)
+    {
+        if($options['project_id'] > 0)
+            return $query->where(['ResourceTransferHeaders.to_project_id' => $options['project_id']]);
+        return $query;
+    }
+
+    public function findByTransferDateFrom(Query $query, array $options)
+    {
+        return $query->where([
+            $query->newExpr()->gte('ResourceTransferHeaders.created', $options['transfer_date_from'], 'datetime'),
+        ]);
+    }
+
+    public function findByTransferDateTo(Query $query, array $options)
+    {
+        return $query->where([
+            $query->newExpr()->lt('ResourceTransferHeaders.created', $options['transfer_date_to'], 'datetime')
+        ]);
+    }
 }

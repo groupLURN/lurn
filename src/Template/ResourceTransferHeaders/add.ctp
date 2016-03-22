@@ -49,7 +49,16 @@
         <div class="col-xs-6">
             <legend><h4><i class="fa fa-angle-right"></i> <?= __('Equipment Requested') ?></h4></legend>
             <?= $this->element('paned_multi_select', [
-                'id' => 'equipment-paned-multi-select'
+                'id' => 'equipment-paned-multi-select',
+                'data' => array_map(function($equipment_request_detail)
+                {
+                    return [
+                        'id' => $equipment_request_detail->equipment_id,
+                        'name' => $equipment_request_detail->equipment['name'],
+                        'quantity' => $equipment_request_detail->quantity,
+                    ];
+                }, $selectedResourceRequestHeader->equipment_request_details)
+
             ]) ?>
         </div>
         <div class="col-xs-6">

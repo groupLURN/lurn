@@ -11,8 +11,11 @@ use Cake\Validation\Validator;
  * ResourceTransferHeaders Model
  *
  * @property \Cake\ORM\Association\BelongsTo $ResourceRequestHeaders
- * @property \Cake\ORM\Association\BelongsTo $Projects
- * @property \Cake\ORM\Association\BelongsTo $Projects
+ * @property \Cake\ORM\Association\BelongsTo $ProjectFrom
+ * @property \Cake\ORM\Association\BelongsTo $ProjectTo
+ * @property \Cake\ORM\Association\BelongsToMany $EquipmentInventories
+ * @property \Cake\ORM\Association\BelongsToMany $Manpower
+ * @property \Cake\ORM\Association\BelongsToMany $Materials
  * @property \Cake\ORM\Association\HasMany $EquipmentTransferDetails
  * @property \Cake\ORM\Association\HasMany $ManpowerTransferDetails
  * @property \Cake\ORM\Association\HasMany $MaterialTransferDetails
@@ -40,11 +43,28 @@ class ResourceTransferHeadersTable extends Table
             'foreignKey' => 'resource_request_header_id',
             'joinType' => 'INNER'
         ]);
-        $this->belongsTo('Projects', [
+        $this->belongsTo('ProjectFrom', [
+            'className' => 'Projects',
             'foreignKey' => 'from_project_id'
         ]);
-        $this->belongsTo('Projects', [
+        $this->belongsTo('ProjectTo', [
+            'className' => 'Projects',
             'foreignKey' => 'to_project_id'
+        ]);
+        $this->belongsToMany('EquipmentInventories', [
+            'foreignKey' => 'resource_transfer_header_id',
+            'targetForeignKey' => 'equipment_inventory_id',
+            'joinTable' => 'equipment_transfer_details'
+        ]);
+        $this->belongsToMany('Manpower', [
+            'foreignKey' => 'resource_transfer_header_id',
+            'targetForeignKey' => 'manpower_id',
+            'joinTable' => 'manpower_transfer_details'
+        ]);
+        $this->belongsToMany('Materials', [
+            'foreignKey' => 'resource_transfer_header_id',
+            'targetForeignKey' => 'material_id',
+            'joinTable' => 'material_transfer_details'
         ]);
         $this->hasMany('EquipmentTransferDetails', [
             'foreignKey' => 'resource_transfer_header_id'
@@ -82,8 +102,8 @@ class ResourceTransferHeadersTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['resource_request_header_id'], 'ResourceRequestHeaders'));
-        $rules->add($rules->existsIn(['from_project_id'], 'Projects'));
-        $rules->add($rules->existsIn(['to_project_id'], 'Projects'));
+        $rules->add($rules->existsIn(['from_project_id'], 'ProjectFrom'));
+        $rules->add($rules->existsIn(['to_project_id'], 'ProjectTo'));
         return $rules;
     }
 }

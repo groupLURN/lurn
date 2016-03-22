@@ -19,23 +19,9 @@
                         event.preventDefault();
                         return;
                     }
-                    $('#equipment-paned-multi-select').html('');
-                    $.getJSON('%s' + '/' + $(this).val(),
-                        function(response)
-                        {
-                            fillPane($('#equipment-paned-multi-select'),
-                                $.map(response.resourceRequestHeader.equipment, function(object)
-                                {
-                                    return {
-                                        id: object.id,
-                                        name: object.name,
-                                        quantity: object._joinData.quantity
-                                    };
-                                })
-                            );
-                        }
-                    );
-                ", $this->Url->build(['controller' => 'ResourceRequestHeaders', 'action' => 'view']))
+                    window.location = '%s' + '?resources_request_number=' + $(this).val();
+                ", $this->Url->build(['controller' => 'ResourceTransferHeaders', 'action' => 'add'])),
+                'val' => isset($resources_request_number)? $resources_request_number: 0
             ]);
 
 

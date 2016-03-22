@@ -1,3 +1,4 @@
+<?= $this->Html->script('paned-multi-select', ['block' => 'script-end']); ?>
 <?php
 $defaults = [
     'data' => [
@@ -11,27 +12,12 @@ $defaults = [
             'name' => 'Equipment2',
             'quantity' => 2
         ]
-    ]
+    ],
+    'id' => 'equipment-paned-multi-select'
 ];
 
 extract($defaults, EXTR_SKIP);
 ?>
 
-<ul class="nav nav-pills nav-stacked">
-    <?php $i = 0; foreach($data as $array) : ?>
-    <li <?= $i++ === 0? 'class="active"': ''?>>
-        <a onclick="javascript:selectCurrentPill(this)" style="cursor: pointer;">
-            <?= $array['quantity'] . "x\t" . $array['name'] ?>
-        </a>
-    </li>
-    <?php endforeach; ?>
+<ul class="nav nav-pills nav-stacked" id="<?=$id?>">
 </ul>
-
-<script>
-    function selectCurrentPill(element)
-    {
-        var $context = $(element).closest("ul");
-        $context.find("li").removeClass("active");
-        $(element).closest("li").addClass("active");
-    }
-</script>

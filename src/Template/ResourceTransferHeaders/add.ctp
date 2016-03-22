@@ -12,7 +12,30 @@
                     'class' => 'mt',
                     'text' => 'Resources Request Number'
                 ],
-                'options' => [null => '-'] + $resourceRequestHeadersHash
+                'options' => [null => '-'] + $resourceRequestHeadersHash,
+                'onchange' => sprintf("
+                    if(!confirm('Are you sure you want to change resource request number? This will erase the details below.'))
+                    {
+                        event.preventDefault();
+                        return;
+                    }
+                    $('#equipment-paned-multi-select').html('');
+                    $.getJSON('%s' + '/' + $(this).val(),
+                        function(response)
+                        {
+                            fillPane($('#equipment-paned-multi-select'),
+                                $.map(response.resourceRequestHeader.equipment, function(object)
+                                {
+                                    return {
+                                        id: object.id,
+                                        name: object.name,
+                                        quantity: object._joinData.quantity
+                                    };
+                                })
+                            );
+                        }
+                    );
+                ", $this->Url->build(['controller' => 'ResourceRequestHeaders', 'action' => 'view']))
             ]);
 
 
@@ -40,7 +63,7 @@
         <div class="col-xs-6">
             <legend><h4><i class="fa fa-angle-right"></i> <?= __('Equipment Requested') ?></h4></legend>
             <?= $this->element('paned_multi_select', [
-
+                'id' => 'equipment-paned-multi-select'
             ]) ?>
         </div>
         <div class="col-xs-6">

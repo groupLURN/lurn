@@ -75,13 +75,8 @@ class ResourceTransferHeadersController extends AppController
         $materials = TableRegistry::get('Materials')->find('list')->toArray();
         $manpowerTypes = TableRegistry::get('ManpowerTypes')->find('list')->toArray();
 
-//        foreach($resourceRequestHeaders as $resourceRequestHeader)
-//            $equipmentRequestHash[$resourceRequestHeader->id] =
-//                (new Collection($resourceRequestHeader->equipment_request_details))->groupBy('id');
-
         $this->set(compact('resourceTransferHeader', 'resourceRequestHeaders', 'resourceRequestHeadersHash', 'projects', 'equipment'));
         $this->set('_serialize', ['resourceTransferHeader', 'resourceRequestHeaders', 'resourceRequestHeadersHash', 'projects', 'equipment']);
-        $this->set('_backEnd', compact('equipmentRequestHash'));
     }
 
     /**

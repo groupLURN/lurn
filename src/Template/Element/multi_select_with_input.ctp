@@ -7,7 +7,8 @@ $defaults = [
     'values' => [], // Pre-set values.
 
     'id' => '', // To be used in paned_multi_select.js
-    'hidden' => false, // Shows/Hides this element
+    'hidden' => false, // Shows/Hides this element,
+    'checker' => "javascript:(function(){})();"
 ];
 
 extract($defaults, EXTR_SKIP);
@@ -37,7 +38,7 @@ for ($i = 0; $i < count($namespaces); $i++)
                 <input type="text" class='number-only resource-quantity' style="text-align: center;">
                 Quantity
             <?php endif; ?>
-            <img src="/img/add.png" alt="Add" style="cursor: pointer;" onclick="add_<?= $resource ?>(this)">
+            <img src="/img/add.png" alt="Add" style="cursor: pointer;" onclick="if(<?= $checker ?> === true) add_<?= $resource ?>(this);">
         </div>
     </div>
     <ul class="options">
@@ -59,6 +60,10 @@ for ($i = 0; $i < count($namespaces); $i++)
     function add_<?= $resource ?>(object) {
         var $context = $(object).closest("div.multi-select-with-input");
         var $select = $("select.chosen", $context);
+
+        if($select.val() === null)
+            return;
+
         var $ul = $("ul.options", $context);
 
         var $li = $("<li>", {
@@ -66,8 +71,8 @@ for ($i = 0; $i < count($namespaces); $i++)
         });
 
         var selectedObject = {
-            id: $("select.chosen", $context).val(),
-            name: $select.find('[value= ' + $("select.chosen", $context).val() + ']').text()
+            id: $select.val(),
+            name: $select.find('[value= ' + $select.val() + ']').text()
         };
 
         <?php if($quantity) : ?>

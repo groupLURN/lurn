@@ -58,7 +58,14 @@ extract($defaults, EXTR_SKIP);
                 'options' => $value['list'],
                 'resource' => $rightPane['options']['resource'],
                 'quantity' => $rightPane['options']['quantity'],
-                'hidden' => $i++ === 0 ? false : true
+                'hidden' => $i++ === 0 ? false : true,
+                'checker' => sprintf("(function(object)
+                {
+                    var \$context = $(object).closest('div.multi-select-with-input');
+                    var \$ul = \$context.find('ul.options');
+
+                    return \$ul.find('li').length < %s;
+                })(this)", $value['quantity'])
             ]) ?>
         <?php endforeach; ?>
     </div>

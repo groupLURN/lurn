@@ -3,6 +3,7 @@ namespace App\Model\Table;
 
 use App\Model\Entity\ResourceRequestHeader;
 use ArrayObject;
+use Cake\Collection\Collection;
 use Cake\Event\Event;
 use Cake\I18n\Time;
 use Cake\ORM\Query;
@@ -141,5 +142,70 @@ class ResourceRequestHeadersTable extends Table
                 $data[$key] = Time::parseDateTime($data[$key], 'yyyy/MM/dd');
             }
         }
+    }
+
+    public function computeQuantityRemaining($resourceRequestHeader)
+    {
+        // First, build a hash map for easier access on the total quantity transferred per equipment, manpower_type and
+        // material.
+        $equipmentTransferredHash = [];
+        $manpowerTypeTransferredHash = [];
+        $materialTransferredHash = [];
+
+        foreach($resourceRequestHeader->resource_transfer_headers as $resourceTransferHeader)
+        {
+            foreach($resourceTransferHeader->equipment_transfer_details as $equipmentTransferDetail)
+            {
+                $ref = &$equipmentTransferredHash[$equipmentTransferDetail->equipment_inventory->equipment_id];
+                $ref = isset($ref)? $ref['quantity_transferred'] + 1: 1;
+            }
+            foreach($resourceTransferHeader->manpower_transfer_details as $manpowerTransferDetail)
+            {
+                $ref = &$manpowerTypeTransferredHash[$manpowerTransferDetail->manpower->manpower_type_id];
+                $ref = isset($ref)? $ref['quantity_transferred'] + 1: 1;
+            }
+            foreach($resourceTransferHeader->material_transfer_details as $materialTransferDetail)
+            {
+                $ref = &$materialTransferredHash[$materialTransferDetail->material_id];
+                $ref = isset($ref)? $ref['quantity_transferred'] + $materialTransferDetail->quantity: $materialTransferDetail->quantity;
+            }
+        }
+
+        // Should be all quantity_remaining === 0 to be NoRemaining.
+        $noRemaining = true;
+
+        foreach($resourceRequestHeader->equipment_request_details as &$equipmentRequestDetail)
+            if(isset($equipmentTransferredHash[$equipmentRequestDetail->equipment_id]))
+            {
+                $equipmentRequestDetail->quantity_remaining = $equipmentRequestDetail->quantity -
+                    $equipmentTransferredHash[$equipmentRequestDetail->equipment_id];
+                $noRemaining = $noRemaining && $equipmentRequestDetail->quantity_remaining === 0;
+            }
+            else
+                $noRemaining = false;
+
+        foreach($resourceRequestHeader->manpower_request_details as &$manpowerRequestDetail)
+            if(isset($manpowerTypeTransferredHash[$manpowerRequestDetail->manpower_id]))
+            {
+                $manpowerRequestDetail->quantity_remaining = $manpowerRequestDetail->quantity -
+                    $manpowerTypeTransferredHash[$manpowerRequestDetail->manpower_id];
+                $noRemaining = $noRemaining && $manpowerRequestDetail->quantity_remaining === 0;
+            }
+            else
+                $noRemaining = false;
+
+        foreach($resourceRequestHeader->material_request_details as &$materialRequestDetail)
+            if(isset($materialTransferredHash[$materialRequestDetail->material_id]))
+            {
+                $materialRequestDetail->quantity_remaining = $materialRequestDetail->quantity -
+                    $materialTransferredHash[$materialRequestDetail->material_id];
+                $noRemaining = $noRemaining && $materialRequestDetail->quantity_remaining === 0;
+            }
+            else
+                $noRemaining = false;
+
+        $resourceRequestHeader->all_quantity_transferred = $noRemaining;
+
+        return $this;
     }
 }

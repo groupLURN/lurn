@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Collection\Collection;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -65,9 +66,35 @@ class ResourceTransferHeadersController extends AppController
         $materials = TableRegistry::get('Materials')->find('list', ['limit' => 200])->toArray();
         $equipment = TableRegistry::get('Equipment')->find('list', ['limit' => 200])->toArray();
         $manpowerTypes = TableRegistry::get('ManpowerTypes')->find('list', ['limit' => 200])->toArray();
-        $resourceRequestHeaders = $this->ResourceTransferHeaders->ResourceRequestHeaders
-            ->find('list', ['limit' => 200])->toArray();
         $projects = $this->ResourceTransferHeaders->Projects->find('list', ['limit' => 200]);
+
+        // Retrieve incomplete resource requests.
+        $resourceRequestHeaders = $this->ResourceTransferHeaders->ResourceRequestHeaders
+            ->find()
+            ->contain([
+                'EquipmentRequestDetails',
+                'ManpowerRequestDetails',
+                'MaterialRequestDetails',
+                'ResourceTransferHeaders' => [
+                    'EquipmentTransferDetails' => ['EquipmentInventories'],
+                    'ManpowerTransferDetails' => ['Manpower'],
+                    'MaterialTransferDetails'
+                ]
+            ])
+            ->toArray();
+
+        foreach($resourceRequestHeaders as $resourceRequestHeader)
+            $this->ResourceTransferHeaders->ResourceRequestHeaders->computeQuantityRemaining($resourceRequestHeader);
+
+        $collection = new Collection($resourceRequestHeaders);
+        $incompleteRequests = $collection->filter(function ($request, $key) {
+            return $request->all_quantity_transferred === false;
+        });
+
+        $resourceRequestHeaders = [];
+        foreach($incompleteRequests as $incompleteRequest)
+            $resourceRequestHeaders[$incompleteRequest->number] = $incompleteRequest->number;
+
         $this->set(compact('resourceTransferHeader', 'resourceRequestHeaders', 'projects', 'equipment'));
         $this->set('_serialize', ['resourceTransferHeader', 'resourceRequestHeaders', 'projects', 'equipment']);
     }

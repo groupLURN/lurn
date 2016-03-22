@@ -208,4 +208,35 @@ class ResourceRequestHeadersTable extends Table
 
         return $this;
     }
+
+    public function findIncompleteRequestHeaders()
+    {
+        $resourceRequestHeaders = $this
+            ->find()
+            ->contain([
+                'EquipmentRequestDetails',
+                'ManpowerRequestDetails',
+                'MaterialRequestDetails',
+                'ResourceTransferHeaders' => [
+                    'EquipmentTransferDetails' => ['EquipmentInventories'],
+                    'ManpowerTransferDetails' => ['Manpower'],
+                    'MaterialTransferDetails'
+                ]
+            ])
+            ->toArray();
+
+        foreach($resourceRequestHeaders as $resourceRequestHeader)
+            $this->computeQuantityRemaining($resourceRequestHeader);
+
+        $collection = new Collection($resourceRequestHeaders);
+        $incompleteRequests = $collection->filter(function ($request, $key) {
+            return $request->all_quantity_transferred === false;
+        });
+
+        $resourceRequestHeaders = [];
+        foreach($incompleteRequests as $incompleteRequest)
+            $resourceRequestHeaders[$incompleteRequest->number] = $incompleteRequest->number;
+
+        return $resourceRequestHeaders;
+    }
 }

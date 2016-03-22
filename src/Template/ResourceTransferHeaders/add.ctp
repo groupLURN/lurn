@@ -34,13 +34,6 @@
             'options' => $projects
         ]);
 
-        echo $this->Form->input('received_date', [
-            'type' => 'text',
-            'class' => 'form-control datetime-picker',
-            'label' => [
-                'class' => 'mt'
-            ]
-        ]);
         ?>
     </fieldset>
     <div class="row mt">

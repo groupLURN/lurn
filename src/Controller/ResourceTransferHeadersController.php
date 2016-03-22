@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\ORM\TableRegistry;
 
 /**
  * ResourceTransferHeaders Controller
@@ -61,11 +62,14 @@ class ResourceTransferHeadersController extends AppController
                 $this->Flash->error(__('The resource transfer header could not be saved. Please, try again.'));
             }
         }
+        $materials = TableRegistry::get('Materials')->find('list', ['limit' => 200])->toArray();
+        $equipment = TableRegistry::get('Equipment')->find('list', ['limit' => 200])->toArray();
+        $manpowerTypes = TableRegistry::get('ManpowerTypes')->find('list', ['limit' => 200])->toArray();
         $resourceRequestHeaders = $this->ResourceTransferHeaders->ResourceRequestHeaders
             ->find('list', ['limit' => 200])->toArray();
         $projects = $this->ResourceTransferHeaders->Projects->find('list', ['limit' => 200]);
-        $this->set(compact('resourceTransferHeader', 'resourceRequestHeaders', 'projects'));
-        $this->set('_serialize', ['resourceTransferHeader']);
+        $this->set(compact('resourceTransferHeader', 'resourceRequestHeaders', 'projects', 'equipment'));
+        $this->set('_serialize', ['resourceTransferHeader', 'resourceRequestHeaders', 'projects', 'equipment']);
     }
 
     /**

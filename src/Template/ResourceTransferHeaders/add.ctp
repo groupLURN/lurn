@@ -1,30 +1,73 @@
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('List Resource Transfer Headers'), ['action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('List Resource Request Headers'), ['controller' => 'ResourceRequestHeaders', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Resource Request Header'), ['controller' => 'ResourceRequestHeaders', 'action' => 'add']) ?></li>
-        <li><?= $this->Html->link(__('List Projects'), ['controller' => 'Projects', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Project'), ['controller' => 'Projects', 'action' => 'add']) ?></li>
-        <li><?= $this->Html->link(__('List Equipment Transfer Details'), ['controller' => 'EquipmentTransferDetails', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Equipment Transfer Detail'), ['controller' => 'EquipmentTransferDetails', 'action' => 'add']) ?></li>
-        <li><?= $this->Html->link(__('List Manpower Transfer Details'), ['controller' => 'ManpowerTransferDetails', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Manpower Transfer Detail'), ['controller' => 'ManpowerTransferDetails', 'action' => 'add']) ?></li>
-        <li><?= $this->Html->link(__('List Material Transfer Details'), ['controller' => 'MaterialTransferDetails', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Material Transfer Detail'), ['controller' => 'MaterialTransferDetails', 'action' => 'add']) ?></li>
-    </ul>
-</nav>
-<div class="resourceTransferHeaders form large-9 medium-8 columns content">
+<?= $this->Flash->render() ?>
+<?= $this->assign('title', 'Create Resources Transfer') ?>
+<div class="row mt">
+    <div class="col-md-12">
     <?= $this->Form->create($resourceTransferHeader) ?>
     <fieldset>
-        <legend><?= __('Add Resource Transfer Header') ?></legend>
+        <legend><?= __('Create Resources Transfer') ?></legend>
         <?php
-            echo $this->Form->input('resource_request_header_id', ['options' => $resourceRequestHeaders]);
-            echo $this->Form->input('from_project_id');
-            echo $this->Form->input('to_project_id', ['options' => $projects, 'empty' => true]);
-            echo $this->Form->input('received_date');
+            echo $this->Form->input('resource_request_header_id', [
+                'class' => 'form-control chosen',
+                'label' => [
+                    'class' => 'mt',
+                    'text' => 'Resources Request Number'
+                ],
+                'options' => [null => '-'] + $resourceRequestHeaders
+            ]);
+
+
+        echo $this->Form->input('from_project_id', [
+            'class' => 'form-control chosen',
+            'label' => [
+                'text' => 'Transfer From',
+                'class' => 'mt'
+            ],
+            'options' => [null => 'General']
+        ]);
+
+        echo $this->Form->input('to_project_id', [
+            'class' => 'form-control chosen',
+            'label' => [
+                'text' => 'Transfer To',
+                'class' => 'mt'
+            ],
+            'options' => $projects
+        ]);
+
+        echo $this->Form->input('received_date', [
+            'type' => 'text',
+            'class' => 'form-control datetime-picker',
+            'label' => [
+                'class' => 'mt'
+            ]
+        ]);
         ?>
     </fieldset>
-    <?= $this->Form->button(__('Submit')) ?>
+    <div class="row mt">
+        <div class="col-xs-6">
+            <legend><h4><i class="fa fa-angle-right"></i> <?= __('Equipment Requested') ?></h4></legend>
+
+            <ul class="nav nav-pills nav-stacked">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="#">Menu 1</a></li>
+                <li><a href="#">Menu 2</a></li>
+                <li><a href="#">Menu 3</a></li>
+            </ul>
+
+        </div>
+        <div class="col-xs-6">
+            <legend><h4><i class="fa fa-angle-right"></i> <?= __('Assign Equipment Needed') ?></h4></legend>
+            <?= $this->element('multi_select_with_input', [
+                'options' => $equipment,
+                'resource' => 'equipment'
+            ]) ?>
+        </div>
+    </div>
+    <?= $this->Form->button(__('Submit'), [
+        'class' => 'btn btn-primary btn-submit'
+    ]) ?>
     <?= $this->Form->end() ?>
+
+
+    </div>
 </div>

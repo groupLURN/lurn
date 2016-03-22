@@ -18,26 +18,24 @@ for ($i = 0; $i < count($namespaces); $i++)
 ?>
 
 <div class="content-panel multi-select-with-input">
-    <table>
-        <tr>
-            <td>
-                <?= $this->Form->input('equipment_list', [
-                    'label' => false,
-                    'type' => 'select',
-                    'data-placeholder' => 'No ' . $resource,
-                    'class' => 'chosen resource form-control',
-                    'options' => $options
-                ]) ?>
-            </td>
-            <td>
-                <?php if($quantity) : ?>
-                <input type="text" class='number-only resource-quantity'>
+    <div class="mt parent-center">
+        <div class="child-center" style="width: 40%;">
+            <?= $this->Form->input('list', [
+                'label' => false,
+                'type' => 'select',
+                'data-placeholder' => 'No ' . $resource,
+                'class' => 'chosen resource form-control',
+                'options' => $options
+            ]) ?>
+        </div>
+        <div class="child-center">
+            <?php if($quantity) : ?>
+                <input type="text" class='number-only resource-quantity' style="text-align: center;">
                 Quantity
-                <?php endif; ?>
-                <img src="/img/add.png" alt="Add" style="cursor: pointer;" onclick="add_<?= $resource ?>(this)">
-            </td>
-        </tr>
-    </table>
+            <?php endif; ?>
+            <img src="/img/add.png" alt="Add" style="cursor: pointer;" onclick="add_<?= $resource ?>(this)">
+        </div>
+    </div>
     <ul class="options">
     <?php foreach($values as $value) : ?>
         <li onclick="$(this).remove();">
@@ -54,7 +52,7 @@ for ($i = 0; $i < count($namespaces); $i++)
 
 <script>
     function add_<?= $resource ?>(object){
-        var $context = $(object).closest("div");
+        var $context = $(object).closest("div.multi-select-with-input");
         var $select = $("select.chosen", $context);
         var $ul = $("ul.options", $context);
 

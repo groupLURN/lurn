@@ -152,7 +152,8 @@
         'onclick' => "
             if(!confirm('Once the resources transfer is submitted, the resources transfer cannot be edited or deleted. Are you sure with your resources transfer?'))
                 event.preventDefault();
-            "
+            ",
+        'disabled' => !isset($resources_request_number)
     ]) ?>
 
     <?= $this->Form->end() ?>

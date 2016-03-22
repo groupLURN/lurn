@@ -157,17 +157,17 @@ class ResourceRequestHeadersTable extends Table
             foreach($resourceTransferHeader->equipment_transfer_details as $equipmentTransferDetail)
             {
                 $ref = &$equipmentTransferredHash[$equipmentTransferDetail->equipment_inventory->equipment_id];
-                $ref = isset($ref)? $ref['quantity_transferred'] + 1: 1;
+                $ref = isset($ref)? $ref + 1: 1;
             }
             foreach($resourceTransferHeader->manpower_transfer_details as $manpowerTransferDetail)
             {
                 $ref = &$manpowerTypeTransferredHash[$manpowerTransferDetail->manpower->manpower_type_id];
-                $ref = isset($ref)? $ref['quantity_transferred'] + 1: 1;
+                $ref = isset($ref)? $ref + 1: 1;
             }
             foreach($resourceTransferHeader->material_transfer_details as $materialTransferDetail)
             {
                 $ref = &$materialTransferredHash[$materialTransferDetail->material_id];
-                $ref = isset($ref)? $ref['quantity_transferred'] + $materialTransferDetail->quantity: $materialTransferDetail->quantity;
+                $ref = isset($ref)? $ref + $materialTransferDetail->quantity: $materialTransferDetail->quantity;
             }
         }
 
@@ -188,10 +188,10 @@ class ResourceRequestHeadersTable extends Table
             }
 
         foreach($resourceRequestHeader->manpower_request_details as &$manpowerRequestDetail)
-            if(isset($manpowerTypeTransferredHash[$manpowerRequestDetail->manpower_id]))
+            if(isset($manpowerTypeTransferredHash[$manpowerRequestDetail->manpower_type_id]))
             {
                 $manpowerRequestDetail->quantity_remaining = $manpowerRequestDetail->quantity -
-                    $manpowerTypeTransferredHash[$manpowerRequestDetail->manpower_id];
+                    $manpowerTypeTransferredHash[$manpowerRequestDetail->manpower_type_id];
                 $noRemaining = $noRemaining && $manpowerRequestDetail->quantity_remaining === 0;
             }
             else

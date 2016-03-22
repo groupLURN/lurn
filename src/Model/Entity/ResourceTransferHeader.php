@@ -12,7 +12,6 @@ use Cake\ORM\Entity;
  * @property int $from_project_id
  * @property int $to_project_id
  * @property \App\Model\Entity\Project $project
- * @property \Cake\I18n\Time $received_date
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
  * @property \App\Model\Entity\EquipmentTransferDetail[] $equipment_transfer_details

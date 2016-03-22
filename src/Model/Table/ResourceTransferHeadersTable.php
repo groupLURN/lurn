@@ -69,11 +69,6 @@ class ResourceTransferHeadersTable extends Table
             ->integer('id')
             ->allowEmpty('id', 'create');
 
-        $validator
-            ->dateTime('received_date')
-            ->requirePresence('received_date', 'create')
-            ->notEmpty('received_date');
-
         return $validator;
     }
 

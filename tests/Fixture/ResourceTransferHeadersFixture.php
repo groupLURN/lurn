@@ -21,7 +21,6 @@ class ResourceTransferHeadersFixture extends TestFixture
         'resource_request_header_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
         'from_project_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
         'to_project_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
-        'received_date' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         'created' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         'modified' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         '_indexes' => [
@@ -53,9 +52,8 @@ class ResourceTransferHeadersFixture extends TestFixture
             'resource_request_header_id' => 1,
             'from_project_id' => 1,
             'to_project_id' => 1,
-            'received_date' => '2016-03-21 22:00:03',
-            'created' => '2016-03-21 22:00:03',
-            'modified' => '2016-03-21 22:00:03'
+            'created' => '2016-03-22 15:17:36',
+            'modified' => '2016-03-22 15:17:36'
         ],
     ];
 }

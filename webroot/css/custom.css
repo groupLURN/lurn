@@ -111,7 +111,7 @@ ul.options li {
     box-shadow: 30px;
 }
 
-.multi-select-with-input img {
+.multi-select-with-input img, .editable-data-table-action img {
     width: 24px;
 }
 

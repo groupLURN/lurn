@@ -24,7 +24,7 @@ for ($i = 0; $i < count($namespaces); $i++)
 
 <div class="content-panel multi-select-with-input" id="<?= $id ?>" <?= $hidden ? 'hidden' : '' ?>>
     <div class="mt parent-center">
-        <div class="child-center" style="width: 40%;">
+        <div class="child-center" style="width: 32%;">
             <?= $this->Form->input('list', [
                 'label' => false,
                 'type' => 'select',

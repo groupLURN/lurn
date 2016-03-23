@@ -4,17 +4,16 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * MaterialsProjectInventory Entity.
+ * EquipmentTransferDetail Entity.
  *
- * @property int $material_id
- * @property \App\Model\Entity\Material $material
- * @property int $project_id
- * @property \App\Model\Entity\Project $project
- * @property int $quantity
+ * @property int $resource_transfer_header_id
+ * @property \App\Model\Entity\ResourceTransferHeader $resource_transfer_header
+ * @property int $equipment_inventory_id
+ * @property \App\Model\Entity\EquipmentInventory $equipment_inventory
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
  */
-class MaterialsProjectInventory extends Entity
+class EquipmentTransferDetail extends Entity
 {
 
     /**
@@ -27,6 +26,8 @@ class MaterialsProjectInventory extends Entity
      * @var array
      */
     protected $_accessible = [
-        '*' => true
+        '*' => true,
+        'resource_transfer_header_id' => false,
+        'equipment_inventory_id' => false,
     ];
 }

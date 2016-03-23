@@ -112,7 +112,7 @@ ul.options li {
 }
 
 .multi-select-with-input img {
-    width: 15%;
+    width: 24px;
 }
 
 .multi-select-with-input ul {
@@ -129,4 +129,13 @@ tr:not(:last-child) .editable-data-table-add {
 
 form .chosen-container {
     font-size: 14px;
+}
+
+.parent-center {
+    text-align: center;
+}
+
+.child-center {
+    margin-left: 12px;
+    display: inline-block;
 }

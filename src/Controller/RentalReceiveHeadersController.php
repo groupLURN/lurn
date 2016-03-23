@@ -78,7 +78,7 @@ class RentalReceiveHeadersController extends AppController
             $rentalReceiveHeader = $this->RentalReceiveHeaders->patchEntity($rentalReceiveHeader, $this->request->data);
 
             if ($this->RentalReceiveHeaders->save($rentalReceiveHeader)) {
-                $this->Flash->success(__('The rental receive number ' . $rentalReceiveHeader->id . ' has been saved.'));
+                $this->Flash->success(__('The rental receive number ' . $rentalReceiveHeader->number . ' has been saved.'));
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The rental receive header could not be saved. Please, try again.'));

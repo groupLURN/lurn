@@ -3,7 +3,7 @@
 <table>
     <tr>
         <th><?= __('Rental Request Number') ?></th>
-        <td><?= h($rentalRequestHeader->id) ?></td>
+        <td><?= h($rentalRequestHeader->number) ?></td>
     </tr>
     <?php if($rentalRequestHeader->has('project')) : ?>
     <tr>

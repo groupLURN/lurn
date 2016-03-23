@@ -1,14 +1,14 @@
 <?= $this->assign('title', 'Rental Receive') ?>
 <div class="rentalReceiveHeaders view large-9 medium-8 columns content">
-    <h3><?= h($rentalReceiveHeader->id) ?></h3>
+    <h3><?= 'Rental Receive Number ' . h($rentalReceiveHeader->number) ?></h3>
     <table class="vertical-table table table-striped">
         <tr>
             <th><?= __('Rental Receive Number') ?></th>
-            <td><?= $this->Number->format($rentalReceiveHeader->id) ?></td>
+            <td><?= h($rentalReceiveHeader->number) ?></td>
         </tr>
         <tr>
             <th><?= __('Rental Request Number') ?></th>
-            <td><?= h($rentalReceiveHeader->rental_receive_details[0]->rental_request_detail->rental_request_header->id) ?></td>
+            <td><?= h($rentalReceiveHeader->rental_receive_details[0]->rental_request_detail->rental_request_header->number) ?></td>
         </tr>
         <?php if($rentalReceiveHeader->rental_receive_details[0]->rental_request_detail->rental_request_header->has('project')) : ?>
         <tr>

@@ -27,8 +27,6 @@ class MaterialsProjectInventory extends Entity
      * @var array
      */
     protected $_accessible = [
-        '*' => true,
-        'material_id' => false,
-        'project_id' => false,
+        '*' => true
     ];
 }

@@ -2,9 +2,14 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\ResourceTransferHeader;
+use ArrayObject;
+use Cake\Datasource\EntityInterface;
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Event\Event;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
 
 /**
@@ -105,6 +110,60 @@ class ResourceTransferHeadersTable extends Table
         $rules->add($rules->existsIn(['from_project_id'], 'ProjectFrom'));
         $rules->add($rules->existsIn(['to_project_id'], 'ProjectTo'));
         return $rules;
+    }
+
+    public function afterSave(Event $event, EntityInterface $entity, ArrayObject $options)
+    {
+        $resourceTransferHeader = $this->get($entity->id, [
+            'contain' => ['ProjectTo', 'EquipmentTransferDetails',
+                'ManpowerTransferDetails', 'MaterialTransferDetails']
+        ]);
+
+        foreach($resourceTransferHeader->equipment_transfer_details as $detail)
+        {
+            $equipmentInventory = TableRegistry::get('EquipmentInventories')->get($detail->equipment_inventory_id);
+            $equipmentInventory->project_id = $resourceTransferHeader->project_to->id;
+            TableRegistry::get('EquipmentInventories')->save($equipmentInventory);
+        }
+
+        foreach($resourceTransferHeader->manpower_transfer_details as $detail)
+        {
+            $manpower = TableRegistry::get('Manpower')->get($detail->manpower_id);
+            $manpower->project_id = $resourceTransferHeader->project_to->id;
+            TableRegistry::get('Manpower')->save($manpower);
+        }
+
+        foreach($resourceTransferHeader->material_transfer_details as $detail)
+        {
+            $materialGeneralInventory = TableRegistry::get('MaterialsGeneralInventories')
+                ->get($detail->material_id);
+            $materialGeneralInventory->quantity -= $detail->quantity;
+            TableRegistry::get('MaterialsGeneralInventories')->save($materialGeneralInventory);
+
+
+            try
+            {
+                $materialProjectInventory = TableRegistry::get('MaterialsProjectInventories')
+                    ->get([
+                        'material_id' => $detail->material_id,
+                        'project_id' => $resourceTransferHeader->project_to->id
+                    ]);
+                $materialProjectInventory->quantity += $detail->quantity;
+
+            }
+            catch(RecordNotFoundException $e)
+            {
+                $materialProjectInventory = TableRegistry::get('MaterialsProjectInventories')->newEntity([
+                    'material_id' => $detail->material_id,
+                    'project_id' => $resourceTransferHeader->project_to->id,
+                    'quantity' => $detail->quantity
+                ]);
+            }
+            finally
+            {
+                TableRegistry::get('MaterialsProjectInventories')->save($materialProjectInventory);
+            }
+        }
     }
 
     public function findByProjectId(Query $query, array $options)

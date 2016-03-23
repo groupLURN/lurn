@@ -100,7 +100,7 @@
                 <tbody>
                 <?php foreach ($purchaseOrderHeaders as $purchaseOrderHeader): ?>
                     <tr>
-                        <td><?= h($purchaseOrderHeader->id) ?></td>
+                        <td><?= h($purchaseOrderHeader->number) ?></td>
                         <td><?= $purchaseOrderHeader->has('project') ? $this->Html->link($purchaseOrderHeader->project->title, ['controller' => 'Projects', 'action' => 'view', $purchaseOrderHeader->project->id]) : '' ?></td>
                         <td><?= $purchaseOrderHeader->has('supplier') ? $this->Html->link($purchaseOrderHeader->supplier->name, ['controller' => 'Suppliers', 'action' => 'view', $purchaseOrderHeader->supplier->id]) : '' ?></td>
                         <td><?= h($purchaseOrderHeader->created) ?></td>

@@ -64,7 +64,7 @@ class PurchaseOrderHeadersController extends AppController
                 'associated' => ['PurchaseOrderDetails']
             ]);
             if ($this->PurchaseOrderHeaders->save($purchaseOrderHeader)) {
-                $this->Flash->success(__('The purchase order number ' . $purchaseOrderHeader->id . ' has been saved.'));
+                $this->Flash->success(__('The purchase order number ' . $purchaseOrderHeader->number . ' has been saved.'));
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The purchase order header could not be saved. Please, try again.'));

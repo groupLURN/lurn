@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\ORM\TableRegistry;
 
 /**
  * PurchaseReceiveHeaders Controller
@@ -18,10 +19,20 @@ class PurchaseReceiveHeadersController extends AppController
      */
     public function index()
     {
+        $this->paginate = [
+            'sortWhitelist' => ['PurchaseReceiveHeaders.id', 'PurchaseOrderHeaders.id', 'Projects.title', 'Suppliers.name', 'PurchaseOrderHeaders.created', 'PurchaseReceiveHeaders.created']
+        ];
+
+        $this->paginate += $this->createFinders($this->request->query);
+        $this->paginate['finder']['PurchaseReceives'] = [];
         $purchaseReceiveHeaders = $this->paginate($this->PurchaseReceiveHeaders);
 
-        $this->set(compact('purchaseReceiveHeaders'));
-        $this->set('_serialize', ['purchaseReceiveHeaders']);
+        $projects = $this->PurchaseReceiveHeaders->PurchaseReceiveDetails->PurchaseOrderDetails->PurchaseOrderHeaders->Projects->find('list')->toArray();
+        $suppliers = $this->PurchaseReceiveHeaders->PurchaseReceiveDetails->PurchaseOrderDetails->PurchaseOrderHeaders->Suppliers->find('list')->toArray();
+
+        $this->set($this->request->query);
+        $this->set(compact('purchaseReceiveHeaders', 'projects', 'suppliers'));
+        $this->set('_serialize', ['purchaseReceiveHeaders', 'projects', 'suppliers']);
     }
 
     /**

@@ -43,9 +43,10 @@ class PurchaseOrderHeadersController extends AppController
     public function view($id = null)
     {
         $purchaseOrderHeader = $this->PurchaseOrderHeaders->get($id, [
-            'contain' => ['Projects', 'Suppliers', 'PurchaseOrderDetails' => ['Materials']]
+            'contain' => ['Projects', 'Suppliers', 'PurchaseOrderDetails' => ['Materials', 'PurchaseReceiveDetails']]
         ]);
 
+        $this->PurchaseOrderHeaders->computeQuantityRemaining($purchaseOrderHeader);
         $this->set('purchaseOrderHeader', $purchaseOrderHeader);
         $this->set('_serialize', ['purchaseOrderHeader']);
     }

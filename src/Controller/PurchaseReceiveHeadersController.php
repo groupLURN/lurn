@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Collection\Collection;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -61,16 +62,45 @@ class PurchaseReceiveHeadersController extends AppController
     {
         $purchaseReceiveHeader = $this->PurchaseReceiveHeaders->newEntity();
         if ($this->request->is('post')) {
+            $this->transpose($this->request->data, 'purchase_receive_details');
+
             $purchaseReceiveHeader = $this->PurchaseReceiveHeaders->patchEntity($purchaseReceiveHeader, $this->request->data);
+
             if ($this->PurchaseReceiveHeaders->save($purchaseReceiveHeader)) {
-                $this->Flash->success(__('The purchase receive header has been saved.'));
+                $this->Flash->success(__('The purchase receive number ' . $purchaseReceiveHeader->number . ' has been saved.'));
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The purchase receive header could not be saved. Please, try again.'));
             }
         }
-        $this->set(compact('purchaseReceiveHeader'));
-        $this->set('_serialize', ['purchaseReceiveHeader']);
+        $materials = TableRegistry::get('Materials')->find('list')->toArray();
+
+        // Retrieve incomplete purchase requests.
+        $purchaseOrderHeaders = $this->PurchaseReceiveHeaders->PurchaseReceiveDetails->PurchaseOrderDetails
+            ->PurchaseOrderHeaders
+            ->find()
+            ->contain(['Projects', 'Suppliers', 'PurchaseOrderDetails' => [
+                'Materials', 'PurchaseReceiveDetails']
+            ])
+            ->toArray();
+
+        foreach($purchaseOrderHeaders as $purchaseOrderHeader)
+        {
+            $this->PurchaseReceiveHeaders->PurchaseReceiveDetails->PurchaseOrderDetails->PurchaseOrderHeaders->computeQuantityRemaining($purchaseOrderHeader)
+                ->computeAllQuantityReceived($purchaseOrderHeader);
+        }
+
+        $collection = new Collection($purchaseOrderHeaders);
+        $incompleteOrders = $collection->filter(function ($request, $key) {
+            return $request->all_quantity_received === false;
+        });
+
+        $purchaseOrderHeaders = [];
+        foreach($incompleteOrders as $incompleteOrder)
+            $purchaseOrderHeaders[$incompleteOrder->id] = $incompleteOrder->id;
+
+        $this->set(compact('purchaseReceiveHeader', 'purchaseOrderHeaders', 'materials'));
+        $this->set('_serialize', ['purchaseReceiveHeader', 'purchaseOrderHeaders', 'materials']);
     }
 
     /**

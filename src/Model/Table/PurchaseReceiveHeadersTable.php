@@ -4,10 +4,13 @@ namespace App\Model\Table;
 use App\Model\Entity\PurchaseReceiveHeader;
 use ArrayObject;
 use Cake\Datasource\EntityInterface;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
+use Cake\I18n\Time;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
 
 /**
@@ -57,6 +60,44 @@ class PurchaseReceiveHeadersTable extends Table
             ->notEmpty('received_date');
 
         return $validator;
+    }
+
+    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
+    {
+        foreach (['received_date'] as $key) {
+            if (isset($data[$key]) && is_string($data[$key])) {
+                $data[$key] = Time::parseDateTime($data[$key], 'yyyy/MM/dd');
+            }
+        }
+    }
+
+    public function afterSave(Event $event, EntityInterface $entity, ArrayObject $options)
+    {
+        $purchaseReceiveHeader = $this->get($entity->id, [
+            'contain' => ['PurchaseReceiveDetails.PurchaseOrderDetails.Materials']
+        ]);
+
+        foreach($purchaseReceiveHeader->purchase_receive_details as $purchaseReceiveDetail)
+        {
+            try
+            {
+                $materialGeneralInventory = TableRegistry::get('MaterialsGeneralInventories')
+                    ->get($purchaseReceiveDetail->purchase_order_detail->material_id);
+
+                $materialGeneralInventory->quantity += $purchaseReceiveDetail->quantity;
+            }
+            catch(RecordNotFoundException $e)
+            {
+                $materialGeneralInventory = TableRegistry::get('MaterialsGeneralInventories')->newEntity([
+                    'material_id' => $purchaseReceiveDetail->purchase_order_detail->material_id,
+                    'quantity' => $purchaseReceiveDetail->quantity
+                ]);
+            }
+            finally
+            {
+                TableRegistry::get('MaterialsGeneralInventories')->save($materialGeneralInventory);
+            }
+        }
     }
 
     public function findPurchaseReceives(Query $query, array $options)

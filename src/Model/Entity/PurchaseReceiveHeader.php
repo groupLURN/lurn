@@ -28,4 +28,9 @@ class PurchaseReceiveHeader extends Entity
         '*' => true,
         'id' => false,
     ];
+
+    protected function _getNumber()
+    {
+        return $this->_properties['id'] . '-B';
+    }
 }

@@ -30,4 +30,9 @@ class RentalRequestHeader extends Entity
     protected $_accessible = [
         '*' => true
     ];
+
+    protected function _getNumber()
+    {
+        return $this->_properties['id'] . '-A';
+    }
 }

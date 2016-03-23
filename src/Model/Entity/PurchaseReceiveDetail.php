@@ -4,15 +4,18 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * RentalReceiveHeader Entity.
+ * PurchaseReceiveDetail Entity.
  *
  * @property int $id
- * @property \Cake\I18n\Time $receive_date
+ * @property int $purchase_receive_header_id
+ * @property \App\Model\Entity\PurchaseReceiveHeader $purchase_receive_header
+ * @property int $purchase_order_detail_id
+ * @property \App\Model\Entity\PurchaseOrderDetail $purchase_order_detail
+ * @property int $quantity
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
- * @property \App\Model\Entity\RentalReceiveDetail[] $rental_receive_details
  */
-class RentalReceiveHeader extends Entity
+class PurchaseReceiveDetail extends Entity
 {
 
     /**
@@ -25,11 +28,7 @@ class RentalReceiveHeader extends Entity
      * @var array
      */
     protected $_accessible = [
-        '*' => true
+        '*' => true,
+        'id' => false,
     ];
-
-    protected function _getNumber()
-    {
-        return $this->_properties['id'] . '-B';
-    }
 }

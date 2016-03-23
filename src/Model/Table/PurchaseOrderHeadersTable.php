@@ -2,6 +2,7 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\PurchaseOrderHeader;
+use Cake\Collection\Collection;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -100,5 +101,30 @@ class PurchaseOrderHeadersTable extends Table
         return $query->where([
             $query->newExpr()->lt('PurchaseOrderHeaders.created', $options['order_date_to'], 'datetime')
         ]);
+    }
+
+    public function computeQuantityRemaining($purchaseOrderHeader)
+    {
+        foreach($purchaseOrderHeader->purchase_order_details as &$purchaseOrderDetail)
+        {
+            $collection = new Collection($purchaseOrderDetail->purchase_receive_details);
+            $purchaseOrderDetail->quantity_received = $collection->reduce(function($accumulated, $purchaseReceiveDetail)
+            {
+                return $accumulated + $purchaseReceiveDetail->quantity;
+            }, 0);
+            $purchaseOrderDetail->quantity_remaining = $purchaseOrderDetail->quantity - $purchaseOrderDetail->quantity_received;
+        }
+        unset($purchaseOrderDetail);
+        return $this;
+    }
+
+    public function computeAllQuantityReceived($purchaseOrderHeader)
+    {
+        $collection = new Collection($purchaseOrderHeader->purchase_order_details);
+        $purchaseOrderHeader->all_quantity_received = $collection->reduce(function($accumulated, $purchaseOrderDetail)
+            {
+                return $accumulated + $purchaseOrderDetail->quantity_remaining;
+            }, 0) === 0;
+        return $this;
     }
 }

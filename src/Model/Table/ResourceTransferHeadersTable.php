@@ -140,7 +140,6 @@ class ResourceTransferHeadersTable extends Table
             $materialGeneralInventory->quantity -= $detail->quantity;
             TableRegistry::get('MaterialsGeneralInventories')->save($materialGeneralInventory);
 
-
             try
             {
                 $materialProjectInventory = TableRegistry::get('MaterialsProjectInventories')

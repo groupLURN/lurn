@@ -67,7 +67,7 @@ class RentalRequestHeadersController extends AppController
                 'associated' => ['RentalRequestDetails']
             ]);
             if ($this->RentalRequestHeaders->save($rentalRequestHeader)) {
-                $this->Flash->success(__('The rental request number ' . $rentalRequestHeader->id . ' has been saved.'));
+                $this->Flash->success(__('The rental request number ' . $rentalRequestHeader->number . ' has been saved.'));
                 $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The rental request could not be saved. Please, try again.'));

@@ -43,7 +43,7 @@ class PurchaseOrderHeadersController extends AppController
     public function view($id = null)
     {
         $purchaseOrderHeader = $this->PurchaseOrderHeaders->get($id, [
-            'contain' => ['Projects', 'Suppliers', 'PurchaseOrderDetails']
+            'contain' => ['Projects', 'Suppliers', 'PurchaseOrderDetails' => ['Materials']]
         ]);
 
         $this->set('purchaseOrderHeader', $purchaseOrderHeader);

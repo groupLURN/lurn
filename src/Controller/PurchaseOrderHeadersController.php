@@ -59,18 +59,22 @@ class PurchaseOrderHeadersController extends AppController
     {
         $purchaseOrderHeader = $this->PurchaseOrderHeaders->newEntity();
         if ($this->request->is('post')) {
-            $purchaseOrderHeader = $this->PurchaseOrderHeaders->patchEntity($purchaseOrderHeader, $this->request->data);
+            $this->transpose($this->request->data, 'purchase_order_details');
+            $purchaseOrderHeader = $this->PurchaseOrderHeaders->patchEntity($purchaseOrderHeader, $this->request->data, [
+                'associated' => ['PurchaseOrderDetails']
+            ]);
             if ($this->PurchaseOrderHeaders->save($purchaseOrderHeader)) {
-                $this->Flash->success(__('The purchase order header has been saved.'));
+                $this->Flash->success(__('The purchase order number ' . $purchaseOrderHeader->id . ' has been saved.'));
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The purchase order header could not be saved. Please, try again.'));
             }
         }
-        $projects = $this->PurchaseOrderHeaders->Projects->find('list', ['limit' => 200]);
-        $suppliers = $this->PurchaseOrderHeaders->Suppliers->find('list', ['limit' => 200]);
-        $this->set(compact('purchaseOrderHeader', 'projects', 'suppliers'));
-        $this->set('_serialize', ['purchaseOrderHeader']);
+        $projects = $this->PurchaseOrderHeaders->Projects->find('list')->toArray();
+        $suppliers = $this->PurchaseOrderHeaders->Suppliers->find('list')->toArray();
+        $materials = TableRegistry::get('Materials')->find('list')->toArray();
+        $this->set(compact('purchaseOrderHeader', 'projects', 'suppliers', 'materials'));
+        $this->set('_serialize', ['purchaseOrderHeader', 'projects', 'suppliers', 'materials']);
     }
 
     /**

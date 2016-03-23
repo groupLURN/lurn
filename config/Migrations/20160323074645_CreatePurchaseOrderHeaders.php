@@ -34,5 +34,6 @@ class CreatePurchaseOrderHeaders extends AbstractMigration
         $table->addForeignKey('project_id', 'projects');
         $table->addForeignKey('supplier_id', 'suppliers');
         $table->create();
+        $this->execute('ALTER TABLE purchase_order_headers AUTO_INCREMENT = 2000000');
     }
 }

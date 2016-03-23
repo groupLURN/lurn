@@ -26,5 +26,6 @@ class CreatePurchaseReceiveHeaders extends AbstractMigration
             'null' => false,
         ]);
         $table->create();
+        $this->execute('ALTER TABLE purchase_receive_headers AUTO_INCREMENT = 2000000');
     }
 }

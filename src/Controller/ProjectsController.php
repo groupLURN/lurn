@@ -46,7 +46,10 @@ class ProjectsController extends AppController
 
                 return [$accumulated[0] + $finishedTasks, $accumulated[1] + $totalTasks];
             }, [0, 0]);
-            $project->progress = $finishedTasks / $totalTasks * 100;
+            if($totalTasks > 0)
+                $project->progress = $finishedTasks / $totalTasks * 100;
+            else
+                $project->progress = 0;
         }
 
         $projectStatuses = $this->Projects->ProjectStatuses->find('list', ['limit' => 200])->toArray();

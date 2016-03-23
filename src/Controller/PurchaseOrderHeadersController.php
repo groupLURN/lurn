@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\ORM\TableRegistry;
 
 /**
  * PurchaseOrderHeaders Controller
@@ -21,10 +22,15 @@ class PurchaseOrderHeadersController extends AppController
         $this->paginate = [
             'contain' => ['Projects', 'Suppliers']
         ];
-        $purchaseOrderHeaders = $this->paginate($this->PurchaseOrderHeaders);
 
-        $this->set(compact('purchaseOrderHeaders'));
-        $this->set('_serialize', ['purchaseOrderHeaders']);
+        $this->paginate += $this->createFinders($this->request->query);
+        $purchaseOrderHeaders = $this->paginate($this->PurchaseOrderHeaders);
+        $projects = TableRegistry::get('Projects')->find('list')->toArray();
+        $suppliers = TableRegistry::get('Suppliers')->find('list')->toArray();
+
+        $this->set(compact('purchaseOrderHeaders', 'projects', 'suppliers'));
+        $this->set($this->request->query);
+        $this->set('_serialize', ['purchaseOrderHeaders', 'projects', 'suppliers']);
     }
 
     /**

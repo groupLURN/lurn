@@ -73,4 +73,32 @@ class PurchaseOrderHeadersTable extends Table
         $rules->add($rules->existsIn(['supplier_id'], 'Suppliers'));
         return $rules;
     }
+
+    public function findByProjectId(Query $query, array $options)
+    {
+        if($options['project_id'] > 0)
+            return $query->where(['PurchaseOrderHeaders.project_id' => $options['project_id']]);
+        return $query;
+    }
+
+    public function findBySupplierId(Query $query, array $options)
+    {
+        if($options['supplier_id'] > 0)
+            return $query->where(['PurchaseOrderHeaders.supplier_id' => $options['supplier_id']]);
+        return $query;
+    }
+
+    public function findByOrderDateFrom(Query $query, array $options)
+    {
+        return $query->where([
+            $query->newExpr()->gte('PurchaseOrderHeaders.created', $options['order_date_from'], 'datetime'),
+        ]);
+    }
+
+    public function findByOrderDateTo(Query $query, array $options)
+    {
+        return $query->where([
+            $query->newExpr()->lt('PurchaseOrderHeaders.created', $options['order_date_to'], 'datetime')
+        ]);
+    }
 }

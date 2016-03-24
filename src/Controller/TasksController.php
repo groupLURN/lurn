@@ -62,6 +62,10 @@ class TasksController extends AppController
         $this->set('_serialize', ['milestones']);
     }
 
+    public function manage()
+    {
+        $this->index();
+    }
     /**
      * View method
      *

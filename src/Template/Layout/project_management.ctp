@@ -21,10 +21,15 @@ $this->start('additional-sidebar');
     </ul>
 </li>
 <li class="sub-menu">
-    <a href=<?= $this->Url->build(['controller' => 'TaskReplenishmentHeaders', 'action' => 'index']) ?>>
+    <a href="javascript:;">
         <i class="fa fa-recycle"></i>
-        <span>Resources Management</span>
+        <span>Project Implementation</span>
     </a>
+    <ul class="sub">
+        <li><a href="<?= $this->Url->build(['controller' => 'TaskReplenishmentHeaders', 'action' => 'index', '?' => [
+                'project_id' => $projectId
+            ]]) ?>">Task Management</a></li>
+    </ul>
 </li>
 <li class="sub-menu">
     <a href="javascript:;" >

@@ -258,7 +258,7 @@ class TasksTable extends Table
         }, $ratio);
 
         if($ratio[1] > 0)
-            $task->replenishment = $ratio[0]/$ratio[1];
+            $task->replenishment = ($ratio[0]/$ratio[1]) * 100;
         else
             $task->replenishment = 0;
     }

@@ -371,4 +371,63 @@ class TasksTable extends Table
                 return true;
             });
     }
+
+    public function returnToProjectInventory($task, $materials)
+    {
+        return
+            $this->connection()->transactional(function() use ($task, $materials)
+            {
+                // Return all equipment to project inventory.
+                $equipmentInventories = TableRegistry::get('EquipmentInventories')->find()
+                    ->where([
+                        'project_id' => $task->milestone->project_id,
+                        'task_id' => $task->id
+                    ])
+                    ->toArray();
+                foreach($equipmentInventories as $equipmentInventory)
+                {
+                    $equipmentInventory->task_id = null;
+                    TableRegistry::get('EquipmentInventories')->save($equipmentInventory, ['atomic' => false]);
+                }
+
+                // Return all manpower to project inventory.
+                $manpower = TableRegistry::get('Manpower')->find()
+                    ->where([
+                        'project_id' => $task->milestone->project_id,
+                        'task_id' => $task->id
+                    ])
+                    ->toArray();
+                foreach($manpower as $manpower_)
+                {
+                    $manpower_->task_id = null;
+                    TableRegistry::get('Manpower')->save($manpower_, ['atomic' => false]);
+                }
+
+                // Return selectively materials to project inventory.
+                foreach($materials as $material)
+                {
+                    $materialInventory = TableRegistry::get('MaterialsTaskInventories')->find()
+                        ->where([
+                            'material_id' => $material['id'],
+                            'project_id' => $task->milestone->project_id,
+                            'task_id' => $task->id
+                        ])
+                        ->first();
+
+                    $materialInventory->quantity = $material['in_stock_quantity'] - $material['quantity_used'];
+                    TableRegistry::get('MaterialsTaskInventories')->save($materialInventory, ['atomic' => false]);
+
+                    $materialInventory = TableRegistry::get('MaterialsProjectInventories')->find()
+                        ->where([
+                            'material_id' => $material['id'],
+                            'project_id' => $task->milestone->project_id
+                        ])
+                        ->first();
+
+                    $materialInventory->quantity += $material['quantity_used'];
+                    TableRegistry::get('MaterialsProjectInventories')->save($materialInventory, ['atomic' => false]);
+                }
+                return true;
+            });
+    }
 }

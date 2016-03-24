@@ -119,27 +119,31 @@ class TasksController extends AppController
 
     public function finish($id = null)
     {
-        if ($this->request->is(['patch', 'post', 'put']))
-        {
-            $task = $this->Tasks->get($id);
-            $task->is_finished = 1;
-
-            if ($this->Tasks->save($task)) {
-                $this->Flash->success(__('The task has been saved.'));
-                return $this->redirect(['action' => 'index', '?' => ['project_id' => $this->__projectId]]);
-            }
-            else
-                $this->Flash->error(__('The task could not be saved. Please, try again.'));
-        }
-
         $task = $this->Tasks->get($id, [
             'contain' => [
+                'Milestones',
                 'Equipment', 'ManpowerTypes', 'Materials',
                 'EquipmentReplenishmentDetails', 'ManpowerTypeReplenishmentDetails', 'MaterialReplenishmentDetails'
             ]
         ]);
 
         $this->Tasks->computeForTaskReplenishment($task);
+
+        if ($this->request->is(['patch', 'post', 'put']))
+        {
+            $task->is_finished = 1;
+            $this->transpose($this->request->data, 'materials');
+
+            if ($this->Tasks->returnToProjectInventory($task, $this->request->data['materials']) &&
+                $this->Tasks->save($task))
+            {
+                $this->Flash->success(__('The task has been marked finished!'));
+                return $this->redirect(['action' => 'manage', '?' => ['project_id' => $this->__projectId]]);
+            }
+            else
+                $this->Flash->error(__('The task could not be saved. Please, try again.'));
+        }
+
         $this->set(compact('task'));
         $this->set('_serialize', ['task']);
     }

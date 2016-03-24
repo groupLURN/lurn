@@ -337,7 +337,7 @@ class TasksTable extends Table
                     if($materialInventory->quantity < $resource['_joinData']['quantity_remaining'])
                         $quantityTransferred = $materialInventory->quantity;
                     else
-                        $quantityTransferred = $materialInventory->quantity - $resource['_joinData']['quantity_remaining'];
+                        $quantityTransferred = $resource['_joinData']['quantity_remaining'];
 
                     $materialInventory->quantity -= $quantityTransferred;
                     TableRegistry::get('MaterialsProjectInventories')->save($materialInventory, ['atomic' => false]);

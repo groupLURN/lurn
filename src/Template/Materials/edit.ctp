@@ -3,7 +3,7 @@
     <div class="col-md-12">
         <?= $this->Form->create($material) ?>
         <fieldset>
-            <legend><h3><i class="fa fa-angle-right"></i> <?= __('Add Equipment') ?></h3></legend>
+            <legend><h3><i class="fa fa-angle-right"></i> <?= __('Edit Material') ?></h3></legend>
             <?php
 
             echo $this->Form->input('name', [

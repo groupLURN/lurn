@@ -101,6 +101,22 @@ class TasksController extends AppController
 
         return $this->redirect(['action' => 'manage', '?' => ['project_id' => $this->__projectId]]);
     }
+
+    public function viewStock($id = null)
+    {
+        $task = $this->Tasks->get($id, [
+            'contain' => ['Milestones',
+                'Equipment', 'ManpowerTypes', 'Materials',
+                'EquipmentReplenishmentDetails', 'ManpowerTypeReplenishmentDetails', 'MaterialReplenishmentDetails'
+            ]
+        ]);
+
+        $this->Tasks->computeForTaskReplenishment($task);
+
+        $this->set('task', $task);
+        $this->set('_serialize', ['task']);
+    }
+
     /**
      * View method
      *

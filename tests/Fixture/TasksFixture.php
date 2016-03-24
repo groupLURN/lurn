@@ -50,14 +50,14 @@ class TasksFixture extends TestFixture
      */
     public $records = [
         [
-            'id' => '64ee85bb-4eee-4477-b129-45f40c2cfe92',
+            'id' => '4bde925a-b509-43af-a9be-d8a7e6eb4b32',
             'milestone_id' => 'Lorem ipsum dolor sit amet',
             'title' => 'Lorem ipsum dolor sit amet',
             'is_finished' => 1,
-            'start_date' => '2016-03-08 23:34:48',
-            'end_date' => '2016-03-08 23:34:48',
-            'created' => '2016-03-08 23:34:48',
-            'modified' => '2016-03-08 23:34:48'
+            'start_date' => '2016-03-24 15:42:33',
+            'end_date' => '2016-03-24 15:42:33',
+            'created' => '2016-03-24 15:42:33',
+            'modified' => '2016-03-24 15:42:33'
         ],
     ];
 }

@@ -15,7 +15,10 @@ use Cake\Validation\Validator;
  *
  * @property \Cake\ORM\Association\BelongsTo $Milestones
  * @property \Cake\ORM\Association\HasMany $EquipmentInventories
+ * @property \Cake\ORM\Association\HasMany $EquipmentReplenishmentDetails
  * @property \Cake\ORM\Association\HasMany $Manpower
+ * @property \Cake\ORM\Association\HasMany $ManpowerTypeReplenishmentDetails
+ * @property \Cake\ORM\Association\HasMany $MaterialReplenishmentDetails
  * @property \Cake\ORM\Association\HasMany $MaterialsTaskInventories
  * @property \Cake\ORM\Association\BelongsToMany $Equipment
  * @property \Cake\ORM\Association\BelongsToMany $ManpowerTypes
@@ -47,10 +50,13 @@ class TasksTable extends Table
 
         $this->addBehavior('Timestamp');
 
+        // Milestone
         $this->belongsTo('Milestones', [
             'foreignKey' => 'milestone_id',
             'joinType' => 'LEFT'
         ]);
+
+        // Task Inventories
         $this->hasMany('EquipmentInventories', [
             'foreignKey' => 'task_id'
         ]);
@@ -60,6 +66,8 @@ class TasksTable extends Table
         $this->hasMany('MaterialsTaskInventories', [
             'foreignKey' => 'task_id'
         ]);
+
+        // Resources Needed
         $this->belongsToMany('Equipment', [
             'foreignKey' => 'task_id',
             'targetForeignKey' => 'equipment_id',
@@ -74,6 +82,18 @@ class TasksTable extends Table
             'foreignKey' => 'task_id',
             'targetForeignKey' => 'material_id',
             'joinTable' => 'materials_tasks'
+        ]);
+
+        // Record of Replenishment
+        $this->hasMany('EquipmentReplenishmentDetails', [
+            'foreignKey' => 'task_id'
+        ]);
+
+        $this->hasMany('ManpowerTypeReplenishmentDetails', [
+            'foreignKey' => 'task_id'
+        ]);
+        $this->hasMany('MaterialReplenishmentDetails', [
+            'foreignKey' => 'task_id'
         ]);
     }
 

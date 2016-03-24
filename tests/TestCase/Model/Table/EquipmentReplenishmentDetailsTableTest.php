@@ -1,22 +1,22 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\TasksTable;
+use App\Model\Table\EquipmentReplenishmentDetailsTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\TasksTable Test Case
+ * App\Model\Table\EquipmentReplenishmentDetailsTable Test Case
  */
-class TasksTableTest extends TestCase
+class EquipmentReplenishmentDetailsTableTest extends TestCase
 {
 
     /**
      * Test subject
      *
-     * @var \App\Model\Table\TasksTable
+     * @var \App\Model\Table\EquipmentReplenishmentDetailsTable
      */
-    public $Tasks;
+    public $EquipmentReplenishmentDetails;
 
     /**
      * Fixtures
@@ -24,6 +24,7 @@ class TasksTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
+        'app.equipment_replenishment_details',
         'app.tasks',
         'app.milestones',
         'app.projects',
@@ -56,7 +57,6 @@ class TasksTableTest extends TestCase
         'app.in_house_equipment_inventories',
         'app.rented_equipment_inventories',
         'app.equipment_tasks',
-        'app.equipment_replenishment_details',
         'app.manpower_type_replenishment_details',
         'app.material_replenishment_details',
         'app.manpower_types_tasks'
@@ -70,8 +70,8 @@ class TasksTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Tasks') ? [] : ['className' => 'App\Model\Table\TasksTable'];
-        $this->Tasks = TableRegistry::get('Tasks', $config);
+        $config = TableRegistry::exists('EquipmentReplenishmentDetails') ? [] : ['className' => 'App\Model\Table\EquipmentReplenishmentDetailsTable'];
+        $this->EquipmentReplenishmentDetails = TableRegistry::get('EquipmentReplenishmentDetails', $config);
     }
 
     /**
@@ -81,7 +81,7 @@ class TasksTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->Tasks);
+        unset($this->EquipmentReplenishmentDetails);
 
         parent::tearDown();
     }

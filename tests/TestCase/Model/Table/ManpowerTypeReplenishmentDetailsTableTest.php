@@ -1,22 +1,22 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\TasksTable;
+use App\Model\Table\ManpowerTypeReplenishmentDetailsTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\TasksTable Test Case
+ * App\Model\Table\ManpowerTypeReplenishmentDetailsTable Test Case
  */
-class TasksTableTest extends TestCase
+class ManpowerTypeReplenishmentDetailsTableTest extends TestCase
 {
 
     /**
      * Test subject
      *
-     * @var \App\Model\Table\TasksTable
+     * @var \App\Model\Table\ManpowerTypeReplenishmentDetailsTable
      */
-    public $Tasks;
+    public $ManpowerTypeReplenishmentDetails;
 
     /**
      * Fixtures
@@ -24,6 +24,7 @@ class TasksTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
+        'app.manpower_type_replenishment_details',
         'app.tasks',
         'app.milestones',
         'app.projects',
@@ -57,7 +58,6 @@ class TasksTableTest extends TestCase
         'app.rented_equipment_inventories',
         'app.equipment_tasks',
         'app.equipment_replenishment_details',
-        'app.manpower_type_replenishment_details',
         'app.material_replenishment_details',
         'app.manpower_types_tasks'
     ];
@@ -70,8 +70,8 @@ class TasksTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Tasks') ? [] : ['className' => 'App\Model\Table\TasksTable'];
-        $this->Tasks = TableRegistry::get('Tasks', $config);
+        $config = TableRegistry::exists('ManpowerTypeReplenishmentDetails') ? [] : ['className' => 'App\Model\Table\ManpowerTypeReplenishmentDetailsTable'];
+        $this->ManpowerTypeReplenishmentDetails = TableRegistry::get('ManpowerTypeReplenishmentDetails', $config);
     }
 
     /**
@@ -81,7 +81,7 @@ class TasksTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->Tasks);
+        unset($this->ManpowerTypeReplenishmentDetails);
 
         parent::tearDown();
     }

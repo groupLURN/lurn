@@ -117,6 +117,33 @@ class TasksController extends AppController
         $this->set('_serialize', ['task']);
     }
 
+    public function finish($id = null)
+    {
+        if ($this->request->is(['patch', 'post', 'put']))
+        {
+            $task = $this->Tasks->get($id);
+            $task->is_finished = 1;
+
+            if ($this->Tasks->save($task)) {
+                $this->Flash->success(__('The task has been saved.'));
+                return $this->redirect(['action' => 'index', '?' => ['project_id' => $this->__projectId]]);
+            }
+            else
+                $this->Flash->error(__('The task could not be saved. Please, try again.'));
+        }
+
+        $task = $this->Tasks->get($id, [
+            'contain' => [
+                'Equipment', 'ManpowerTypes', 'Materials',
+                'EquipmentReplenishmentDetails', 'ManpowerTypeReplenishmentDetails', 'MaterialReplenishmentDetails'
+            ]
+        ]);
+
+        $this->Tasks->computeForTaskReplenishment($task);
+        $this->set(compact('task'));
+        $this->set('_serialize', ['task']);
+    }
+
     /**
      * View method
      *

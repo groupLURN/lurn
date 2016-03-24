@@ -115,7 +115,7 @@
                                     <td class="actions">
                                         <?= $this->dataTableViewButton(__('View'), ['action' => 'ViewStock', $task->id, '?' => ['project_id' => $projectId]]); ?>
                                         <?= $this->dataTableEditButton(__('Replenish'), ['action' => 'replenish', $task->id, '?' => ['project_id' => $projectId]]); ?>
-                                        <?= $this->dataTableManageButton(__('Finish'), ['action' => 'finish', $task->id, '?' => ['project_id' => $projectId]]); ?>
+                                        <?php if(!$task->is_finished) echo $this->dataTableManageButton(__('Finish'), ['action' => 'finish', $task->id, '?' => ['project_id' => $projectId]]); ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

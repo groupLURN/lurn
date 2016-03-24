@@ -23,8 +23,8 @@
         </tr>
     </table>
     <div class="related">
-        <h4><?= __('Equipment') ?></h4>
         <?php if (!empty($task->equipment)): ?>
+            <h4><?= __('Equipment') ?></h4>
             <table cellpadding="0" cellspacing="0" class="table table-striped">
                 <tr>
                     <th><?= __('Name') ?></th>
@@ -42,8 +42,8 @@
         <?php endif; ?>
     </div>
     <div class="related">
-        <h4><?= __('Manpower Types') ?></h4>
         <?php if (!empty($task->manpower_types)): ?>
+            <h4><?= __('Manpower Types') ?></h4>
             <table cellpadding="0" cellspacing="0" class="table table-striped">
                 <tr>
                     <th><?= __('Manpower Type') ?></th>
@@ -61,8 +61,8 @@
         <?php endif; ?>
     </div>
     <div class="related">
-        <h4><?= __('Materials') ?></h4>
         <?php if (!empty($task->materials)): ?>
+            <h4><?= __('Materials') ?></h4>
             <table cellpadding="0" cellspacing="0" class="table table-striped">
                 <tr>
                     <th><?= __('Name') ?></th>

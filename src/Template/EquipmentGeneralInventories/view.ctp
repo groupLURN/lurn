@@ -5,7 +5,7 @@
     <table class="vertical-table table table-striped">
         <tr>
             <th><?= __('Equipment Name') ?></th>
-            <td><?= h($summary->equipment->name) ?></td>
+            <td><?= h($summary->name) ?></td>
         </tr>
         <tr>
             <th><?= __('Available In-house Quantity') ?></th>

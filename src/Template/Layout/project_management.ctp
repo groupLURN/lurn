@@ -1,5 +1,5 @@
 <?php
-$this->extend('/Layout/default');
+$this->extend('/Layout/base');
 $this->start('additional-sidebar');
 ?>
 <li class="sub-menu">

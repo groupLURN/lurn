@@ -13,6 +13,7 @@ use Cake\Event\Event;
 class TasksController extends AppController
 {
     private $__projectId = null;
+    private $_milestones = null;
 
     public function beforeFilter(Event $event)
     {
@@ -67,17 +68,37 @@ class TasksController extends AppController
         $this->set($this->request->query);
         $this->set('_serialize', ['milestones', 'milestonesProgress']);
 
-        return $milestones;
+        $this->_milestones = $milestones;
     }
 
     public function manage()
     {
-        $milestones = $this->index();
-        $this->Tasks->computeForTaskReplenishment($milestones);
+        $this->index();
+        $milestones = $this->_milestones;
+        $this->Tasks->computeForTaskReplenishmentUsingMilestones($milestones);
 
         $this->set(compact('taskReplenishment', 'milestones'));
         $this->set($this->request->query);
         $this->set('_serialize', ['taskReplenishment', 'milestones']);
+    }
+
+    public function replenish($id)
+    {
+        $task = $this->Tasks->get($id, [
+            'contain' => [
+                'Equipment', 'ManpowerTypes', 'Materials',
+                'EquipmentReplenishmentDetails', 'ManpowerTypeReplenishmentDetails', 'MaterialReplenishmentDetails'
+            ]
+        ]);
+
+        $this->Tasks->computeForTaskReplenishment($task);
+
+        if($this->Tasks->replenish($task))
+            $this->Flash->success(__('The Task ' . $task->title . ' has been replenished.'));
+        else
+            $this->Flash->error(__('The Task ' . $task->title . '  cannot be replenished. Please, try again.'));
+
+        return $this->redirect(['action' => 'manage', '?' => ['project_id' => $this->__projectId]]);
     }
     /**
      * View method

@@ -153,93 +153,117 @@ class TasksTable extends Table
         }
     }
 
-    public function computeForTaskReplenishment($milestones)
+    public function computeForTaskReplenishmentUsingMilestones($milestones)
     {
         foreach($milestones as $milestone)
             foreach($milestone->tasks as &$task)
             {
-                // Compute for the in-stock quantity by SUM-ming.
-                $collection = new Collection($task->equipment_replenishment_details);
-                $equipmentDetails = $collection->reduce(function($accumulated, $detail)
-                {
-                    if(isset($accumulated[$detail->equipment_id]))
-                        $accumulated[$detail->equipment_id] += $detail->quantity;
-                    else
-                        $accumulated[$detail->equipment_id] = $detail->quantity;
-
-                    return $accumulated;
-                }, []);
-
-                // Compute for the in-stock quantity by SUM-ming.
-                $collection = new Collection($task->manpower_type_replenishment_details);
-                $manpowerTypeDetails = $collection->reduce(function($accumulated, $detail)
-                {
-                    if(isset($accumulated[$detail->manpower_type_id]))
-                        $accumulated[$detail->manpower_type_id] += $detail->quantity;
-                    else
-                        $accumulated[$detail->manpower_type_id] = $detail->quantity;
-
-                    return $accumulated;
-                }, []);
-
-                // Compute for the in-stock quantity by SUM-ming.
-                $collection = new Collection($task->material_replenishment_details);
-                $materialDetails = $collection->reduce(function($accumulated, $detail)
-                {
-                    if(isset($accumulated[$detail->material_id]))
-                        $accumulated[$detail->material_id] += $detail->quantity;
-                    else
-                        $accumulated[$detail->material_id] = $detail->quantity;
-
-                    return $accumulated;
-                }, []);
-
-                // Add in-stock quantity.
-                foreach($task->equipment as $equipment)
-                    $equipment['_joinData']['in_stock_quantity'] = isset($equipmentDetails[$equipment['id']])?
-                        $equipmentDetails[$equipment['id']]: 0;
-
-                foreach($task->manpower_types as $manpowerType)
-                    $manpowerType['_joinData']['in_stock_quantity'] = isset($manpowerTypeDetails[$manpowerType['id']])?
-                        $manpowerTypeDetails[$manpowerType['id']]: 0;
-
-                foreach($task->materials as $material)
-                    $material['_joinData']['in_stock_quantity'] = isset($materialDetails[$material['id']])?
-                        $materialDetails[$material['id']]: 0;
-
-                // Lastly, compute for total percentage of the current stock versus what is needed.
-                $ratio = [0, 0];
-                $collection = new Collection($task->equipment);
-                $ratio = $collection->reduce(function($accumulated, $detail)
-                {
-                    return [
-                        $accumulated[0] + $detail['_joinData']['in_stock_quantity'],
-                        $accumulated[1] + $detail['_joinData']['quantity']
-                    ];
-                }, $ratio);
-
-                $collection = new Collection($task->manpower_types);
-                $ratio = $collection->reduce(function($accumulated, $detail)
-                {
-                    return [
-                        $accumulated[0] + $detail['_joinData']['in_stock_quantity'],
-                        $accumulated[1] + $detail['_joinData']['quantity']
-                    ];
-                }, $ratio);
-
-                $collection = new Collection($task->materials);
-                $ratio = $collection->reduce(function($accumulated, $detail)
-                {
-                    return [
-                        $accumulated[0] + $detail['_joinData']['in_stock_quantity'],
-                        $accumulated[1] + $detail['_joinData']['quantity']
-                    ];
-                }, $ratio);
-
-                if($ratio[1] > 0)
-                    $task->replenishment = $ratio[0]/$ratio[1];
-                else
-                    $task->replenishment = 0;
+                $this->computeForTaskReplenishment($task);
             }
+    }
+
+    public function computeForTaskReplenishment($task)
+    {
+        // Compute for the in-stock quantity by SUM-ming.
+        $collection = new Collection($task->equipment_replenishment_details);
+        $equipmentDetails = $collection->reduce(function($accumulated, $detail)
+        {
+            if(isset($accumulated[$detail->equipment_id]))
+                $accumulated[$detail->equipment_id] += $detail->quantity;
+            else
+                $accumulated[$detail->equipment_id] = $detail->quantity;
+
+            return $accumulated;
+        }, []);
+
+        // Compute for the in-stock quantity by SUM-ming.
+        $collection = new Collection($task->manpower_type_replenishment_details);
+        $manpowerTypeDetails = $collection->reduce(function($accumulated, $detail)
+        {
+            if(isset($accumulated[$detail->manpower_type_id]))
+                $accumulated[$detail->manpower_type_id] += $detail->quantity;
+            else
+                $accumulated[$detail->manpower_type_id] = $detail->quantity;
+
+            return $accumulated;
+        }, []);
+
+        // Compute for the in-stock quantity by SUM-ming.
+        $collection = new Collection($task->material_replenishment_details);
+        $materialDetails = $collection->reduce(function($accumulated, $detail)
+        {
+            if(isset($accumulated[$detail->material_id]))
+                $accumulated[$detail->material_id] += $detail->quantity;
+            else
+                $accumulated[$detail->material_id] = $detail->quantity;
+
+            return $accumulated;
+        }, []);
+
+        // Add in-stock quantity.
+        foreach($task->equipment as $equipment)
+        {
+            $equipment['_joinData']['in_stock_quantity'] = isset($equipmentDetails[$equipment['id']])?
+                $equipmentDetails[$equipment['id']]: 0;
+            $equipment['_joinData']['quantity_remaining'] = $equipment['_joinData']['quantity'] -
+                $equipment['_joinData']['in_stock_quantity'];
+        }
+
+
+        foreach($task->manpower_types as $manpowerType)
+        {
+            $manpowerType['_joinData']['in_stock_quantity'] = isset($manpowerTypeDetails[$manpowerType['id']])?
+                $manpowerTypeDetails[$manpowerType['id']]: 0;
+            $manpowerType['_joinData']['quantity_remaining'] = $manpowerType['_joinData']['quantity'] -
+                $manpowerType['_joinData']['in_stock_quantity'];
+        }
+
+
+        foreach($task->materials as $material)
+        {
+            $material['_joinData']['in_stock_quantity'] = isset($materialDetails[$material['id']])?
+                $materialDetails[$material['id']]: 0;
+            $material['_joinData']['quantity_remaining'] = $material['_joinData']['quantity'] -
+                $material['_joinData']['in_stock_quantity'];
+        }
+
+        // Lastly, compute for total percentage of the current stock versus what is needed.
+        $ratio = [0, 0];
+        $collection = new Collection($task->equipment);
+        $ratio = $collection->reduce(function($accumulated, $detail)
+        {
+            return [
+                $accumulated[0] + $detail['_joinData']['in_stock_quantity'],
+                $accumulated[1] + $detail['_joinData']['quantity']
+            ];
+        }, $ratio);
+
+        $collection = new Collection($task->manpower_types);
+        $ratio = $collection->reduce(function($accumulated, $detail)
+        {
+            return [
+                $accumulated[0] + $detail['_joinData']['in_stock_quantity'],
+                $accumulated[1] + $detail['_joinData']['quantity']
+            ];
+        }, $ratio);
+
+        $collection = new Collection($task->materials);
+        $ratio = $collection->reduce(function($accumulated, $detail)
+        {
+            return [
+                $accumulated[0] + $detail['_joinData']['in_stock_quantity'],
+                $accumulated[1] + $detail['_joinData']['quantity']
+            ];
+        }, $ratio);
+
+        if($ratio[1] > 0)
+            $task->replenishment = $ratio[0]/$ratio[1];
+        else
+            $task->replenishment = 0;
+    }
+
+    public function replenish($task)
+    {
+        return true;
     }
 }

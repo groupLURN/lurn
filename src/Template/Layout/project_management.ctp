@@ -14,11 +14,17 @@ $this->start('additional-sidebar');
         <span>Project Planning</span>
     </a>
     <ul class="sub">
-        <li><a href="/project-planning/create-gantt-chart/<?= $projectId ?>">Create Gantt Chart</a></li>
+        <li><a href="/project-planning/create-gantt-chart/<?= $projectId ?>">Gantt Chart</a></li>
     </ul>
     <ul class="sub">
-        <li><a href="/tasks?project_id=<?= $projectId ?>">Manage Tasks & Resources</a></li>
+        <li><a href="/tasks?project_id=<?= $projectId ?>">Tasks</a></li>
     </ul>
+</li>
+<li class="sub-menu">
+    <a href=<?= $this->Url->build(['controller' => 'TaskReplenishmentHeaders', 'action' => 'index']) ?>>
+        <i class="fa fa-recycle"></i>
+        <span>Resources Management</span>
+    </a>
 </li>
 <li class="sub-menu">
     <a href="javascript:;" >

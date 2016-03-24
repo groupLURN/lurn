@@ -9,6 +9,7 @@ use Cake\I18n\Time;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
 
 /**
@@ -264,6 +265,110 @@ class TasksTable extends Table
 
     public function replenish($task)
     {
-        return true;
+        return
+            $this->connection()->transactional(function() use ($task)
+            {
+                foreach($task->equipment as $resource)
+                {
+                    $equipmentInventories = TableRegistry::get('EquipmentInventories')->find()
+                        ->where([
+                            'project_id' => $task->milestone->project_id,
+                            'task_id IS NULL',
+                            'equipment_id' => $resource->id
+                        ])
+                        ->toArray();
+                    $size = count($equipmentInventories);
+                    $quantityTransferred = 0;
+                    for($i = 0; $i < $size && $i < $resource['_joinData']['quantity_remaining']; $i++)
+                    {
+                        $entity = $equipmentInventories[$i];
+                        $entity->task_id = $task->id;
+                        TableRegistry::get('EquipmentInventories')->save($entity, ['atomic' => false]);
+                        $quantityTransferred++;
+                    }
+
+                    $entity = TableRegistry::get('EquipmentReplenishmentDetails')->newEntity([
+                        'task_id' => $task->id,
+                        'equipment_id' => $resource->id,
+                        'quantity' => $quantityTransferred
+                    ]);
+                    TableRegistry::get('EquipmentReplenishmentDetails')->save($entity, ['atomic' => false]);
+                }
+
+                foreach($task->manpower_types as $resource)
+                {
+                    $manpowerInventories = TableRegistry::get('Manpower')->find()
+                        ->where([
+                            'project_id' => $task->milestone->project_id,
+                            'task_id IS NULL',
+                            'manpower_type_id' => $resource->id
+                        ])
+                        ->toArray();
+                    $size = count($manpowerInventories);
+                    $quantityTransferred = 0;
+                    for($i = 0; $i < $size && $i < $resource['_joinData']['quantity_remaining']; $i++)
+                    {
+                        $entity = $manpowerInventories[$i];
+                        $entity->task_id = $task->id;
+                        TableRegistry::get('Manpower')->save($entity, ['atomic' => false]);
+                        $quantityTransferred++;
+                    }
+
+                    $entity = TableRegistry::get('ManpowerTypeReplenishmentDetails')->newEntity([
+                        'task_id' => $task->id,
+                        'manpower_type_id' => $resource->id,
+                        'quantity' => $quantityTransferred
+                    ]);
+                    TableRegistry::get('ManpowerTypeReplenishmentDetails')->save($entity, ['atomic' => false]);
+                }
+
+                foreach($task->materials as $resource)
+                {
+                    $materialInventory = TableRegistry::get('MaterialsProjectInventories')->find()
+                        ->where([
+                            'material_id' => $resource->id,
+                            'project_id' => $task->milestone->project_id
+                        ])
+                        ->first();
+
+                    if($materialInventory === null)
+                        continue;
+
+                    if($materialInventory->quantity < $resource['_joinData']['quantity_remaining'])
+                        $quantityTransferred = $materialInventory->quantity;
+                    else
+                        $quantityTransferred = $materialInventory->quantity - $resource['_joinData']['quantity_remaining'];
+
+                    $materialInventory->quantity -= $quantityTransferred;
+                    TableRegistry::get('MaterialsProjectInventories')->save($materialInventory, ['atomic' => false]);
+
+                    $materialInventory = TableRegistry::get('MaterialsTaskInventories')->find()
+                        ->where([
+                            'material_id' => $resource->id,
+                            'project_id' => $task->milestone->project_id,
+                            'task_id' => $task->id
+                        ])
+                        ->first();
+
+                    if($materialInventory !== null)
+                        $materialInventory->quantity += $quantityTransferred;
+                    else
+                        $materialInventory = TableRegistry::get('MaterialsTaskInventories')->newEntity([
+                            'material_id' => $resource->id,
+                            'project_id' => $task->milestone->project_id,
+                            'task_id' => $task->id,
+                            'quantity' => $quantityTransferred
+                        ]);
+                    TableRegistry::get('MaterialsTaskInventories')->save($materialInventory, ['atomic' => false]);
+
+                    $entity = TableRegistry::get('MaterialReplenishmentDetails')->newEntity([
+                        'task_id' => $task->id,
+                        'material_id' => $resource->id,
+                        'quantity' => $quantityTransferred
+                    ]);
+                    TableRegistry::get('MaterialReplenishmentDetails')->save($entity, ['atomic' => false]);
+                }
+                return true;
+            });
     }
 }

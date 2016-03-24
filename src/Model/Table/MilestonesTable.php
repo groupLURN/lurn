@@ -109,7 +109,8 @@ class MilestonesTable extends Table
             ->contain(['Tasks' => function ($query) use ($expression){
                 return $query->where($expression);
             }])
-            ->matching('Tasks')->where($expression);
+            ->matching('Tasks')->where($expression)
+            ->group('Milestones.id');
     }
 
     public function findByStatus(Query $query, array $options)
@@ -139,6 +140,7 @@ class MilestonesTable extends Table
             ->contain(['Tasks' => function ($query) use ($conditions){
                 return $query->where($conditions);
             }])
-            ->matching('Tasks')->where($conditions);
+            ->matching('Tasks')->where($conditions)
+            ->group('Milestones.id');
     }
 }

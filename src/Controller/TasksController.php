@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Collection\Collection;
 use Cake\Event\Event;
 
 /**
@@ -34,7 +35,12 @@ class TasksController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => 'Tasks'
+            'contain' => [
+                'Tasks' => [
+                    'Equipment', 'ManpowerTypes', 'Materials',
+                    'EquipmentReplenishmentDetails', 'ManpowerTypeReplenishmentDetails', 'MaterialReplenishmentDetails'
+                ]
+            ]
         ];
         
         $this->paginate += $this->createFinders($this->request->query, 'Milestones');
@@ -59,12 +65,19 @@ class TasksController extends AppController
 
         $this->set(compact('milestones', 'milestonesProgress'));
         $this->set($this->request->query);
-        $this->set('_serialize', ['milestones']);
+        $this->set('_serialize', ['milestones', 'milestonesProgress']);
+
+        return $milestones;
     }
 
     public function manage()
     {
-        $this->index();
+        $milestones = $this->index();
+        $this->Tasks->computeForTaskReplenishment($milestones);
+
+        $this->set(compact('taskReplenishment', 'milestones'));
+        $this->set($this->request->query);
+        $this->set('_serialize', ['taskReplenishment', 'milestones']);
     }
     /**
      * View method

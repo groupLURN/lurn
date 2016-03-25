@@ -27,7 +27,10 @@ class ProjectsController extends AppController
             'finder' =>
                 array_merge(
                     $this->createFinders($this->request->query)['finder'],
-                    ['ByAuthorization' => ['user_id' => $this->Auth->user('id')]]
+                    [
+                        'ByAuthorization' => ['user_id' => $this->Auth->user('id')],
+                        'ProjectStatus' => []
+                    ]
                 )
         ];
 
@@ -52,7 +55,7 @@ class ProjectsController extends AppController
                 $project->progress = 0;
         }
 
-        $projectStatuses = $this->Projects->ProjectStatuses->find('list', ['limit' => 200])->toArray();
+        $projectStatuses = $this->Projects->getProjectStatusList();
 
         $this->set(compact('projects', 'projectStatuses'));
         $this->set($this->request->query);

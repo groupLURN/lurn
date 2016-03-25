@@ -135,7 +135,7 @@
                                 <div style="text-align:center; color:black;"><?= h(number_format($project->progress, 2)).'% Complete'?></div>
                             </div>
                         </td>
-                        <td><?= $project->has('project_status') ? $this->Html->link($project->project_status->title, ['controller' => 'ProjectStatuses', 'action' => 'view', $project->project_status->id]) : '' ?></td>
+                        <td><?= h($project->status) ?></td>
                         <td class="actions">
                             <?= $this->dataTableManageButton(__('Manage'), ['controller' => 'ProjectOverview', 'action' => 'index', $project->id]); ?>
                             <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $project->id]); ?>

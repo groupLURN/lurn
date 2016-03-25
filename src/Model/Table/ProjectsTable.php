@@ -28,6 +28,12 @@ use Cake\Validation\Validator;
 class ProjectsTable extends Table
 {
 
+    const STATUS_PLANNING_PHASE = 'Planning Phase';
+    const STATUS_ON_GOING = 'Ongoing';
+    const STATUS_DELAYED = 'Delayed';
+    const STATUS_COMPLETED = 'Completed';
+    const STATUS_CLOSED = 'Closed';
+
     /**
      * Initialize method
      *
@@ -139,6 +145,18 @@ class ProjectsTable extends Table
         }
     }
 
+    public function getProjectStatusList()
+    {
+        return
+            [
+                self::STATUS_PLANNING_PHASE => self::STATUS_PLANNING_PHASE,
+                self::STATUS_ON_GOING => self::STATUS_ON_GOING,
+                self::STATUS_DELAYED => self::STATUS_DELAYED,
+                self::STATUS_COMPLETED => self::STATUS_COMPLETED,
+                self::STATUS_CLOSED => self::STATUS_CLOSED
+            ];
+    }
+
     public function findByTitle(Query $query, array $options)
     {
         return $query->where($query->newExpr()->like('Projects.title', '%' . $options['title'] . '%'));
@@ -146,8 +164,8 @@ class ProjectsTable extends Table
 
     public function findByProjectStatusId(Query $query, array $options)
     {
-        if((int)$options['project_status_id'] > 0)
-            return $query->where(['Projects.project_status_id' => $options['project_status_id']]);
+        if($options['project_status_id'] !== "0")
+            return $query->having(['status' => $options['project_status_id']]);
         else
             return $query;
     }
@@ -170,6 +188,37 @@ class ProjectsTable extends Table
     public function findByEndDateTo(Query $query, array $options)
     {
         return $query->where($query->newExpr()->lt('Projects.end_date', $options['end_date_to'], 'datetime'));
+    }
+
+    public function findProjectStatus(Query $query, array $options)
+    {
+        $projectStatus = $query->newExpr()->add([sprintf("
+        IF(
+		    CURDATE() < Projects.`start_date`,
+		    '%s',
+		    IF(
+			    SUM(IF(Tasks.`is_finished` =  1, 1, 0)) = COUNT(Tasks.`id`) AND
+			    CURDATE() > DATE_ADD(Projects.`end_date`, INTERVAL 1 YEAR),
+			    '%s',
+                IF(
+                    SUM(IF(Tasks.`is_finished` =  1, 1, 0)) = COUNT(Tasks.`id`),
+                    '%s',
+                        IF(
+                            SUM(IF(Tasks.`is_finished` =  0 AND CURDATE() > Tasks.`end_date`, 1, 0)) > 0,
+                            '%s',
+                            '%s'
+                        )
+                )
+            )
+	    )", self::STATUS_PLANNING_PHASE, self::STATUS_CLOSED, self::STATUS_COMPLETED, self::STATUS_DELAYED, self::STATUS_ON_GOING
+        )]);
+
+
+        return $query
+            ->select(['status' => $projectStatus])
+            ->select($this)
+            ->leftJoinWith('Milestones.Tasks')
+            ->group('Projects.id');
     }
 
     public function findByAuthorization(Query $query, array $options)

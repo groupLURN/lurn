@@ -192,10 +192,12 @@ class ProjectsTable extends Table
 		    '%s',
 		    IF(
 			    SUM(IF(Tasks.`is_finished` =  1, 1, 0)) = COUNT(Tasks.`id`) AND
+			    COUNT(Tasks.id) > 0 AND
 			    CURDATE() > DATE_ADD(Projects.`end_date`, INTERVAL 1 YEAR),
 			    '%s',
                 IF(
-                    SUM(IF(Tasks.`is_finished` =  1, 1, 0)) = COUNT(Tasks.`id`),
+                    SUM(IF(Tasks.`is_finished` =  1, 1, 0)) = COUNT(Tasks.`id`) AND
+			        COUNT(Tasks.id) > 0,
                     '%s',
                         IF(
                             SUM(IF(Tasks.`is_finished` =  0 AND CURDATE() > Tasks.`end_date`, 1, 0)) > 0,

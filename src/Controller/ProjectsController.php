@@ -28,8 +28,7 @@ class ProjectsController extends AppController
                 array_merge(
                     $this->createFinders($this->request->query)['finder'],
                     [
-                        'ByAuthorization' => ['user_id' => $this->Auth->user('id')],
-                        'ProjectStatus' => []
+                        'ByAuthorization' => ['user_id' => $this->Auth->user('id')]
                     ]
                 )
         ];
@@ -37,6 +36,7 @@ class ProjectsController extends AppController
         $projects = $this->paginate($this->Projects);
         foreach($projects as $project)
         {
+            $this->Projects->computeProjectStatus($project);
             $milestones = new Collection($project->milestones);
             list($finishedTasks, $totalTasks) = $milestones->reduce(function($accumulated, $milestone)
             {

@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\ORM\TableRegistry;
 
 /**
  * Employees Controller
@@ -46,6 +47,9 @@ class EmployeesController extends AppController
                 'Employees'
             ]]
         ]);
+
+        foreach($employee->projects as $project)
+            TableRegistry::get('Projects')->computeProjectStatus($project);
 
         $this->set('employee', $employee);
         $this->set('_serialize', ['employee']);

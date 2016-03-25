@@ -48,7 +48,7 @@
                     <td><?= $this->Html->link($projects->employee->name, ['controller' => 'employees', 'action' => 'view', $projects->employee->id]) ?></td>
                     <td><?= h($projects->start_date) ?></td>
                     <td><?= h($projects->end_date) ?></td>
-                    <td><?= h($projects->project_status_id) ?></td>
+                    <td><?= h($projects->status) ?></td>
                 </tr>
             <?php endforeach; ?>
         </table>

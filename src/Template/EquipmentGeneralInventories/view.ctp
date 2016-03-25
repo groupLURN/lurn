@@ -80,7 +80,7 @@
                     <td><?= $this->Html->link($detail['project']->employee->name, ['controller' => 'employees', 'action' => 'view', $detail['project']->employee->id]) ?></td>
                     <td><?= h($detail['project']->start_date) ?></td>
                     <td><?= h($detail['project']->end_date) ?></td>
-                    <td><?= h($detail['project']->project_status->title) ?></td>
+                    <td><?= h($detail['project']->status) ?></td>
                     <td><?= $this->Number->format($detail['quantity']) ?> </td>
                 </tr>
             <?php endforeach; ?>
@@ -117,7 +117,7 @@
                     <td><?= $this->Html->link($detail['project']->employee->name, ['controller' => 'employees', 'action' => 'view', $detail['project']->employee->id]) ?></td>
                     <td><?= h($detail['project']->start_date) ?></td>
                     <td><?= h($detail['project']->end_date) ?></td>
-                    <td><?= h($detail['project']->project_status->title) ?></td>
+                    <td><?= h($detail['project']->status) ?></td>
                     <td><?= $this->Number->format($detail['quantity']) ?> </td>
                 </tr>
                 <tr id="project-<?=$detail['project']->id?>" class="collapse">

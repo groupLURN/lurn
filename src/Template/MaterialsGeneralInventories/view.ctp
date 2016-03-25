@@ -47,7 +47,7 @@
                     <td><?= $this->Html->link($projectInventory->project->employee->name, ['controller' => 'employees', 'action' => 'view', $projectInventory->project->employee->id]) ?></td>
                     <td><?= h($projectInventory->project->start_date) ?></td>
                     <td><?= h($projectInventory->project->end_date) ?></td>
-                    <td><?= h($projectInventory->project->project_status->title) ?></td>
+                    <td><?= h($projectInventory->project->status) ?></td>
                     <td><?= $this->Number->format($projectInventory->quantity) ?> </td>
                 </tr>
             <?php endforeach; ?>

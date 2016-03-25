@@ -58,14 +58,6 @@
                 ]
             ]);
 
-            echo $this->Form->input('project_status_id', [
-                'options' => $projectStatuses,
-                'class' => 'form-control',
-                'label' => [
-                    'class' => 'mt'
-                ]
-            ]);
-
             ?>
 
             <legend class="mt"><h3><i class="fa fa-angle-right"></i> <?= __('Core Team Assignment') ?></h3></legend>

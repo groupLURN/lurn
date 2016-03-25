@@ -19,7 +19,7 @@
         </tr>
         <tr>
             <th><?= __('Project Status') ?></th>
-            <td><?= $project->has('project_status') ? $this->Html->link($project->project_status->title, ['controller' => 'ProjectStatuses', 'action' => 'view', $project->project_status->id]) : '' ?></td>
+            <td><?= h($project->status) ?></td>
         </tr>
         <tr>
             <th><?= __('Project Manager') ?></th>

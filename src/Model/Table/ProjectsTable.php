@@ -240,4 +240,12 @@ class ProjectsTable extends Table
                 ->matching('EmployeesJoin', function($query) use ($options) {
                     return $query->where(['EmployeesJoin.user_id' => $options['user_id']]);
                 });
-    }}
+    }
+
+    public function computeProjectStatus($project)
+    {
+        $query = $this->find()->where(['Projects.id' => $project->id]);
+        $query = $this->findProjectStatus($query, []);
+        $project->status = $query->first()->status;
+    }
+}

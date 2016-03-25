@@ -20,7 +20,7 @@ class ProjectsController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['Clients', 'Employees', 'ProjectStatuses', 'Milestones' => ['Tasks']]
+            'contain' => ['Clients', 'Employees', 'Milestones' => ['Tasks']]
         ];
 
         $this->paginate += [
@@ -72,11 +72,11 @@ class ProjectsController extends AppController
     public function view($id = null)
     {
         $project = $this->Projects->get($id, [
-            'contain' => ['Clients', 'Employees', 'ProjectStatuses', 'EmployeesJoin' => [
+            'contain' => ['Clients', 'Employees', 'EmployeesJoin' => [
                 'EmployeeTypes'
             ]]
         ]);
-
+        $this->Projects->computeProjectStatus($project);
         $this->set('project', $project);
         $this->set('_serialize', ['project']);
     }
@@ -101,9 +101,8 @@ class ProjectsController extends AppController
         $clients = $this->Projects->Clients->find('list', ['limit' => 200]);
 
         $employeesJoin = $this->Projects->EmployeesJoin->find('list', ['limit' => 200])->toArray();
-        $projectStatuses = $this->Projects->ProjectStatuses->find('list', ['limit' => 200]);
         $employees = $this->Projects->Employees->find('list', ['limit' => 200]);
-        $this->set(compact('project', 'clients', 'projectStatuses', 'employees', 'employeesJoin'));
+        $this->set(compact('project', 'clients', 'employees', 'employeesJoin'));
         $this->set('_serialize', ['project']);
     }
 
@@ -130,14 +129,13 @@ class ProjectsController extends AppController
         }
         $clients = $this->Projects->Clients->find('list', ['limit' => 200]);
         $employees = $this->Projects->Employees->find('list', ['limit' => 200]);
-        $projectStatuses = $this->Projects->ProjectStatuses->find('list', ['limit' => 200]);
         $employeesJoin = $this->Projects->EmployeesJoin->find('list', ['limit' => 200])->toArray();
 
         $currentEmployeesJoin = [];
         foreach($project->employees_join as $employee)
             $currentEmployeesJoin[] = $employee->id;
 
-        $this->set(compact('project', 'clients', 'projectStatuses', 'employees', 'employeesJoin', 'currentEmployeesJoin'));
+        $this->set(compact('project', 'clients', 'employees', 'employeesJoin', 'currentEmployeesJoin'));
         $this->set('_serialize', ['project']);
     }
 

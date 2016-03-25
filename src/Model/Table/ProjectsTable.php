@@ -16,7 +16,6 @@ use Cake\Validation\Validator;
  *
  * @property \Cake\ORM\Association\BelongsTo $Clients
  * @property \Cake\ORM\Association\BelongsTo $Employees
- * @property \Cake\ORM\Association\BelongsTo $ProjectStatuses
  * @property \Cake\ORM\Association\HasMany $EquipmentProjectInventories
  * @property \Cake\ORM\Association\HasMany $EquipmentTaskInventories
  * @property \Cake\ORM\Association\HasMany $Manpower
@@ -56,10 +55,6 @@ class ProjectsTable extends Table
         ]);
         $this->belongsTo('Employees', [
             'foreignKey' => 'project_manager_id',
-            'joinType' => 'LEFT'
-        ]);
-        $this->belongsTo('ProjectStatuses', [
-            'foreignKey' => 'project_status_id',
             'joinType' => 'LEFT'
         ]);
         $this->hasMany('EquipmentProjectInventories', [
@@ -132,7 +127,6 @@ class ProjectsTable extends Table
     {
         $rules->add($rules->existsIn(['client_id'], 'Clients'));
         $rules->add($rules->existsIn(['project_manager_id'], 'Employees'));
-        $rules->add($rules->existsIn(['project_status_id'], 'ProjectStatuses'));
         return $rules;
     }
 

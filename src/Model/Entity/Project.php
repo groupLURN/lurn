@@ -11,7 +11,6 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\Client $client
  * @property int $project_manager_id
  * @property int $project_status_id
- * @property \App\Model\Entity\ProjectStatus $project_status
  * @property string $title
  * @property string $description
  * @property string $location

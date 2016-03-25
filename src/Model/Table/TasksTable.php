@@ -414,6 +414,9 @@ class TasksTable extends Table
                         ])
                         ->first();
 
+                    if($materialInventory === null)
+                        continue;
+
                     $materialInventory->quantity = $material['in_stock_quantity'] - $material['quantity_used'];
                     TableRegistry::get('MaterialsTaskInventories')->save($materialInventory, ['atomic' => false]);
 

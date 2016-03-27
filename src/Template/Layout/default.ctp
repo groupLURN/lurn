@@ -5,7 +5,7 @@ $this->start('additional-sidebar');
 <li class="sub-menu">
     <a href="javascript:;" >
         <i class="fa fa-desktop"></i>
-        <span><?= __('Humans & Resources')?></span>
+        <span><?= __('Project Team & Assets')?></span>
     </a>
     <ul class="sub">
         <li><a href="/clients">Clients</a></li>

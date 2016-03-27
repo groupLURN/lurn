@@ -123,6 +123,20 @@
                     </div>
                 </div>
             </div>
+
+        <?php
+
+        echo $this->Form->input('comments', [
+            'class' => 'form-control',
+            'label' => [
+                'class' => 'mt',
+                'text' => 'Comments'
+            ],
+            'type' => 'textarea'
+        ]);
+
+        ?>
+
         <?= $this->Form->button(__('Finish'), [
             'class' => 'btn btn-primary btn-submit',
             'onclick' => "

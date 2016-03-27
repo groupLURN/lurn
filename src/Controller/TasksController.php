@@ -132,6 +132,7 @@ class TasksController extends AppController
         if ($this->request->is(['patch', 'post', 'put']))
         {
             $task->is_finished = 1;
+            $task->comments = $this->request->data['comments'];
             $this->transpose($this->request->data, 'materials');
 
             if ($this->Tasks->returnToProjectInventory($task, $this->request->data['materials']) &&

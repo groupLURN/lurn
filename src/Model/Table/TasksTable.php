@@ -129,6 +129,9 @@ class TasksTable extends Table
             ->requirePresence('end_date', 'create')
             ->notEmpty('end_date');
 
+        $validator
+            ->allowEmpty('comments');
+
         return $validator;
     }
 

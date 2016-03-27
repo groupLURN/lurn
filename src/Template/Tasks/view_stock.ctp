@@ -21,6 +21,12 @@
             <th><?= __('Status') ?></th>
             <td><?= $task->status; ?></td>
         </tr>
+    <?php if ($task->status === 'Done') : ?>
+        <tr>
+            <th><?= __('Comments') ?></th>
+            <td><?= $task->comments; ?></td>
+        </tr>
+    <?php endif; ?>
     </table>
     <div class="related">
         <?php if (!empty($task->equipment)): ?>

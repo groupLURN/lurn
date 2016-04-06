@@ -16,7 +16,6 @@ use Cake\Validation\Validator;
  *
  * @property \Cake\ORM\Association\BelongsTo $Clients
  * @property \Cake\ORM\Association\BelongsTo $Employees
- * @property \Cake\ORM\Association\BelongsTo $ProjectStatuses
  * @property \Cake\ORM\Association\HasMany $EquipmentProjectInventories
  * @property \Cake\ORM\Association\HasMany $EquipmentTaskInventories
  * @property \Cake\ORM\Association\HasMany $Manpower
@@ -27,6 +26,12 @@ use Cake\Validation\Validator;
  */
 class ProjectsTable extends Table
 {
+
+    const STATUS_PLANNING_PHASE = 'Planning Phase';
+    const STATUS_ON_GOING = 'Ongoing';
+    const STATUS_DELAYED = 'Delayed';
+    const STATUS_COMPLETED = 'Completed';
+    const STATUS_CLOSED = 'Closed';
 
     /**
      * Initialize method
@@ -50,10 +55,6 @@ class ProjectsTable extends Table
         ]);
         $this->belongsTo('Employees', [
             'foreignKey' => 'project_manager_id',
-            'joinType' => 'LEFT'
-        ]);
-        $this->belongsTo('ProjectStatuses', [
-            'foreignKey' => 'project_status_id',
             'joinType' => 'LEFT'
         ]);
         $this->hasMany('EquipmentProjectInventories', [
@@ -126,7 +127,6 @@ class ProjectsTable extends Table
     {
         $rules->add($rules->existsIn(['client_id'], 'Clients'));
         $rules->add($rules->existsIn(['project_manager_id'], 'Employees'));
-        $rules->add($rules->existsIn(['project_status_id'], 'ProjectStatuses'));
         return $rules;
     }
 
@@ -139,6 +139,18 @@ class ProjectsTable extends Table
         }
     }
 
+    public function getProjectStatusList()
+    {
+        return
+            [
+                self::STATUS_PLANNING_PHASE => self::STATUS_PLANNING_PHASE,
+                self::STATUS_ON_GOING => self::STATUS_ON_GOING,
+                self::STATUS_DELAYED => self::STATUS_DELAYED,
+                self::STATUS_COMPLETED => self::STATUS_COMPLETED,
+                self::STATUS_CLOSED => self::STATUS_CLOSED
+            ];
+    }
+
     public function findByTitle(Query $query, array $options)
     {
         return $query->where($query->newExpr()->like('Projects.title', '%' . $options['title'] . '%'));
@@ -146,8 +158,8 @@ class ProjectsTable extends Table
 
     public function findByProjectStatusId(Query $query, array $options)
     {
-        if((int)$options['project_status_id'] > 0)
-            return $query->where(['Projects.project_status_id' => $options['project_status_id']]);
+        if($options['project_status_id'] !== "0")
+            return $query->having(['status' => $options['project_status_id']]);
         else
             return $query;
     }
@@ -172,6 +184,39 @@ class ProjectsTable extends Table
         return $query->where($query->newExpr()->lt('Projects.end_date', $options['end_date_to'], 'datetime'));
     }
 
+    public function findProjectStatus(Query $query, array $options)
+    {
+        $projectStatus = $query->newExpr()->add([sprintf("
+        IF(
+		    CURDATE() < Projects.`start_date`,
+		    '%s',
+		    IF(
+			    SUM(IF(Tasks.`is_finished` =  1, 1, 0)) = COUNT(Tasks.`id`) AND
+			    COUNT(Tasks.id) > 0 AND
+			    CURDATE() > DATE_ADD(Projects.`end_date`, INTERVAL 1 YEAR),
+			    '%s',
+                IF(
+                    SUM(IF(Tasks.`is_finished` =  1, 1, 0)) = COUNT(Tasks.`id`) AND
+			        COUNT(Tasks.id) > 0,
+                    '%s',
+                        IF(
+                            SUM(IF(Tasks.`is_finished` =  0 AND CURDATE() > Tasks.`end_date`, 1, 0)) > 0,
+                            '%s',
+                            '%s'
+                        )
+                )
+            )
+	    )", self::STATUS_PLANNING_PHASE, self::STATUS_CLOSED, self::STATUS_COMPLETED, self::STATUS_DELAYED, self::STATUS_ON_GOING
+        )]);
+
+
+        return $query
+            ->select(['status' => $projectStatus])
+            ->select($this)
+            ->leftJoinWith('Milestones.Tasks')
+            ->group('Projects.id');
+    }
+
     public function findByAuthorization(Query $query, array $options)
     {
         $resultSet = TableRegistry::get('employees')->find()
@@ -191,4 +236,12 @@ class ProjectsTable extends Table
                 ->matching('EmployeesJoin', function($query) use ($options) {
                     return $query->where(['EmployeesJoin.user_id' => $options['user_id']]);
                 });
-    }}
+    }
+
+    public function computeProjectStatus($project)
+    {
+        $query = $this->find()->where(['Projects.id' => $project->id]);
+        $query = $this->findProjectStatus($query, []);
+        $project->status = $query->first()->status;
+    }
+}

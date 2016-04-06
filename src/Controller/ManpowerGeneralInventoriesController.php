@@ -57,12 +57,17 @@ class ManpowerGeneralInventoriesController extends AppController
         $manpower = TableRegistry::get('ManpowerTypes')->get($id, [
             'contain' => [
                 'Manpower' => [
-                    'Projects' => ['Employees', 'Clients', 'ProjectStatuses']
+                    'Projects' => ['Employees', 'Clients']
                 ]
             ]
         ])->manpower;
 
+        foreach($manpower as $manpower_)
+            if(isset($manpower_->project))
+                TableRegistry::get('Projects')->computeProjectStatus($manpower_->project);
+
         $collection = new Collection($manpower);
+
 
         $availableManpower = $collection->filter(function($manpower)
         {

@@ -129,6 +129,9 @@ class TasksTable extends Table
             ->requirePresence('end_date', 'create')
             ->notEmpty('end_date');
 
+        $validator
+            ->allowEmpty('comments');
+
         return $validator;
     }
 
@@ -337,7 +340,7 @@ class TasksTable extends Table
                     if($materialInventory->quantity < $resource['_joinData']['quantity_remaining'])
                         $quantityTransferred = $materialInventory->quantity;
                     else
-                        $quantityTransferred = $materialInventory->quantity - $resource['_joinData']['quantity_remaining'];
+                        $quantityTransferred = $resource['_joinData']['quantity_remaining'];
 
                     $materialInventory->quantity -= $quantityTransferred;
                     TableRegistry::get('MaterialsProjectInventories')->save($materialInventory, ['atomic' => false]);
@@ -413,6 +416,9 @@ class TasksTable extends Table
                             'task_id' => $task->id
                         ])
                         ->first();
+
+                    if($materialInventory === null)
+                        continue;
 
                     $materialInventory->quantity = $material['in_stock_quantity'] - $material['quantity_used'];
                     TableRegistry::get('MaterialsTaskInventories')->save($materialInventory, ['atomic' => false]);

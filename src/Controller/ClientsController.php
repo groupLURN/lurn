@@ -39,11 +39,11 @@ class ClientsController extends AppController
     public function view($id = null)
     {
         $client = $this->Clients->get($id, [
-            'contain' => ['Users', 'Projects' => [
-                'ProjectStatuses',
-                'Employees'
-            ]]
+            'contain' => ['Users', 'Projects' => ['Employees']]
         ]);
+
+        foreach($client->projects as $project)
+            $this->Clients->Projects->computeProjectStatus($project);
 
         $this->set('client', $client);
         $this->set('_serialize', ['client']);

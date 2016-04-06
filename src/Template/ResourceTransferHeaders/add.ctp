@@ -31,7 +31,8 @@
                 'text' => 'Transfer From',
                 'class' => 'mt'
             ],
-            'options' => [null => 'General']
+            'options' => [null => 'General'],
+            'val' => $selectedResourceRequestHeader->to_project_id
         ]);
 
         echo $this->Form->input('to_project_id', [
@@ -40,7 +41,8 @@
                 'text' => 'Transfer To',
                 'class' => 'mt'
             ],
-            'options' => $projects
+            'options' => $projects,
+            'val' => $selectedResourceRequestHeader->from_project_id
         ]);
 
         ?>

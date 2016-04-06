@@ -33,16 +33,16 @@ class EquipmentGeneralInventoriesController extends AppController
             ]
         ];
 
-        $this->paginate += $this->createFinders($this->request->query, 'EquipmentInventories');
+        $this->paginate += $this->createFinders($this->request->query, 'Equipment');
         $this->paginate['finder']['generalInventorySummary'] = [];
-        $equipmentInventories = $this->paginate(TableRegistry::get('EquipmentInventories'));
+        $equipment = $this->paginate(TableRegistry::get('Equipment'));
 
         $projects = TableRegistry::get('Projects')->find('list')->toArray();
         $suppliers = TableRegistry::get('Suppliers')->find('list')->toArray();
         $equipmentTypes = Equipment::getTypes();
-        $this->set(compact('equipmentInventories', 'projects', 'equipmentTypes', 'suppliers'));
+        $this->set(compact('equipment', 'projects', 'equipmentTypes', 'suppliers'));
         $this->set($this->request->query);
-        $this->set('_serialize', ['equipmentInventories', 'projects', 'equipmentTypes', 'suppliers']);
+        $this->set('_serialize', ['equipment', 'projects', 'equipmentTypes', 'suppliers']);
     }
 
     /**
@@ -54,13 +54,13 @@ class EquipmentGeneralInventoriesController extends AppController
      */
     public function view($id = null)
     {
-        $summary = TableRegistry::get('EquipmentInventories')->find('generalInventorySummary', ['id' => $id])
+        $summary = TableRegistry::get('Equipment')->find('generalInventorySummary', ['id' => $id])
             ->first();
 
         $rentedEquipmentInventories = TableRegistry::get('Equipment')->get($id, [
             'contain' => [
                 'RentedEquipmentInventories' => [
-                    'Projects' => ['Employees', 'Clients', 'ProjectStatuses'],
+                    'Projects' => ['Employees', 'Clients'],
                     'RentalReceiveDetails.RentalRequestDetails.RentalRequestHeaders.Suppliers',
                     'RentalReceiveDetails.RentalReceiveHeaders'
                 ]
@@ -70,7 +70,7 @@ class EquipmentGeneralInventoriesController extends AppController
         $inHouseEquipmentInventories = TableRegistry::get('Equipment')->get($id, [
             'contain' => [
                 'InHouseEquipmentInventories' => [
-                    'Projects' => ['Employees', 'Clients', 'ProjectStatuses']
+                    'Projects' => ['Employees', 'Clients']
                 ]
             ]
         ])->in_house_equipment_inventories;
@@ -101,6 +101,7 @@ class EquipmentGeneralInventoriesController extends AppController
         $unavailableInHouseEquipment = $unavailableRentedEquipment = [];
         foreach($unavailableInHouseEquipmentByProject as $row)
         {
+            TableRegistry::get('Projects')->computeProjectStatus($row[0]->project);
             $unavailableInHouseEquipment[] = [
                 'quantity' => count($row),
                 'project' => $row[0]->project
@@ -109,6 +110,7 @@ class EquipmentGeneralInventoriesController extends AppController
 
         foreach($unavailableRentedEquipmentByProject as $row)
         {
+            TableRegistry::get('Projects')->computeProjectStatus($row[0]->project);
             $collection = new Collection($row);
             $details = $collection->groupBy('rental_receive_detail_id');
             $unavailableRentedEquipment[] = [

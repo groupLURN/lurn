@@ -67,7 +67,7 @@
                     <td><?= $this->Html->link($manpower->project->employee->name, ['controller' => 'employees', 'action' => 'view', $manpower->project->employee->id]) ?></td>
                     <td><?= h($manpower->project->start_date) ?></td>
                     <td><?= h($manpower->project->end_date) ?></td>
-                    <td><?= h($manpower->project->project_status->title) ?></td>
+                    <td><?= h($manpower->project->status) ?></td>
                     <td><?= $this->Number->format(count($unavailableManpower)) ?> </td>
                 </tr>
                 <tr id="project-<?=$manpower->project->id?>" class="collapse">

@@ -1,10 +1,10 @@
 <?= $this->assign('title', 'Rental Request') ?>
 <div class="rentalRequestHeaders view large-9 medium-8 columns content">
-    <h3><?= h($rentalRequestHeader->id) ?></h3>
+    <h3><?= 'Rental Request Number ' . h($rentalRequestHeader->number) ?></h3>
     <table class="vertical-table table table-striped">
         <tr>
             <th><?= __('Rental Request Number') ?></th>
-            <td><?= $this->Number->format($rentalRequestHeader->id) ?></td>
+            <td><?= h($rentalRequestHeader->number) ?></td>
         </tr>
         <tr>
             <th><?= __('Project') ?></th>

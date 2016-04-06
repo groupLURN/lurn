@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Collection\Collection;
 use Cake\Event\Event;
 
 /**
@@ -12,6 +13,7 @@ use Cake\Event\Event;
 class TasksController extends AppController
 {
     private $__projectId = null;
+    private $_milestones = null;
 
     public function beforeFilter(Event $event)
     {
@@ -34,7 +36,12 @@ class TasksController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => 'Tasks'
+            'contain' => [
+                'Tasks' => [
+                    'Equipment', 'ManpowerTypes', 'Materials',
+                    'EquipmentReplenishmentDetails', 'ManpowerTypeReplenishmentDetails', 'MaterialReplenishmentDetails'
+                ]
+            ]
         ];
         
         $this->paginate += $this->createFinders($this->request->query, 'Milestones');
@@ -59,7 +66,87 @@ class TasksController extends AppController
 
         $this->set(compact('milestones', 'milestonesProgress'));
         $this->set($this->request->query);
-        $this->set('_serialize', ['milestones']);
+        $this->set('_serialize', ['milestones', 'milestonesProgress']);
+
+        $this->_milestones = $milestones;
+    }
+
+    public function manage()
+    {
+        $this->index();
+        $milestones = $this->_milestones;
+        $this->Tasks->computeForTaskReplenishmentUsingMilestones($milestones);
+
+        $this->set(compact('taskReplenishment', 'milestones'));
+        $this->set($this->request->query);
+        $this->set('_serialize', ['taskReplenishment', 'milestones']);
+    }
+
+    public function replenish($id)
+    {
+        $task = $this->Tasks->get($id, [
+            'contain' => [
+                'Milestones',
+                'Equipment', 'ManpowerTypes', 'Materials',
+                'EquipmentReplenishmentDetails', 'ManpowerTypeReplenishmentDetails', 'MaterialReplenishmentDetails'
+            ]
+        ]);
+
+        $this->Tasks->computeForTaskReplenishment($task);
+
+        if($this->Tasks->replenish($task))
+            $this->Flash->success(__('The Task ' . $task->title . ' has been replenished.'));
+        else
+            $this->Flash->error(__('The Task ' . $task->title . '  cannot be replenished. Please, try again.'));
+
+        return $this->redirect(['action' => 'manage', '?' => ['project_id' => $this->__projectId]]);
+    }
+
+    public function viewStock($id = null)
+    {
+        $task = $this->Tasks->get($id, [
+            'contain' => ['Milestones',
+                'Equipment', 'ManpowerTypes', 'Materials',
+                'EquipmentReplenishmentDetails', 'ManpowerTypeReplenishmentDetails', 'MaterialReplenishmentDetails'
+            ]
+        ]);
+
+        $this->Tasks->computeForTaskReplenishment($task);
+
+        $this->set('task', $task);
+        $this->set('_serialize', ['task']);
+    }
+
+    public function finish($id = null)
+    {
+        $task = $this->Tasks->get($id, [
+            'contain' => [
+                'Milestones',
+                'Equipment', 'ManpowerTypes', 'Materials',
+                'EquipmentReplenishmentDetails', 'ManpowerTypeReplenishmentDetails', 'MaterialReplenishmentDetails'
+            ]
+        ]);
+
+        $this->Tasks->computeForTaskReplenishment($task);
+
+        if ($this->request->is(['patch', 'post', 'put']))
+        {
+            $task->is_finished = 1;
+            $task->comments = $this->request->data['comments'];
+            $this->transpose($this->request->data, 'materials');
+
+            if ($this->Tasks->returnToProjectInventory($task, $this->request->data['materials']) &&
+                $this->Tasks->save($task))
+            {
+                $this->Flash->success(__('The task has been marked finished!'));
+                return $this->redirect(['action' => 'manage', '?' => ['project_id' => $this->__projectId]]);
+            }
+            else
+                $this->Flash->error(__('The task could not be saved. Please, try again.'));
+        }
+
+        $this->set(compact('task'));
+        $this->set('_serialize', ['task']);
     }
 
     /**
@@ -72,9 +159,7 @@ class TasksController extends AppController
     public function view($id = null)
     {
         $task = $this->Tasks->get($id, [
-            'contain' => ['Milestones', 'Equipment', 'Manpower' => [
-                'ManpowerTypes'
-            ], 'Materials']
+            'contain' => ['Milestones', 'Equipment', 'ManpowerTypes', 'Materials']
         ]);
 
         $this->set('task', $task);
@@ -119,18 +204,9 @@ class TasksController extends AppController
 
             $task = $this->Tasks->get($id);
 
-            $nullSet = [
-                'manpower_types' => [],
-                'equipment' => [],
-                'materials' => []
-            ];
-
-            if(isset($this->request->data['resources']))
-                $this->request->data['resources'] += $nullSet;
-            else
-                $this->request->data['resources'] = $nullSet;
-
-            $this->request->data += $this->_resourcesAdapter($this->request->data['resources']);
+            $this->transpose($this->request->data, 'equipment');
+            $this->transpose($this->request->data, 'manpower_types');
+            $this->transpose($this->request->data, 'materials');
 
             $task = $this->Tasks->patchEntity($task, $this->request->data, [
                 'associated' => ['Equipment', 'ManpowerTypes', 'Materials']
@@ -216,17 +292,5 @@ class TasksController extends AppController
             $this->Flash->error(__('The task could not be deleted. Please, try again.'));
         }
         return $this->redirect(['action' => 'index']);
-    }
-
-    private function _resourcesAdapter($input)
-    {
-        $output = [];
-        // resource (e.g. ['materials', 'manpower']
-        foreach($input as $resource => $resourceElement)
-            // Key (e.g. ['id', '_joinData']
-            foreach($resourceElement as $key => $array)
-                foreach($array as $index => $value)
-                    $output[$resource][$index][$key] = $value;
-        return $output;
     }
 }

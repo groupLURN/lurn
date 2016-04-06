@@ -61,11 +61,14 @@ class MaterialsGeneralInventoriesController extends AppController
         $material = TableRegistry::get('Materials')->get($id, [
             'contain' => [
                 'MaterialsProjectInventories' => [
-                    'Projects' => ['Clients', 'Employees', 'ProjectStatuses'],
+                    'Projects' => ['Clients', 'Employees'],
                     'MaterialsTaskInventories'
                 ]
             ]
         ]);
+
+        foreach($material->materials_project_inventories as $materialProjectInventory)
+            TableRegistry::get('Projects')->computeProjectStatus($materialProjectInventory->project);
 
         foreach($material->materials_project_inventories as &$projectInventory)
         {

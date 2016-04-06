@@ -92,17 +92,17 @@
                 </tr>
                 </thead>
                 <tbody>
-                <?php foreach ($equipmentInventories as $equipmentInventory): ?>
+                <?php foreach ($equipment as $equipment_): ?>
                     <tr>
-                        <td><?= $this->Html->link($equipmentInventory->equipment->name, ['controller' => 'Equipment', 'action' => 'view', $equipmentInventory->id]) ?></td>
-                        <td><?= $this->Number->format($equipmentInventory->available_in_house_quantity) ?></td>
-                        <td><?= $this->Number->format($equipmentInventory->available_rented_quantity) ?></td>
-                        <td><?= $this->Number->format($equipmentInventory->unavailable_in_house_quantity) ?></td>
-                        <td><?= $this->Number->format($equipmentInventory->unavailable_rented_quantity) ?></td>
-                        <td><?= $this->Number->format($equipmentInventory->total_quantity) ?></td>
+                        <td><?= $this->Html->link($equipment_->name, ['controller' => 'Equipment', 'action' => 'view', $equipment_->id]) ?></td>
+                        <td><?= $this->Number->format($equipment_->available_in_house_quantity) ?></td>
+                        <td><?= $this->Number->format($equipment_->available_rented_quantity) ?></td>
+                        <td><?= $this->Number->format($equipment_->unavailable_in_house_quantity) ?></td>
+                        <td><?= $this->Number->format($equipment_->unavailable_rented_quantity) ?></td>
+                        <td><?= $this->Number->format($equipment_->total_quantity) ?></td>
                         <td class="actions">
-                            <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $equipmentInventory->equipment->id]); ?>
-                            <?= $this->dataTableEditButton(__('Adjust'), ['action' => 'edit', $equipmentInventory->equipment->id]); ?>
+                            <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $equipment_->id]); ?>
+                            <?= $this->dataTableEditButton(__('Adjust'), ['action' => 'edit', $equipment_->id]); ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>

@@ -33,22 +33,32 @@ class TasksTableTest extends TestCase
         'app.employees',
         'app.employee_types',
         'app.employees_projects',
-        'app.project_statuses',
         'app.equipment_project_inventories',
         'app.equipment_task_inventories',
         'app.manpower',
         'app.manpower_types',
+        'app.manpower_general_inventories',
         'app.materials_project_inventories',
         'app.materials',
         'app.materials_general_inventories',
         'app.materials_task_inventories',
         'app.materials_tasks',
         'app.employees_join',
+        'app.equipment_inventories',
         'app.equipment',
         'app.equipment_general_inventories',
-        'app.equipment_inventories',
+        'app.rental_receive_details',
+        'app.rental_receive_headers',
+        'app.rental_request_details',
+        'app.rental_request_headers',
+        'app.suppliers',
+        'app.in_house_equipment_inventories',
+        'app.rented_equipment_inventories',
         'app.equipment_tasks',
-        'app.manpower_tasks'
+        'app.manpower_types_tasks',
+        'app.equipment_replenishment_details',
+        'app.manpower_type_replenishment_details',
+        'app.material_replenishment_details'
     ];
 
     /**
@@ -111,6 +121,46 @@ class TasksTableTest extends TestCase
      * @return void
      */
     public function testBeforeMarshal()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test computeForTaskReplenishmentUsingMilestones method
+     *
+     * @return void
+     */
+    public function testComputeForTaskReplenishmentUsingMilestones()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test computeForTaskReplenishment method
+     *
+     * @return void
+     */
+    public function testComputeForTaskReplenishment()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test replenish method
+     *
+     * @return void
+     */
+    public function testReplenish()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test returnToProjectInventory method
+     *
+     * @return void
+     */
+    public function testReturnToProjectInventory()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

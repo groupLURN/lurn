@@ -45,6 +45,7 @@ Router::defaultRouteClass('DashedRoute');
 Router::scope('/', function ($routes) {
 
     $routes->extensions(['json', 'pdf']);
+    $routes->resources('Projects');
     $routes->connect('/', ['controller' => 'Dashboard', 'action' => 'index']);
 
     /**

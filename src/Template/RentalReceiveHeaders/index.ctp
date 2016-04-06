@@ -102,8 +102,8 @@
                 <tbody>
                 <?php foreach ($rentalReceiveHeaders as $rentalReceiveHeader): ?>
                     <tr>
-                        <td><?= h($rentalReceiveHeader->id) ?></td>
-                        <td><?= $this->Html->link($rentalReceiveHeader->_matchingData['RentalRequestHeaders']['id'], ['controller' => 'RentalRequestHeaders', 'action' => 'view', $rentalReceiveHeader->_matchingData['RentalRequestHeaders']['id']])?></td>
+                        <td><?= h($rentalReceiveHeader->number) ?></td>
+                        <td><?= $this->Html->link($rentalReceiveHeader->_matchingData['RentalRequestHeaders']['number'], ['controller' => 'RentalRequestHeaders', 'action' => 'view', $rentalReceiveHeader->_matchingData['RentalRequestHeaders']['id']])?></td>
                         <td><?= $rentalReceiveHeader->_matchingData['Projects']['id']? $this->Html->link($rentalReceiveHeader->_matchingData['Projects']['title'], ['controller' => 'RentalReceiveHeaders', 'action' => 'view', $rentalReceiveHeader->_matchingData['Projects']['id']]): '' ?></td>
                         <td><?= $this->Html->link($rentalReceiveHeader->_matchingData['Suppliers']['name'], ['controller' => 'RentalReceiveHeaders', 'action' => 'view', $this->Html->link($rentalReceiveHeader->_matchingData['Suppliers']['id'])]) ?></td>
                         <td><?= h($rentalReceiveHeader->receive_date) ?></td>

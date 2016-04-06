@@ -132,5 +132,4 @@ class RentalReceiveHeadersTable extends Table
             $query->newExpr()->lt('RentalReceiveHeaders.created', $options['receive_date_to'], 'datetime')
         ]);
     }
-
 }

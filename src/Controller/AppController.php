@@ -29,6 +29,8 @@ use Cake\Utility\Inflector;
 class AppController extends Controller
 {
 
+    protected $userId;
+
     /**
      * Initialization hook method.
      *
@@ -53,11 +55,25 @@ class AppController extends Controller
                         'username' => 'username',
                         'password' => 'password'
                     ]
-                ]],
+                ]
+            ],
             'loginAction' => ['controller' => 'Users', 'action' => 'login'],
             'unauthorizedRedirect' => $this->referer()
         ]);
 
+        $this->userId = $this->Auth->user('id');
+    }
+
+    public function beforeFilter(Event $event)
+    {
+        if($this->request->params['_ext'] === 'json')
+        {
+            $this->Auth->config('authenticate', ['Basic' => ['userModel' => 'Users']]);
+            $this->Auth->config('storage', 'Memory');
+            $this->Auth->config('unauthorizedRedirect', false);
+        }
+
+        return parent::beforeFilter($event);
     }
 
     /**
@@ -116,8 +132,11 @@ class AppController extends Controller
     protected function transpose(&$data, $key)
     {
         // Subject consists of N parallel arrays where its keys are the properties of the entity.
-        $subject = $data[$key];
+        $subject = isset($data[$key])?$data[$key]: null;
         $data[$key] = [];
+
+        if($subject === null)
+            return;
 
         $index = 0;
         foreach($subject as $property => $parallelArrays)

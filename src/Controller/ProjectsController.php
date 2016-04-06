@@ -20,20 +20,23 @@ class ProjectsController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['Clients', 'Employees', 'ProjectStatuses', 'Milestones' => ['Tasks']]
+            'contain' => ['Clients', 'Employees', 'Milestones' => ['Tasks']]
         ];
 
         $this->paginate += [
             'finder' =>
                 array_merge(
                     $this->createFinders($this->request->query)['finder'],
-                    ['ByAuthorization' => ['user_id' => $this->Auth->user('id')]]
+                    [
+                        'ByAuthorization' => ['user_id' => $this->Auth->user('id')]
+                    ]
                 )
         ];
 
         $projects = $this->paginate($this->Projects);
         foreach($projects as $project)
         {
+            $this->Projects->computeProjectStatus($project);
             $milestones = new Collection($project->milestones);
             list($finishedTasks, $totalTasks) = $milestones->reduce(function($accumulated, $milestone)
             {
@@ -46,10 +49,13 @@ class ProjectsController extends AppController
 
                 return [$accumulated[0] + $finishedTasks, $accumulated[1] + $totalTasks];
             }, [0, 0]);
-            $project->progress = $finishedTasks / $totalTasks * 100;
+            if($totalTasks > 0)
+                $project->progress = $finishedTasks / $totalTasks * 100;
+            else
+                $project->progress = 0;
         }
 
-        $projectStatuses = $this->Projects->ProjectStatuses->find('list', ['limit' => 200])->toArray();
+        $projectStatuses = $this->Projects->getProjectStatusList();
 
         $this->set(compact('projects', 'projectStatuses'));
         $this->set($this->request->query);
@@ -66,11 +72,11 @@ class ProjectsController extends AppController
     public function view($id = null)
     {
         $project = $this->Projects->get($id, [
-            'contain' => ['Clients', 'Employees', 'ProjectStatuses', 'EmployeesJoin' => [
+            'contain' => ['Clients', 'Employees', 'EmployeesJoin' => [
                 'EmployeeTypes'
             ]]
         ]);
-
+        $this->Projects->computeProjectStatus($project);
         $this->set('project', $project);
         $this->set('_serialize', ['project']);
     }
@@ -95,9 +101,8 @@ class ProjectsController extends AppController
         $clients = $this->Projects->Clients->find('list', ['limit' => 200]);
 
         $employeesJoin = $this->Projects->EmployeesJoin->find('list', ['limit' => 200])->toArray();
-        $projectStatuses = $this->Projects->ProjectStatuses->find('list', ['limit' => 200]);
         $employees = $this->Projects->Employees->find('list', ['limit' => 200]);
-        $this->set(compact('project', 'clients', 'projectStatuses', 'employees', 'employeesJoin'));
+        $this->set(compact('project', 'clients', 'employees', 'employeesJoin'));
         $this->set('_serialize', ['project']);
     }
 
@@ -124,14 +129,13 @@ class ProjectsController extends AppController
         }
         $clients = $this->Projects->Clients->find('list', ['limit' => 200]);
         $employees = $this->Projects->Employees->find('list', ['limit' => 200]);
-        $projectStatuses = $this->Projects->ProjectStatuses->find('list', ['limit' => 200]);
         $employeesJoin = $this->Projects->EmployeesJoin->find('list', ['limit' => 200])->toArray();
 
         $currentEmployeesJoin = [];
         foreach($project->employees_join as $employee)
             $currentEmployeesJoin[] = $employee->id;
 
-        $this->set(compact('project', 'clients', 'projectStatuses', 'employees', 'employeesJoin', 'currentEmployeesJoin'));
+        $this->set(compact('project', 'clients', 'employees', 'employeesJoin', 'currentEmployeesJoin'));
         $this->set('_serialize', ['project']);
     }
 

@@ -32,4 +32,9 @@ class Material extends Entity
         '*' => true,
         'id' => false,
     ];
+
+    protected function _getFullName()
+    {
+        return $this->_properties['name'] . '  ' . $this->_properties['unit_measure'];
+    }
 }

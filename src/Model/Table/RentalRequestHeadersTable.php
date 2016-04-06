@@ -122,9 +122,9 @@ class RentalRequestHeadersTable extends Table
     public function computeAllQuantityReceived($rentalRequestHeader)
     {
         $collection = new Collection($rentalRequestHeader->rental_request_details);
-        $rentalRequestHeader->all_quantity_received = $collection->reduce(function($accumulated, $rentalReceiveDetail)
+        $rentalRequestHeader->all_quantity_received = $collection->reduce(function($accumulated, $rentalRequestDetail)
         {
-            return $accumulated + $rentalReceiveDetail->quantity_remaining;
+            return $accumulated + $rentalRequestDetail->quantity_remaining;
         }, 0) === 0;
         return $this;
     }

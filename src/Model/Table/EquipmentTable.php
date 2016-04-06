@@ -128,8 +128,8 @@ class EquipmentTable extends Table
 
     public function findByProjectId(Query $query, array $options)
     {
-        if($options['project_id'] > 0)
-            return $query->where(['Projects.id' => $options['project_id']]);
+        if(!empty($options['project_id']))
+            return $query->having(['project_id' => $options['project_id']]);
         return $query;
     }
 
@@ -145,6 +145,50 @@ class EquipmentTable extends Table
         return $query->where([
             $query->newExpr()->lt('Tasks.end_date', $options['schedule_date_to'], 'datetime')
         ]);
+    }
+    public function findByEquipmentType(Query $query, array $options)
+    {
+        $equipmentTypes = array_flip(Equipment::getTypes());
+
+        $hasInHouse = $query->func()->sum(
+            $query->newExpr()->addCase(
+                $query->newExpr()->add('rental_receive_detail_id IS NULL'), 1
+            )
+        );
+
+        $hasRented = $query->func()->sum(
+            $query->newExpr()->addCase(
+                $query->newExpr()->add([
+                    'rental_receive_detail_id IS NOT NULL',
+                    'RentalReceiveDetails.id IS NOT NULL'
+                ]), 1
+            )
+        );
+
+        $query->select(['_hasInHouse' => $hasInHouse, '_hasRented' => $hasRented]);
+        $query->leftJoinWith('EquipmentInventories.RentalReceiveDetails');
+        if((int)$options['equipment_type'] === $equipmentTypes['In-House'])
+            $query->having(['_hasInHouse > 0']);
+        else if((int)$options['equipment_type'] === $equipmentTypes['Rented'])
+            $query->having(['_hasRented > 0']);
+        return $query;
+    }
+
+    public function findBySupplierId(Query $query, array $options)
+    {
+        if($options['supplier_id'] > 0)
+        {
+            $hasSupplier = $query->func()->sum(
+                $query->newExpr()->addCase(
+                    $query->newExpr()->add(['RentalRequestHeaders.supplier_id' => $options['supplier_id']]), 1
+                )
+            );
+
+            $query->select(['_hasSupplier' => $hasSupplier])
+                ->leftJoinWith('EquipmentInventories.RentalReceiveDetails.RentalRequestDetails.RentalRequestHeaders')
+                ->having('_hasSupplier > 0');
+        }
+        return $query;
     }
 
     public function findEquipmentSchedule(Query $query, array $options)
@@ -163,5 +207,96 @@ class EquipmentTable extends Table
             ->leftJoin(['Projects' => 'projects'], ['Projects.id = Milestones.project_id'])
             ->leftJoinWith('EquipmentGeneralInventories')
             ->group(['EquipmentTasks.equipment_id', 'EquipmentTasks.task_id']);
+    }
+
+    public function findGeneralInventorySummary(Query $query, array $options)
+    {
+        $available_in_house_quantity = $query->func()->sum(
+            $query->newExpr()->addCase(
+                $query->newExpr()->add([
+                    'AND' =>
+                        [
+                            'EquipmentInventories.project_id IS' => null,
+                            'EquipmentInventories.rental_receive_detail_id IS' => null,
+                        ]
+                ]),
+                1,
+                'integer'
+            )
+        );
+
+        $available_rented_quantity = $query->func()->sum(
+            $query->newExpr()->addCase(
+                $query->newExpr()->add([
+                    'AND' =>
+                        [
+                            'EquipmentInventories.project_id IS' => null,
+                            'EquipmentInventories.rental_receive_detail_id IS NOT' => null,
+                            'RentalReceiveDetails.id IS NOT' => null
+                        ]
+                ]),
+                1,
+                'integer'
+            )
+        );
+
+        $unavailable_in_house_quantity = $query->func()->sum(
+            $query->newExpr()->addCase(
+                $query->newExpr()->add([
+                    'AND' =>
+                        [
+                            'EquipmentInventories.project_id IS NOT' => null,
+                            'EquipmentInventories.rental_receive_detail_id IS' => null,
+                        ]
+                ]),
+                1,
+                'integer'
+            )
+        );
+
+        $unavailable_rented_quantity = $query->func()->sum(
+            $query->newExpr()->addCase(
+                $query->newExpr()->add([
+                    'AND' =>
+                        [
+                            'EquipmentInventories.project_id IS NOT' => null,
+                            'EquipmentInventories.rental_receive_detail_id IS NOT' => null,
+                            'RentalReceiveDetails.id IS NOT' => null
+                        ]
+                ]),
+                1,
+                'integer'
+            )
+        );
+
+        $total_quantity = $query->func()->sum(
+            $query->newExpr()->addCase(
+                $query->newExpr()->add([
+                    'OR' =>
+                        [
+                            'EquipmentInventories.rental_receive_detail_id IS' => null,
+                            'AND' => [
+                                'EquipmentInventories.rental_receive_detail_id IS NOT' => null,
+                                'RentalReceiveDetails.id IS NOT' => null
+                            ]
+                        ]
+                ]),
+                1,
+                'integer'
+            )
+        );
+
+        if(isset($options['id']))
+            $query = $query->where(['Equipment.id' => $options['id']]);
+
+        return $query->select(['Equipment.id', 'Equipment.name', 'last_modified' => 'EquipmentInventories.modified',
+            'available_in_house_quantity' => $available_in_house_quantity,
+            'available_rented_quantity' => $available_rented_quantity,
+            'unavailable_in_house_quantity' => $unavailable_in_house_quantity,
+            'unavailable_rented_quantity' => $unavailable_rented_quantity,
+            'total_quantity' => $total_quantity,
+            'project_id' => 'EquipmentInventories.project_id'])
+            ->leftJoinWith('EquipmentInventories.RentalReceiveDetails')
+            ->group('Equipment.id');
     }
 }

@@ -25,6 +25,7 @@ class TasksFixture extends TestFixture
         'end_date' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         'created' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         'modified' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
+        'comments' => ['type' => 'string', 'length' => 255, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null, 'fixed' => null],
         '_indexes' => [
             'BY_TITLE' => ['type' => 'index', 'columns' => ['title'], 'length' => []],
             'BY_IS_FINISHED' => ['type' => 'index', 'columns' => ['is_finished'], 'length' => []],
@@ -50,14 +51,15 @@ class TasksFixture extends TestFixture
      */
     public $records = [
         [
-            'id' => '64ee85bb-4eee-4477-b129-45f40c2cfe92',
+            'id' => '3ba98fc1-e334-409f-a793-a6842a3e6c60',
             'milestone_id' => 'Lorem ipsum dolor sit amet',
             'title' => 'Lorem ipsum dolor sit amet',
             'is_finished' => 1,
-            'start_date' => '2016-03-08 23:34:48',
-            'end_date' => '2016-03-08 23:34:48',
-            'created' => '2016-03-08 23:34:48',
-            'modified' => '2016-03-08 23:34:48'
+            'start_date' => '2016-03-28 00:00:25',
+            'end_date' => '2016-03-28 00:00:25',
+            'created' => '2016-03-28 00:00:25',
+            'modified' => '2016-03-28 00:00:25',
+            'comments' => 'Lorem ipsum dolor sit amet'
         ],
     ];
 }

@@ -149,7 +149,7 @@ TOP BAR CONTENT & NOTIFICATIONS
                         </li>
                         <li>
                             <a href="index.html#">
-                                <span class="photo"><img alt="avatar" src="/img/ui-zac.jpg"></span>
+                                <span class="photo"> <img alt="avatar" src=<?= $this->Url->build(['controller' => 'img/ui-zac.jpg', 'action' => 'index']) ?>> </span>
                                         <span class="subject">
                                         <span class="from">Zac Snider</span>
                                         <span class="time">Just now</span>
@@ -161,7 +161,7 @@ TOP BAR CONTENT & NOTIFICATIONS
                         </li>
                         <li>
                             <a href="index.html#">
-                                <span class="photo"><img alt="avatar" src="/img/ui-divya.jpg"></span>
+                                <span class="photo"><img alt="avatar" src=<?= $this->Url->build(['controller' => 'img/ui-divya.jpg', 'action' => 'index']) ?>></span>
                                         <span class="subject">
                                         <span class="from">Divya Manian</span>
                                         <span class="time">40 mins.</span>
@@ -173,7 +173,7 @@ TOP BAR CONTENT & NOTIFICATIONS
                         </li>
                         <li>
                             <a href="index.html#">
-                                <span class="photo"><img alt="avatar" src="/img/ui-danro.jpg"></span>
+                                <span class="photo"><img alt="avatar" src=<?= $this->Url->build(['controller' => 'img/ui-danro.jpg', 'action' => 'index']) ?>></span>
                                         <span class="subject">
                                         <span class="from">Dan Rogers</span>
                                         <span class="time">2 hrs.</span>
@@ -185,7 +185,7 @@ TOP BAR CONTENT & NOTIFICATIONS
                         </li>
                         <li>
                             <a href="index.html#">
-                                <span class="photo"><img alt="avatar" src="/img/ui-sherman.jpg"></span>
+                                <span class="photo"><img alt="avatar" src=<?= $this->Url->build(['controller' => 'img/ui-sherman.jpg', 'action' => 'index']) ?>></span>
                                         <span class="subject">
                                         <span class="from">Dj Sherman</span>
                                         <span class="time">4 hrs.</span>
@@ -206,7 +206,7 @@ TOP BAR CONTENT & NOTIFICATIONS
         </div>
         <div class="top-menu">
             <ul class="nav pull-right top-menu">
-                <li><a class="logout" href="/users/logout">Logout</a></li>
+                <li><a class="logout" href=<?= $this->Url->build(['controller' => 'users/logout', 'action' => 'index']) ?>>Loguout</a></li>               
             </ul>
         </div>
     </header>
@@ -221,11 +221,11 @@ TOP BAR CONTENT & NOTIFICATIONS
             <!-- sidebar menu start-->
             <ul class="sidebar-menu" id="nav-accordion">
 
-                <p class="centered"><a href="profile.html"><img src="/img/ui-sam.jpg" class="img-circle" width="60"></a></p>
+                <p class="centered"><a href="profile.html"><img src=<?= $this->Url->build(['controller' => 'img/ui-sam.jpg', 'action' => 'index']) ?> class="img-circle" width="60"></a></p>
                 <h5 class="centered">Marcel Newman</h5>
 
                 <li class="mt">
-                    <a class="active" href="/dashboard">
+                    <a class="active" href=<?= $this->Url->build(['controller' => 'dashboard', 'action' => 'index']) ?>>
                         <i class="fa fa-dashboard"></i>
                         <span>Dashboard</span>
                     </a>

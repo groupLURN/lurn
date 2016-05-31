@@ -10,7 +10,7 @@ echo <<<EOD
             // (string | mandatory) the text inside the notification
             text: 'Hover me to enable the Close Button. You can hide the left sidebar clicking on the button next to the logo. Free version for <a href="http://blacktie.co" target="_blank" style="color:#ffd777">BlackTie.co</a>.',
             // (string | optional) the image to display on the left
-            image: '/img/ui-sam.jpg',
+            image: '/cakephp_3_2/lurn/img/ui-sam.jpg',
             // (bool | optional) if you want it to fade out on its own or just sit there
             sticky: true,
             // (int | optional) the time you want it to be alive for before fading out
@@ -68,8 +68,8 @@ $this->Html->scriptEnd();
 
             <div class="row">
                 <div class="col-lg-9 main-chart">
-
-                    <div class="row mtbox">
+                        
+                   <!--  <div class="row mtbox">
                         <div class="col-md-2 col-sm-2 col-md-offset-1 box0">
                             <div class="box1">
                                 <span class="li_heart"></span>
@@ -107,14 +107,14 @@ $this->Html->scriptEnd();
                         </div>
 
                     </div><!-- /row mt -->
-
+                    
 
                     <div class="row mt">
                         <!-- SERVER STATUS PANELS -->
                         <div class="col-md-4 col-sm-4 mb">
                             <div class="white-panel pn donut-chart">
                                 <div class="white-header">
-                                    <h5>SERVER LOAD</h5>
+                                    <h5>PENDING</h5>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-6 col-xs-6 goleft">
@@ -142,7 +142,7 @@ $this->Html->scriptEnd();
                         <div class="col-md-4 col-sm-4 mb">
                             <div class="white-panel pn">
                                 <div class="white-header">
-                                    <h5>TOP PRODUCT</h5>
+                                    <h5>ON-GOING</h5>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-6 col-xs-6 goleft">
@@ -151,7 +151,7 @@ $this->Html->scriptEnd();
                                     <div class="col-sm-6 col-xs-6"></div>
                                 </div>
                                 <div class="centered">
-                                    <img src="/img/product.png" width="120">
+                                    <img alt="avatar" src=<?= $this->Url->build(['controller' => 'img/product.png', 'action' => 'index']) ?> width="120"'>
                                 </div>
                             </div>
                         </div><!-- /col-md-4 -->
@@ -160,9 +160,9 @@ $this->Html->scriptEnd();
                             <!-- WHITE PANEL - TOP USER -->
                             <div class="white-panel pn">
                                 <div class="white-header">
-                                    <h5>TOP USER</h5>
+                                    <h5>DONE</h5>
                                 </div>
-                                <p><img src="/img/ui-zac.jpg" class="img-circle" width="80"></p>
+                                <p><img src=<?= $this->Url->build(['controller' => 'img/ui-zac.jpg', 'action' => 'index']) ?> class="img-circle" width="80"></p>
                                 <p><b>Zac Snider</b></p>
                                 <div class="row">
                                     <div class="col-md-6">
@@ -229,56 +229,7 @@ $this->Html->scriptEnd();
                         </div><!-- /col-md-4 -->
 
                     </div><!-- /row -->
-
-                    <div class="row mt">
-                        <!--CUSTOM CHART START -->
-                        <div class="border-head">
-                            <h3>VISITS</h3>
-                        </div>
-                        <div class="custom-bar-chart">
-                            <ul class="y-axis">
-                                <li><span>10.000</span></li>
-                                <li><span>8.000</span></li>
-                                <li><span>6.000</span></li>
-                                <li><span>4.000</span></li>
-                                <li><span>2.000</span></li>
-                                <li><span>0</span></li>
-                            </ul>
-                            <div class="bar">
-                                <div class="title">JAN</div>
-                                <div class="value tooltips" data-original-title="8.500" data-toggle="tooltip" data-placement="top">85%</div>
-                            </div>
-                            <div class="bar ">
-                                <div class="title">FEB</div>
-                                <div class="value tooltips" data-original-title="5.000" data-toggle="tooltip" data-placement="top">50%</div>
-                            </div>
-                            <div class="bar ">
-                                <div class="title">MAR</div>
-                                <div class="value tooltips" data-original-title="6.000" data-toggle="tooltip" data-placement="top">60%</div>
-                            </div>
-                            <div class="bar ">
-                                <div class="title">APR</div>
-                                <div class="value tooltips" data-original-title="4.500" data-toggle="tooltip" data-placement="top">45%</div>
-                            </div>
-                            <div class="bar">
-                                <div class="title">MAY</div>
-                                <div class="value tooltips" data-original-title="3.200" data-toggle="tooltip" data-placement="top">32%</div>
-                            </div>
-                            <div class="bar ">
-                                <div class="title">JUN</div>
-                                <div class="value tooltips" data-original-title="6.200" data-toggle="tooltip" data-placement="top">62%</div>
-                            </div>
-                            <div class="bar">
-                                <div class="title">JUL</div>
-                                <div class="value tooltips" data-original-title="7.500" data-toggle="tooltip" data-placement="top">75%</div>
-                            </div>
-                        </div>
-                        <!--custom chart end-->
-                    </div><!-- /row -->
-
-                </div><!-- /col-lg-9 END SECTION MIDDLE -->
-
-
+                   
                 <!-- **********************************************************************************************************************************************************
                 RIGHT SIDEBAR CONTENT
                 *********************************************************************************************************************************************************** -->
@@ -348,7 +299,7 @@ $this->Html->scriptEnd();
                     <!-- First Member -->
                     <div class="desc">
                         <div class="thumb">
-                            <img class="img-circle" src="/img/ui-divya.jpg" width="35px" height="35px" align="">
+                            <img class="img-circle" src=<?= $this->Url->build(['controller' => 'img/ui-divya.jpg', 'action' => 'index']) ?> width="35px" height="35px" align="">
                         </div>
                         <div class="details">
                             <p><a href="#">DIVYA MANIAN</a><br/>
@@ -359,7 +310,7 @@ $this->Html->scriptEnd();
                     <!-- Second Member -->
                     <div class="desc">
                         <div class="thumb">
-                            <img class="img-circle" src="/img/ui-sherman.jpg" width="35px" height="35px" align="">
+                            <img class="img-circle"  src=<?= $this->Url->build(['controller' => 'img/ui-sherman.jpg', 'action' => 'index']) ?> width="35px" height="35px" align="">
                         </div>
                         <div class="details">
                             <p><a href="#">DJ SHERMAN</a><br/>
@@ -370,7 +321,7 @@ $this->Html->scriptEnd();
                     <!-- Third Member -->
                     <div class="desc">
                         <div class="thumb">
-                            <img class="img-circle" src="/img/ui-danro.jpg" width="35px" height="35px" align="">
+                            <img class="img-circle" src=<?= $this->Url->build(['controller' => 'img/ui-danro.jpg', 'action' => 'index']) ?> width="35px" height="35px" align="">
                         </div>
                         <div class="details">
                             <p><a href="#">DAN ROGERS</a><br/>
@@ -381,7 +332,7 @@ $this->Html->scriptEnd();
                     <!-- Fourth Member -->
                     <div class="desc">
                         <div class="thumb">
-                            <img class="img-circle" src="/img/ui-zac.jpg" width="35px" height="35px" align="">
+                            <img class="img-circle" src=<?= $this->Url->build(['controller' => 'img/ui-zac.jpg', 'action' => 'index']) ?> width="35px" height="35px" align="">
                         </div>
                         <div class="details">
                             <p><a href="#">Zac Sniders</a><br/>
@@ -392,7 +343,7 @@ $this->Html->scriptEnd();
                     <!-- Fifth Member -->
                     <div class="desc">
                         <div class="thumb">
-                            <img class="img-circle" src="/img/ui-sam.jpg" width="35px" height="35px" align="">
+                            <img class="img-circle" src=<?= $this->Url->build(['controller' => 'img/ui-sam.jpg', 'action' => 'index']) ?> width="35px" height="35px" align="">
                         </div>
                         <div class="details">
                             <p><a href="#">Marcel Newman</a><br/>

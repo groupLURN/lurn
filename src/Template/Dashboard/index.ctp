@@ -114,7 +114,7 @@ $this->Html->scriptEnd();
                         <div class="col-md-4 col-sm-4 mb">
                             <div class="white-panel pn donut-chart">
                                 <div class="white-header">
-                                    <h5>PENDING</h5>
+                                    <h3>PENDING</h3>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-6 col-xs-6 goleft">
@@ -134,7 +134,12 @@ $this->Html->scriptEnd();
                                                                             }
                                                                         ];
                                                                         var myDoughnut = new Chart(document.getElementById("serverstatus01").getContext("2d")).Doughnut(doughnutData);
-                                </script>
+                                </script>   
+                                <div class="white-panel pn donut-chart">
+                                    <div class="white-header">
+                                        <h5> PROJECT 1</h5>
+                                    </div>
+                                </div>                             
                             </div><! --/grey-panel -->
                         </div><!-- /col-md-4-->
 
@@ -142,7 +147,7 @@ $this->Html->scriptEnd();
                         <div class="col-md-4 col-sm-4 mb">
                             <div class="white-panel pn">
                                 <div class="white-header">
-                                    <h5>ON-GOING</h5>
+                                    <h3>ON-GOING</h3>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-6 col-xs-6 goleft">
@@ -160,7 +165,7 @@ $this->Html->scriptEnd();
                             <!-- WHITE PANEL - TOP USER -->
                             <div class="white-panel pn">
                                 <div class="white-header">
-                                    <h5>DONE</h5>
+                                    <h3>DONE</h3>
                                 </div>
                                 <p><img src=<?= $this->Url->build(['controller' => 'img/ui-zac.jpg', 'action' => 'index']) ?> class="img-circle" width="80"></p>
                                 <p><b>Zac Snider</b></p>
@@ -179,57 +184,10 @@ $this->Html->scriptEnd();
 
 
                     </div><!-- /row -->
+                    
+                </div><!-- /col-lg-9 END SECTION MIDDLE -->
 
-
-                    <div class="row">
-                        <!-- TWITTER PANEL -->
-                        <div class="col-md-4 mb">
-                            <div class="darkblue-panel pn">
-                                <div class="darkblue-header">
-                                    <h5>DROPBOX STATICS</h5>
-                                </div>
-                                <canvas id="serverstatus02" height="120" width="120"></canvas>
-                                <script>
-                                                                        var doughnutData = [
-                                                                            {
-                                                                                value: 60,
-                                                                                color:"#68dff0"
-                                                                            },
-                                                                            {
-                                                                                value : 40,
-                                                                                color : "#444c57"
-                                                                            }
-                                                                        ];
-                                                                        var myDoughnut = new Chart(document.getElementById("serverstatus02").getContext("2d")).Doughnut(doughnutData);
-                                </script>
-                                <p>April 17, 2014</p>
-                                <footer>
-                                    <div class="pull-left">
-                                        <h5><i class="fa fa-hdd-o"></i> 17 GB</h5>
-                                    </div>
-                                    <div class="pull-right">
-                                        <h5>60% Used</h5>
-                                    </div>
-                                </footer>
-                            </div><! -- /darkblue panel -->
-                        </div><!-- /col-md-4 -->
-
-
-                        <div class="col-md-4 col-sm-4 mb">
-                            <!-- REVENUE PANEL -->
-                            <div class="darkblue-panel pn">
-                                <div class="darkblue-header">
-                                    <h5>REVENUE</h5>
-                                </div>
-                                <div class="chart mt">
-                                    <div class="sparkline" data-type="line" data-resize="true" data-height="75" data-width="90%" data-line-width="1" data-line-color="#fff" data-spot-color="#fff" data-fill-color="" data-highlight-line-color="#fff" data-spot-radius="4" data-data="[200,135,667,333,526,996,564,123,890,464,655]"></div>
-                                </div>
-                                <p class="mt"><b>$ 17,980</b><br/>Month Income</p>
-                            </div>
-                        </div><!-- /col-md-4 -->
-
-                    </div><!-- /row -->
-                   
+                 
                 <!-- **********************************************************************************************************************************************************
                 RIGHT SIDEBAR CONTENT
                 *********************************************************************************************************************************************************** -->

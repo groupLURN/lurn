@@ -4,8 +4,9 @@ $this->start('additional-sidebar');
 ?>
 <li class="sub-menu">
     <a href="javascript:;" >
-        <i class="fa fa-desktop"></i>
-        <span><?= __('Project Team & Assets')?></span>
+        <i class="fa fa-desktop"></i>       
+        <span><?= __('Project Team & Assets')?> 
+        </span>         
     </a>
     <ul class="sub">
         <li><a href=<?= $this->Url->build(['controller' => 'clients', 'action' => 'index']) ?>>Clients</a></li>

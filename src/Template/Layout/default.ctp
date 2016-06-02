@@ -6,6 +6,7 @@ $this->start('additional-sidebar');
     <a href="javascript:;" >
         <i class="fa fa-desktop"></i>       
         <span><?= __('Project Team & Assets')?> 
+        <span class="caret"> </span>
         </span>         
     </a>
     <ul class="sub">
@@ -23,6 +24,7 @@ $this->start('additional-sidebar');
     <a href="javascript:;" >
         <i class="fa fa-tasks"></i>
         <span>Projects</span>
+        <span class="caret"> </span>
     </a>
     <ul class="sub">
        <li><a href=<?= $this->Url->build(['controller' => 'Projects', 'action' => 'index']) ?>>View Projects</a></li>
@@ -33,6 +35,7 @@ $this->start('additional-sidebar');
     <a href="javascript:;" >
         <i class="fa fa-archive"></i>
         <span>General Inventories</span>
+        <span class="caret"> </span>
     </a>
     <ul class="sub">
         <li><a href=<?= $this->Url->build(['controller' => 'equipment-general-inventories', 'action' => 'index']) ?>>Equipment Inventory</a></li>
@@ -44,6 +47,7 @@ $this->start('additional-sidebar');
     <a href="javascript:;" >
         <i class="fa fa-search"></i>
         <span>Track Resources Schedule</span>
+        <span class="caret"> </span>
     </a>
     <ul class="sub">
         <li><a href=<?= $this->Url->build(['controller' => 'track-equipment-schedule', 'action' => 'index']) ?>>Track Equipment</a></li>
@@ -55,6 +59,7 @@ $this->start('additional-sidebar');
     <a href="javascript:;" >
         <i class="fa fa-cube"></i>
         <span>Replenishments</span>
+        <span class="caret"> </span>
     </a>
     <ul class="sub">
         <li><a href=<?= $this->Url->build(['controller' => 'rental-request-headers', 'action' => 'index']) ?>>Rental Requests</a></li>
@@ -67,6 +72,7 @@ $this->start('additional-sidebar');
     <a href="javascript:;" >
         <i class="fa fa-recycle"></i>
         <span>Resources Management</span>
+        <span class="caret"> </span>
     </a>
     <ul class="sub">
         <li><a href=<?= $this->Url->build(['controller' => 'ResourceRequestHeaders', 'action' => 'index']) ?>>Create Resources Request</a></li>
@@ -78,6 +84,7 @@ $this->start('additional-sidebar');
     <a href="Javascript:;" >
         <i class="fa fa-recycle"></i>
         <span>Reports</span>
+        <span class="caret"> </span>
     </a>
     <ul class="sub">
         <li><a href=<?= $this->Url->build(['controller' => 'Reports', 'action' => 'index']) ?>>All Reports </a></li>

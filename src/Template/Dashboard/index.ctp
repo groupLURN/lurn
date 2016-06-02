@@ -66,6 +66,15 @@ $this->Html->scriptEnd();
     <section id="main-content">
         <section class="wrapper">
 
+            <div class="apb">
+                    <h6 class="apd">DASHBOARD</h6>
+                    <h2 class="apc">OVERVIEW</h2>
+            </div>
+
+           <!--  <div class="anv alg ala">
+                <h3 class="anw anx"> Quick Stats </h3>
+            </div> -->
+
             <div class="row">
                 <div class="col-lg-9 main-chart">
                         

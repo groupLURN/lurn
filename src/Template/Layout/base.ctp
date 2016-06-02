@@ -50,7 +50,7 @@ $this->Html->script('/non_bower_components/chart-master/Chart', ['block' => 'scr
     <?= $this->fetch('script-header') ?>
 </head>
 
-<body>
+<body class="background-dark template-product">
 
 <!-- **********************************************************************************************************************************************************
 TOP BAR CONTENT & NOTIFICATIONS

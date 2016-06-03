@@ -74,7 +74,7 @@ $this->Html->scriptEnd();
            <!--  <div class="anv alg ala">
                 <h3 class="anw anx"> Quick Stats </h3>
             </div> -->
-
+            <hr class="style-eight">
             <div class="row">
                 <div class="col-lg-9 main-chart">
                         
@@ -123,7 +123,7 @@ $this->Html->scriptEnd();
                         <div class="col-md-4 col-sm-4 mb">
                             <div class="white-panel pn donut-chart">
                                 <div class="white-header">
-                                    <h3>RECENT ACTIVITY</h3>
+                                    <h3><p class="text-success">RECENT <br> ACTIVITY</p></h3>
                                 </div>
                                 <!-- <div class="row"> -->
                                   <!--   <div class="col-sm-6 col-xs-6 goleft">
@@ -225,7 +225,7 @@ $this->Html->scriptEnd();
                         <div class="col-md-4 col-sm-4 mb">
                             <div class="white-panel pn">
                                 <div class="white-header">
-                                    <h3>DUE TODAY</h3>
+                                    <h3><p class="text-danger">DUE <br> TODAY</p></h3>
                                 </div>
                                 <div class="row">
                                         <div class="panel panel-info">       
@@ -282,8 +282,8 @@ $this->Html->scriptEnd();
                             <!-- WHITE PANEL - TOP USER -->
                             <div class="white-panel pn">
                                 <div class="white-header">
-                                    <h3>UPCOMING EVENT</h3>
-                                </div>
+                                    <h3><p class="text-warning">UPCOMING <br> EVENT</p></h3>
+                                </div>  
                                  <div class="row">
                                         <div class="panel panel-info">       
                                             <h5> PROJECT 6</h5>    

@@ -17,6 +17,14 @@
                 'class' => 'mt'
             ]
         ]);
+
+        echo $this->Form->input('current password', [
+        class' => 'form-control',
+            'label' => [
+                'class' => 'mt'
+            ]
+        ]);
+        ?>
         echo $this->Form->input('password', [
             'class' => 'form-control',
             'label' => [

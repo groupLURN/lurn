@@ -63,7 +63,7 @@ $this->Html->scriptEnd();
     MAIN CONTENT
     *********************************************************************************************************************************************************** -->
     <!--main content start-->
-    <section id="main-content">
+    <section >
         <section class="wrapper">
 
             <div class="apb">
@@ -120,10 +120,10 @@ $this->Html->scriptEnd();
 
                     <div class="row mt">
                         <!-- SERVER STATUS PANELS -->
-                        <div class="col-md-4 col-sm-4 mb">
-                            <div class="white-panel pn donut-chart">
+                        <div class="col-md-4 col-sm-4 mb"  style="overflow-y: auto; height:600px" >
+                            <div class="white-panel pn donut-chart" >
                                 <div class="white-header">
-                                    <h3><p class="text-success">RECENT <br> ACTIVITY</p></h3>
+                                    <h3><p class="text-success">RECENT ACTIVITY</p></h3>
                                 </div>
                                 <!-- <div class="row"> -->
                                   <!--   <div class="col-sm-6 col-xs-6 goleft">
@@ -222,10 +222,10 @@ $this->Html->scriptEnd();
                         </div><!-- /col-md-4-->
 
 
-                        <div class="col-md-4 col-sm-4 mb">
+                        <div class="col-md-4 col-sm-4 mb"  style="overflow-y: auto; height:600px" >
                             <div class="white-panel pn">
                                 <div class="white-header">
-                                    <h3><p class="text-danger">DUE <br> TODAY</p></h3>
+                                    <h3><p class="text-danger">DUE TODAY</p></h3>
                                 </div>
                                 <div class="row">
                                         <div class="panel panel-info">       
@@ -278,11 +278,11 @@ $this->Html->scriptEnd();
                             </div>
                         </div><!-- /col-md-4 -->
 
-                        <div class="col-md-4 mb">
+                        <div class="col-md-4 mb"  style="overflow-y: auto; height:600px" >
                             <!-- WHITE PANEL - TOP USER -->
                             <div class="white-panel pn">
                                 <div class="white-header">
-                                    <h3><p class="text-warning">UPCOMING <br> EVENT</p></h3>
+                                    <h3><p class="text-warning">UPCOMING EVENT</p></h3>
                                 </div>  
                                  <div class="row">
                                         <div class="panel panel-info">       
@@ -377,81 +377,9 @@ $this->Html->scriptEnd();
                         </div>
                     </div>
 
-                    <!-- USERS ONLINE SECTION -->
-                    <h3>TEAM MEMBERS</h3>
-                    <!-- First Member -->
-                    <div class="desc">
-                        <div class="thumb">
-                            <img class="img-circle" src=<?= $this->Url->build(['controller' => 'img/ui-divya.jpg', 'action' => 'index']) ?> width="35px" height="35px" align="">
-                        </div>
-                        <div class="details">
-                            <p><a href="#">DIVYA MANIAN</a><br/>
-                                <muted>Available</muted>
-                            </p>
-                        </div>
-                    </div>
-                    <!-- Second Member -->
-                    <div class="desc">
-                        <div class="thumb">
-                            <img class="img-circle"  src=<?= $this->Url->build(['controller' => 'img/ui-sherman.jpg', 'action' => 'index']) ?> width="35px" height="35px" align="">
-                        </div>
-                        <div class="details">
-                            <p><a href="#">DJ SHERMAN</a><br/>
-                                <muted>I am Busy</muted>
-                            </p>
-                        </div>
-                    </div>
-                    <!-- Third Member -->
-                    <div class="desc">
-                        <div class="thumb">
-                            <img class="img-circle" src=<?= $this->Url->build(['controller' => 'img/ui-danro.jpg', 'action' => 'index']) ?> width="35px" height="35px" align="">
-                        </div>
-                        <div class="details">
-                            <p><a href="#">DAN ROGERS</a><br/>
-                                <muted>Available</muted>
-                            </p>
-                        </div>
-                    </div>
-                    <!-- Fourth Member -->
-                    <div class="desc">
-                        <div class="thumb">
-                            <img class="img-circle" src=<?= $this->Url->build(['controller' => 'img/ui-zac.jpg', 'action' => 'index']) ?> width="35px" height="35px" align="">
-                        </div>
-                        <div class="details">
-                            <p><a href="#">Zac Sniders</a><br/>
-                                <muted>Available</muted>
-                            </p>
-                        </div>
-                    </div>
-                    <!-- Fifth Member -->
-                    <div class="desc">
-                        <div class="thumb">
-                            <img class="img-circle" src=<?= $this->Url->build(['controller' => 'img/ui-sam.jpg', 'action' => 'index']) ?> width="35px" height="35px" align="">
-                        </div>
-                        <div class="details">
-                            <p><a href="#">Marcel Newman</a><br/>
-                                <muted>Available</muted>
-                            </p>
-                        </div>
-                    </div>
-
-
-
-                    
-
                     <!-- CALENDAR-->
-                    <div id="calendar" class="mb">
-                        <div class="panel green-panel no-margin">
-                            <div class="panel-body">
-                                <div id="date-popover" class="popover top" style="cursor: pointer; disadding: block; margin-left: 33%; margin-top: -50px; width: 175px;">
-                                    <div class="arrow"></div>
-                                    <h3 class="popover-title" style="disadding: none;"></h3>
-                                    <div id="date-popover-content" class="popover-content"></div>
-                                </div>
-                                <div id="my-calendar"></div>
-                            </div>
-                        </div>
-                    </div><!-- / calendar -->
+                   
+                    
 
                 </div><!-- /col-lg-3 -->
             </div><! --/row -->

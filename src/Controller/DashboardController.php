@@ -16,7 +16,19 @@ class DashboardController extends AppController
      * @return void
      */
     public function index()
-    {
+    {    	  
     }
 
+      public function view($id = null)
+    {
+        $project = $this->Projects->get($id, [
+            'contain' => ['Clients', 'Employees', 'EmployeesJoin' => [
+                'EmployeeTypes'
+            ]]
+        ]);
+        $this->Projects->computeProjectStatus($project);
+        $this->set('project', $project);
+        $this->set('_serialize', ['project']);
+    }
+    
 }

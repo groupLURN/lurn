@@ -128,13 +128,17 @@ $this->Html->scriptEnd();
                                 <!-- <div class="row"> -->
                                   <!--   <div class="col-sm-6 col-xs-6 goleft">
                                         <p><i class="fa fa-database"></i> 70%</p>
+
                                     </div> -->
+                                    <?php foreach ($projects as $project): ?>
+                                    <td><?= h($project->title) ?></td>   
+                                    <?php endforeach; ?>
                                     <div class="row">
                                         <div class="panel panel-info">       
                                             <h5> PROJECT 1</h5>    
                                             <div class="white-panel pn donut-chart">
                                                 <div class="white-header">      
-                                                    <h5> Title1 </h5>
+                                                    <h5> Milestone 1 </h5>
                                                 </div>
                                                  <canvas id="serverstatus01" height="120" width="120"></canvas>
                                                     <script>
@@ -174,7 +178,7 @@ $this->Html->scriptEnd();
                                             <h5> PROJECT 2</h5>    
                                             <div class="white-panel pn donut-chart">
                                                 <div class="white-header">      
-                                                    <h5> Title2 </h5>
+                                                    <h5> Milestone 2 </h5>
                                                 </div>
                                                  <canvas id="serverstatus02" height="120" width="120"></canvas>
                                                     <script>
@@ -199,7 +203,7 @@ $this->Html->scriptEnd();
                                                 <h5> PROJECT 3</h5>    
                                                 <div class="white-panel pn donut-chart">
                                                     <div class="white-header">      
-                                                        <h5> Title3 </h5>
+                                                        <h5> Milestone 3 </h5>
                                                     </div>
                                                      <canvas id="serverstatus03" height="120" width="120"></canvas>
                                                     <script>
@@ -232,7 +236,7 @@ $this->Html->scriptEnd();
                                             <h5> PROJECT 4</h5>    
                                             <div class="white-panel pn donut-chart">
                                                 <div class="white-header">      
-                                                    <h5> Title4 </h5>
+                                                    <h5> Milestone 4 </h5>
                                                 </div>
                                                  <canvas id="serverstatus04" height="120" width="120"></canvas>
                                                     <script>
@@ -256,7 +260,7 @@ $this->Html->scriptEnd();
                                             <h5> PROJECT 4</h5>    
                                             <div class="white-panel pn donut-chart">
                                                 <div class="white-header">      
-                                                    <h5> Title5 </h5>
+                                                    <h5> Milestone 5 </h5>
                                                 </div>
                                                  <canvas id="serverstatus05" height="120" width="120"></canvas>
                                                     <script>
@@ -289,7 +293,7 @@ $this->Html->scriptEnd();
                                             <h5> PROJECT 6</h5>    
                                             <div class="white-panel pn donut-chart">
                                                 <div class="white-header">      
-                                                    <h5> Title6 </h5>
+                                                    <h5> Milestone 6 </h5>
                                                 </div>
                                             </div>           
                                         </div>    
@@ -299,7 +303,7 @@ $this->Html->scriptEnd();
                                             <h5> PROJECT 7</h5>    
                                             <div class="white-panel pn donut-chart">
                                                 <div class="white-header">      
-                                                    <h5> Title7 </h5>
+                                                    <h5> Milestone 7 </h5>
                                                 </div>
                                             </div>           
                                         </div>    

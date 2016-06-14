@@ -50,7 +50,7 @@ $this->Html->script('/non_bower_components/chart-master/Chart', ['block' => 'scr
     <?= $this->fetch('script-header') ?>
 </head>
 
-<body class="background-dark template-product">
+<body >
 
 <!-- **********************************************************************************************************************************************************
 TOP BAR CONTENT & NOTIFICATIONS
@@ -221,7 +221,7 @@ TOP BAR CONTENT & NOTIFICATIONS
             <!-- sidebar menu start-->
             <ul class="sidebar-menu" id="nav-accordion">
 
-                <p class="centered"><a href="profile.html"><img src=<?= $this->Url->build(['controller' => 'img/ui-sam.jpg', 'action' => 'index']) ?> class="img-circle" width="60"></a></p>
+                <p class="centered"><a href=<?= $this->Url->build(['controller' => 'profile', 'action' => 'index']) ?>><img src=<?= $this->Url->build(['controller' => 'img/ui-sam.jpg', 'action' => 'index']) ?> class="img-circle" width="60"></a></p>
                 <h5 class="centered">Marcel Newman</h5>
 
                 <li class="mt">

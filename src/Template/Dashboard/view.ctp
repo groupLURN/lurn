@@ -1,4 +1,4 @@
- <div class="col-lg-9 main-chart">
+<div class="col-lg-9 main-chart">
                         
                    <!--  <div class="row mtbox">
                         <div class="col-md-2 col-sm-2 col-md-offset-1 box0">
@@ -50,13 +50,17 @@
                                 <!-- <div class="row"> -->
                                   <!--   <div class="col-sm-6 col-xs-6 goleft">
                                         <p><i class="fa fa-database"></i> 70%</p>
+
                                     </div> -->
+                                    <?php foreach ($projects as $project): ?>
+                                    <td><?= h($project->title) ?></td>   
+                                    <?php endforeach; ?>
                                     <div class="row">
                                         <div class="panel panel-info">       
                                             <h5> PROJECT 1</h5>    
                                             <div class="white-panel pn donut-chart">
                                                 <div class="white-header">      
-                                                    <h5> Title1 </h5>
+                                                    <h5> Milestone 1 </h5>
                                                 </div>
                                                  <canvas id="serverstatus01" height="120" width="120"></canvas>
                                                     <script>
@@ -96,7 +100,7 @@
                                             <h5> PROJECT 2</h5>    
                                             <div class="white-panel pn donut-chart">
                                                 <div class="white-header">      
-                                                    <h5> Title2 </h5>
+                                                    <h5> Milestone 2 </h5>
                                                 </div>
                                                  <canvas id="serverstatus02" height="120" width="120"></canvas>
                                                     <script>
@@ -121,7 +125,7 @@
                                                 <h5> PROJECT 3</h5>    
                                                 <div class="white-panel pn donut-chart">
                                                     <div class="white-header">      
-                                                        <h5> Title3 </h5>
+                                                        <h5> Milestone 3 </h5>
                                                     </div>
                                                      <canvas id="serverstatus03" height="120" width="120"></canvas>
                                                     <script>
@@ -154,7 +158,7 @@
                                             <h5> PROJECT 4</h5>    
                                             <div class="white-panel pn donut-chart">
                                                 <div class="white-header">      
-                                                    <h5> Title4 </h5>
+                                                    <h5> Milestone 4 </h5>
                                                 </div>
                                                  <canvas id="serverstatus04" height="120" width="120"></canvas>
                                                     <script>
@@ -178,7 +182,7 @@
                                             <h5> PROJECT 4</h5>    
                                             <div class="white-panel pn donut-chart">
                                                 <div class="white-header">      
-                                                    <h5> Title5 </h5>
+                                                    <h5> Milestone 5 </h5>
                                                 </div>
                                                  <canvas id="serverstatus05" height="120" width="120"></canvas>
                                                     <script>
@@ -211,7 +215,7 @@
                                             <h5> PROJECT 6</h5>    
                                             <div class="white-panel pn donut-chart">
                                                 <div class="white-header">      
-                                                    <h5> Title6 </h5>
+                                                    <h5> Milestone 6 </h5>
                                                 </div>
                                             </div>           
                                         </div>    
@@ -221,7 +225,7 @@
                                             <h5> PROJECT 7</h5>    
                                             <div class="white-panel pn donut-chart">
                                                 <div class="white-header">      
-                                                    <h5> Title7 </h5>
+                                                    <h5> Milestone 7 </h5>
                                                 </div>
                                             </div>           
                                         </div>    
@@ -233,3 +237,74 @@
                     </div><!-- /row -->
                     
                 </div><!-- /col-lg-9 END SECTION MIDDLE -->
+
+                 
+                <!-- **********************************************************************************************************************************************************
+                RIGHT SIDEBAR CONTENT
+                *********************************************************************************************************************************************************** -->
+
+                <div class="col-lg-3 ds">
+                    <!--COMPLETED ACTIONS DONUTS CHART-->
+                    <h3>NOTIFICATIONS</h3>
+
+                    <!-- First Action -->
+                    <div class="desc">
+                        <div class="thumb">
+                            <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
+                        </div>
+                        <div class="details">
+                            <p><muted>2 Minutes Ago</muted><br/>
+                                <a href="#">James Brown</a> subscribed to your newsletter.<br/>
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Second Action -->
+                    <div class="desc">
+                        <div class="thumb">
+                            <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
+                        </div>
+                        <div class="details">
+                            <p><muted>3 Hours Ago</muted><br/>
+                                <a href="#">Diana Kennedy</a> purchased a year subscription.<br/>
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Third Action -->
+                    <div class="desc">
+                        <div class="thumb">
+                            <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
+                        </div>
+                        <div class="details">
+                            <p><muted>7 Hours Ago</muted><br/>
+                                <a href="#">Brandon Page</a> purchased a year subscription.<br/>
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Fourth Action -->
+                    <div class="desc">
+                        <div class="thumb">
+                            <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
+                        </div>
+                        <div class="details">
+                            <p><muted>11 Hours Ago</muted><br/>
+                                <a href="#">Mark Twain</a> commented your post.<br/>
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Fifth Action -->
+                    <div class="desc">
+                        <div class="thumb">
+                            <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
+                        </div>
+                        <div class="details">
+                            <p><muted>18 Hours Ago</muted><br/>
+                                <a href="#">Daniel Pratt</a> purchased a wallet in your store.<br/>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- CALENDAR-->
+                   
+                    
+
+                </div><!-- /col-lg-3 -->

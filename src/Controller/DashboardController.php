@@ -19,7 +19,9 @@ class DashboardController extends AppController
     public function index()
     {    	      
         $this->loadModel('Projects');
+        $this->loadModel('Milestones');
         $projects = $this->Projects->find('all');
+        $milesstones = $this->Milestones->find('all');
 
          if (isset($this->params['requested']))
         {
@@ -30,6 +32,7 @@ class DashboardController extends AppController
             // you already have the posts
             //$this->set('posts', $this->Portfolio->find('all'));
             $this->set ( 'projects', $projects );
+            $this->set ( 'milestones', $milesstones);   
         }
     }
       public function view($id = null)

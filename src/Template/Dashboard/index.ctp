@@ -98,7 +98,7 @@ $this->Html->scriptEnd();
                                                 <div class="white-header">      
                                                     <h5> Milestone 1 </h5>
                                                 </div>
-                                                 <canvas id="serverstatus01" height="120" width="120"></canvas>
+                                                 <canvas id="<?= h($project->title) ?>" height="100" width="100"></canvas>
                                                     <script>
                                                                             var doughnutData = [
                                                                                 {
@@ -110,8 +110,12 @@ $this->Html->scriptEnd();
                                                                                     color : "#fdfdfd"
                                                                                 }
                                                                             ];
-                                                                            var myDoughnut = new Chart(document.getElementById("serverstatus01").getContext("2d")).Doughnut(doughnutData);
-                                                    </script>                     
+                                                                            var myDoughnut = new Chart(document.getElementById("<?= h($project->title) ?>").getContext("2d")).Doughnut(doughnutData);
+                                                    </script>   
+                                                    <div class="col-sm-6 col-xs-6 goleft">
+                                                             <p>70%</p></br>
+                                                             <p><?= h($project->modified) ?> </p>
+                                                    </div>           
                                             </div>           
                                         </div>    
                                     </div>                             
@@ -135,7 +139,7 @@ $this->Html->scriptEnd();
                                                 <div class="white-header">      
                                                     <h5> Milestone 1 </h5>
                                                 </div>
-                                                 <canvas id="serverstatus02" height="120" width="120"></canvas>
+                                                <canvas id="<?= h($project->title) ?> due" height="100" width="100"></canvas>
                                                     <script>
                                                                             var doughnutData = [
                                                                                 {
@@ -147,8 +151,12 @@ $this->Html->scriptEnd();
                                                                                     color : "#fdfdfd"
                                                                                 }
                                                                             ];
-                                                                            var myDoughnut = new Chart(document.getElementById("serverstatus02").getContext("2d")).Doughnut(doughnutData);
-                                                    </script>                     
+                                                                            var myDoughnut = new Chart(document.getElementById("<?= h($project->title) ?> due").getContext("2d")).Doughnut(doughnutData);
+                                                    </script>   
+                                                    <div class="col-sm-6 col-xs-6 goleft">
+                                                             <p>70%</p></br>
+                                                             <p><?= h($project->modified) ?> </p>
+                                                    </div>                      
                                             </div>           
                                         </div>    
                                     </div>                             
@@ -163,14 +171,15 @@ $this->Html->scriptEnd();
                                 <div class="white-header">
                                     <h3><p class="text-warning">UPCOMING EVENT</p></h3>
                                 </div>  
-                                <?php foreach ($projects as $project): ?>
+                                <?php foreach ($milestones as $milestone): ?>
                                     <div class="row">
                                         <div class="panel panel-info">       
-                                            <h5><?= h($project->title) ?></h5>    
+                                            <h5>PROJECT TITLE</h5>    
                                             <div class="white-panel pn donut-chart">
                                                 <div class="white-header">      
-                                                    <h5> Milestone 6 </h5>
+                                                    <h5> <?= h($milestone->start_date) ?> </h5>
                                                 </div>
+                                                <div> <h3><?= h($milestone->title) ?></h3> </div>
                                             </div>           
                                         </div>    
                                     </div>                             

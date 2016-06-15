@@ -131,7 +131,10 @@ $this->Html->scriptEnd();
                                 <div class="white-header">
                                     <h3><p class="text-danger">DUE TODAY</p></h3>
                                 </div>
-                                <?php foreach ($projects as $project): ?>
+                                <?php if (empty($duestoday)): ?>
+                                <div> <h3> No Projects On Due Today </h3> </div>
+                                <?php endif; ?>
+                                <?php foreach ($duestoday as $project): ?>
                                     <div class="row">
                                         <div class="panel panel-info">       
                                             <h5> <?= h($project->title) ?></h5>    
@@ -159,7 +162,7 @@ $this->Html->scriptEnd();
                                                     </div>                      
                                             </div>           
                                         </div>    
-                                    </div>                             
+                                    </div>                            
                                     <?php endforeach; ?>
                                        
                             </div>
@@ -171,7 +174,7 @@ $this->Html->scriptEnd();
                                 <div class="white-header">
                                     <h3><p class="text-warning">UPCOMING EVENT</p></h3>
                                 </div>  
-                                <?php foreach ($milestones as $milestone): ?>
+                                <?php foreach ($milestoneslist as $milestone): ?>
                                     <div class="row">
                                         <div class="panel panel-info">       
                                             <h5>PROJECT TITLE</h5>    

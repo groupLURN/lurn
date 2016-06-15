@@ -3,6 +3,8 @@ namespace App\Controller;
     
 
 use App\Controller\AppController;
+use Cake\Collection\Collection;
+use Cake\I18n\Time;
 /**
  * Dashboard Controller
  *
@@ -18,10 +20,15 @@ class DashboardController extends AppController
 
     public function index()
     {    	      
+
         $this->loadModel('Projects');
         $this->loadModel('Milestones');
+
         $projects = $this->Projects->find('all');
-        $milesstones = $this->Milestones->find('all');
+        $milesstoneslist = $this->Milestones->find('all');
+        $duestoday = $this->Projects->find('all', 
+                   array('conditions'=>array('Projects.id'>0,
+                                            'DATE(Projects.end_date)'=>'CURDATE()')));
 
          if (isset($this->params['requested']))
         {
@@ -32,8 +39,10 @@ class DashboardController extends AppController
             // you already have the posts
             //$this->set('posts', $this->Portfolio->find('all'));
             $this->set ( 'projects', $projects );
-            $this->set ( 'milestones', $milesstones);   
+            $this->set ( 'milestoneslist', $milesstoneslist);   
+            $this->set ( 'duestoday', $duestoday);
         }
+
     }
       public function view($id = null)
     {         

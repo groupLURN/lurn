@@ -12,7 +12,7 @@ $this->start('additional-sidebar');
     <ul class="sub">
         <li><a href=<?= $this->Url->build(['controller' => 'clients', 'action' => 'index']) ?>>Clients</a></li>
         <li><a href=<?= $this->Url->build(['controller' => 'employees', 'action' => 'index']) ?>>Employees</a></li>
-        <li><a href=<?= $this->Url->build(['controller' => 'equipments', 'action' => 'index']) ?>>Equipments</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'equipment', 'action' => 'index']) ?>>Equipments</a></li>
         <li><a href=<?= $this->Url->build(['controller' => 'manpower', 'action' => 'index']) ?>>Manpower</a></li>
         <li><a href=<?= $this->Url->build(['controller' => 'materials', 'action' => 'index']) ?>>Materials</a></li>
         <li><a href=<?= $this->Url->build(['controller' => 'suppliers', 'action' => 'index']) ?>>Suppliers</a></li>

@@ -89,7 +89,10 @@ $this->start('additional-sidebar');
         <span class="caret"> </span>
     </a>
     <ul class="sub">
-        <li><a href=<?= $this->Url->build(['controller' => 'Reports', 'action' => 'index']) ?>>All Reports </a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'Reports', 'action' => 'index']) ?>>Project Invetory</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'GeneralReports', 'action' => 'index']) ?>>General Inventory</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'TaskReports', 'action' => 'index']) ?>>Task Accomplishment</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'IncidentReports', 'action' => 'index']) ?>>Incident Reports</a></li>
     </ul>
 </li>
 </li>

@@ -2,12 +2,27 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Core\Configure;
+use Cake\Core\Configure\Engine\PhpConfig;
 
 /**
  * Reports Controller
  *
  * @property \App\Model\Table\ReportsTable $Reports
  */
+    Configure::write('CakePdf', [
+        'engine' => 'CakePdf.WkHtmlToPdf',
+        'margin' => [
+            'bottom' => 15,
+            'left' => 50,
+            'right' => 30,
+            'top' => 45
+        ],
+        'orientation' => 'landscape',
+        'download' => true
+    ]);
+
+
 class ReportsController extends AppController
 {
 
@@ -18,10 +33,7 @@ class ReportsController extends AppController
      */
     public function index()
     {
-        $reports = $this->paginate($this->Reports);
-
-        $this->set(compact('reports'));
-        $this->set('_serialize', ['reports']);
+        $this->loadModel('Projects');
     }
 
     /**
@@ -106,3 +118,4 @@ class ReportsController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 }
+

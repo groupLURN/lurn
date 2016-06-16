@@ -41,7 +41,7 @@ use Cake\Routing\Router;
  */
 
 Router::defaultRouteClass('DashedRoute');
-
+Router::extensions(['pdf']);
 Router::scope('/', function ($routes) {
 
     $routes->extensions(['json', 'pdf']);

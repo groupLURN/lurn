@@ -23,7 +23,7 @@ use Cake\Core\Configure\Engine\PhpConfig;
     ]);
 
 
-class ReportsController extends AppController
+class TaskReportsController extends AppController
 {
 
     /**

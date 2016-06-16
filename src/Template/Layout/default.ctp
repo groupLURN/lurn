@@ -87,12 +87,12 @@ $this->start('additional-sidebar');
         <i class="fa fa-recycle"></i>
         <span>Reports</span>
         <span class="caret"> </span>
-    </a>t
+    </a>
     <ul class="sub">
         <li><a href=<?= $this->Url->build(['controller' => 'ProjectReports', 'action' => 'index']) ?>>Project Invetory</a></li>
         <li><a href=<?= $this->Url->build(['controller' => 'GeneralReports', 'action' => 'index']) ?>>General Inventory</a></li>
         <li><a href=<?= $this->Url->build(['controller' => 'TaskReports', 'action' => 'index']) ?>>Task Accomplishment</a></li>
-        <li><a href=<?= $this->Url->build(['controller' => 'IncidentReports', 'action' => 'index']) ?>>Incident Reports</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'IncidentReports', 'action' => 'index']) ?>>Incident</a></li>
     </ul>
 </li>
 </li>

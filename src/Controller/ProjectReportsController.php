@@ -4,6 +4,11 @@ namespace App\Controller;
 use App\Controller\AppController;
 use Cake\Core\Configure;
 use Cake\Core\Configure\Engine\PhpConfig;
+use App\Model\Entity\Equipment;
+use Cake\Collection\Collection;
+use Cake\Core\Exception\Exception;
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\ORM\TableRegistry;
 
 /**
  * Reports Controller
@@ -33,7 +38,28 @@ class ProjectReportsController extends AppController
      */
     public function index()
     {
-        $this->loadModel('Projects');
+              $this->paginate = [
+            'sortWhitelist' => [
+                'available_in_house_quantity',
+                'available_rented_quantity',
+                'unavailable_in_house_quantity',
+                'unavailable_rented_quantity',
+                'total_quantity',
+                'last_modified'
+            ]
+        ];
+
+        $this->paginate += $this->createFinders($this->request->query, 'Equipment');
+        $this->paginate['finder']['generalInventorySummary'] = [];
+        $equipment = $this->paginate(TableRegistry::get('Equipment'));
+
+        $projects = TableRegistry::get('Projects')->find('list')->toArray();
+        $suppliers = TableRegistry::get('Suppliers')->find('list')->toArray();
+        $equipmentTypes =array("","Materials Summary", "Manpower Summary", "Equipment Summary");
+        $this->set(compact('equipment', 'projects', 'equipmentTypes', 'suppliers'));
+        $this->set($this->request->query);
+        $this->set('_serialize', ['equipment', 'projects', 'equipmentTypes', 'suppliers']);
+        
     }
 
     /**

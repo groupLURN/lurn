@@ -229,7 +229,11 @@ TOP BAR CONTENT & NOTIFICATIONS
                         <i class="fa fa-dashboard"></i>
                         <span>Dashboard</span>
                     </a>
+                     <a  href=<?= $this->Url->build(['controller' => 'events', 'action' => 'index']) ?>>
+                    <span>Events Calendar</span>
+                    </a>
                 </li>
+                
                 <?= $this->fetch('additional-sidebar') ?>
             </ul>
             <!-- sidebar menu end-->

@@ -56,8 +56,19 @@
 </div>
 <div class="row mt">
     <div class="col-xs-12">
-        <?= $this->dataTableViewButton(__('Save as PDF'), ['action' => 'view', 1, '_ext' => 'pdf']); ?>
-        <?= $this->dataTablePrintButton(__('Print'), ['action' => 'view', '_ext' => 'pdf']); ?>
+        <?php 
+        $startParam = "";
+        if (isset($start_date))
+            $startParam = '&start_date=' . $start_date;
+        $endParam = "";
+        if (isset($end_date))
+            $endParam = '&end_date=' . $end_date;
+        ?>
+
+        <?= $this->Form->button('<i class="fa fa-save"></i> Save as PDF', 
+            array('onclick' => "location.href='" . $this->Url->build('/equipment-project-inventory-report/view/1.pdf?project_id=' . $project_id . $startParam . $endParam) . "'", 'class' => 'btn btn-primary')); ?>
+        <?= $this->Form->button('<i class="fa fa-print"></i> Print', 
+            array('onclick' => "location.href='" . $this->Url->build('/equipment-project-inventory-report/view/0.pdf?project_id=' . $project_id . $startParam . $endParam) . "'", 'class' => 'btn btn-warning')); ?>
     </div>
 </div>
 <div class="row mt">
@@ -77,6 +88,7 @@
             <br><br>
             <h5>* As of <?= $currentDate ?></h5>
             <br>
+            <?php if (sizeOf($equipmentInventories) > 0): ?>
             <table class="table table-bordered">
                 <thead>
                 <tr>
@@ -101,6 +113,9 @@
                 <?php endforeach; ?>
                 </tbody>
             </table>
+            <?php else: ?>
+            <p>No data available.</p>
+            <?php endif; ?>
         </div><!-- /content-panel -->
     </div><!-- /col-md-12 -->
 </div>

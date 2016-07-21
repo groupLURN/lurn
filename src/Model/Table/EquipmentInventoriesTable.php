@@ -158,20 +158,17 @@ class EquipmentInventoriesTable extends Table
                                 'EquipmentInventories.task_id IS' => null,
                                 'EquipmentInventories.rental_receive_detail_id IS' => null,
                                 'Tasks.start_date <=' => $options['end_date'],
-                            ],
-                        'OR' =>
-                            [
-                                'AND' => 
+                                'OR' => 
                                     [
                                         'Tasks.start_date <=' => $options['start_date'],
                                         'Tasks.end_date <=' => $options['end_date'],
                                     ],
-                                'AND' => 
+                                'OR' =>
                                     [
                                         'Tasks.start_date >=' => $options['start_date'],
                                         'Tasks.end_date <=' => $options['end_date'],
                                     ],
-                                'AND' => 
+                                'OR' =>
                                     [
                                         'Tasks.start_date >=' => $options['start_date'],
                                         'Tasks.end_date >=' => $options['end_date'],
@@ -192,20 +189,17 @@ class EquipmentInventoriesTable extends Table
                                 'EquipmentInventories.rental_receive_detail_id IS NOT' => null,
                                 'RentalReceiveDetails.id IS NOT' => null,
                                 'Tasks.start_date <=' => $options['end_date'],
-                            ],
-                        'OR' =>
-                            [
-                                'AND' => 
+                                'OR' => 
                                     [
                                         'Tasks.start_date <=' => $options['start_date'],
                                         'Tasks.end_date <=' => $options['end_date'],
                                     ],
-                                'AND' => 
+                                'OR' =>
                                     [
                                         'Tasks.start_date >=' => $options['start_date'],
                                         'Tasks.end_date <=' => $options['end_date'],
                                     ],
-                                'AND' => 
+                                'OR' =>
                                     [
                                         'Tasks.start_date >=' => $options['start_date'],
                                         'Tasks.end_date >=' => $options['end_date'],
@@ -225,20 +219,17 @@ class EquipmentInventoriesTable extends Table
                                 'EquipmentInventories.task_id IS NOT' => null,
                                 'EquipmentInventories.rental_receive_detail_id IS' => null,
                                 'Tasks.start_date <=' => $options['end_date'],
-                            ],
-                        'OR' =>
-                            [
-                                'AND' => 
+                                'OR' => 
                                     [
                                         'Tasks.start_date <=' => $options['start_date'],
                                         'Tasks.end_date <=' => $options['end_date'],
                                     ],
-                                'AND' => 
+                                'OR' =>
                                     [
                                         'Tasks.start_date >=' => $options['start_date'],
                                         'Tasks.end_date <=' => $options['end_date'],
                                     ],
-                                'AND' => 
+                                'OR' =>
                                     [
                                         'Tasks.start_date >=' => $options['start_date'],
                                         'Tasks.end_date >=' => $options['end_date'],
@@ -259,20 +250,17 @@ class EquipmentInventoriesTable extends Table
                                 'EquipmentInventories.rental_receive_detail_id IS NOT' => null,
                                 'RentalReceiveDetails.id IS NOT' => null,
                                 'Tasks.start_date <=' => $options['end_date'],
-                            ],
-                        'OR' =>
-                            [
-                                'AND' => 
+                                'OR' => 
                                     [
                                         'Tasks.start_date <=' => $options['start_date'],
                                         'Tasks.end_date <=' => $options['end_date'],
                                     ],
-                                'AND' => 
+                                'OR' =>
                                     [
                                         'Tasks.start_date >=' => $options['start_date'],
                                         'Tasks.end_date <=' => $options['end_date'],
                                     ],
-                                'AND' => 
+                                'OR' =>
                                     [
                                         'Tasks.start_date >=' => $options['start_date'],
                                         'Tasks.end_date >=' => $options['end_date'],
@@ -298,20 +286,17 @@ class EquipmentInventoriesTable extends Table
                         'AND' =>
                             [
                                 'Tasks.start_date <=' => $options['end_date'],
-                            ],
-                        'OR' =>
-                            [
-                                'AND' => 
+                                'OR' => 
                                     [
                                         'Tasks.start_date <=' => $options['start_date'],
                                         'Tasks.end_date <=' => $options['end_date'],
                                     ],
-                                'AND' => 
+                                'OR' =>
                                     [
                                         'Tasks.start_date >=' => $options['start_date'],
                                         'Tasks.end_date <=' => $options['end_date'],
                                     ],
-                                'AND' => 
+                                'OR' =>
                                     [
                                         'Tasks.start_date >=' => $options['start_date'],
                                         'Tasks.end_date >=' => $options['end_date'],

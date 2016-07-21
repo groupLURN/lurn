@@ -156,6 +156,13 @@ class ProjectsTable extends Table
         return $query->where($query->newExpr()->like('Projects.title', '%' . $options['title'] . '%'));
     }
 
+    public function findByProjectId(Query $query, array $options)
+    {
+        return $query->select(['Projects.title', 'Projects.location', 'client_name' => 'Clients.company_name', 'manager_name' => 'Employees.name'])
+            ->contain(['Clients', 'Employees'])
+            ->where(['Projects.id' => $options['project_id']]);
+    }
+
     public function findByProjectStatusId(Query $query, array $options)
     {
         if($options['project_status_id'] !== "0")

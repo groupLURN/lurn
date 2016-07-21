@@ -26,7 +26,7 @@ class ProjectOverviewController extends AppController
      *
      * @return void
      */
-    public function index()
+    public function index($projectId = null)
     {
     }
 }

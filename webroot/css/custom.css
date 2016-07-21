@@ -139,3 +139,7 @@ form .chosen-container {
     margin-left: 12px;
     display: inline-block;
 }
+
+.float-right {
+    float: right;
+}

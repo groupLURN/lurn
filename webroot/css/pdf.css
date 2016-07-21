@@ -10,6 +10,14 @@ table {
     font-size: 24px;
 }
 
+.text-left {
+    text-align: left;
+}
+
+.float-right {
+    float: right;
+}
+
 .body table {
     table-layout: fixed;
     width: 100%;
@@ -23,6 +31,11 @@ table {
 
 .body table, .body th, .body td {
     border: 1px solid black;
+}
+
+.report td, .report th {
+    padding: 3px 3px;
+    font-size: 18px;
 }
 
 .signatory {

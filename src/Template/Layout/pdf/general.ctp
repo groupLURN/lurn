@@ -28,8 +28,7 @@ $this->Html->css('pdf', ['block' => true, 'fullBase' => true]);
 <div class="header">
     <?= $this->Html->image('logo.jpg', array('fullBase' => true, 'class' => 'float-right')) ?>
     <h3 class="text-left">
-        <?= $this->fetch('title') ?>
-        <br>
+        <?= $this->fetch('title') ?><br>
         J.I. Espino Construction
     </h3>
     <br>

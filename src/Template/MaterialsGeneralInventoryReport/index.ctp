@@ -2,8 +2,12 @@
 <?= $this->assign('title', 'General Materials Inventory Report') ?>
 <div class="row mt">
     <div class="col-xs-12">
-        <?= $this->dataTableViewButton(__('Save as PDF'), ['action' => 'view', 1, '_ext' => 'pdf']); ?>
-        <?= $this->dataTablePrintButton(__('Print'), ['action' => 'view', '_ext' => 'pdf']); ?>
+        <?= $this->Form->button('<i class="fa fa-save"></i> Save as PDF', 
+            array('onclick' => "location.href='" . $this->Url->build('/materials-general-inventory-report/view/1.pdf'). "'",
+            'class' => 'btn btn-primary')); ?>
+        <?= $this->Form->button('<i class="fa fa-print"></i> Print', 
+            array('onclick' => "location.href='" . $this->Url->build('/materials-general-inventory-report/view/0.pdf'). "'",
+            'class' => 'btn btn-warning')); ?>
     </div>
 </div>
 <div class="row mt">

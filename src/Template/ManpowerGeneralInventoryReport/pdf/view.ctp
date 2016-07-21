@@ -20,4 +20,6 @@
         <?php endforeach; ?>
 </tbody>
 </table>
+<?php else: ?>
+<p>No data available.</p>
 <?php endif; ?>

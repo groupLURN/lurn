@@ -11,13 +11,13 @@
         <div class="content-panel" style="padding:20px">
             <?= $this->Html->image('logo.jpg', array('class' => 'float-right')) ?>
             <h5>
-                <?= $this->fetch('title') ?>
-                <br>
+                <?= $this->fetch('title') ?><br>
                 J.I. Espino Construction
             </h5>
             <br><br>
             <h5>* As of <?= $currentDate ?></h5>
             <br>
+            <?php if (sizeOf($equipment) > 0): ?>
             <table class="table table-bordered">
                 <thead>
                 <tr>
@@ -42,6 +42,9 @@
                 <?php endforeach; ?>
                 </tbody>
             </table>
+            <?php else: ?>
+            <p>No data available.</p>
+            <?php endif; ?>
         </div><!-- /content-panel -->
     </div><!-- /col-md-12 -->
 </div>

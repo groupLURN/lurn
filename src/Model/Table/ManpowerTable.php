@@ -144,23 +144,108 @@ class ManpowerTable extends Table
 
     public function findProjectInventorySummary(Query $query, array $options)
     {
-        $available_quantity = $query->func()->sum(
-            $query->newExpr()->addCase(
-                $query->newExpr()->add(['Manpower.project_id IS NOT' => null, 'Manpower.task_id IS' => null]),
-                1,
-                'integer'
-            )
-        );
+        if (isset($options['start_date']) && isset($options['end_date'])):
+            $available_quantity = $query->leftJoinWith('Tasks')->func()->sum(
+                $query->newExpr()->addCase(
+                    $query->newExpr()->add([
+                        'OR' =>
+                            [
+                                'Manpower.task_id IS' => null,
+                                'AND' =>
+                                    [
+                                        'Manpower.task_id IS NOT' => null,
+                                        'Manpower.task_id = Tasks.id',
+                                        'Tasks.end_date <' => $options['start_date'],                                
+                                    ]
+                            ],
+                        'AND' =>
+                            [
+                                'Manpower.project_id IS NOT' => null,
+                            ]
+                    ]),
+                    1,
+                    'integer'
+                )
+            );
 
-        $unavailable_quantity = $query->func()->sum(
-            $query->newExpr()->addCase(
-                $query->newExpr()->add(['Manpower.project_id IS NOT' => null, 'Manpower.task_id IS NOT' => null]),
-                1,
-                'integer'
-            )
-        );
+            $unavailable_quantity = $query->leftJoinWith('Tasks')->func()->sum(
+                $query->newExpr()->addCase(
+                    $query->newExpr()->add([
+                        'AND' =>
+                            [
+                                'Manpower.project_id IS NOT' => null, 
+                                'Manpower.task_id IS NOT' => null,
+                                'Manpower.task_id = Tasks.id',
+                                'Tasks.start_date <=' => $options['end_date'],
+                                'OR' => 
+                                    [
+                                        'Tasks.start_date <=' => $options['start_date'],
+                                        'Tasks.end_date <=' => $options['end_date'],
+                                    ],
+                                'OR' =>
+                                    [
+                                        'Tasks.start_date >=' => $options['start_date'],
+                                        'Tasks.end_date <=' => $options['end_date'],
+                                    ],
+                                'OR' =>
+                                    [
+                                        'Tasks.start_date >=' => $options['start_date'],
+                                        'Tasks.end_date >=' => $options['end_date'],
+                                    ]
+                            ]
+                    ]),
+                    1,
+                    'integer'
+                )
+            );
 
-        $total_quantity = $query->func()->count('Manpower.id');
+            $total_quantity = $query->leftJoinWith('Tasks')->func()->sum(
+                $query->newExpr()->addCase(
+                    $query->newExpr()->add([
+                        'OR' =>
+                            [
+                                'Manpower.task_id IS' => null,
+                                'AND' =>
+                                    [
+                                        'Manpower.task_id IS NOT' => null,
+                                        'Manpower.task_id = Tasks.id',
+                                        'Tasks.end_date <' => $options['start_date'],                                
+                                    ],
+                                'AND' =>
+                                    [
+                                        'Manpower.task_id IS NOT' => null,
+                                        'Manpower.task_id = Tasks.id',
+                                        'Tasks.start_date <=' => $options['end_date']
+                                    ]
+                            ],
+                        'AND' =>
+                            [
+                                'Manpower.project_id IS NOT' => null,
+                            ]
+                    ]),
+                    1,
+                    'integer'
+                )
+            );
+        else:
+            $available_quantity = $query->func()->sum(
+                $query->newExpr()->addCase(
+                    $query->newExpr()->add(['Manpower.project_id IS NOT' => null, 'Manpower.task_id IS' => null]),
+                    1,
+                    'integer'
+                )
+            );
+
+            $unavailable_quantity = $query->func()->sum(
+                $query->newExpr()->addCase(
+                    $query->newExpr()->add(['Manpower.project_id IS NOT' => null, 'Manpower.task_id IS NOT' => null]),
+                    1,
+                    'integer'
+                )
+            );
+
+            $total_quantity = $query->func()->count('Manpower.id');
+        endif;            
 
         if(isset($options['id']))
             $query = $query->where(['ManpowerTypes.id' => $options['id']]);

@@ -153,26 +153,19 @@ class EquipmentInventoriesTable extends Table
             $available_in_house_quantity = $query->func()->sum(
                 $query->newExpr()->addCase(
                     $query->newExpr()->add([
-                        'AND' =>
+                        'OR' =>
                             [
                                 'EquipmentInventories.task_id IS' => null,
-                                'EquipmentInventories.rental_receive_detail_id IS' => null,
-                                'Tasks.start_date <=' => $options['end_date'],
-                                'OR' => 
+                                'AND' =>
                                     [
-                                        'Tasks.start_date <=' => $options['start_date'],
-                                        'Tasks.end_date <=' => $options['end_date'],
-                                    ],
-                                'OR' =>
-                                    [
-                                        'Tasks.start_date >=' => $options['start_date'],
-                                        'Tasks.end_date <=' => $options['end_date'],
-                                    ],
-                                'OR' =>
-                                    [
-                                        'Tasks.start_date >=' => $options['start_date'],
-                                        'Tasks.end_date >=' => $options['end_date'],
+                                        'EquipmentInventories.task_id IS NOT' => null,
+                                        'EquipmentInventories.task_id = Tasks.id',
+                                        'Tasks.end_date <' => $options['start_date'],                                
                                     ]
+                            ],
+                        'AND' =>
+                            [
+                                'EquipmentInventories.rental_receive_detail_id IS' => null
                             ]
                     ]),
                     1,
@@ -183,27 +176,20 @@ class EquipmentInventoriesTable extends Table
             $available_rented_quantity = $query->func()->sum(
                 $query->newExpr()->addCase(
                     $query->newExpr()->add([
-                        'AND' =>
+                        'OR' =>
                             [
                                 'EquipmentInventories.task_id IS' => null,
+                                'AND' =>
+                                    [
+                                        'EquipmentInventories.task_id IS NOT' => null,
+                                        'EquipmentInventories.task_id = Tasks.id',
+                                        'Tasks.end_date <' => $options['start_date'],                                
+                                    ]
+                            ],
+                        'AND' =>
+                            [
                                 'EquipmentInventories.rental_receive_detail_id IS NOT' => null,
                                 'RentalReceiveDetails.id IS NOT' => null,
-                                'Tasks.start_date <=' => $options['end_date'],
-                                'OR' => 
-                                    [
-                                        'Tasks.start_date <=' => $options['start_date'],
-                                        'Tasks.end_date <=' => $options['end_date'],
-                                    ],
-                                'OR' =>
-                                    [
-                                        'Tasks.start_date >=' => $options['start_date'],
-                                        'Tasks.end_date <=' => $options['end_date'],
-                                    ],
-                                'OR' =>
-                                    [
-                                        'Tasks.start_date >=' => $options['start_date'],
-                                        'Tasks.end_date >=' => $options['end_date'],
-                                    ]
                             ]
                     ]),
                     1,
@@ -272,7 +258,7 @@ class EquipmentInventoriesTable extends Table
                 )
             );
 
-            $total_quantity = $query->func()->sum(
+            $total_quantity = $query->leftJoinWith('Tasks')->func()->sum(
                 $query->newExpr()->addCase(
                     $query->newExpr()->add([
                         'OR' =>
@@ -283,23 +269,31 @@ class EquipmentInventoriesTable extends Table
                                     'RentalReceiveDetails.id IS NOT' => null
                                 ]
                             ],
-                        'AND' =>
+                        'OR' =>
                             [
-                                'Tasks.start_date <=' => $options['end_date'],
-                                'OR' => 
+                                'AND' =>
                                     [
-                                        'Tasks.start_date <=' => $options['start_date'],
-                                        'Tasks.end_date <=' => $options['end_date'],
+                                        'EquipmentInventories.task_id IS' => null,
                                     ],
-                                'OR' =>
+                                'AND' =>
                                     [
-                                        'Tasks.start_date >=' => $options['start_date'],
-                                        'Tasks.end_date <=' => $options['end_date'],
-                                    ],
-                                'OR' =>
-                                    [
-                                        'Tasks.start_date >=' => $options['start_date'],
-                                        'Tasks.end_date >=' => $options['end_date'],
+                                        'EquipmentInventories.task_id IS NOT' => null,
+                                        'Tasks.start_date <=' => $options['end_date'],
+                                        'OR' => 
+                                            [
+                                                'Tasks.start_date <=' => $options['start_date'],
+                                                'Tasks.end_date <=' => $options['end_date'],
+                                            ],
+                                        'OR' =>
+                                            [
+                                                'Tasks.start_date >=' => $options['start_date'],
+                                                'Tasks.end_date <=' => $options['end_date'],
+                                            ],
+                                        'OR' =>
+                                            [
+                                                'Tasks.start_date >=' => $options['start_date'],
+                                                'Tasks.end_date >=' => $options['end_date'],
+                                            ]
                                     ]
                             ]
                     ]),

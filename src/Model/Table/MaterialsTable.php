@@ -130,15 +130,16 @@ class MaterialsTable extends Table
 
     public function findProjectInventorySummary(Query $query, array $options)
     {
-        $available_quantity = $query->func()->coalesce(['MaterialsProjectInventories.quantity' => 'literal', 0]);
+        if (isset($options['start_date']) && isset($options['end_date'])):
+            $available_quantity = $query->func()->coalesce(['MaterialsProjectInventories.quantity' => 'literal', 0]);
+            $unavailable_quantity = $query->newExpr()->add(['SUM(COALESCE(MaterialsTaskInventories.quantity, 0))']);
+            $total_quantity = $query->newExpr()->add(['COALESCE(MaterialsProjectInventories.quantity, 0) + SUM(COALESCE(MaterialsTaskInventories.quantity, 0))']);
+        else:
+            $available_quantity = $query->func()->coalesce(['MaterialsProjectInventories.quantity' => 'literal', 0]);
+            $unavailable_quantity = $query->newExpr()->add(['SUM(COALESCE(MaterialsTaskInventories.quantity, 0))']);
+            $total_quantity = $query->newExpr()->add(['COALESCE(MaterialsProjectInventories.quantity, 0) + SUM(COALESCE(MaterialsTaskInventories.quantity, 0))']);
 
-        $unavailable_quantity = $query->newExpr()->add([
-            'SUM(COALESCE(MaterialsTaskInventories.quantity, 0))'
-        ]);
-
-        $total_quantity = $query->newExpr()->add([
-            'COALESCE(MaterialsProjectInventories.quantity, 0) + SUM(COALESCE(MaterialsTaskInventories.quantity, 0))'
-        ]);
+        endif;  
 
         if(isset($options['id']))
             $query->where(['Materials.id' => $options['id']]);
@@ -159,6 +160,7 @@ class MaterialsTable extends Table
                 'MaterialsTaskInventories.material_id = Materials.id',
                 'MaterialsTaskInventories.project_id' => $options['project_id']
             ])
+            ->leftJoin(['Projects' => 'projects'], ['Projects.id = MaterialsProjectInventories.project_id'])
             ->group(['MaterialsProjectInventories.project_id', 'Materials.id']);
     }
 

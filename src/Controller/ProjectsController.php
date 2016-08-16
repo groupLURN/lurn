@@ -158,6 +158,13 @@ class ProjectsController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 
+
+    public function getProjectList()
+    {
+        return $this->Project->findAll();
+    }
+
+
     public function isAuthorized($user)
     {
         $action = $this->request->params['action'];

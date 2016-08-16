@@ -225,3 +225,5 @@ Configure::write('CakePdf', [
     'orientation' => 'portrait',
     'pageSize' => 'Letter'
 ]);
+
+Plugin::load('Calendar', ['bootstrap' => false, 'routes' => true]);

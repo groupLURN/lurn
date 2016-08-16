@@ -6,17 +6,18 @@
             <legend><h3><i class="fa fa-angle-right"></i> <?= __('Add Project') ?></h3></legend>
             <?php
 
-            echo $this->Form->input('title', [
+            echo $this->Form->input('titles', [
                 'class' => 'form-control',
                 'label' => [
                     'class' => 'mt'
                 ]
             ]);
+
             echo $this->Form->input('description', [
                 'class' => 'form-control',
-                'label' => [
-                    'class' => 'mt'
-                ]
+                'label' =>  [
+                 'class' => 'mt'
+                 ]           
             ]);
 
             echo $this->Form->input('location', [
@@ -31,12 +32,13 @@
                 'class' => 'form-control',
                 'label' => [
                     'class' => 'mt'
-                ]
+                ]   
             ]);
 
             echo $this->Form->input('project_manager_id', [
                 'options' => $employees,
                 'class' => 'form-control',
+                'disabled' => 'disabled',                
                 'label' => [
                     'class' => 'mt'
                 ]

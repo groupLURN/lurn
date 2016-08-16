@@ -4,17 +4,18 @@ $this->start('additional-sidebar');
 ?>
 <li class="sub-menu">
     <a href="javascript:;" >
-        <i class="fa fa-desktop"></i>
-        <span><?= __('Project Team & Assets')?></span>
+        <i class="fa fa-desktop"></i>       
+        <span><?= __('Project Team & Assets')?> 
+        <span class="caret"> </span>
+        </span>         
     </a>
     <ul class="sub">
-        <li><a href=<?= $this->Url->build(['controller' => 'Clients']) ?>>Clients</a></li>
-        <li><a href=<?= $this->Url->build(['controller' => 'Employees']) ?>>Employees</a></li>
-        <li><a href=<?= $this->Url->build(['controller' => 'Equipment']) ?>>Equipment</a></li>
-        <li><a href=<?= $this->Url->build(['controller' => 'Manpower']) ?>>Manpower</a></li>
-        <li><a href=<?= $this->Url->build(['controller' => 'Materials']) ?>>Materials</a></li>
-        <li><a href=<?= $this->Url->build(['controller' => 'Suppliers']) ?>>Suppliers</a></li>
-        <li><a href=<?= $this->Url->build(['controller' => 'Users']) ?>>Users</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'clients', 'action' => 'index']) ?>>Clients</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'employees', 'action' => 'index']) ?>>Employees</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'equipment', 'action' => 'index']) ?>>Equipments</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'manpower', 'action' => 'index']) ?>>Manpower</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'materials', 'action' => 'index']) ?>>Materials</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'suppliers', 'action' => 'index']) ?>>Suppliers</a></li>
     </ul>
 </li>
 
@@ -22,9 +23,12 @@ $this->start('additional-sidebar');
     <a href="javascript:;" >
         <i class="fa fa-tasks"></i>
         <span>Projects</span>
+        <span class="caret"> </span>
     </a>
     <ul class="sub">
-        <li><a  href=<?= $this->Url->build(['controller' => 'Projects']) ?>>View Projects</a></li>
+       <li><a href=<?= $this->Url->build(['controller' => 'Projects', 'action' => 'index']) ?>>View Projects</a></li>
+       <li><a href=<?= $this->Url->build(['controller' => 'Projects', 'action' => 'index']) ?>>Project Overview</a></li>
+       <li><a href=<?= $this->Url->build(['controller' => 'Projects', 'action' => 'index']) ?>>Projects Planning</a></li>
     </ul>
 </li>
 
@@ -32,40 +36,44 @@ $this->start('additional-sidebar');
     <a href="javascript:;" >
         <i class="fa fa-archive"></i>
         <span>General Inventories</span>
+        <span class="caret"> </span>
     </a>
     <ul class="sub">
-        <li><a  href=<?= $this->Url->build(['controller' => 'EquipmentGeneralInventories']) ?>>Equipment Inventory</a></li>
-        <li><a  href=<?= $this->Url->build(['controller' => 'MaterialsGeneralInventories']) ?>>Materials Inventory</a></li>
-        <li><a  href=<?= $this->Url->build(['controller' => 'ManpowerGeneralInventories']) ?>>Manpower Inventory</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'equipment-general-inventories', 'action' => 'index']) ?>>Equipment Inventory</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'materials-general-inventories', 'action' => 'index']) ?>>Materials Inventory</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'manpower-general-inventories', 'action' => 'index']) ?>>Manpower Inventory</a></li>
     </ul>
 </li>
 <li class="sub-menu">
     <a href="javascript:;" >
         <i class="fa fa-search"></i>
         <span>Track Resources Schedule</span>
+        <span class="caret"> </span>
     </a>
     <ul class="sub">
-        <li><a  href=<?= $this->Url->build(['controller' => 'TrackEquipmentSchedule']) ?>>Track Equipment</a></li>
-        <li><a  href=<?= $this->Url->build(['controller' => 'TrackMaterialsSchedule']) ?>>Track Materials</a></li>
-        <li><a  href=<?= $this->Url->build(['controller' => 'TrackManpowerSchedule']) ?>>Track Manpower</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'track-equipment-schedule', 'action' => 'index']) ?>>Track Equipment</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'track-materials-schedule', 'action' => 'index']) ?>>Track Materials</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'track-manpower-schedule', 'action' => 'index']) ?>>Track Manpower</a></li>
     </ul>
 </li>
 <li class="sub-menu">
     <a href="javascript:;" >
         <i class="fa fa-cube"></i>
         <span>Replenishments</span>
+        <span class="caret"> </span>
     </a>
     <ul class="sub">
-        <li><a href=<?= $this->Url->build(['controller' => 'RentalRequestHeaders']) ?>>Rental Requests</a></li>
-        <li><a href=<?= $this->Url->build(['controller' => 'RentalReceiveHeaders']) ?>>Rental Receives</a></li>
-        <li><a href=<?= $this->Url->build(['controller' => 'PurchaseOrderHeaders']) ?>>Purchase Orders</a></li>
-        <li><a href=<?= $this->Url->build(['controller' => 'PurchaseReceiveHeaders']) ?>>Purchase Receives</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'rental-request-headers', 'action' => 'index']) ?>>Rental Requests</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'RentalReceiveHeaders', 'action' => 'index']) ?>>Rental Receives</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'PurchaseOrderHeaders', 'action' => 'index']) ?>>Purchase Orders</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'PurchaseReceiveHeaders', 'action' => 'index']) ?>>Purchase Receives</a></li>
     </ul>
 </li>
 <li class="sub-menu">
     <a href="javascript:;" >
         <i class="fa fa-recycle"></i>
         <span>Resources Management</span>
+        <span class="caret"> </span>
     </a>
     <ul class="sub">
         <li><a href=<?= $this->Url->build(['controller' => 'ResourceRequestHeaders']) ?>>Create Resources Request</a></li>
@@ -82,6 +90,21 @@ $this->start('additional-sidebar');
         <li><a href=<?= $this->Url->build(['controller' => 'MaterialsGeneralInventoryReport']) ?>>Materials Inventory Report</a></li>
         <li><a href=<?= $this->Url->build(['controller' => 'ManpowerGeneralInventoryReport']) ?>>Manpower Inventory Report</a></li>
     </ul>
+</li>
+</li>
+<li class="sub-menu">
+    <a href="Javascript:;" >
+        <i class="fa fa-recycle"></i>
+        <span>Reports</span>
+        <span class="caret"> </span>
+    </a>
+    <ul class="sub">
+        <li><a href=<?= $this->Url->build(['controller' => 'ProjectReports', 'action' => 'index']) ?>>Project Invetory</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'GeneralReports', 'action' => 'index']) ?>>General Inventory</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'TaskReports', 'action' => 'index']) ?>>Task Accomplishment</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'IncidentReports', 'action' => 'index']) ?>>Incident</a></li>
+    </ul>
+</li>
 </li>
 <?php $this->end(); ?>
 <?= $this->fetch('content'); ?>

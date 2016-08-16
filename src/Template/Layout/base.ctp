@@ -50,7 +50,7 @@ $this->Html->script('/non_bower_components/chart-master/Chart', ['block' => 'scr
     <?= $this->fetch('script-header') ?>
 </head>
 
-<body>
+<body >
 
 <!-- **********************************************************************************************************************************************************
 TOP BAR CONTENT & NOTIFICATIONS
@@ -134,24 +134,24 @@ TOP BAR CONTENT & NOTIFICATIONS
                         <li class="external">
                             <a href="#">See All Tasks</a>
                         </li>
-                         -->
-                    </ul>
-                </li>
-                <!-- settings end -->
-                <!-- inbox dropdown start-->
-                <li id="header_inbox_bar" class="dropdown">
-                    <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
-                        <i class="fa fa-envelope-o"></i>
-                        <!--<span class="badge bg-theme">5</span>-->
-                    </a>
-                    <ul class="dropdown-menu extended inbox">
+                    -->
+                </ul>
+            </li>
+            <!-- settings end -->
+            <!-- inbox dropdown start-->
+            <li id="header_inbox_bar" class="dropdown">
+                <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
+                    <i class="fa fa-envelope-o"></i>
+                    <!--<span class="badge bg-theme">5</span>-->
+                </a>
+                <ul class="dropdown-menu extended inbox">
                         <!--<div class="notify-arrow notify-arrow-green"></div>
                         <li>
                             <p class="green">You have 5 new messages</p>
                         </li>
                         <li>
                             <a href="index.html#">
-                                <span class="photo"><img alt="avatar" src="/img/ui-zac.jpg"></span>
+                                <span class="photo"> <img alt="avatar" src=<?= $this->Url->build(['controller' => 'img/ui-zac.jpg', 'action' => 'index']) ?>> </span>
                                         <span class="subject">
                                         <span class="from">Zac Snider</span>
                                         <span class="time">Just now</span>
@@ -163,7 +163,7 @@ TOP BAR CONTENT & NOTIFICATIONS
                         </li>
                         <li>
                             <a href="index.html#">
-                                <span class="photo"><img alt="avatar" src="/img/ui-divya.jpg"></span>
+                                <span class="photo"><img alt="avatar" src=<?= $this->Url->build(['controller' => 'img/ui-divya.jpg', 'action' => 'index']) ?>></span>
                                         <span class="subject">
                                         <span class="from">Divya Manian</span>
                                         <span class="time">40 mins.</span>
@@ -175,7 +175,7 @@ TOP BAR CONTENT & NOTIFICATIONS
                         </li>
                         <li>
                             <a href="index.html#">
-                                <span class="photo"><img alt="avatar" src="/img/ui-danro.jpg"></span>
+                                <span class="photo"><img alt="avatar" src=<?= $this->Url->build(['controller' => 'img/ui-danro.jpg', 'action' => 'index']) ?>></span>
                                         <span class="subject">
                                         <span class="from">Dan Rogers</span>
                                         <span class="time">2 hrs.</span>
@@ -187,7 +187,7 @@ TOP BAR CONTENT & NOTIFICATIONS
                         </li>
                         <li>
                             <a href="index.html#">
-                                <span class="photo"><img alt="avatar" src="/img/ui-sherman.jpg"></span>
+                                <span class="photo"><img alt="avatar" src=<?= $this->Url->build(['controller' => 'img/ui-sherman.jpg', 'action' => 'index']) ?>></span>
                                         <span class="subject">
                                         <span class="from">Dj Sherman</span>
                                         <span class="time">4 hrs.</span>
@@ -208,12 +208,7 @@ TOP BAR CONTENT & NOTIFICATIONS
         </div>
         <div class="top-menu">
             <ul class="nav pull-right top-menu">
-                <li><?php echo $this->Html->link(
-                'Logout',
-                '/users/logout',
-                ['class' => 'logout']
-            );
-            ?></li>
+                <li><a class="logout" href=<?= $this->Url->build(['controller' => 'users/logout', 'action' => 'index']) ?>>Logout</a></li>
             </ul>
         </div>
     </header>
@@ -227,27 +222,29 @@ TOP BAR CONTENT & NOTIFICATIONS
         <div id="sidebar"  class="nav-collapse ">
             <!-- sidebar menu start-->
             <ul class="sidebar-menu" id="nav-accordion">
+                        <p class="centered">
+                            <a href=<?= $this->Url->build(['controller' => 'profile', 'action' => 'index']) ?>>
+                                <img src=<?= $this->Url->build(['controller' => 'img/ui-sam.jpg', 'action' => 'index']) ?> class="img-circle" width="60">
+                                </a>
+                        </p>
+                        <h5 class="centered"><?=  $this->request->session()->read('Auth.User.username'); ?></h5>
+                    <li>
+                        <a href=<?= $this->Url->build(['controller' => 'dashboard/', 'action' => 'index']) ?>>
+                            <i class="fa fa-dashboard"></i><span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li >
+                        <a href=<?= $this->Url->build(['controller' => 'events', 'action' => 'index']) ?>>
+                            <i class="fa fa-calendar"></i><span>Events Calendar</span>
+                        </a>
+                    </li>
 
-                <!--<p class="centered"><a href="profile.html"><img src="/img/ui-sam.jpg" class="img-circle" width="60"></a></p>-->
-                <br/>
-                <h5 class="centered"><?=  $this->request->session()->read('Auth.User.username'); ?></h5>
-
-                <li class="mt">
-                <?php echo $this->Html->link(
-                        '<i class="fa fa-dashboard"></i>Dashboard',
-                        '/dashboard',
-                        [
-                        'escape'    =>  false 
-                        ]
-                    );
-                ?>
-                </li>
-                <?= $this->fetch('additional-sidebar') ?>
+                    <?= $this->fetch('additional-sidebar') ?>
             </ul>
-            <!-- sidebar menu end-->
+                <!-- sidebar menu end-->
         </div>
     </aside>
-    <!--sidebar end-->
+        <!--sidebar end-->
 
     <!-- **********************************************************************************************************************************************************
     MAIN CONTENT

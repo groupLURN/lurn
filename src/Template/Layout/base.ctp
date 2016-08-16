@@ -71,9 +71,10 @@ TOP BAR CONTENT & NOTIFICATIONS
                 <li class="dropdown">
                     <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
                         <i class="fa fa-tasks"></i>
-                        <span class="badge bg-theme">4</span>
+                        <!-- <span class="badge bg-theme">4</span>-->
                     </a>
                     <ul class="dropdown-menu extended tasks-bar">
+                        <!--
                         <div class="notify-arrow notify-arrow-green"></div>
                         <li>
                             <p class="green">You have 4 pending tasks</p>
@@ -133,6 +134,7 @@ TOP BAR CONTENT & NOTIFICATIONS
                         <li class="external">
                             <a href="#">See All Tasks</a>
                         </li>
+                         -->
                     </ul>
                 </li>
                 <!-- settings end -->
@@ -140,10 +142,10 @@ TOP BAR CONTENT & NOTIFICATIONS
                 <li id="header_inbox_bar" class="dropdown">
                     <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
                         <i class="fa fa-envelope-o"></i>
-                        <span class="badge bg-theme">5</span>
+                        <!--<span class="badge bg-theme">5</span>-->
                     </a>
                     <ul class="dropdown-menu extended inbox">
-                        <div class="notify-arrow notify-arrow-green"></div>
+                        <!--<div class="notify-arrow notify-arrow-green"></div>
                         <li>
                             <p class="green">You have 5 new messages</p>
                         </li>
@@ -197,7 +199,7 @@ TOP BAR CONTENT & NOTIFICATIONS
                         </li>
                         <li>
                             <a href="index.html#">See all messages</a>
-                        </li>
+                        </li>-->
                     </ul>
                 </li>
                 <!-- inbox dropdown end -->
@@ -206,7 +208,12 @@ TOP BAR CONTENT & NOTIFICATIONS
         </div>
         <div class="top-menu">
             <ul class="nav pull-right top-menu">
-                <li><a class="logout" href="/users/logout">Logout</a></li>
+                <li><?php echo $this->Html->link(
+                'Logout',
+                '/users/logout',
+                ['class' => 'logout']
+            );
+            ?></li>
             </ul>
         </div>
     </header>
@@ -221,14 +228,19 @@ TOP BAR CONTENT & NOTIFICATIONS
             <!-- sidebar menu start-->
             <ul class="sidebar-menu" id="nav-accordion">
 
-                <p class="centered"><a href="profile.html"><img src="/img/ui-sam.jpg" class="img-circle" width="60"></a></p>
-                <h5 class="centered">Marcel Newman</h5>
+                <!--<p class="centered"><a href="profile.html"><img src="/img/ui-sam.jpg" class="img-circle" width="60"></a></p>-->
+                <br/>
+                <h5 class="centered"><?=  $this->request->session()->read('Auth.User.username'); ?></h5>
 
                 <li class="mt">
-                    <a class="active" href="/dashboard">
-                        <i class="fa fa-dashboard"></i>
-                        <span>Dashboard</span>
-                    </a>
+                <?php echo $this->Html->link(
+                        '<i class="fa fa-dashboard"></i>Dashboard',
+                        '/dashboard',
+                        [
+                        'escape'    =>  false 
+                        ]
+                    );
+                ?>
                 </li>
                 <?= $this->fetch('additional-sidebar') ?>
             </ul>

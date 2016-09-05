@@ -2,8 +2,11 @@
 
 $this->assign('title', 'Sign-in!');
 $this->Html->scriptStart(['block' => 'script-inline', 'safe' => false]);
-echo '$.backstretch("/img/login-bg.jpg", {speed: 500})';
+
+$imageUrl = $this->Url->image('login-bg.jpg');
+echo '$.backstretch("'.$imageUrl.'", {speed: 500})';
 $this->Html->scriptEnd();
+
 ?>
 
 <div id="login-page">

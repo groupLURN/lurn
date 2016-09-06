@@ -19,47 +19,47 @@ class ProjectsController extends AppController
      */
     public function index()
     {
-        $this->paginate = [
-            'contain' => ['Clients', 'Employees', 'Milestones' => ['Tasks']]
-        ];
+    	$this->paginate = [
+    	'contain' => ['Clients', 'Employees', 'Milestones' => ['Tasks']]
+    	];
 
-        $this->paginate += [
-            'finder' =>
-                array_merge(
-                    $this->createFinders($this->request->query)['finder'],
-                    [
-                        'ByAuthorization' => ['user_id' => $this->Auth->user('id')]
-                    ]
-                )
-        ];
+    	$this->paginate += [
+    	'finder' =>
+    	array_merge(
+    		$this->createFinders($this->request->query)['finder'],
+    		[
+    		'ByAuthorization' => ['user_id' => $this->Auth->user('id')]
+    		]
+    		)
+    	];
 
-        $projects = $this->paginate($this->Projects);
-        foreach($projects as $project)
-        {
-            $this->Projects->computeProjectStatus($project);
-            $milestones = new Collection($project->milestones);
-            list($finishedTasks, $totalTasks) = $milestones->reduce(function($accumulated, $milestone)
-            {
-                $tasks = new Collection($milestone->tasks);
+    	$projects = $this->paginate($this->Projects);
+    	foreach($projects as $project)
+    	{
+    		$this->Projects->computeProjectStatus($project);
+    		$milestones = new Collection($project->milestones);
+    		list($finishedTasks, $totalTasks) = $milestones->reduce(function($accumulated, $milestone)
+    		{
+    			$tasks = new Collection($milestone->tasks);
 
-                list($finishedTasks, $totalTasks) = $tasks->reduce(function($accumulated, $task)
-                {
-                    return [$accumulated[0] + $task->is_finished, $accumulated[1] + 1];
-                }, [0, 0]);
+    			list($finishedTasks, $totalTasks) = $tasks->reduce(function($accumulated, $task)
+    			{
+    				return [$accumulated[0] + $task->is_finished, $accumulated[1] + 1];
+    			}, [0, 0]);
 
-                return [$accumulated[0] + $finishedTasks, $accumulated[1] + $totalTasks];
-            }, [0, 0]);
-            if($totalTasks > 0)
-                $project->progress = $finishedTasks / $totalTasks * 100;
-            else
-                $project->progress = 0;
-        }
+    			return [$accumulated[0] + $finishedTasks, $accumulated[1] + $totalTasks];
+    		}, [0, 0]);
+    		if($totalTasks > 0)
+    			$project->progress = $finishedTasks / $totalTasks * 100;
+    		else
+    			$project->progress = 0;
+    	}
 
-        $projectStatuses = $this->Projects->getProjectStatusList();
+    	$projectStatuses = $this->Projects->getProjectStatusList();
 
-        $this->set(compact('projects', 'projectStatuses'));
-        $this->set($this->request->query);
-        $this->set('_serialize', ['projects']);
+    	$this->set(compact('projects', 'projectStatuses'));
+    	$this->set($this->request->query);
+    	$this->set('_serialize', ['projects']);
     }
 
     /**
@@ -71,14 +71,14 @@ class ProjectsController extends AppController
      */
     public function view($id = null)
     {
-        $project = $this->Projects->get($id, [
-            'contain' => ['Clients', 'Employees', 'EmployeesJoin' => [
-                'EmployeeTypes'
-            ]]
-        ]);
-        $this->Projects->computeProjectStatus($project);
-        $this->set('project', $project);
-        $this->set('_serialize', ['project']);
+    	$project = $this->Projects->get($id, [
+    		'contain' => ['Clients', 'Employees', 'EmployeesJoin' => [
+    		'EmployeeTypes'
+    		]]
+    		]);
+    	$this->Projects->computeProjectStatus($project);
+    	$this->set('project', $project);
+    	$this->set('_serialize', ['project']);
     }
 
     /**
@@ -88,22 +88,42 @@ class ProjectsController extends AppController
      */
     public function add()
     {
-        $project = $this->Projects->newEntity();
-        if ($this->request->is('post')) {
-            $project = $this->Projects->patchEntity($project, $this->request->data);
-            if ($this->Projects->save($project)) {
-                $this->Flash->success(__('The project has been saved.'));
-                return $this->redirect(['action' => 'index']);
-            } else {
-                $this->Flash->error(__('The project could not be saved. Please, try again.'));
-            }
-        }
-        $clients = $this->Projects->Clients->find('list', ['limit' => 200]);
+    	$project = $this->Projects->newEntity();
+    	if ($this->request->is('post')) {
+    		$project = $this->Projects->patchEntity($project, $this->request->data);
 
-        $employeesJoin = $this->Projects->EmployeesJoin->find('list', ['limit' => 200])->toArray();
-        $employees = $this->Projects->Employees->find('list', ['limit' => 200]);
-        $this->set(compact('project', 'clients', 'employees', 'employeesJoin'));
-        $this->set('_serialize', ['project']);
+    		echo $project;
+    		if ($this->Projects->save($project)) {
+    			$this->Flash->success(__('The project has been saved.'));
+    			return $this->redirect(['action' => 'index']);
+    		} else {
+    			$this->Flash->error(__('The project could not be saved. Please, try again.'));
+    		}
+    	}
+    	$clients = $this->Projects->Clients->find('list', ['limit' => 200]);
+
+
+    	$projectEngineers = $this->Projects->EmployeesJoin->find('list', [
+    		'conditions' => ['employee_type_id =' => 3],
+    		'limit' => 200
+
+    		])->toArray();
+
+    	$warehouseKeepers = $this->Projects->EmployeesJoin->find('list', [
+    		'conditions' => ['employee_type_id =' => 4],
+    		'limit' => 200
+
+    		])->toArray();
+
+    	$skilledWorkers = $this->Projects->EmployeesJoin->find('list', [
+    		'conditions' => ['employee_type_id =' => 5],
+    		'limit' => 200
+
+    		])->toArray();
+
+    	$employees = $this->Projects->Employees->find('list', ['limit' => 200]);
+    	$this->set(compact('project', 'clients', 'employees', 'projectEngineers', 'warehouseKeepers', 'skilledWorkers'));
+    	$this->set('_serialize', ['project']);
     }
 
     /**
@@ -115,28 +135,28 @@ class ProjectsController extends AppController
      */
     public function edit($id = null)
     {
-        $project = $this->Projects->get($id, [
-            'contain' => ['Employees', 'EmployeesJoin']
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $project = $this->Projects->patchEntity($project, $this->request->data);
-            if ($this->Projects->save($project)) {
-                $this->Flash->success(__('The project has been saved.'));
-                return $this->redirect(['action' => 'index']);
-            } else {
-                $this->Flash->error(__('The project could not be saved. Please, try again.'));
-            }
-        }
-        $clients = $this->Projects->Clients->find('list', ['limit' => 200]);
-        $employees = $this->Projects->Employees->find('list', ['limit' => 200]);
-        $employeesJoin = $this->Projects->EmployeesJoin->find('list', ['limit' => 200])->toArray();
+    	$project = $this->Projects->get($id, [
+    		'contain' => ['Employees', 'EmployeesJoin']
+    		]);
+    	if ($this->request->is(['patch', 'post', 'put'])) {
+    		$project = $this->Projects->patchEntity($project, $this->request->data);
+    		if ($this->Projects->save($project)) {
+    			$this->Flash->success(__('The project has been saved.'));
+    			return $this->redirect(['action' => 'index']);
+    		} else {
+    			$this->Flash->error(__('The project could not be saved. Please, try again.'));
+    		}
+    	}
+    	$clients = $this->Projects->Clients->find('list', ['limit' => 200]);
+    	$employees = $this->Projects->Employees->find('list', ['limit' => 200]);
+    	$employeesJoin = $this->Projects->EmployeesJoin->find('list', ['limit' => 200])->toArray();
 
-        $currentEmployeesJoin = [];
-        foreach($project->employees_join as $employee)
-            $currentEmployeesJoin[] = $employee->id;
+    	$currentEmployeesJoin = [];
+    	foreach($project->employees_join as $employee)
+    		$currentEmployeesJoin[] = $employee->id;
 
-        $this->set(compact('project', 'clients', 'employees', 'employeesJoin', 'currentEmployeesJoin'));
-        $this->set('_serialize', ['project']);
+    	$this->set(compact('project', 'clients', 'employees', 'employeesJoin', 'currentEmployeesJoin'));
+    	$this->set('_serialize', ['project']);
     }
 
     /**
@@ -148,50 +168,50 @@ class ProjectsController extends AppController
      */
     public function delete($id = null)
     {
-        $this->request->allowMethod(['post', 'delete']);
-        $project = $this->Projects->get($id);
-        if ($this->Projects->delete($project)) {
-            $this->Flash->success(__('The project has been deleted.'));
-        } else {
-            $this->Flash->error(__('The project could not be deleted. Please, try again.'));
-        }
-        return $this->redirect(['action' => 'index']);
+    	$this->request->allowMethod(['post', 'delete']);
+    	$project = $this->Projects->get($id);
+    	if ($this->Projects->delete($project)) {
+    		$this->Flash->success(__('The project has been deleted.'));
+    	} else {
+    		$this->Flash->error(__('The project could not be deleted. Please, try again.'));
+    	}
+    	return $this->redirect(['action' => 'index']);
     }
 
 
     public function getProjectList()
     {
-        return $this->Project->findAll();
+    	return $this->Project->findAll();
     }
 
 
     public function isAuthorized($user)
     {
-        $action = $this->request->params['action'];
+    	$action = $this->request->params['action'];
 
-        $isProjectManager = $this->Projects->Employees->find()
-            ->contain(['Users'])
-            ->where(['Users.id' => $user['id']])
-            ->matching('EmployeeTypes', function($query){
-                return $query->where(['EmployeeTypes.title' => 'Project Manager/Project Supervisor']);
-            })->first() !== null;
+    	$isProjectManager = $this->Projects->Employees->find()
+    	->contain(['Users'])
+    	->where(['Users.id' => $user['id']])
+    	->matching('EmployeeTypes', function($query){
+    		return $query->where(['EmployeeTypes.title' => 'Project Manager/Project Supervisor']);
+    	})->first() !== null;
 
-        if (in_array($action, ['edit', 'add', 'delete']))
-            return $isProjectManager;
-        else if (in_array($action, ['view']))
-        {
-            $projectId = $this->request->params['pass'][0];
+    	if (in_array($action, ['edit', 'add', 'delete']))
+    		return $isProjectManager;
+    	else if (in_array($action, ['view']))
+    	{
+    		$projectId = $this->request->params['pass'][0];
 
-            $isUserAssigned = $this->Projects->find()
-                ->matching('EmployeesJoin', function($query) use ($user) {
-                    return $query->where(['EmployeesJoin.user_id' => $user['id']]);
-                })
-                ->where(['Projects.id' => $projectId])
-                ->first() !== null;
+    		$isUserAssigned = $this->Projects->find()
+    		->matching('EmployeesJoin', function($query) use ($user) {
+    			return $query->where(['EmployeesJoin.user_id' => $user['id']]);
+    		})
+    		->where(['Projects.id' => $projectId])
+    		->first() !== null;
 
-            return $isUserAssigned || $isProjectManager;
-        }
+    		return $isUserAssigned || $isProjectManager;
+    	}
 
-        return parent::isAuthorized($user);
+    	return parent::isAuthorized($user);
     }
 }

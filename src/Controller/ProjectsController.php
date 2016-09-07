@@ -88,40 +88,45 @@ class ProjectsController extends AppController
      */
     public function add()
     {
+        $this->loadModel('Clients');
+        $this->loadModel('Employees');
+
     	$project = $this->Projects->newEntity();
+
     	if ($this->request->is('post')) {
     		$project = $this->Projects->patchEntity($project, $this->request->data);
 
     		echo $project;
+
     		if ($this->Projects->save($project)) {
     			$this->Flash->success(__('The project has been saved.'));
     			return $this->redirect(['action' => 'index']);
     		} else {
     			$this->Flash->error(__('The project could not be saved. Please, try again.'));
-    		}
+			}
     	}
-    	$clients = $this->Projects->Clients->find('list', ['limit' => 200]);
 
+    	$clients = $this->Clients->find('list', ['limit' => 200]);
 
-    	$projectEngineers = $this->Projects->EmployeesJoin->find('list', [
+    	$projectEngineers = $this->Employees->find('list', [
     		'conditions' => ['employee_type_id =' => 3],
     		'limit' => 200
 
     		])->toArray();
 
-    	$warehouseKeepers = $this->Projects->EmployeesJoin->find('list', [
+    	$warehouseKeepers = $this->Employees->find('list', [
     		'conditions' => ['employee_type_id =' => 4],
     		'limit' => 200
 
     		])->toArray();
 
-    	$skilledWorkers = $this->Projects->EmployeesJoin->find('list', [
+    	$skilledWorkers = $this->Employees->find('list', [
     		'conditions' => ['employee_type_id =' => 5],
     		'limit' => 200
 
     		])->toArray();
 
-    	$employees = $this->Projects->Employees->find('list', ['limit' => 200]);
+    	$employees = $this->Employees->find('list', ['limit' => 200]);
     	$this->set(compact('project', 'clients', 'employees', 'projectEngineers', 'warehouseKeepers', 'skilledWorkers'));
     	$this->set('_serialize', ['project']);
     }

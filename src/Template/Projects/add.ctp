@@ -6,7 +6,7 @@
             <legend><h3><i class="fa fa-angle-right"></i>Add Project</h3></legend>
             <?php
 
-            echo $this->Form->input('titles', [
+            echo $this->Form->input('title', [
                 'class' => 'form-control',
                 'label' => [
                     'class' => 'mt'
@@ -38,7 +38,7 @@
             echo $this->Form->input('project_manager_id', [
                 'options' => $employees,
                 'class' => 'form-control',
-                'disabled' => 'disabled',                
+                'disabled' => 'disabled',
                 'label' => [
                     'class' => 'mt'
                 ]

@@ -109,6 +109,14 @@ class EmployeesTable extends Table
         });
     }
 
+    public function findByUserId(Query $query, array $options)
+    {
+        if((int)$options['user_id'] > -1)
+            return $query->where(['user_id' => $options['user_id']]);
+        else
+            return $query;
+    }
+
     public function findByEmployeeTypeId(Query $query, array $options)
     {
         if((int)$options['employee_type_id'] > 0)

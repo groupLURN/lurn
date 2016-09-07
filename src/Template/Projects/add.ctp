@@ -35,15 +35,6 @@
 				]   
 				]);
 
-			echo $this->Form->input('project_manager_id', [
-				'options' => $employees,
-				'class' => 'form-control',
-				'disabled' => 'disabled',
-				'label' => [
-				'class' => 'mt'
-				]
-				]);
-
 			echo $this->Form->input('start_date', [
 				'type' => 'text',
 				'class' => 'form-control datetime-picker',
@@ -93,21 +84,6 @@
 					]);
 					?>
 
-				<br>
-
-				<?=
-				$this->Form->input('employees_join._ids', [
-					'type' => 'select',
-					'data-placeholder' => 'Add Skilled Workers',
-					'multiple' => true,
-					'options' => $skilledWorkers,
-					'class' => 'form-control chosen',
-					'label' => [
-					'text' => 'Skilled Workers'
-					],
-					'hiddenField' => false
-					]);
-					?>
 			</fieldset>
 
 						<?= $this->Form->button(__('Submit'), [

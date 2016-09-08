@@ -91,18 +91,21 @@ public function add()
 	$this->loadModel('Clients');
 	$this->loadModel('Employees');
 
-	$project = $this->Projects->newEntity();
-
-	$loggedInUser = $this->Auth->user();
-
+	$project 		= $this->Projects->newEntity();
+	$loggedInUser 	= $this->Auth->user();
 	$projectManager = $this->Employees->find('byUserId', ['user_id' => $loggedInUser['id']])->toArray();
+	$companyOwner	= $this->Employees->find('byEmployeeTypeId', ['employee_type_id' => 1])->toArray();
 
 	if ($this->request->is('post'))
 	{
 		$project = $this->Projects->patchEntity($project, $this->request->data);
 
 		$project['project_manager_id'] = $projectManager[0]['id'];
+		
+		array_push($project['employees_join'], $projectManager[0]);		
+		array_push($project['employees_join'], $companyOwner[0]);
 
+		// echo $project;
 
 		if ($this->Projects->save($project))
 		{

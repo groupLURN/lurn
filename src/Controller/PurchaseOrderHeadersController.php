@@ -132,5 +132,102 @@ public function delete($id = null)
 		$this->Flash->error(__('The purchase order header could not be deleted. Please, try again.'));
 	}
 	return $this->redirect(['action' => 'index']);
-}
+} 
+
+// public function getFilteredSuppliers() {
+// 	$this->loadModel('Suppliers');
+
+// 	$suppliers 	= array();
+
+
+
+// 	$project 	= $this->request->query('project_id');
+// 	$milestone	= $this->request->query('milestone_id');
+// 	$task		= $this->request->query('task_id');
+
+// 	if (isset($project)) {
+// 		$suppliers = $this->Suppliers->find('list', ['limit' => 200]);
+// 	}
+
+// 	header('Content-Type: application/json');
+// 	echo json_encode($suppliers);
+// 	exit();
+// }	
+
+/**
+* Method for getting milestones from the database
+*
+* @return json response
+*/
+public function getMilestones() {
+	$this->loadModel('Milestones');
+	$milestones 	= array();
+	$project_id 	= $this->request->query('project_id');
+
+	if ($project_id) {
+		$milestones = $this->Milestones->find()->where(['project_id' => $project_id]);
+	}
+
+	header('Content-Type: application/json');
+	echo json_encode($milestones);
+	exit();
+}	
+
+/**
+* Method for getting tasks from the database
+*
+* @return json response
+*/
+public function getTasks() {
+	$this->loadModel('Tasks');
+	$tasks 	= array();
+
+	$project_id 	= $this->request->query('project_id');
+	$milestone_id 	= $this->request->query('milestone_id');
+
+	if ($project_id !== null && $milestone_id !== null) {
+		$tasks = $this->Tasks->find('all', 
+			array(
+				'joins' => array(
+					array(
+					'table' => 'projects',
+					'alias' => 'Projects',
+					'type' => 'inner',
+					'foreignKey' => false,
+					'conditions' => array('Projects.id' => $project_id)
+					),
+					array(
+					'table' => 'milestones',
+					'alias' => 'Milestones',
+					'type' => 'inner',
+					'foreignKey' => false,
+					'conditions' => array('Milestones.id' => $milestone_id)
+					)
+				)
+			)
+		);
+	} else  if ($project_id !== null) {
+		$tasks = $this->Tasks->find('all', 
+			array(
+
+				'joins' => array(
+					'table' => 'projects',
+					'alias' => 'Projects',
+					'type' => 'inner',
+					'foreignKey' => false,
+					'conditions' => array('Projects.id' => $project_id)
+				)			
+			)
+		);
+	} else if ($milestone_id !== null) {
+		$tasks = $this->Tasks->find()->where(['milestone_id' => $milestone_id]);
+	}
+
+
+	header('Content-Type: application/json');
+	echo json_encode($tasks);
+	exit();
+}	
+
+
 }

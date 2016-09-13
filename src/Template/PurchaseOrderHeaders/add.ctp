@@ -4,15 +4,30 @@
     <div class="col-md-12">
         <?= $this->Form->create($purchaseOrderHeader) ?>
         <fieldset>
-            <legend><h3><i class="fa fa-angle-right"></i> <?= __('Create Purchase Order') ?></h3></legend>
+            <legend><h3><i class="fa fa-angle-right"></i>Create Purchase Order</h3></legend>
             <?php
-
             echo $this->Form->input('project_id', [
                 'class' => 'form-control chosen',
                 'label' => [
                     'class' => 'mt'
                 ],
-                'options' => [null => '-'] + $projects
+                'options' => [null => '-Choose a Project-'] + $projects
+            ]);
+
+            echo $this->Form->input('milestone_id', [
+                'class' => 'form-control chosen',
+                'label' => [
+                    'class' => 'mt'
+                ],
+                'options' => [null => '-Choose a Milestone-'] + $milestones
+            ]);
+
+            echo $this->Form->input('task_id', [
+                'class' => 'form-control chosen',
+                'label' => [
+                    'class' => 'mt'
+                ],
+                'options' => [null => '-Choose a Task-'] + $tasks
             ]);
 
             echo $this->Form->input('supplier_id', [
@@ -20,12 +35,12 @@
                 'label' => [
                     'class' => 'mt'
                 ],
-                'options' => $suppliers
+                'options' => [null => '-Choose a Supplier-'] + $suppliers
             ]);
 
             ?>
 
-            <legend class="mt"><h3><i class="fa fa-angle-right"></i> <?= __('Purchase Order') ?></h3></legend>
+            <legend class="mt"><h3><i class="fa fa-angle-right"></i>Purchase Order</h3></legend>
             <?= $this->element('editable_data_table', [
                 'tableWidth' => '350px',
                 'headers' => [

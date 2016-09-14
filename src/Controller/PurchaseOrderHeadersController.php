@@ -187,6 +187,8 @@ public function getTasks() {
 
 	if ($project_id !== null && $milestone_id !== null) {
 		$tasks = $this->Tasks->find('byProjectAndMilestone', ['project_id' => $project_id, 'milestone_id' => $milestone_id]);
+
+		//echo $this->Tasks->find('byProjectAndMilestone', ['project_id' => $project_id, 'milestone_id' => $milestone_id]);
 	} else  if ($project_id !== null) {
 		$tasks = $this->Tasks->find('byProject', ['project_id' => $project_id]);
 	} 

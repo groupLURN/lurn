@@ -169,12 +169,13 @@ class TasksTable extends Table
         if((int)$options['project_id'] > -1)
             return $query
                 ->join([
-                'p' => [
-                    'table' => 'projects',
-                    'type' => 'INNER',
-                    'conditions' => ['p.id' => (int)$options['project_id']]
-                ]
-            ]);
+                    'm' => [
+                        'table' => 'milestones',
+                        'type' => 'INNER',
+                        'conditions' => ['m.project_id' => (int)$options['project_id'],
+                            'm.id = milestone_id']
+                    ]
+                ]);
         else
             return $query;
     }
@@ -185,12 +186,14 @@ class TasksTable extends Table
             return $query
                 ->where(['milestone_id' => $options['milestone_id']])
                 ->join([
-                    'p' => [
-                        'table' => 'projects',
+                    'm' => [
+                        'table' => 'milestones',
                         'type' => 'INNER',
-                        'conditions' => ['p.id' => (int)$options['project_id']]
+                        'conditions' => ['m.project_id' => (int)$options['project_id'],
+                            'm.id = milestone_id']
                     ]
-                ]);
+                ])
+                ;
         else
             return $query;
     }

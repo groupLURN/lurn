@@ -186,42 +186,10 @@ public function getTasks() {
 	$milestone_id 	= $this->request->query('milestone_id');
 
 	if ($project_id !== null && $milestone_id !== null) {
-		$tasks = $this->Tasks->find('all', 
-			array(
-				'joins' => array(
-					array(
-					'table' => 'projects',
-					'alias' => 'Projects',
-					'type' => 'inner',
-					'foreignKey' => false,
-					'conditions' => array('Projects.id' => $project_id)
-					),
-					array(
-					'table' => 'milestones',
-					'alias' => 'Milestones',
-					'type' => 'inner',
-					'foreignKey' => false,
-					'conditions' => array('Milestones.id' => $milestone_id)
-					)
-				)
-			)
-		);
+		$tasks = $this->Tasks->find('byProjectAndMilestone', ['project_id' => $project_id, 'milestone_id' => $milestone_id]);
 	} else  if ($project_id !== null) {
-		$tasks = $this->Tasks->find('all', 
-			array(
-
-				'joins' => array(
-					'table' => 'projects',
-					'alias' => 'Projects',
-					'type' => 'inner',
-					'foreignKey' => false,
-					'conditions' => array('Projects.id' => $project_id)
-				)			
-			)
-		);
-	} else if ($milestone_id !== null) {
-		$tasks = $this->Tasks->find()->where(['milestone_id' => $milestone_id]);
-	}
+		$tasks = $this->Tasks->find('byProject', ['project_id' => $project_id]);
+	} 
 
 
 	header('Content-Type: application/json');

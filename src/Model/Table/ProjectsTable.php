@@ -72,7 +72,13 @@ class ProjectsTable extends Table
         $this->hasMany('MaterialsTaskInventories', [
             'foreignKey' => 'project_id'
         ]);
+        $this->hasMany('Tasks', [
+            'className' => 'Addresses',
+            'bindingKey' => 'project_id',
+            'foreignKey' => 'project_id'
+        ]);
         $this->hasMany('Milestones', [
+            'className' => 'Milestones',
             'foreignKey' => 'project_id'
         ]);
         $this->belongsToMany('EmployeesJoin', [

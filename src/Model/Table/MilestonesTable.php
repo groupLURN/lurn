@@ -98,7 +98,11 @@ class MilestonesTable extends Table
 
     public function findByProjectId(Query $query, array $options)
     {
-        return $query->where(['Milestones.project_id' => $options['project_id']]);
+        if(-1 < (int)$options['project_id']) {
+            return $query->where(['Milestones.project_id' => $options['project_id']]);
+        } else {
+            return $query;
+        }
     }
 
     public function findByTitle(Query $query, array $options)

@@ -165,7 +165,7 @@ public function getMilestones() {
 	$project_id 	= $this->request->query('project_id');
 
 	if ($project_id) {
-		$milestones = $this->Milestones->find()->where(['project_id' => $project_id]);
+		$milestones = $this->Milestones->find('byProjectId', ['project_id' => $project_id]);
 	}
 
 	header('Content-Type: application/json');

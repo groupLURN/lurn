@@ -213,15 +213,14 @@ public function getSuppliers() {
 	$task_id 		= $this->request->query('task_id');
 
 	if ($task_id !== null) {
-		$suppliers = $this->Tasks->find('byTask', ['task_id' => $task_id]);
+		$suppliers = $this->Suppliers->find('byTask', ['task_id' => $task_id]);
 
 	} else if ($milestone_id !== null) {
-		$suppliers = $this->Tasks->find('byMilestone', ['milestone_id' => $milestone_id]);
+		$suppliers = $this->Suppliers->find('byMilestone', ['milestone_id' => $milestone_id]);
 
 	} else  if ($project_id !== null) {
-		$suppliers = $this->Tasks->find('byProject', ['project_id' => $project_id]);
+		$suppliers = $this->Suppliers->find('byProject', ['project_id' => $project_id]);
 	} 
-
 
 	header('Content-Type: application/json');
 	echo json_encode($suppliers);

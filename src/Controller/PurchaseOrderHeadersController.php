@@ -199,5 +199,35 @@ public function getTasks() {
 	exit();
 }	
 
+/**
+* Method for getting suppliers from the database
+*
+* @return json response
+*/
+public function getSuppliers() {
+	$this->loadModel('Suppliers');
+	$suppliers 	= array();
+
+	$project_id 	= $this->request->query('project_id');
+	$milestone_id 	= $this->request->query('milestone_id');
+	$task_id 		= $this->request->query('task_id');
+
+	if ($task_id !== null) {
+		$suppliers = $this->Tasks->find('byTask', ['task_id' => $task_id]);
+
+	} else if ($milestone_id !== null) {
+		$suppliers = $this->Tasks->find('byMilestone', ['milestone_id' => $milestone_id]);
+
+	} else  if ($project_id !== null) {
+		$suppliers = $this->Tasks->find('byProject', ['project_id' => $project_id]);
+	} 
+
+
+	header('Content-Type: application/json');
+	echo json_encode($suppliers);
+	exit();
+}	
+
+
 
 }

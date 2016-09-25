@@ -1,7 +1,7 @@
 <?php
 use Migrations\AbstractMigration;
 
-class CreateResourceSuppliers extends AbstractMigration
+class CreateMaterialsSuppliers extends AbstractMigration
 {
     /**
      * Change Method.
@@ -12,7 +12,7 @@ class CreateResourceSuppliers extends AbstractMigration
      */
     public function change()
     {
-        $table = $this->table('resource_suppliers');
+        $table = $this->table('materials_suppliers');
         $table->addColumn('material_id', 'integer', [
             'default' => null,
             'limit' => 11,

@@ -83,4 +83,25 @@ class SuppliersTable extends Table
             return $exp->like('name', '%' . $options['name'] . '%');
         });
     }
+
+    public function findByTask(Query $query, array $options)
+    {
+        if((int)$options['task_id'] > -1)
+            return $query
+                ->join([
+                    'mt' => [
+                        'table' => 'materials_tasks',
+                        'type' => 'INNER',
+                        'conditions' => ['mt.task_id' => (int)$options['task_id']]
+                    ],
+                    'rs' => [
+                        'table' => 'resource_suppliers',
+                        'type' => 'INNER',
+                        'conditions' => ['rs.resource_id = mt.material_id',
+                            'm.id = milestone_id']
+                    ]
+                ]);
+        else
+            return $query;
+    }
 }

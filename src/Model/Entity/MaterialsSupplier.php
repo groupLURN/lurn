@@ -4,7 +4,7 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * ResourceSupplier Entity
+ * MaterialsSupplier Entity
  *
  * @property int $id
  * @property int $material_id
@@ -15,7 +15,7 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\Material $material
  * @property \App\Model\Entity\Supplier $supplier
  */
-class ResourceSupplier extends Entity
+class MaterialsSupplier extends Entity
 {
 
     /**

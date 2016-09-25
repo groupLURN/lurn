@@ -1,22 +1,22 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\ResourceSuppliersTable;
+use App\Model\Table\MaterialsSuppliersTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\ResourceSuppliersTable Test Case
+ * App\Model\Table\MaterialsSuppliersTable Test Case
  */
-class ResourceSuppliersTableTest extends TestCase
+class MaterialsSuppliersTableTest extends TestCase
 {
 
     /**
      * Test subject
      *
-     * @var \App\Model\Table\ResourceSuppliersTable
+     * @var \App\Model\Table\MaterialsSuppliersTable
      */
-    public $ResourceSuppliers;
+    public $MaterialsSuppliers;
 
     /**
      * Fixtures
@@ -24,7 +24,7 @@ class ResourceSuppliersTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.resource_suppliers',
+        'app.materials_suppliers',
         'app.materials',
         'app.materials_general_inventories',
         'app.materials_project_inventories',
@@ -70,8 +70,8 @@ class ResourceSuppliersTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('ResourceSuppliers') ? [] : ['className' => 'App\Model\Table\ResourceSuppliersTable'];
-        $this->ResourceSuppliers = TableRegistry::get('ResourceSuppliers', $config);
+        $config = TableRegistry::exists('MaterialsSuppliers') ? [] : ['className' => 'App\Model\Table\MaterialsSuppliersTable'];
+        $this->MaterialsSuppliers = TableRegistry::get('MaterialsSuppliers', $config);
     }
 
     /**
@@ -81,7 +81,7 @@ class ResourceSuppliersTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->ResourceSuppliers);
+        unset($this->MaterialsSuppliers);
 
         parent::tearDown();
     }

@@ -4,10 +4,10 @@ namespace App\Test\Fixture;
 use Cake\TestSuite\Fixture\TestFixture;
 
 /**
- * ResourceSuppliersFixture
+ * MaterialsSuppliersFixture
  *
  */
-class ResourceSuppliersFixture extends TestFixture
+class MaterialsSuppliersFixture extends TestFixture
 {
 
     /**
@@ -28,8 +28,8 @@ class ResourceSuppliersFixture extends TestFixture
         ],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
-            'resource_suppliers_ibfk_1' => ['type' => 'foreign', 'columns' => ['material_id'], 'references' => ['materials', 'id'], 'update' => 'restrict', 'delete' => 'restrict', 'length' => []],
-            'resource_suppliers_ibfk_2' => ['type' => 'foreign', 'columns' => ['supplier_id'], 'references' => ['suppliers', 'id'], 'update' => 'restrict', 'delete' => 'restrict', 'length' => []],
+            'materials_suppliers_ibfk_1' => ['type' => 'foreign', 'columns' => ['material_id'], 'references' => ['materials', 'id'], 'update' => 'restrict', 'delete' => 'restrict', 'length' => []],
+            'materials_suppliers_ibfk_2' => ['type' => 'foreign', 'columns' => ['supplier_id'], 'references' => ['suppliers', 'id'], 'update' => 'restrict', 'delete' => 'restrict', 'length' => []],
         ],
         '_options' => [
             'engine' => 'InnoDB',
@@ -48,8 +48,8 @@ class ResourceSuppliersFixture extends TestFixture
             'id' => 1,
             'material_id' => 1,
             'supplier_id' => 1,
-            'created' => '2016-09-22 20:59:08',
-            'modified' => '2016-09-22 20:59:08'
+            'created' => '2016-09-25 15:25:49',
+            'modified' => '2016-09-25 15:25:49'
         ],
     ];
 }

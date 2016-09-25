@@ -7,22 +7,22 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * ResourceSuppliers Model
+ * MaterialsSuppliers Model
  *
  * @property \Cake\ORM\Association\BelongsTo $Materials
  * @property \Cake\ORM\Association\BelongsTo $Suppliers
  *
- * @method \App\Model\Entity\ResourceSupplier get($primaryKey, $options = [])
- * @method \App\Model\Entity\ResourceSupplier newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\ResourceSupplier[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\ResourceSupplier|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\ResourceSupplier patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\ResourceSupplier[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\ResourceSupplier findOrCreate($search, callable $callback = null)
+ * @method \App\Model\Entity\MaterialsSupplier get($primaryKey, $options = [])
+ * @method \App\Model\Entity\MaterialsSupplier newEntity($data = null, array $options = [])
+ * @method \App\Model\Entity\MaterialsSupplier[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\MaterialsSupplier|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\MaterialsSupplier patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\MaterialsSupplier[] patchEntities($entities, array $data, array $options = [])
+ * @method \App\Model\Entity\MaterialsSupplier findOrCreate($search, callable $callback = null)
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class ResourceSuppliersTable extends Table
+class MaterialsSuppliersTable extends Table
 {
 
     /**
@@ -35,7 +35,7 @@ class ResourceSuppliersTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('resource_suppliers');
+        $this->table('materials_suppliers');
         $this->displayField('id');
         $this->primaryKey('id');
 

@@ -88,7 +88,8 @@ class SuppliersTable extends Table
     {
         if((int)$options['task_id'] > -1)
             return $query
-                ->where(['Suppliers.id = ms.supplier_id'])
+                ->where(['mt.task_id' => (int)$options['task_id']])
+                ->distinct(['Suppliers.id'])
                 ->join([
                     'mt' => [
                         'table' => 'materials_tasks',
@@ -98,7 +99,8 @@ class SuppliersTable extends Table
                     'ms' => [
                         'table' => 'materials_suppliers',
                         'type' => 'INNER',
-                        'conditions' => ['ms.material_id = mt.material_id']
+                        'conditions' => ['mt.material_id = ms.material_id',
+                        'ms.supplier_id = Suppliers.id']
                     ]
                 ]);
         else

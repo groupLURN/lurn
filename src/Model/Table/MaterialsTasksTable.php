@@ -71,4 +71,12 @@ class MaterialsTasksTable extends Table
         $rules->add($rules->existsIn(['task_id'], 'Tasks'));
         return $rules;
     }
+
+    public function findByTask(Query $query, array $options)
+    {
+        if((int)$options['task_id'] > -1)
+            return $query->where(['task_id' => $options['task_id']]);
+        else
+            return $query;
+    }
 }

@@ -205,14 +205,18 @@ public function getTasks() {
 * @return json response
 */
 public function getSuppliers() {
+	$this->loadModel('MaterialsTasks');
 	$this->loadModel('Suppliers');
+
 	$suppliers 	= array();
+	$materials  = array();
 
 	$project_id 	= $this->request->query('project_id');
 	$milestone_id 	= $this->request->query('milestone_id');
 	$task_id 		= $this->request->query('task_id');
 
 	if ($task_id !== null) {
+		$materials = $this->MaterialsTasks->find('byTask', ['task_id' => $task_id]);
 		$suppliers = $this->Suppliers->find('byTask', ['task_id' => $task_id]);
 
 	} else if ($milestone_id !== null) {
@@ -222,6 +226,8 @@ public function getSuppliers() {
 		$suppliers = $this->Suppliers->find('byProject', ['project_id' => $project_id]);
 	} 
 
+	
+	echo $suppliers;
 	header('Content-Type: application/json');
 	echo json_encode($suppliers);
 	exit();

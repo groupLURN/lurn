@@ -74,7 +74,7 @@ class MaterialsTasksTable extends Table
 
     public function findByTask(Query $query, array $options)
     {
-        if((int)$options['task_id'] > -1)
+        if((float)$options['task_id'] > -1)
             return $query->where(['task_id' => $options['task_id']]);
         else
             return $query;

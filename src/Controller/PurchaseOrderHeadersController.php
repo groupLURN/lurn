@@ -188,7 +188,6 @@ public function getTasks() {
 	if ($project_id !== null && $milestone_id !== null) {
 		$tasks = $this->Tasks->find('byProjectAndMilestone', ['project_id' => $project_id, 'milestone_id' => $milestone_id]);
 
-		//echo $this->Tasks->find('byProjectAndMilestone', ['project_id' => $project_id, 'milestone_id' => $milestone_id]);
 	} else  if ($project_id !== null) {
 		$tasks = $this->Tasks->find('byProject', ['project_id' => $project_id]);
 	} 
@@ -207,6 +206,7 @@ public function getTasks() {
 public function getSuppliers() {
 	$this->loadModel('MaterialsTasks');
 	$this->loadModel('Suppliers');
+	$this->loadModel('Tasks');
 
 	$suppliers 	= array();
 	$materials  = array();
@@ -216,20 +216,64 @@ public function getSuppliers() {
 	$task_id 		= $this->request->query('task_id');
 
 	if ($task_id !== null) {
-		$materials = $this->MaterialsTasks->find('byTask', ['task_id' => $task_id]);
-		$suppliers = $this->Suppliers->find('byTask', ['task_id' => $task_id]);
+		$suppliers_holder = array();
 
-	} else if ($milestone_id !== null) {
-		$suppliers = $this->Suppliers->find('byMilestone', ['milestone_id' => $milestone_id]);
+		$materials = $this->MaterialsTasks->find('byTask', ['task_id' => $task_id])->toArray();
+
+		foreach ($materials as $key => $value) {
+			foreach ($this->Suppliers->find('byMaterial', ['material_id' => $value['material_id']]) as $row) {
+				array_push($suppliers_holder, $row);
+			}
+		}
+
+		$suppliers = array_unique($suppliers_holder);
+
+
+	} else if ($milestone_id !== null && $project_id !== null) {
+		$suppliers_holder 	= array();
+		$materials_holder 	= array();
+		$tasks 				= array();
+		$task_ids 			= array();
+
+		$tasks = $this->Tasks->find('byProjectAndMilestone', ['project_id' => $project_id, 'milestone_id' => $milestone_id]);;
+
+		foreach ($tasks as $row) {
+				array_push($task_ids, $row['id']);
+		}
+
+		$task_ids = array_unique($task_ids);
+
+
+		foreach ($task_ids as $key => $value) {
+
+		$task_id = (float)$value;
+				
+			debug( $this->MaterialsTasks->find('byTask', ['task_id' => $task_id]) );
+			foreach ( $this->MaterialsTasks->find('byTask', ['task_id' => $task_id]) as $row) {
+			debug($task_id);
+				array_push($materials_holder, $row);
+			}
+		}
+
+		$materials = array_unique($materials_holder);
+
+		foreach ($materials as $key => $value) {
+			foreach ($this->Suppliers->find('byMaterial', ['material_id' => $value['material_id']]) as $row) {
+				array_push($suppliers_holder, $row);
+			}
+		}
+
+		$suppliers = array_unique($suppliers_holder);
 
 	} else  if ($project_id !== null) {
-		$suppliers = $this->Suppliers->find('byProject', ['project_id' => $project_id]);
+		$suppliers_holder = array();
 	} 
 
 	
-	echo $suppliers;
-	header('Content-Type: application/json');
-	echo json_encode($suppliers);
+
+
+	// header('Content-Type: application/json');
+	// echo json_encode($suppliers);
 	exit();
 }	
 

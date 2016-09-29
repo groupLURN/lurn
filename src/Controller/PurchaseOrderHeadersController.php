@@ -229,13 +229,19 @@ public function getSuppliers() {
 		$suppliers = array_unique($suppliers_holder);
 
 
-	} else if ($milestone_id !== null && $project_id !== null) {
+	} else if ($project_id !== null) {
 		$suppliers_holder 	= array();
 		$materials_holder 	= array();
 		$tasks 				= array();
 		$task_ids 			= array();
 
-		$tasks = $this->Tasks->find('byProjectAndMilestone', ['project_id' => $project_id, 'milestone_id' => $milestone_id]);;
+		if($milestone_id !== null) {
+
+			$tasks = $this->Tasks->find('byProjectAndMilestone', ['project_id' => $project_id, 'milestone_id' => $milestone_id]);
+		} else{
+			
+		 	$tasks = $this->Tasks->find('byProject', ['project_id' => $project_id]);
+		}
 
 		foreach ($tasks as $row) {
 				array_push($task_ids, $row['id']);
@@ -262,9 +268,6 @@ public function getSuppliers() {
 		}
 
 		$suppliers = array_unique($suppliers_holder);
-
-	} else  if ($project_id !== null) {
-		$suppliers_holder = array();
 	} 
 
 	

@@ -248,9 +248,7 @@ public function getSuppliers() {
 
 		$task_id = (float)$value;
 				
-			debug( $this->MaterialsTasks->find('byTask', ['task_id' => $task_id]) );
 			foreach ( $this->MaterialsTasks->find('byTask', ['task_id' => $task_id]) as $row) {
-			debug($task_id);
 				array_push($materials_holder, $row);
 			}
 		}
@@ -272,8 +270,8 @@ public function getSuppliers() {
 	
 
 
-	// header('Content-Type: application/json');
-	// echo json_encode($suppliers);
+	header('Content-Type: application/json');
+	echo json_encode($suppliers);
 	exit();
 }	
 

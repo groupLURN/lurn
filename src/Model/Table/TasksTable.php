@@ -52,10 +52,17 @@ class TasksTable extends Table
 
         $this->addBehavior('Timestamp');
 
+        // Projects
+        $this->belongsTo('Projects', [
+            'className'     => 'Milestones',
+            'foreignKey'    => 'project_id',
+            'joinType'      => 'INNEER'
+        ]);
+
         // Milestone
         $this->belongsTo('Milestones', [
-            'foreignKey' => 'milestone_id',
-            'joinType' => 'LEFT'
+            'foreignKey'    => 'milestone_id',
+            'joinType'      => 'LEFT'
         ]);
 
         // Task Inventories
@@ -155,6 +162,40 @@ class TasksTable extends Table
                 $data[$key] = Time::parseDateTime($data[$key], 'yyyy/MM/dd');
             }
         }
+    }
+
+    public function findByProject(Query $query, array $options)
+    {
+        if((int)$options['project_id'] > -1)
+            return $query
+                ->join([
+                    'm' => [
+                        'table' => 'milestones',
+                        'type' => 'INNER',
+                        'conditions' => ['m.project_id' => (int)$options['project_id'],
+                            'm.id = milestone_id']
+                    ]
+                ]);
+        else
+            return $query;
+    }
+
+    public function findByProjectAndMilestone(Query $query, array $options)
+    {
+        if((int)$options['milestone_id'] > -1 && (int)$options['project_id'] > -1)
+            return $query
+                ->where(['milestone_id' => $options['milestone_id']])
+                ->join([
+                    'm' => [
+                        'table' => 'milestones',
+                        'type' => 'INNER',
+                        'conditions' => ['m.project_id' => (int)$options['project_id'],
+                            'm.id = milestone_id']
+                    ]
+                ])
+                ;
+        else
+            return $query;
     }
 
     public function computeForTaskReplenishmentUsingMilestones($milestones)

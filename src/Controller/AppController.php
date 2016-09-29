@@ -91,7 +91,7 @@ class AppController extends Controller
         }
     }
 
-    public function paginate($object = null)
+    public function paginate($object = null, array $settings = [])
     {
         if(!empty($this->paginate['finder']) && is_array($this->paginate['finder']))
         {

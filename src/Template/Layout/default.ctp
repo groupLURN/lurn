@@ -26,8 +26,7 @@ $this->start('additional-sidebar');
         <span class="caret"> </span>
     </a>
     <ul class="sub">
-       <li><a href=<?= $this->Url->build(['controller' => 'Projects', 'action' => 'index']) ?>>View Projects</a></li>
-       <li><a href=<?= $this->Url->build(['controller' => 'Projects', 'action' => 'index']) ?>>Project Overview</a></li>
+       <li><a href=<?= $this->Url->build(['controller' => 'Projects', 'action' => 'index']) ?>>View All Projects</a></li>
        <li><a href=<?= $this->Url->build(['controller' => 'Projects', 'action' => 'index']) ?>>Projects Planning</a></li>
     </ul>
 </li>

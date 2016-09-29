@@ -202,4 +202,28 @@ class MaterialsTable extends Table
             ->leftJoinWith('MaterialsGeneralInventories');
     }
 
+    public function findByTaskAndSupplier(Query $query, array $options)
+    {
+        if((float)$options['task_id'] > -1 && (float)$options['supplier_id'] > -1){
+
+            return $query
+                ->join([
+                    'mt' => [
+                        'table' => 'materials_tasks',
+                        'type' => 'INNER',
+                        'conditions' => ['mt.material_id = Materials.id']],
+                    'ms' => [
+                        'table' => 'materials_suppliers',
+                        'type' => 'INNER',
+                        'conditions' => ['ms.material_id = mt.material_id']
+                    ]
+                ])
+                ->where(['ms.supplier_id' => $options['supplier_id'],
+                    'mt.task_id' => $options['task_id']]);
+        } else {
+
+            return $query;
+        }
+    }
+
 }

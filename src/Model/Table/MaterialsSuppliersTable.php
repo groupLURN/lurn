@@ -1,19 +1,28 @@
 <?php
 namespace App\Model\Table;
 
-use App\Model\Entity\MaterialsTask;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * MaterialsTasks Model
+ * MaterialsSuppliers Model
  *
  * @property \Cake\ORM\Association\BelongsTo $Materials
- * @property \Cake\ORM\Association\BelongsTo $Tasks
+ * @property \Cake\ORM\Association\BelongsTo $Suppliers
+ *
+ * @method \App\Model\Entity\MaterialsSupplier get($primaryKey, $options = [])
+ * @method \App\Model\Entity\MaterialsSupplier newEntity($data = null, array $options = [])
+ * @method \App\Model\Entity\MaterialsSupplier[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\MaterialsSupplier|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\MaterialsSupplier patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\MaterialsSupplier[] patchEntities($entities, array $data, array $options = [])
+ * @method \App\Model\Entity\MaterialsSupplier findOrCreate($search, callable $callback = null)
+ *
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class MaterialsTasksTable extends Table
+class MaterialsSuppliersTable extends Table
 {
 
     /**
@@ -26,9 +35,9 @@ class MaterialsTasksTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('materials_tasks');
-        $this->displayField('material_id');
-        $this->primaryKey(['material_id', 'task_id']);
+        $this->table('materials_suppliers');
+        $this->displayField('id');
+        $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
 
@@ -36,8 +45,8 @@ class MaterialsTasksTable extends Table
             'foreignKey' => 'material_id',
             'joinType' => 'INNER'
         ]);
-        $this->belongsTo('Tasks', [
-            'foreignKey' => 'task_id',
+        $this->belongsTo('Suppliers', [
+            'foreignKey' => 'supplier_id',
             'joinType' => 'INNER'
         ]);
     }
@@ -51,9 +60,8 @@ class MaterialsTasksTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->integer('quantity')
-            ->requirePresence('quantity', 'create')
-            ->notEmpty('quantity');
+            ->integer('id')
+            ->allowEmpty('id', 'create');
 
         return $validator;
     }
@@ -68,15 +76,8 @@ class MaterialsTasksTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['material_id'], 'Materials'));
-        $rules->add($rules->existsIn(['task_id'], 'Tasks'));
-        return $rules;
-    }
+        $rules->add($rules->existsIn(['supplier_id'], 'Suppliers'));
 
-    public function findByTask(Query $query, array $options)
-    {
-        if((float)$options['task_id'] > -1)
-            return $query->where(['task_id' => $options['task_id']]);
-        else
-            return $query;
+        return $rules;
     }
 }

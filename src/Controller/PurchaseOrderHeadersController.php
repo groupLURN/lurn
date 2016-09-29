@@ -192,7 +192,6 @@ public function getTasks() {
 		$tasks = $this->Tasks->find('byProject', ['project_id' => $project_id]);
 	} 
 
-
 	header('Content-Type: application/json');
 	echo json_encode($tasks);
 	exit();
@@ -216,22 +215,13 @@ public function getSuppliers() {
 	$task_id 		= $this->request->query('task_id');
 
 	if ($task_id !== null) {
-		$suppliers_holder = array();
 
-		$materials = $this->MaterialsTasks->find('byTask', ['task_id' => $task_id])->toArray();
+		$suppliers = $this->Suppliers->find('byTask', ['task_id' => $task_id]);
 
-		foreach ($materials as $key => $value) {
-			foreach ($this->Suppliers->find('byMaterial', ['material_id' => $value['material_id']]) as $row) {
-				array_push($suppliers_holder, $row);
-			}
-		}
-
-		$suppliers = array_unique($suppliers_holder);
 
 
 	} else if ($project_id !== null) {
 		$suppliers_holder 	= array();
-		$materials_holder 	= array();
 		$tasks 				= array();
 		$task_ids 			= array();
 
@@ -239,12 +229,12 @@ public function getSuppliers() {
 
 			$tasks = $this->Tasks->find('byProjectAndMilestone', ['project_id' => $project_id, 'milestone_id' => $milestone_id]);
 		} else{
-			
+
 		 	$tasks = $this->Tasks->find('byProject', ['project_id' => $project_id]);
 		}
 
 		foreach ($tasks as $row) {
-				array_push($task_ids, $row['id']);
+			array_push($task_ids, $row['id']);
 		}
 
 		$task_ids = array_unique($task_ids);
@@ -252,31 +242,47 @@ public function getSuppliers() {
 
 		foreach ($task_ids as $key => $value) {
 
-		$task_id = (float)$value;
+			$task_id = (float)$value;
 				
-			foreach ( $this->MaterialsTasks->find('byTask', ['task_id' => $task_id]) as $row) {
-				array_push($materials_holder, $row);
-			}
-		}
-
-		$materials = array_unique($materials_holder);
-
-		foreach ($materials as $key => $value) {
-			foreach ($this->Suppliers->find('byMaterial', ['material_id' => $value['material_id']]) as $row) {
+			foreach ( $this->Suppliers->find('byTask', ['task_id' => $task_id]) as $row) {
 				array_push($suppliers_holder, $row);
 			}
 		}
 
+
 		$suppliers = array_unique($suppliers_holder);
 	} 
-
-	
-
 
 	header('Content-Type: application/json');
 	echo json_encode($suppliers);
 	exit();
 }	
+
+/**
+* Method for getting materials from the database
+*
+* @return json response
+*/
+public function getMaterials() {
+	$this->loadModel('Materials');
+
+	$materials  = array();
+
+	$project_id 	= $this->request->query('project_id');
+	$milestone_id 	= $this->request->query('milestone_id');
+	$task_id 		= $this->request->query('task_id');
+	$supplier_id	= $this->request->query('supplier_id');
+
+	if($supplier_id != null) {
+		if ($task_id != null) {
+			$materials = $this->Materials->find('byTaskAndSupplier', ['task_id' => $task_id, 'supplier_id' => $supplier_id]);
+		} else if ($project_id !== null) {
+		} 
+	}
+	header('Content-Type: application/json');
+	echo json_encode($materials);
+	exit();
+}
 
 
 

@@ -92,11 +92,36 @@ class SuppliersTable extends Table
                     'ms' => [
                         'table' => 'materials_suppliers',
                         'type' => 'INNER',
-                        'conditions' => ['ms.material_id' => $options['material_id'],
+                        'conditions' => [
                         'ms.supplier_id = Suppliers.id']
                     ]
                 ])
-                ->where('Suppliers.id = supplier_id');
+                ->where(['ms.material_id' => $options['material_id']]);
+        } else {
+            return $query;
+        }
+    }
+
+    public function findByTask(Query $query, array $options)
+    {
+        if((float)$options['task_id'] > 0){
+            return $query
+                ->group(['Suppliers.id'])
+                ->join([
+                    'ms' => [
+                        'table' => 'materials_suppliers',
+                        'type' => 'INNER',
+                        'conditions' => ['ms.supplier_id = Suppliers.id']
+                    ],
+
+                    'mt' => [
+                        'table' => 'materials_tasks',
+                        'type' => 'INNER',
+                        'conditions' => ['mt.material_id = ms.material_id']
+
+                    ]
+                ])
+                ->where(['mt.task_id' => $options['task_id']]);
         } else {
             return $query;
         }

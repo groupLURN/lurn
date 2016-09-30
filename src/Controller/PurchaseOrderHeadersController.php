@@ -59,6 +59,10 @@ public function view($id = null)
 public function add()
 {
 	$this->loadModel('Projects');
+	$this->loadModel('Milestones');
+	$this->loadModel('Tasks');
+	$this->loadModel('Suppliers');
+	$this->loadModel('Materials');
 
 	$purchaseOrderHeader = $this->PurchaseOrderHeaders->newEntity();
 
@@ -76,8 +80,12 @@ public function add()
 	}
 
 	$projects 		= $this->Projects->find('list')->toArray();
-	$this->set(compact('purchaseOrderHeader', 'projects'));
-	$this->set('_serialize', ['purchaseOrderHeader', 'projects']);
+	$milestones 	= $this->Milestones->find('list')->toArray();
+	$tasks 			= $this->Tasks->find('list')->toArray();
+	$suppliers 		= $this->Suppliers->find('list')->toArray();
+	$materials 		= $this->Materials->find('list')->toArray();
+	$this->set(compact('purchaseOrderHeader', 'projects', 'milestones', 'tasks', 'suppliers', 'materials'));
+	$this->set('_serialize', ['purchaseOrderHeader', 'projects', 'suppliers', 'materials']);
 }
 
 /**
@@ -177,10 +185,10 @@ public function getTasks() {
 	$project_id 	= $this->request->query('project_id');
 	$milestone_id 	= $this->request->query('milestone_id');
 
-	if ($project_id !== null && $milestone_id !== null) {
+	if ($project_id != null && $milestone_id != null) {
 		$tasks = $this->Tasks->find('byProjectAndMilestone', ['project_id' => $project_id, 'milestone_id' => $milestone_id]);
 
-	} else  if ($project_id !== null) {
+	} else  if ($project_id != null) {
 		$tasks = $this->Tasks->find('byProject', ['project_id' => $project_id]);
 	} 
 
@@ -206,16 +214,16 @@ public function getSuppliers() {
 	$milestone_id 	= $this->request->query('milestone_id');
 	$task_id 		= $this->request->query('task_id');
 
-	if ($task_id !== null) {
+	if ($task_id != null) {
 
 		$suppliers = $this->Suppliers->find('byTask', ['task_id' => $task_id]);
 
-	} else if ($project_id !== null) {
+	} else if ($project_id != null) {
 		$suppliers_holder 	= array();
 		$tasks 				= array();
 		$task_ids 			= array();
 
-		if($milestone_id !== null) {
+		if($milestone_id != null) {
 
 			$tasks = $this->Tasks->find('byProjectAndMilestone', ['project_id' => $project_id, 'milestone_id' => $milestone_id]);
 		} else{
@@ -274,7 +282,7 @@ public function getMaterials() {
 			$tasks 				= array();
 			$task_ids 			= array();
 
-			if($milestone_id !== null) {
+			if($milestone_id != null) {
 
 				$tasks = $this->Tasks->find('byProjectAndMilestone', ['project_id' => $project_id, 'milestone_id' => $milestone_id]);
 			} else{

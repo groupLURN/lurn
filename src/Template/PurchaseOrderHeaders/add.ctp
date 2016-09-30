@@ -50,9 +50,9 @@
                 ],
                 'columns' => [
                     $this->Form->input('purchase_order_details.material_id[]', [
-                        'class' => 'chosen form-control',
+                        'class' => ' form-control chosen',
                         'label' => false,
-                        'options' => ['0' => '-'],
+                        'options' => ['0' => '-'] + $materials,
                         'id' => false
                     ]),
                     $this->Form->input('purchase_order_details.quantity[]', [

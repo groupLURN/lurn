@@ -35,6 +35,9 @@ $this->Html->script('/non_bower_components/uncategorized/common-scripts', ['bloc
 $this->Html->script('/non_bower_components/uncategorized/gritter-conf', ['block' => true]);
 $this->Html->script('/non_bower_components/uncategorized/sparkline-chart', ['block' => true]);
 $this->Html->script('/non_bower_components/chart-master/Chart', ['block' => 'script-header']);
+$this->Html->script('purchase-order-header', ['block' => true]);
+
+
 ?>
 
 <!DOCTYPE html>

@@ -59,10 +59,6 @@ public function view($id = null)
 public function add()
 {
 	$this->loadModel('Projects');
-	$this->loadModel('Milestones');
-	$this->loadModel('Tasks');
-	$this->loadModel('Suppliers');
-	$this->loadModel('Materials');
 
 	$purchaseOrderHeader = $this->PurchaseOrderHeaders->newEntity();
 
@@ -80,12 +76,8 @@ public function add()
 	}
 
 	$projects 		= $this->Projects->find('list')->toArray();
-	$milestones 	= $this->Milestones->find('list')->toArray();
-	$tasks 			= $this->Tasks->find('list')->toArray();
-	$suppliers 		= $this->Suppliers->find('list')->toArray();
-	$materials 		= $this->Materials->find('list')->toArray();
-	$this->set(compact('purchaseOrderHeader', 'projects', 'milestones', 'tasks', 'suppliers', 'materials'));
-	$this->set('_serialize', ['purchaseOrderHeader', 'projects', 'suppliers', 'materials']);
+	$this->set(compact('purchaseOrderHeader', 'projects'));
+	$this->set('_serialize', ['purchaseOrderHeader', 'projects']);
 }
 
 /**

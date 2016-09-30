@@ -1,5 +1,6 @@
 <?= $this->Flash->render() ?>
 <?= $this->assign('title', 'Create Purchase Order') ?>
+
 <div class="row mt">
     <div class="col-md-12">
         <?= $this->Form->create($purchaseOrderHeader) ?>
@@ -19,7 +20,7 @@
                 'label' => [
                     'class' => 'mt'
                 ],
-                'options' => [null => '-Choose a Milestone-'] + $milestones
+                'options' => [null => '-Choose a Milestone-']
             ]);
 
             echo $this->Form->input('task_id', [
@@ -27,7 +28,7 @@
                 'label' => [
                     'class' => 'mt'
                 ],
-                'options' => [null => '-Choose a Task-'] + $tasks
+                'options' => [null => '-Choose a Task-']
             ]);
 
             echo $this->Form->input('supplier_id', [
@@ -35,7 +36,7 @@
                 'label' => [
                     'class' => 'mt'
                 ],
-                'options' => [null => '-Choose a Supplier-'] + $suppliers
+                'options' => [null => '-Choose a Supplier-']
             ]);
 
             ?>
@@ -51,7 +52,7 @@
                     $this->Form->input('purchase_order_details.material_id[]', [
                         'class' => 'chosen form-control',
                         'label' => false,
-                        'options' => ['0' => '-'] + $materials,
+                        'options' => ['0' => '-'],
                         'id' => false
                     ]),
                     $this->Form->input('purchase_order_details.quantity[]', [
@@ -88,3 +89,4 @@
 
     </div>
 </div>
+

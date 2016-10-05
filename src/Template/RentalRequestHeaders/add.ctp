@@ -6,13 +6,28 @@
         <fieldset>
             <legend><h3><i class="fa fa-angle-right"></i> <?= __('Create Rental Request') ?></h3></legend>
             <?php
-
             echo $this->Form->input('project_id', [
                 'class' => 'form-control chosen',
                 'label' => [
                     'class' => 'mt'
                 ],
-                'options' => [null => '-'] + $projects
+                'options' => [null => '-Choose a Project-'] + $projects
+            ]);
+
+            echo $this->Form->input('milestone_id', [
+                'class' => 'form-control chosen',
+                'label' => [
+                    'class' => 'mt'
+                ],
+                'options' => [null => '-Choose a Milestone-']
+            ]);
+
+            echo $this->Form->input('task_id', [
+                'class' => 'form-control chosen',
+                'label' => [
+                    'class' => 'mt'
+                ],
+                'options' => [null => '-Choose a Task-']
             ]);
 
             echo $this->Form->input('supplier_id', [
@@ -20,7 +35,7 @@
                 'label' => [
                     'class' => 'mt'
                 ],
-                'options' => $suppliers
+                'options' => [null => '-Choose a Supplier-']
             ]);
 
             ?>
@@ -36,7 +51,7 @@
                     $this->Form->input('rental_request_details.equipment_id[]', [
                         'class' => 'chosen form-control',
                         'label' => false,
-                        'options' => ['0' => '-'] + $equipment,
+                        'options' => ['0' => '-'],
                         'id' => false
                     ]),
                     $this->Form->input('rental_request_details.quantity[]', [

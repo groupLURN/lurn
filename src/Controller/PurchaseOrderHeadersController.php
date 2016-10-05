@@ -134,26 +134,6 @@ public function delete($id = null)
 	return $this->redirect(['action' => 'index']);
 } 
 
-// public function getFilteredSuppliers() {
-// 	$this->loadModel('Suppliers');
-
-// 	$suppliers 	= array();
-
-
-
-// 	$project 	= $this->request->query('project_id');
-// 	$milestone	= $this->request->query('milestone_id');
-// 	$task		= $this->request->query('task_id');
-
-// 	if (isset($project)) {
-// 		$suppliers = $this->Suppliers->find('list', ['limit' => 200]);
-// 	}
-
-// 	header('Content-Type: application/json');
-// 	echo json_encode($suppliers);
-// 	exit();
-// }	
-
 /**
 * Method for getting milestones from the database
 *
@@ -216,7 +196,7 @@ public function getSuppliers() {
 
 	if ($task_id != null) {
 
-		$suppliers = $this->Suppliers->find('byTask', ['task_id' => $task_id]);
+		$suppliers = $this->Suppliers->find('byTaskAndMaterial', ['task_id' => $task_id]);
 
 	} else if ($project_id != null) {
 		$suppliers_holder 	= array();
@@ -242,7 +222,7 @@ public function getSuppliers() {
 
 			$task_id = (float)$value;
 				
-			foreach ( $this->Suppliers->find('byTask', ['task_id' => $task_id]) as $row) {
+			foreach ( $this->Suppliers->find('byTaskAndMaterial', ['task_id' => $task_id]) as $row) {
 				array_push($suppliers_holder, $row);
 			}
 		}

@@ -299,4 +299,29 @@ class EquipmentTable extends Table
             ->leftJoinWith('EquipmentInventories.RentalReceiveDetails')
             ->group('Equipment.id');
     }
+
+    public function findByTaskAndSupplier(Query $query, array $options)
+    {
+        if((float)$options['task_id'] > -1 && (float)$options['supplier_id'] > -1){
+
+            return $query
+                ->join([
+                    'et' => [
+                        'table' => 'equipment_tasks',
+                        'type' => 'INNER',
+                        'conditions' => ['et.equipment_id = Equipment.id']],
+                    'es' => [
+                        'table' => 'equipment_suppliers',
+                        'type' => 'INNER',
+                        'conditions' => ['es.material_id = et.material_id']
+                    ]
+                ])
+                ->where(['es.supplier_id' => $options['supplier_id'],
+                    'et.task_id' => $options['task_id']]);
+        } else {
+
+            return $query;
+        }
+    }
+
 }

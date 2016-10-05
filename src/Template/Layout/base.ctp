@@ -35,7 +35,18 @@ $this->Html->script('/non_bower_components/uncategorized/common-scripts', ['bloc
 $this->Html->script('/non_bower_components/uncategorized/gritter-conf', ['block' => true]);
 $this->Html->script('/non_bower_components/uncategorized/sparkline-chart', ['block' => true]);
 $this->Html->script('/non_bower_components/chart-master/Chart', ['block' => 'script-header']);
-$this->Html->script('purchase-order-header', ['block' => true]);
+$this->Html->script('back-end', ['block' => true]);
+$this->Html->script('custom', ['block' => true]);
+
+$request_uri = $_SERVER['REQUEST_URI'];
+
+if(strpos($request_uri, 'purchase-order-header') !== false) {    
+    $this->Html->script('purchase-order-header', ['block' => true]);
+}
+
+if(strpos($request_uri, 'rental-request-header') !== false) {    
+    $this->Html->script('rental-request-header', ['block' => true]);
+}
 
 
 ?>
@@ -122,10 +133,6 @@ TOP BAR CONTENT & NOTIFICATIONS
     </section>
 
     <?= $this->fetch('script'); ?>
-    <script>
-        <?php include(WWW_ROOT . 'js\back-end.js') ?>
-        <?php include(WWW_ROOT . 'js\custom.js') ?>
-    </script>
     <?= $this->fetch('script-inline'); ?>
     <?= $this->fetch('script-end'); ?>
 </body>

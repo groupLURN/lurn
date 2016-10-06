@@ -10,20 +10,18 @@ MAIN CONTENT
 			<h2 class="apc">OVERVIEW</h2>
 		</div>
 
-       <!--  <div class="anv alg ala">
-            <h3 class="anw anx"> Quick Stats </h3>
-        </div> -->
         <hr class="style-eight">
         <div class="row">
         	<div class="col-lg-9 main-chart">     
 
         		<div class="row mt">
-        			<!-- SERVER STATUS PANELS -->
-        			<div class="col-md-4 col-sm-4 mb add-scroll" style="overflow-y: auto; height:600px" >
-        				<div class="white-panel pn donut-chart" >
+        			<div class="col-md-4 col-sm-4 mb">
+        				<div class="white-panel donut-chart" >
         					<div class="white-header">
         						<h3><p class="text-success">RECENT ACTIVITY</p></h3>
         					</div>
+
+                        <div class="scroll-wrapper dashboard-card">
                             <!--
                             <?php foreach ($projects as $project): ?>
                             <div class="row">
@@ -57,6 +55,7 @@ MAIN CONTENT
                             <?php endforeach; ?>
 
                         -->
+                        </div>
 
 
                     </div><!--grey-panel -->
@@ -64,19 +63,21 @@ MAIN CONTENT
 
 
                 <div class="col-md-4 col-sm-4 mb">
-                	<div class="white-panel pn">
+                	<div class="white-panel">
                 		<div class="white-header">
                 			<h3><p class="text-danger">DUE PROJECTS</p></h3>
                 		</div>
-                		<?php if (empty($duestoday)): ?>
+                		<?php if (sizeof($duestoday) == 0): ?>
                 			<div> <h3> No Projects On Due Today </h3> </div>
                 		<?php endif; ?>
-                        <div class=" add-scroll"  style="overflow-y: auto; height:600px" >
+                        <div class="scroll-wrapper dashboard-card">
                             
                         <?php foreach ($duestoday as $project): ?>
                             <div class="row">
-                                <div class="panel panel-info">       
-                                    <h5> <?= h($project->title) ?></h5>   
+                                <div class="panel panel-info">      
+                        <div class="white-header"> 
+                                    <h4> <?= h($project->title) ?></h4>  
+                                    </div>
                                     <div class="white-panel pn donut-chart">
                                         <!--<div class="white-header">      
                                             <h5> Milestone 1 </h5>
@@ -114,12 +115,12 @@ MAIN CONTENT
                 	</div>
                 </div><!-- /col-md-4 -->
 
-                <div class="col-md-4 mb add-scroll"  style="overflow-y: auto; height:600px" >
-                	<!-- WHITE PANEL - TOP USER -->
-                	<div class="white-panel pn">
+                <div class="col-md-4 mb">
+                	<div class="white-panel">
                 		<div class="white-header">
                 			<h3><p class="text-warning">UPCOMING EVENTS</p></h3>
                 		</div>  
+                        <div class="scroll-wrapper dashboard-card">
                 		<!--
                 		<?php foreach ($milestoneslist as $milestone): ?>
                 			<div class="row">
@@ -135,6 +136,7 @@ MAIN CONTENT
                 			</div>                             
                 		<?php endforeach; ?>
 						-->
+                        </div>
                 	</div>
                 </div><!-- /col-md-4 -->
 

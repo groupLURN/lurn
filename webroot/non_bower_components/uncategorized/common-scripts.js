@@ -75,7 +75,7 @@ var Script = function () {
 
     $("html").niceScroll({styler:"fb",cursorcolor:"#4ECDC4", cursorwidth: '6', cursorborderradius: '10px', background: '#eeeeee', spacebarenabled:false,  cursorborder: '', zindex: '1000'});
 
-    $(".add-scroll").niceScroll({styler:"fb",cursorcolor:"#4ECDC4", cursorwidth: '3', cursorborderradius: '10px', background: '#eeeeee', spacebarenabled:false,  cursorborder: '', zindex: '1000'});
+    $(".scroll-wrapper").niceScroll({styler:"fb",cursorcolor:"#4ECDC4", cursorwidth: '3', cursorborderradius: '10px', background: '#eeeeee', spacebarenabled:false,  cursorborder: '', zindex: '1000'});
 
 
 // widget tools

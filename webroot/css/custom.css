@@ -168,3 +168,18 @@ hr.style-five {
 hr.style-five:after { /* Not really supposed to work, but does */
  content: "\00a0"; /* Prevent margin collapse */ 
 }
+
+
+.scroll-wrapper{
+    overflow-y: auto;
+}
+
+.dashboard-card{
+    height:50vh;
+}
+
+.dashboard-card > div {
+    margin: auto;
+    width: 100%;
+
+}

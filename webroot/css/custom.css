@@ -183,3 +183,7 @@ hr.style-five:after { /* Not really supposed to work, but does */
     width: 100%;
 
 }
+
+.dashboard-card .panel {
+    margin-bottom: 10px;
+}

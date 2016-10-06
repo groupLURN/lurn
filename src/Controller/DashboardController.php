@@ -28,8 +28,8 @@ class DashboardController extends AppController
         $milesstoneslist = $this->Milestones->find('all');
 
         $due_date = new \DateTime('-7 days');
-        $duestoday = $this->Projects->find('byEndDateTo', ['end_date_to' => $due_date]);
-        
+        $duestoday = $this->Projects->find('dueProjects', ['end_date_to' => $due_date]);
+
          if (isset($this->params['requested']))
         {
             return $projects;

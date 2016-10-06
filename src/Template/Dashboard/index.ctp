@@ -181,7 +181,7 @@ MAIN CONTENT
 
 
             </div><!-- /col-lg-3 -->
-        </div><! --/row -->
+        </div>
     </section>
 </section>
 
@@ -190,7 +190,7 @@ MAIN CONTENT
 <footer class="site-footer">
 	<div class="text-center">
 		LURN
-		<a href="index.html#" class="go-top">
+		<a href="#" class="go-top">
 			<i class="fa fa-angle-up"></i>
 		</a>
 	</div>

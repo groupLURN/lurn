@@ -313,7 +313,7 @@ class EquipmentTable extends Table
                     'es' => [
                         'table' => 'equipment_suppliers',
                         'type' => 'INNER',
-                        'conditions' => ['es.material_id = et.material_id']
+                        'conditions' => ['es.equipment_id = et.equipment_id']
                     ]
                 ])
                 ->where(['es.supplier_id' => $options['supplier_id'],

@@ -67,7 +67,7 @@ $(function(){
 	});
 
 	$("#supplier-id").chosen().change(function() {
-		updateMaterials();
+		updateEquipment();
 	});
 
 	function updateSuppliers() {
@@ -105,13 +105,8 @@ $(function(){
 		milestoneId =  $("#milestone-id").val();
 		taskId 		=  $("#task-id").val();
 		supplierId 	=  $("#supplier-id").val();
-
-		console.log("project_id="+projectId
-				+"&milestone_id="+milestoneId
-				+"&task_id="+taskId
-				+$("select[name='purchase_order_details[material_id][]']:last").val());
-
-		$("select[name='purchase_order_details[material_id][]']:last option").not(":first").remove();
+		//rental_request_details[equipment_id][]
+		$("select[name='rental_request_details[equipment_id][]']:last option").not(":first").remove();
 
 		$.ajax({ 
 			type: "GET", 
@@ -121,19 +116,19 @@ $(function(){
 				+"&supplier_id="+supplierId, 
 			data: { get_param: 'value' }, 
 			success: function (data) { 
-				var materials = data;
+				var equipment = data;
 
-				for(var i=0; i < materials.length; i++) {
+				for(var i=0; i < equipment.length; i++) {
 					var option = "<option value=\"" 
-					+ materials[i].id + "\">" 
-					+ materials[i].name 
+					+ equipment[i].id + "\">" 
+					+ equipment[i].name 
 					+ "</option>";
-					$("select[name='purchase_order_details[material_id][]']:last option:last").after(
+					$("select[name='rental_request_details[equipment_id][]']:last option:last").after(
 						option	            	
 						);
 				}
 
-				$("select[name='purchase_order_details[material_id][]']:last").trigger("chosen:updated");
+				$("select[name='rental_request_details[equipment_id][]']:last").trigger("chosen:updated");
 			}
 		});
 

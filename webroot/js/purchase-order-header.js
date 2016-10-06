@@ -106,11 +106,6 @@ $(function(){
 		taskId 		=  $("#task-id").val();
 		supplierId 	=  $("#supplier-id").val();
 
-		console.log("project_id="+projectId
-				+"&milestone_id="+milestoneId
-				+"&task_id="+taskId
-				+$("select[name='purchase_order_details[material_id][]']:last").val());
-
 		$("select[name='purchase_order_details[material_id][]']:last option").not(":first").remove();
 
 		$.ajax({ 

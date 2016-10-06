@@ -26,18 +26,16 @@ class DashboardController extends AppController
 
         $projects = $this->Projects->find('all');
         $milesstoneslist = $this->Milestones->find('all');
-        $duestoday = $this->Projects->find('all', 
-                   array('conditions'=>array('Projects.id'>0,
-                                            'DATE(Projects.end_date)'=>'CURDATE()')));
 
+        $due_date = new \DateTime('-7 days');
+        $duestoday = $this->Projects->find('byEndDateTo', ['end_date_to' => $due_date]);
+        
          if (isset($this->params['requested']))
         {
             return $projects;
         }
         else
         {
-            // you already have the posts
-            //$this->set('posts', $this->Portfolio->find('all'));
             $this->set ( 'projects', $projects );
             $this->set ( 'milestoneslist', $milesstoneslist);   
             $this->set ( 'duestoday', $duestoday);

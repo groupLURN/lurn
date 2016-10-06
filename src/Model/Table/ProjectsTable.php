@@ -179,22 +179,22 @@ class ProjectsTable extends Table
 
     public function findByStartDateFrom(Query $query, array $options)
     {
-        return $query->where($query->newExpr()->gte('Projects.start_date', $options['start_date_from'], 'datetime'));
+        return $query->where(['Projects.start_date >=' => $options['start_date_from']]);
     }
 
     public function findByStartDateTo(Query $query, array $options)
     {
-        return $query->where($query->newExpr()->lt('Projects.start_date', $options['start_date_to'], 'datetime'));
+        return $query->where(['Projects.start_date <' => $options['start_date_to']]);
     }
 
     public function findByEndDateFrom(Query $query, array $options)
     {
-        return $query->where($query->newExpr()->gte('Projects.end_date', $options['end_date_from'], 'datetime'));
+        return $query->where(['Projects.end_date >=' => $options['end_date_from']]);
     }
 
     public function findByEndDateTo(Query $query, array $options)
     {
-        return $query->where($query->newExpr()->lt('Projects.end_date', $options['end_date_to'], 'datetime'));
+        return $query->where(['Projects.end_date <' => $options['end_date_to']]);
     }
 
     public function findProjectStatus(Query $query, array $options)

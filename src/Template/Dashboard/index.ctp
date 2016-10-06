@@ -19,7 +19,7 @@ MAIN CONTENT
 
         		<div class="row mt">
         			<!-- SERVER STATUS PANELS -->
-        			<div class="col-md-4 col-sm-4 mb"  style="overflow-y: auto; height:600px" >
+        			<div class="col-md-4 col-sm-4 mb add-scroll" style="overflow-y: auto; height:600px" >
         				<div class="white-panel pn donut-chart" >
         					<div class="white-header">
         						<h3><p class="text-success">RECENT ACTIVITY</p></h3>
@@ -63,7 +63,7 @@ MAIN CONTENT
                 </div><!-- /col-md-4-->
 
 
-                <div class="col-md-4 col-sm-4 mb"  style="overflow-y: auto; height:600px" >
+                <div class="col-md-4 col-sm-4 mb">
                 	<div class="white-panel pn">
                 		<div class="white-header">
                 			<h3><p class="text-danger">DUE PROJECTS</p></h3>
@@ -71,44 +71,50 @@ MAIN CONTENT
                 		<?php if (empty($duestoday)): ?>
                 			<div> <h3> No Projects On Due Today </h3> </div>
                 		<?php endif; ?>
-                		<?php foreach ($duestoday as $project): ?>
-                			<div class="row">
-                				<div class="panel panel-info">       
-                					<h5> <?= h($project->title) ?></h5>   
-                					<div class="white-panel pn donut-chart">
-                						<div class="white-header">      
-                							<h5> Milestone 1 </h5>
-                						</div>
-                						<!--
-                						<canvas id="<?= h($project->title) ?> due" height="100" width="100"></canvas>
-                						<script>
-                							var doughnutData = [
-                							{
-                								value: 30,
-                								color:"#68dff0"
-                							},
-                							{
-                								value : 70,
-                								color : "#fdfdfd"
-                							}
-                							];
-                							var myDoughnut = new Chart(document.getElementById("<?= h($project->title) ?> due").getContext("2d")).Doughnut(doughnutData);
-                						</script>
-                						-->   
-                						<div class="col-sm-6 col-xs-6 goleft">
-                							<!--<p>70%</p></br>-->
-                							<p>Last modified:<br> <?= h($project->modified) ?> </p>
-                							<p>End date:<br><?= h($project->end_date) ?> </p>
-                						</div>                      
-                					</div>           
-                				</div>    
-                			</div>                            
-                		<?php endforeach; ?>
+                        <div class=" add-scroll"  style="overflow-y: auto; height:600px" >
+                            
+                        <?php foreach ($duestoday as $project): ?>
+                            <div class="row">
+                                <div class="panel panel-info">       
+                                    <h5> <?= h($project->title) ?></h5>   
+                                    <div class="white-panel pn donut-chart">
+                                        <!--<div class="white-header">      
+                                            <h5> Milestone 1 </h5>
+                                        </div>-->
+                                        <!--
+                                        <canvas id="<?= h($project->title) ?> due" height="100" width="100"></canvas>
+                                        <script>
+                                            var doughnutData = [
+                                            {
+                                                value: 30,
+                                                color:"#68dff0"
+                                            },
+                                            {
+                                                value : 70,
+                                                color : "#fdfdfd"
+                                            }
+                                            ];
+                                            var myDoughnut = new Chart(document.getElementById("<?= h($project->title) ?> due").getContext("2d")).Doughnut(doughnutData);
+                                        </script>
+                                        -->   
+                                        <div class="col-sm-6 col-xs-6 goleft">
+                                            <!--<p>70%</p></br>-->
+                                            <p>
+                                            Last modified:<br> <?= h($project->modified) ?> <br>
+                                            End date:<br><?= h($project->end_date) ?>
+                                            </p>
+                                        </div>                      
+                                    </div>           
+                                </div>    
+                            </div>                            
+                        <?php endforeach; ?>
+
+                        </div>
 
                 	</div>
                 </div><!-- /col-md-4 -->
 
-                <div class="col-md-4 mb"  style="overflow-y: auto; height:600px" >
+                <div class="col-md-4 mb add-scroll"  style="overflow-y: auto; height:600px" >
                 	<!-- WHITE PANEL - TOP USER -->
                 	<div class="white-panel pn">
                 		<div class="white-header">

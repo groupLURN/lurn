@@ -15,46 +15,47 @@ MAIN CONTENT
         	<div class="col-lg-9 main-chart">     
 
         		<div class="row mt">
-        			<div class="col-md-4 col-sm-4 mb">
+        			<div class="col-md-6 col-sm-6 mb">
         				<div class="white-panel donut-chart" >
         					<div class="white-header">
         						<h3><p class="text-success">RECENT ACTIVITY</p></h3>
         					</div>
 
                         <div class="scroll-wrapper dashboard-card">
-                            <!--
                             <?php foreach ($projects as $project): ?>
                             <div class="row">
-                                <div class="panel panel-info">       
-                                    <h5> <?= h($project->title) ?></h5>    
+                                <div class="panel panel-info">            
+                                    <div class="white-header"> 
+                                        <h4> <?= h($project->title) ?></h4>  
+                                    </div>
                                     <div class="white-panel pn donut-chart">
-                                        <div class="white-header">      
-                                            <h5> Milestone 1 </h5>
-                                        </div>
-                                         <canvas id="<?= h($project->title) ?>" height="100" width="100"></canvas>
-                                            <script>
-                                                                    var doughnutData = [
-                                                                        {
-                                                                            value: 30,
-                                                                            color:"#68dff0"
-                                                                        },
-                                                                        {
-                                                                            value : 70,
-                                                                            color : "#fdfdfd"
-                                                                        }
-                                                                    ];
-                                                                    var myDoughnut = new Chart(document.getElementById("<?= h($project->title) ?>").getContext("2d")).Doughnut(doughnutData);
-                                            </script>   
-                                            <div class="col-sm-6 col-xs-6 goleft">
-                                                     <p>70%</p></br>
-                                                     <p><?= h($project->modified) ?> </p>
-                                            </div>           
+                                        <canvas id="<?= h($project->title) ?>" height="100" width="100"></canvas>
+                                        <script>
+                                            var doughnutData = [
+                                                {
+                                                    value: 30,
+                                                    color:"#68dff0"
+                                                },
+                                                {
+                                                    value : 70,
+                                                    color : "#fdfdfd"
+                                                }
+                                            ];
+                                            var myDoughnut = new Chart(document.getElementById("<?= h($project->title) ?>").getContext("2d")).Doughnut(doughnutData);
+                                        </script>   
+                                        <div class="col-sm-6 col-xs-6 goleft">
+                                            <p>percentage finish</p>
+                                            <p>
+                                                Recent Update<br> 
+                                                Milestone: <?= h($project->latestMilestone) ?><br>
+                                                Task: <?= h($project->latestTask) ?><br>
+                                                Date: <?= h($project->updateDate) ?>
+                                            </p>
+                                        </div>           
                                     </div>           
                                 </div>    
                             </div>                             
                             <?php endforeach; ?>
-
-                        -->
                         </div>
 
 
@@ -62,20 +63,20 @@ MAIN CONTENT
                 </div><!-- /col-md-4-->
 
 
-                <div class="col-md-4 col-sm-4 mb">
+                <div class="col-md-6 col-sm-6 mb">
                 	<div class="white-panel">
                 		<div class="white-header">
                 			<h3><p class="text-danger">DUE PROJECTS</p></h3>
                 		</div>
-                		<?php if (sizeof($duestoday) == 0): ?>
+                		<?php if (sizeof($dueToday) == 0): ?>
                 			<div> <h3> No Projects On Due Today </h3> </div>
                 		<?php endif; ?>
                         <div class="scroll-wrapper dashboard-card">
                             
-                        <?php foreach ($duestoday as $project): ?>
+                        <?php foreach ($dueToday as $project): ?>
                             <div class="row">
                                 <div class="panel panel-info">      
-                        <div class="white-header"> 
+                                    <div class="white-header"> 
                                     <h4> <?= h($project->title) ?></h4>  
                                     </div>
                                     <div class="white-panel pn donut-chart">
@@ -101,8 +102,10 @@ MAIN CONTENT
                                         <div class="col-sm-6 col-xs-6 goleft">
                                             <!--<p>70%</p></br>-->
                                             <p>
-                                            Last modified:<br> <?= h($project->modified) ?> <br>
-                                            End date:<br><?= h($project->end_date) ?>
+                                                Last updated date:<br> <?= h($project->modified) ?>
+                                            </p>
+                                            <p>
+                                            Due date:<br><?= h($project->end_date) ?>
                                             </p>
                                         </div>                      
                                     </div>           
@@ -112,31 +115,6 @@ MAIN CONTENT
 
                         </div>
 
-                	</div>
-                </div><!-- /col-md-4 -->
-
-                <div class="col-md-4 mb">
-                	<div class="white-panel">
-                		<div class="white-header">
-                			<h3><p class="text-warning">UPCOMING EVENTS</p></h3>
-                		</div>  
-                        <div class="scroll-wrapper dashboard-card">
-                		<!--
-                		<?php foreach ($milestoneslist as $milestone): ?>
-                			<div class="row">
-                				<div class="panel panel-info">       
-                					<h5>PROJECT TITLE</h5>    
-                					<div class="white-panel pn donut-chart">
-                						<div class="white-header">      
-                							<h5> <?= h($milestone->start_date) ?> </h5>
-                						</div>
-                						<div> <h3><?= h($milestone->title) ?></h3> </div>
-                					</div>           
-                				</div>    
-                			</div>                             
-                		<?php endforeach; ?>
-						-->
-                        </div>
                 	</div>
                 </div><!-- /col-md-4 -->
 

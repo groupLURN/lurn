@@ -23,22 +23,30 @@ class DashboardController extends AppController
 
         $this->loadModel('Projects');
         $this->loadModel('Milestones');
+        $this->loadModel('Tasks');
 
         $projects = $this->Projects->find('all');
-        $milesstoneslist = $this->Milestones->find('all');
 
-        $due_date = new \DateTime('-7 days');
-        $duestoday = $this->Projects->find('dueProjects', ['end_date_to' => $due_date]);
+        $dueDate = new \DateTime('-7 days');
+        $dueToday = $this->Projects->find('dueProjects', ['end_date_to' => $dueDate]);
 
          if (isset($this->params['requested']))
         {
             return $projects;
         }
         else
-        {
-            $this->set ( 'projects', $projects );
-            $this->set ( 'milestoneslist', $milesstoneslist);   
-            $this->set ( 'duestoday', $duestoday);
+        {   
+            foreach ($projects as $project) {
+                $task       = $this->Tasks->find('latestTaskOfProject', ['project_id' => $project['id']])->toArray();
+                $milestone  = $this->Milestones->get($task[0]['milestone_id'])->toArray();
+
+                $project['latestMilestone']    = $task[0]['title'];
+                $project['latestTask']         = $milestone['title'];
+                $project['updateDate']         = $task[0]['modified'];
+            }
+
+            $this->set ( 'projects', $projects );  
+            $this->set ( 'dueToday', $dueToday);
         }
 
     }

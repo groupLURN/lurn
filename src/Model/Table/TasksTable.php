@@ -200,22 +200,23 @@ class TasksTable extends Table
 
     public function findLatestTaskOfProject(Query $query, array $options)
     {
-        if((int)$options['project_id'] > -1)
+        if((int)$options['project_id'] > -1){
             return $query
                 ->join([
                     'm' => [
                         'table' => 'milestones',
                         'type' => 'INNER',
-                        'conditions' => ['m.project_id' => (int)$options['project_id'],
-                            'm.id = milestone_id']
+                        'conditions' => ['m.id = Tasks.milestone_id']
                     ]
                 ])
-                ->where(['is_finished' => 1])
+                ->where(['m.project_id' => (int)$options['project_id'],
+                    'Tasks.is_finished' => 1])
                 ->order(['Tasks.modified' =>'DESC'])
                 ->limit(1)
                 ;
-        else
+        } else {
             return $query;
+        }
     }
 
     public function computeForTaskReplenishmentUsingMilestones($milestones)

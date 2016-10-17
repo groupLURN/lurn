@@ -24,28 +24,28 @@ MAIN CONTENT
                         <div class="scroll-wrapper dashboard-card">
                             <?php foreach ($projects as $project): ?>
                             <div class="row">
-                                <div class="panel panel-info">            
+                                <div class="panel">            
                                     <div class="white-header"> 
                                         <h4> <?= h($project->title) ?></h4>  
                                     </div>
-                                    <div class="white-panel pn donut-chart">
-                                        <canvas id="<?= h($project->title) ?>" height="100" width="100"></canvas>
+                                    <div class="white-panel dashboard-card-content">
+                                        <canvas id="<?= h($project->title) ?>" height="150" width="150"></canvas>
                                         <script>
                                             var doughnutData = [
                                                 {
-                                                    value: 30,
+                                                    value : <?= ceil($project->progress) ?>,
                                                     color:"#68dff0"
                                                 },
                                                 {
-                                                    value : 70,
+                                                    value: <?= 100-ceil($project->progress) ?>,
                                                     color : "#fdfdfd"
                                                 }
                                             ];
                                             var myDoughnut = new Chart(document.getElementById("<?= h($project->title) ?>").getContext("2d")).Doughnut(doughnutData);
                                         </script>   
                                         <div class="col-sm-6 col-xs-6 goleft">
-                                            <p>percentage finish</p>
                                             <p>
+                                                Progress: <?= $project->progress ?>%<br><br>
                                                 Recent Update<br> 
                                                 Milestone: <?= h($project->latestMilestone) ?><br>
                                                 Task: <?= h($project->latestTask) ?><br>
@@ -75,11 +75,11 @@ MAIN CONTENT
                             
                         <?php foreach ($dueToday as $project): ?>
                             <div class="row">
-                                <div class="panel panel-info">      
+                                <div class="panel ">      
                                     <div class="white-header"> 
                                     <h4> <?= h($project->title) ?></h4>  
                                     </div>
-                                    <div class="white-panel pn donut-chart">
+                                    <div class="white-panel  dashboard-card-content">
                                         <!--<div class="white-header">      
                                             <h5> Milestone 1 </h5>
                                         </div>-->
@@ -100,12 +100,8 @@ MAIN CONTENT
                                         </script>
                                         -->   
                                         <div class="col-sm-6 col-xs-6 goleft">
-                                            <!--<p>70%</p></br>-->
                                             <p>
-                                                Last updated date:<br> <?= h($project->modified) ?>
-                                            </p>
-                                            <p>
-                                            Due date:<br><?= h($project->end_date) ?>
+                                                Due date:<br><?= h($project->end_date) ?>
                                             </p>
                                         </div>                      
                                     </div>           

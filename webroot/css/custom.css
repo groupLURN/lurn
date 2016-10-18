@@ -198,6 +198,26 @@ hr.style-five:after { /* Not really supposed to work, but does */
     min-height: 100px;
     overflow: hidden;
 }
+
 .dashboard-card-content, .dashboard-card-content p{
     font-size: 1.75rem;
+}
+
+#calendar {
+    border-spacing: 0px;
+    font-size: 1.5rem;
+    width: 100%;
+}
+
+#calendar .month-year, #calendar .day-name{
+    text-align: center;
+}
+
+#calendar .month-year{
+    margin-bottom: 
+    text-decoration: underline;
+}
+
+#calendar .day-name{
+    width: 14%;
 }

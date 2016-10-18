@@ -140,16 +140,18 @@ MAIN CONTENT
             	</div>
 
             	<!-- CALENDAR-->
-            	<div id="calendar" class="mb">
-            		<div class="panel green-panel no-margin">
-            			<div class="panel-body">
-            				<div id="date-popover" class="popover top" style="cursor: pointer; disadding: block; margin-left: 33%; margin-top: -50px; width: 175px;">
-            					<div class="arrow"></div>
-            					<h3 class="popover-title" style="disadding: none;"></h3>
-            					<div id="date-popover-content" class="popover-content"></div>
-            				</div>
-            				<div id="my-calendar"></div>
-            			</div>
+        		<div class="panel green-panel no-margin">
+        			<div class="panel-body">
+            			<table id="calendar">
+                            <tr>
+                                <th colspan="7" class="month-year"><?= $calendar['month']?> <?= $calendar['year']?></th>
+                            </tr>  
+                            <tr>
+                                <?php foreach ($calendar['dayNames'] as $day): ?>
+                                     <th class="day-name"><?= $day?></th>
+                                <?php endforeach;?>
+                            </tr>        
+                        </table>
             		</div>
             	</div><!-- / calendar -->
 

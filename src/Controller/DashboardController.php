@@ -75,7 +75,14 @@ class DashboardController extends AppController
                 $project['progress'] = $progress;
             }
 
-            $this->set ( 'projects', $projects );  
+            $calendar = [];
+
+            $calendar['year']   = date('Y');
+            $calendar['month']  = date('F');
+            $calendar['dayNames'] = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
+
+            $this->set('projects', $projects);
+            $this->set('calendar', $calendar);  
         }
 
     }

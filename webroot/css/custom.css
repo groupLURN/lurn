@@ -214,10 +214,18 @@ hr.style-five:after { /* Not really supposed to work, but does */
 }
 
 #calendar .month-year{
-    margin-bottom: 
     text-decoration: underline;
 }
 
 #calendar .day-name{
     width: 14%;
+}
+
+#calendar td{
+    margin: 2px;
+}
+
+#calendar .current{
+    background-color: #1fbcd2;
+    text-decoration: underline;
 }

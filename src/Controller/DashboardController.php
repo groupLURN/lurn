@@ -77,9 +77,31 @@ class DashboardController extends AppController
 
             $calendar = [];
 
-            $calendar['year']   = date('Y');
-            $calendar['month']  = date('F');
-            $calendar['dayNames'] = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
+            $calendar['year']       = date('Y');
+            $calendar['month']      = date('F');
+            $calendar['dayNames']   = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
+            $days = [];
+            $noOfWeeks = 0;
+
+            for ($day = 1; $day < date('t')+1; $day++) { 
+
+                $tempDate = date('Y').'-'.date('n').'-'.$day;
+                
+                $dayOfTheWeek = date('w', strtotime($tempDate));
+
+                $days[$noOfWeeks][$dayOfTheWeek] = $day;
+                if($dayOfTheWeek  == 6){
+                    $noOfWeeks++;
+
+                    $days[$noOfWeeks] = [];
+                } else if($day == date('t') && $dayOfTheWeek < 6){
+                    $noOfWeeks++;
+                }
+            }
+
+            $calendar['noOfWeeks']  = $noOfWeeks;
+            $calendar['days']       = $days;
+            $calendar['currentDay'] = date('d');
 
             $this->set('projects', $projects);
             $this->set('calendar', $calendar);  

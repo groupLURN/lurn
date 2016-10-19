@@ -1,66 +1,110 @@
-<?php
-/*
- * View/Events/index.ctp
- * CakePHP Full Calendar Plugin
- *
- * Copyright (c) 2010 Silas Montgomery
- * http://silasmontgomery.com
- *
- * Licensed under MIT
- * http://www.opensource.org/licenses/mit-license.php
- */
-?>
-<div class="events index">
-	<h2><?php __('Events');?></h2>
-	<table cellpadding="0" cellspacing="0">
-	<tr>
-			<th><?php echo $this->Paginator->sort('event_type_id');?></th>
-			<th><?php echo $this->Paginator->sort('title');?></th>
-			<th><?php echo $this->Paginator->sort('status');?></th>
-			<th><?php echo $this->Paginator->sort('start');?></th>
-            <th><?php echo $this->Paginator->sort('end');?></th>
-            <th><?php echo $this->Paginator->sort('all_day');?></th>
-			<th class="actions"></th>
-	</tr>
-	<?php
-	$i = 0;
-	foreach ($events as $event):
-		$class = null;
-		if ($i++ % 2 == 0) {
-			$class = ' class="altrow"';
-		}
-	?>
-	<tr<?php echo $class;?>>
-		<td>
-			<?php echo $this->Html->link($event['EventType']['name'], array('controller' => 'event_types', 'action' => 'view', $event['EventType']['id'])); ?>
-		</td>
-		<td><?php echo $event['Event']['title']; ?></td>
-		<td><?php echo $event['Event']['status']; ?></td>
-		<td><?php echo $event['Event']['start']; ?></td>
-        <?php if($event['Event']['all_day'] == 0) { ?>
-   		<td><?php echo $event['Event']['end']; ?></td>
-        <?php } else { ?>
-		<td>N/A</td>
-        <?php } ?>
-        <td><?php if($event['Event']['all_day'] == 1) { echo "Yes"; } else { echo "No"; } ?>&nbsp;</td>
-		<td class="actions">
-			<?php echo $this->Html->link(__('View', true), array('action' => 'view', $event['Event']['id'])); ?>
-			<?php echo $this->Html->link(__('Edit', true), array('action' => 'edit', $event['Event']['id'])); ?>
-		</td>
-	</tr>
-<?php endforeach; ?>
-	</table>
-	<div class="paging">
-		<?php echo $this->Paginator->prev('<< ' . __('previous', true), array(), null, array('class'=>'disabled'));?>
-	 | 	<?php echo $this->Paginator->numbers();?>
- |
-		<?php echo $this->Paginator->next(__('next', true) . ' >>', array(), null, array('class' => 'disabled'));?>
-	</div>
-</div>
-<div class="actions">
-	<ul>
-		<li><?php echo $this->Html->link(__('New Event', true), array('plugin' => 'full_calendar', 'action' => 'add')); ?></li>
-		<li><?php echo $this->Html->link(__('Manage Event Types', true), array('plugin' => 'full_calendar', 'controller' => 'event_types', 'action' => 'index')); ?> </li>
-		<li><li><?php echo $this->Html->link(__('View Calendar', true), array('plugin' => 'full_calendar', 'controller' => 'full_calendar')); ?></li>
-	</ul>
-</div>
+<!-- **********************************************************************************************************************************************************
+MAIN CONTENT
+*********************************************************************************************************************************************************** -->
+<!--main content start-->
+<section >
+	<section class="wrapper">
+
+		<div class="apb">
+			<h2 class="apc">EVENTS CALENDAR</h2>
+		</div>
+
+        <hr class="style-eight">
+        <div class="row">
+        	<div class="col-lg-12 main-chart">     
+        		<!-- CALENDAR-->
+        		<div class="panel green-panel ">
+        			<div class="panel-body">
+            			<table id="event-calendar">
+                            <tr>
+                                <th colspan="7" class="month-year"><?= $calendar['month']?> <?= $calendar['year']?></th>
+                            </tr>  
+                            <tr>
+                                <?php foreach ($calendar['dayNames'] as $day): ?>
+                                     <th class="day-name"><?= $day?></th>
+                                <?php endforeach;?>
+                            </tr>   
+                            <?php for ($week=0; $week < $calendar['noOfWeeks']; $week++){?>
+                                <tr>
+                                    <?php for ($day=0; $day < 7; $day++){?>
+                                            <td class="
+                                                <?php 
+                                                    if (isset($calendar['days'][$week][$day]) && $calendar['currentDay'] == $calendar['days'][$week][$day]) {
+                                                        echo 'current';
+                                                    }
+
+                                                    if (isset($calendar['deadlines'][$week][$day])) {
+                                                        echo ' event';
+                                                    }
+
+                                                ?>  ">
+                                                <span>
+                                                <?php 
+                                                    if (isset($calendar['days'][$week][$day])) {
+                                                        echo $calendar['days'][$week][$day]; 
+                                                    }
+
+                                                ?>
+                                                </span>
+                                                <?php
+                                                    if (isset($calendar['updates'][$week][$day])) {
+                                                    	foreach ($calendar['updates'][$week][$day] as $key => $value) {
+                                                    		if($key==0){
+                                        		?>
+			                                                <br>
+			                                                <ul class="updates no-padding">
+                                                    			<li>Updates:</li>
+                                        					<?php 
+                                                    			} 
+                                                    		?>
+                                                    		<li><?= $value ?></li>
+
+
+
+                                                    		<?php
+                                                    		if($key==count($calendar['updates'][$week][$day])-1){
+
+                                                			?>
+                                                    			</ul>
+                                                			 <?php
+                                                    		}
+                                                    	}
+                                                    }
+
+                                                ?>  
+                                                <?php
+                                                    if (isset($calendar['deadlines'][$week][$day])) {
+                                                    	foreach ($calendar['deadlines'][$week][$day] as $key => $value) {
+                                                    		if($key==0){
+                                                    		?>
+			                                                <br>
+			                                                <ul class="deadlines no-padding">
+                                                    			<li>Deadlines:</li>
+                                                    		<?php 
+                                                    			} 
+                                                    		?>
+                                                    		<li><?= $value ?></li>
+
+                                                    		<?php
+                                                    		if($key==count($calendar['deadlines'][$week][$day])-1){
+
+                                                			?>
+                                                    			</ul>
+                                                			 <?php
+                                                    		}
+                                                    	}
+                                                    }
+
+                                                ?>  
+
+                                            </td>     
+                                    <?php }?>  
+                                </tr>
+                            <?php }?>
+                        </table>
+            		</div>
+            	</div><!-- / calendar -->
+            </div>
+
+    </section>
+</section>

@@ -28,9 +28,9 @@ class DashboardController extends AppController
         $projects = $this->Projects->find('all');
 
         $dueDate = new \DateTime('-7 days');
-        $dueToday = $this->Projects->find('dueProjects', ['end_date_to' => $dueDate]);
+        $dueProjects = $this->Projects->find('dueProjects', ['end_date_to' => $dueDate]);
 
-        $this->set ( 'dueToday', $dueToday);
+        $this->set ('dueProjects', $dueProjects);
 
          if (isset($this->params['requested']))
         {

@@ -209,23 +209,50 @@ hr.style-five:after { /* Not really supposed to work, but does */
     width: 100%;
 }
 
-#calendar .month-year, #calendar .day-name{
+#event-calendar {
+    border-spacing: 0px;
+    color: #fff;
+    font-size: 1.5rem;
+    width: 100%;
+}
+
+
+#calendar .month-year, #calendar .day-name, #event-calendar .month-year, #event-calendar .day-name{
     text-align: center;
 }
 
-#calendar .month-year{
+#calendar .month-year, #event-calendar .month-year{
     text-decoration: underline;
 }
 
-#calendar .day-name{
+#calendar .day-name, #event-calendar .day-name{
     width: 14%;
+}
+
+#calendar .event, #event-calendar .event{
+    background-color: #FFB36C;
 }
 
 #calendar td{
     margin: 2px;
 }
 
-#calendar .current{
+#event-calendar th{
+    padding: 5px;
+    text-align: left;
+    vertical-align: top;
+    height: 50px;
+    overflow: hidden;
+}
+
+#event-calendar td{
+    padding: 10px;
+    text-align: left;
+    vertical-align: top;
+    height: 100px;
+    overflow: hidden;
+}
+
+#calendar .current, #event-calendar .current{
     background-color: #1fbcd2;
-    text-decoration: underline;
 }

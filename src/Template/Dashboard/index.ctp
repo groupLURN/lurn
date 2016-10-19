@@ -68,12 +68,12 @@ MAIN CONTENT
                     		<div class="white-header">
                     			<h3><p class="text-danger">DUE PROJECTS</p></h3>
                     		</div>
-                    		<?php if (sizeof($dueToday) == 0): ?>
+                    		<?php if (sizeof($dueProjects) == 0): ?>
                     			<div> <h3> No Projects On Due Today </h3> </div>
                     		<?php endif; ?>
                             <div class="scroll-wrapper dashboard-card">
                                 
-                            <?php foreach ($dueToday as $project): ?>
+                            <?php foreach ($dueProjects as $project): ?>
                                 <div class="row">
                                     <div class="panel ">      
                                         <div class="white-header"> 

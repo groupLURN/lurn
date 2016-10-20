@@ -23,6 +23,7 @@ MAIN CONTENT
 
                             <div class="scroll-wrapper dashboard-card">
                                 <?php foreach ($projects as $project): ?>
+                                <a href=<?= ($this->Url->build(['controller' => 'tasks', 'action' => 'view/'.$project->latestTaskId, 'project_id' => $project->id ]))?>>
                                 <div class="row">
                                     <div class="panel">            
                                         <div class="white-header"> 
@@ -53,8 +54,9 @@ MAIN CONTENT
                                                 </p>
                                             </div>           
                                         </div>           
-                                    </div>    
-                                </div>                             
+                                    </div> 
+                                </div> 
+                                </a>                               
                                 <?php endforeach; ?>
                             </div>
 
@@ -74,6 +76,8 @@ MAIN CONTENT
                             <div class="scroll-wrapper dashboard-card">
                                 
                             <?php foreach ($dueProjects as $project): ?>
+
+                                <a href=<?= ($this->Url->build(['controller' => 'projects', 'action' => 'view/'. $project->id ]))?>>
                                 <div class="row">
                                     <div class="panel ">      
                                         <div class="white-header"> 
@@ -102,7 +106,8 @@ MAIN CONTENT
                                             </div>                     
                                         </div>           
                                     </div>    
-                                </div>                            
+                                </div>           
+                                </a>                 
                             <?php endforeach; ?>
                             </div>
                     	</div>

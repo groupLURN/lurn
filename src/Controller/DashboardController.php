@@ -163,6 +163,7 @@ class DashboardController extends AppController
 
                 $project['latestMilestone']    = $latestMilestone['title'];
                 $project['latestTask']         = $latestTask[0]['title'];
+                $project['latestTaskId']         = $latestTask[0]['id'];
                 $project['updatedDate']         = $latestTask[0]['modified'];
             } else {                    
                 $noUpdates[] = $tempIndex;

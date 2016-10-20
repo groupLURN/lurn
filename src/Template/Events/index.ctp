@@ -66,9 +66,11 @@ MAIN CONTENT
                                         					<?php 
                                                     			} 
                                                     		?>
-                                                    		<li>&gt; <?= $value ?></li>
-
-
+                                                    		<li>
+                                                            <a href=<?= ($this->Url->build(['controller' => 'tasks', 'action' => 'view/'.$calendar['updatedTaskIds'][$week][$day][$key], 'project_id' => $calendar['updatedProjectIds'][$week][$day][$key] ]))?>>
+                                                            &gt; <?= $value ?>
+                                                            </a>
+                                                            </li>
 
                                                     		<?php
                                                     		if($key==count($calendar['updates'][$week][$day])-1){
@@ -92,7 +94,11 @@ MAIN CONTENT
                                                     		<?php 
                                                     			} 
                                                     		?>
-                                                    		<li>&gt; <?= h($value) ?></li>
+                                                    		<li>
+                                                            <a href=<?= ($this->Url->build(['controller' => 'projects', 'action' => 'view/'.$calendar['dueProjectIds'][$week][$day][$key] ]))?>>
+                                                            &gt; <?= h($value) ?>
+                                                            </a>
+                                                            </li>
 
                                                     		<?php
                                                     		if($key==count($calendar['dueProjects'][$week][$day])-1){

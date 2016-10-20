@@ -30,10 +30,13 @@ class EventsController extends AppController
         $calendar['year']       = date('Y');
         $calendar['month']      = date('F');
         $calendar['dayNames']   = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        $days           = [];
-        $dueProjects    = [];
-        $updates        = [];
-        $noOfWeeks      = 0;
+        $days               = [];
+        $dueProjects        = [];
+        $dueProjectIds      = [];
+        $updates            = [];
+        $updatedProjectIds  = [];
+        $updatedTaskIds     = [];
+        $noOfWeeks          = 0;
 
         foreach ($projects as $project) { 
             $latestTask         = $this->Tasks->find('latestTaskOfProject', ['project_id' => $project['id']])->toArray();
@@ -43,7 +46,8 @@ class EventsController extends AppController
                 $latestMilestone    = $this->Milestones->get($latestTask[0]['milestone_id']);
 
                 $project['updatedDate']     = $updatedDate;                
-                $project['latestMilestone'] = $latestMilestone;
+                $project['latestMilestone'] = $latestMilestone;          
+                $project['latestTask']      = $latestTask[0];
             }
         }
 
@@ -63,7 +67,13 @@ class EventsController extends AppController
                     if(!isset($dueProjects[$noOfWeeks][$dayOfTheWeek])){
                         $dueProjects[$noOfWeeks][$dayOfTheWeek] = [];
                     }
+
+                    if(!isset($dueProjectIds[$noOfWeeks][$dayOfTheWeek])){
+                        $dueProjectIds[$noOfWeeks][$dayOfTheWeek] = [];
+                    }
+
                     array_push($dueProjects[$noOfWeeks][$dayOfTheWeek], $project->title);
+                    array_push($dueProjectIds[$noOfWeeks][$dayOfTheWeek], $project->id);
                 }
 
                 //add updates to list
@@ -73,9 +83,19 @@ class EventsController extends AppController
                         if(!isset($updates[$noOfWeeks][$dayOfTheWeek])){
                             $updates[$noOfWeeks][$dayOfTheWeek] = [];
                         }
+                    
+                        if(!isset($updatedProjectIds[$noOfWeeks][$dayOfTheWeek])){
+                            $updatedProjectIds[$noOfWeeks][$dayOfTheWeek] = [];
+                        }
+
+                        if(!isset($updatedTaskIds[$noOfWeeks][$dayOfTheWeek])){
+                            $updatedTaskIds[$noOfWeeks][$dayOfTheWeek] = [];
+                        }
 
                         $update = $project->title.'<ul class="milestone"><li>&gt;&gt; '.$project['latestMilestone']->title.'</li></ul>';
-                        array_push($updates[$noOfWeeks][$dayOfTheWeek],  $update);                
+                        array_push($updates[$noOfWeeks][$dayOfTheWeek],  $update);
+                        array_push($updatedProjectIds[$noOfWeeks][$dayOfTheWeek],  $project->id); 
+                        array_push($updatedTaskIds[$noOfWeeks][$dayOfTheWeek],  $project['latestTask']['id']);             
                     }
                 }
             }
@@ -90,11 +110,14 @@ class EventsController extends AppController
             }
         }
 
-        $calendar['noOfWeeks']      = $noOfWeeks;
-        $calendar['days']           = $days;        
-        $calendar['dueProjects']    = $dueProjects;
-        $calendar['updates']        = $updates;
-        $calendar['currentDay']     = date('d');
+        $calendar['noOfWeeks']          = $noOfWeeks;
+        $calendar['days']               = $days;        
+        $calendar['dueProjects']        = $dueProjects;
+        $calendar['dueProjectIds']      = $dueProjectIds;
+        $calendar['updates']            = $updates;
+        $calendar['updatedProjectIds']  = $updatedProjectIds;
+        $calendar['updatedTaskIds']     = $updatedTaskIds;
+        $calendar['currentDay']         = date('d');
 
         $this->set('calendar', $calendar);  
 

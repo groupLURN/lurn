@@ -241,9 +241,24 @@ hr.style-five:after { /* Not really supposed to work, but does */
     background-color: #FF8B21;
 }
 
-
 #calendar .day, #event-calendar .day{
     border: 1px solid #1fbcd2;
+}
+
+#calendar .current{
+    text-decoration: underline;
+}
+
+#event-calendar .current span{
+    border-bottom: 2px solid #ffffff;
+}
+
+#calendar .current-event{
+    text-decoration: underline;
+}
+
+#event-calendar .current-event span{
+    border-bottom: 2px solid #ffffff;
 }
 
 #calendar td{

@@ -33,8 +33,17 @@ MAIN CONTENT
                                                         echo 'current';
                                                     }
 
-                                                    if (isset($calendar['deadlines'][$week][$day])) {
-                                                        echo ' event';
+                                                    if (isset($calendar['dueProjects'][$week][$day]) || isset($calendar['updates'][$week][$day])) {
+                                                        if(isset($calendar['days'][$week][$day]) && $calendar['currentDay'] == $calendar['days'][$week][$day]){
+                                                            echo '-';
+                                                        } else {
+                                                            echo ' ';
+                                                        }
+                                                        echo 'event';
+                                                    }
+
+                                                    if (isset($calendar['days'][$week][$day])) {
+                                                        echo ' day'; 
                                                     }
 
                                                 ?>  ">
@@ -57,7 +66,7 @@ MAIN CONTENT
                                         					<?php 
                                                     			} 
                                                     		?>
-                                                    		<li><?= $value ?></li>
+                                                    		<li>&gt; <?= $value ?></li>
 
 
 
@@ -73,20 +82,20 @@ MAIN CONTENT
 
                                                 ?>  
                                                 <?php
-                                                    if (isset($calendar['deadlines'][$week][$day])) {
-                                                    	foreach ($calendar['deadlines'][$week][$day] as $key => $value) {
+                                                    if (isset($calendar['dueProjects'][$week][$day])) {
+                                                    	foreach ($calendar['dueProjects'][$week][$day] as $key => $value) {
                                                     		if($key==0){
                                                     		?>
 			                                                <br>
-			                                                <ul class="deadlines no-padding">
-                                                    			<li>Deadlines:</li>
+			                                                <ul class="due-projects no-padding">
+                                                    			<li>Due Projects:</li>
                                                     		<?php 
                                                     			} 
                                                     		?>
-                                                    		<li><?= $value ?></li>
+                                                    		<li>&gt; <?= h($value) ?></li>
 
                                                     		<?php
-                                                    		if($key==count($calendar['deadlines'][$week][$day])-1){
+                                                    		if($key==count($calendar['dueProjects'][$week][$day])-1){
 
                                                 			?>
                                                     			</ul>

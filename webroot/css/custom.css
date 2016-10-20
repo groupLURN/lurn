@@ -233,6 +233,19 @@ hr.style-five:after { /* Not really supposed to work, but does */
     background-color: #FFB36C;
 }
 
+#calendar .current, #event-calendar .current{
+    background-color: #1fbcd2;
+}
+
+#calendar .current-event, #event-calendar .current-event{
+    background-color: #FF8B21;
+}
+
+
+#calendar .day, #event-calendar .day{
+    border: 1px solid #1fbcd2;
+}
+
 #calendar td{
     margin: 2px;
 }
@@ -249,10 +262,16 @@ hr.style-five:after { /* Not really supposed to work, but does */
     padding: 10px;
     text-align: left;
     vertical-align: top;
-    height: 100px;
+    height: 50px;
     overflow: hidden;
 }
 
-#calendar .current, #event-calendar .current{
-    background-color: #1fbcd2;
+
+#event-calendar ul{
+    font-size: 1.25rem;
+}
+
+
+#event-calendar ul>li>ul{
+    padding-left: 1rem;
 }

@@ -29,7 +29,7 @@ MAIN CONTENT
                                             <h4> <?= h($project->title) ?></h4>  
                                         </div>
                                         <div class="white-panel dashboard-card-content">
-                                            <canvas id="<?= h($project->title) ?>" height="150" width="150"></canvas>
+                                            <canvas id="recent-<?= h($project->title) ?>" height="150" width="150"></canvas>
                                             <script>
                                                 var doughnutData = [
                                                     {
@@ -41,7 +41,7 @@ MAIN CONTENT
                                                         color : "#fdfdfd"
                                                     }
                                                 ];
-                                                var myDoughnut = new Chart(document.getElementById("<?= h($project->title) ?>").getContext("2d")).Doughnut(doughnutData);
+                                                var myDoughnut = new Chart(document.getElementById("recent-<?= h($project->title) ?>").getContext("2d")).Doughnut(doughnutData);
                                             </script>   
                                             <div class="col-sm-6 col-xs-6 goleft">
                                                 <p>
@@ -49,7 +49,7 @@ MAIN CONTENT
                                                     Recent Update<br> 
                                                     Milestone: <?= h($project->latestMilestone) ?><br>
                                                     Task: <?= h($project->latestTask) ?><br>
-                                                    Date: <?= h($project->updateDate) ?>
+                                                    Date: <?= h(strcmp($project->updatedDate, "N/A") == 0 ? $project->updatedDate : date_format($project->updatedDate,"Y/m/d")) ?>
                                                 </p>
                                             </div>           
                                         </div>           
@@ -80,30 +80,26 @@ MAIN CONTENT
                                         <h4> <?= h($project->title) ?></h4>  
                                         </div>
                                         <div class="white-panel  dashboard-card-content">
-                                            <!--<div class="white-header">      
-                                                <h5> Milestone 1 </h5>
-                                            </div>-->
-                                            <!--
-                                            <canvas id="<?= h($project->title) ?> due" height="100" width="100"></canvas>
+                                            <canvas id="due-<?= h($project->title) ?>" height="150" width="150"></canvas>
                                             <script>
                                                 var doughnutData = [
-                                                {
-                                                    value: 30,
-                                                    color:"#68dff0"
-                                                },
-                                                {
-                                                    value : 70,
-                                                    color : "#fdfdfd"
-                                                }
+                                                    {
+                                                        value : <?= ceil($project->progress) ?>,
+                                                        color:"#68dff0"
+                                                    },
+                                                    {
+                                                        value: <?= 100-ceil($project->progress) ?>,
+                                                        color : "#fdfdfd"
+                                                    }
                                                 ];
-                                                var myDoughnut = new Chart(document.getElementById("<?= h($project->title) ?> due").getContext("2d")).Doughnut(doughnutData);
-                                            </script>
-                                            -->   
+                                                var myDoughnut = new Chart(document.getElementById("due-<?= h($project->title) ?>").getContext("2d")).Doughnut(doughnutData);
+                                            </script>   
                                             <div class="col-sm-6 col-xs-6 goleft">
                                                 <p>
-                                                    Due date:<br><?= h($project->end_date) ?>
+                                                    Progress: <?= $project->progress ?>%<br><br>
+                                                    Due date:<br><?= h(date_format($project->end_date,"Y/m/d")) ?>
                                                 </p>
-                                            </div>                      
+                                            </div>                     
                                         </div>           
                                     </div>    
                                 </div>                            
@@ -136,6 +132,7 @@ MAIN CONTENT
             	</div>
 
             	<!-- CALENDAR-->
+                <a href=<?= $this->Url->build(['controller' => 'events', 'action' => 'index']) ?>>
         		<div class="panel green-panel ">
         			<div class="panel-body">
             			<table id="calendar">
@@ -152,8 +149,22 @@ MAIN CONTENT
                                     <?php for ($day=0; $day < 7; $day++){?>
                                             <td class="
                                                 <?php 
+
                                                     if (isset($calendar['days'][$week][$day]) && $calendar['currentDay'] == $calendar['days'][$week][$day]) {
                                                         echo 'current';
+                                                    }
+
+                                                    if (isset($calendar['events'][$week][$day])) {
+                                                        if(isset($calendar['days'][$week][$day]) && $calendar['currentDay'] == $calendar['days'][$week][$day]){
+                                                            echo '-';
+                                                        } else {
+                                                            echo ' ';
+                                                        }
+                                                        echo 'event';
+                                                    }
+
+                                                    if (isset($calendar['days'][$week][$day])) {
+                                                        echo ' day'; 
                                                     }
 
                                                 ?>  ">
@@ -170,6 +181,7 @@ MAIN CONTENT
                         </table>
             		</div>
             	</div><!-- / calendar -->
+                </a>
             </div><!-- /col-lg-3 -->
         </div>
     </section>

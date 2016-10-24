@@ -212,7 +212,6 @@ class TasksTable extends Table
                 ->where(['m.project_id' => (int)$options['project_id'],
                     'Tasks.is_finished' => 1])
                 ->order(['Tasks.modified' =>'DESC'])
-                ->limit(1)
                 ;
         } else {
             return $query;

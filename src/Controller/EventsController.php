@@ -39,15 +39,10 @@ class EventsController extends AppController
         $noOfWeeks          = 0;
 
         foreach ($projects as $project) { 
-            $latestTask         = $this->Tasks->find('latestTaskOfProject', ['project_id' => $project['id']])->toArray();
+            $updatedTasks = $this->Tasks->find('latestTaskOfProject', ['project_id' => $project['id']])->toArray();
 
-            if(count($latestTask) > 0) {
-                $updatedDate        = $latestTask[0]['modified']->year.'-'.$latestTask[0]['modified']->month.'-'.$latestTask[0]['modified']->day;
-                $latestMilestone    = $this->Milestones->get($latestTask[0]['milestone_id']);
-
-                $project['updatedDate']     = $updatedDate;                
-                $project['latestMilestone'] = $latestMilestone;          
-                $project['latestTask']      = $latestTask[0];
+            if(count($updatedTasks) > 0) {         
+                $project['updatedTasks'] = $updatedTasks;
             }
         }
 
@@ -77,25 +72,30 @@ class EventsController extends AppController
                 }
 
                 //add updates to list
-                if(isset($project['updatedDate'])) {
+                if(isset($project['updatedTasks'])) {
 
-                    if(strcmp($project['updatedDate'], $tempDate) == 0){
-                        if(!isset($updates[$noOfWeeks][$dayOfTheWeek])){
-                            $updates[$noOfWeeks][$dayOfTheWeek] = [];
-                        }
-                    
-                        if(!isset($updatedProjectIds[$noOfWeeks][$dayOfTheWeek])){
-                            $updatedProjectIds[$noOfWeeks][$dayOfTheWeek] = [];
-                        }
+                    for ($i=0; $i < count($project['updatedTasks']); $i++) { 
+                        $latestMilestone    = $this->Milestones->get($project['updatedTasks'][$i]['milestone_id']);
+                        $updatedDate        = $project['updatedTasks'][$i]['modified']->year.'-'.$project['updatedTasks'][$i]['modified']->month.'-'.$project['updatedTasks'][$i]['modified']->day;
 
-                        if(!isset($updatedTaskIds[$noOfWeeks][$dayOfTheWeek])){
-                            $updatedTaskIds[$noOfWeeks][$dayOfTheWeek] = [];
-                        }
+                        if(strcmp($updatedDate, $tempDate) == 0){
+                            if(!isset($updates[$noOfWeeks][$dayOfTheWeek])){
+                                $updates[$noOfWeeks][$dayOfTheWeek] = [];
+                            }
+                        
+                            if(!isset($updatedProjectIds[$noOfWeeks][$dayOfTheWeek])){
+                                $updatedProjectIds[$noOfWeeks][$dayOfTheWeek] = [];
+                            }
 
-                        $update = $project->title.'<ul class="milestone"><li>&gt;&gt; '.$project['latestMilestone']->title.'</li></ul>';
-                        array_push($updates[$noOfWeeks][$dayOfTheWeek],  $update);
-                        array_push($updatedProjectIds[$noOfWeeks][$dayOfTheWeek],  $project->id); 
-                        array_push($updatedTaskIds[$noOfWeeks][$dayOfTheWeek],  $project['latestTask']['id']);             
+                            if(!isset($updatedTaskIds[$noOfWeeks][$dayOfTheWeek])){
+                                $updatedTaskIds[$noOfWeeks][$dayOfTheWeek] = [];
+                            }
+
+                            $update = $project->title.'<ul class="milestone"><li>&gt;&gt; '.$latestMilestone->title.'</li></ul>';
+                            array_push($updates[$noOfWeeks][$dayOfTheWeek],  $update);
+                            array_push($updatedProjectIds[$noOfWeeks][$dayOfTheWeek],  $project->id); 
+                            array_push($updatedTaskIds[$noOfWeeks][$dayOfTheWeek],  $project['updatedTasks'][$i]['id']);             
+                        }
                     }
                 }
             }

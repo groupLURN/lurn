@@ -83,7 +83,8 @@ class DashboardController extends AppController
 
 
                 foreach ($projects as $project) {
-                    $endDate= $project->end_date->year.'-'.$project->end_date->month.'-'.$project->end_date->day;
+                    $updatedTasks  = $this->Tasks->find('latestTaskOfProject', ['project_id' => $project->id])->toArray();
+                    $endDate       = $project->end_date->year.'-'.$project->end_date->month.'-'.$project->end_date->day;
 
                     //add due projects to list
                     if(strcmp($endDate, $tempDate) == 0){
@@ -92,22 +93,21 @@ class DashboardController extends AppController
                         }
                         array_push($events[$noOfWeeks][$dayOfTheWeek], true);
                     }
-
-                    //add events to list
-                    if(strcmp($project['updatedDate'], 'N/A') != 0) {
-                        if($project['updatedDate'] != null) {
-                            $updatedDate = $project['updatedDate']->year.'-'.$project['updatedDate']->month.'-'.$project['updatedDate']->day;
-
-                            if(strcmp($updatedDate, $tempDate) == 0){
-                                if(!isset($events[$noOfWeeks][$dayOfTheWeek])){
-                                    $events[$noOfWeeks][$dayOfTheWeek] = [];
-                                }
-
-                                array_push($events[$noOfWeeks][$dayOfTheWeek],  true);                
+                        
+                    for ($i=0; $i < count($updatedTasks); $i++) { 
+                        $updatedDate        = $updatedTasks[$i]['modified']->year.'-'.$updatedTasks[$i]['modified']->month.'-'.$updatedTasks[$i]['modified']->day;
+                        if(strcmp($updatedDate, $tempDate) == 0){
+                            if(!isset($events[$noOfWeeks][$dayOfTheWeek])){
+                                $events[$noOfWeeks][$dayOfTheWeek] = [];
                             }
 
+                            array_push($events[$noOfWeeks][$dayOfTheWeek],  true);                
                         }
                     }
+                        
+
+                    
+                    
                 }
 
                 $days[$noOfWeeks][$dayOfTheWeek] = $day;
@@ -163,8 +163,8 @@ class DashboardController extends AppController
 
                 $project['latestMilestone']    = $latestMilestone['title'];
                 $project['latestTask']         = $latestTask[0]['title'];
-                $project['latestTaskId']         = $latestTask[0]['id'];
-                $project['updatedDate']         = $latestTask[0]['modified'];
+                $project['latestTaskId']       = $latestTask[0]['id'];
+                $project['updatedDate']        = $latestTask[0]['modified'];
             } else {                    
                 $noUpdates[] = $tempIndex;
             }

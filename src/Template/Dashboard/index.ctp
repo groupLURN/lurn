@@ -50,7 +50,7 @@ MAIN CONTENT
                                                     Recent Update<br> 
                                                     Milestone: <?= h($project->latestMilestone) ?><br>
                                                     Task: <?= h($project->latestTask) ?><br>
-                                                    Date: <?= h(strcmp($project->updatedDate, "N/A") == 0 ? $project->updatedDate : date_format($project->updatedDate,"Y/m/d")) ?>
+                                                    Date: <?= h(strcmp($project->updatedDate, "N/A") == 0 ? $project->updatedDate : date_format($project->updatedDate,"F d, Y")) ?>
                                                 </p>
                                             </div>           
                                         </div>           
@@ -101,7 +101,7 @@ MAIN CONTENT
                                             <div class="col-sm-6 col-xs-6 goleft">
                                                 <p>
                                                     Progress: <?= $project->progress ?>%<br><br>
-                                                    Due date:<br><?= h(date_format($project->end_date,"Y/m/d")) ?>
+                                                    Due date:<br><?= h(date_format($project->end_date,"F d, Y")) ?>
                                                 </p>
                                             </div>                     
                                         </div>           
@@ -116,25 +116,33 @@ MAIN CONTENT
             </div><!-- /col-lg-9 END SECTION MIDDLE -->
 
 
-        <!-- **********************************************************************************************************************************************************
-        RIGHT SIDEBAR CONTENT
-        *********************************************************************************************************************************************************** -->
+        <!--RIGHT SIDEBAR CONTENT-->
 
             <div class="col-lg-3 ds">
-            	<!--COMPLETED ACTIONS DONUTS CHART-->
-            	<h3>NOTIFICATIONS</h3>
+                <!-- NOTIFICATIONS -->
+                <div class="notifications ">
+                <?php 
+                    $max = count($notifications) < 4 ? count($notifications) : 4;
+                    if($max > 0) {
+                        ?>
+                        
+                        <h3>NOTIFICATIONS</h3>
 
-            	<!-- First Action -->
-            	<div class="desc">
-            		<div class="thumb">
-            			<span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
-            		</div>
-            		<div class="details">
-            			<p><muted>2 Minutes Ago</muted><br/>
-            				<a href="#">James Brown</a> subscribed to your newsletter.<br/>
-            			</p>
-            		</div>
-            	</div>
+                        <?php
+                    }
+                    for ($i=0; $i < $max; $i++) { 
+                 ?>
+                    <div class="desc">
+                        <a href=<?= $this->Url->build('').$notifications[$i]['link']  ?>>
+                            <p><muted><?= date_format($notifications[$i]['created'], 'F d, Y - g:ia')?></muted><br/>                                 
+                                <?= $notifications[$i]['message']?>
+                            </p>
+                        </a>
+                    </div>
+                <?php   
+                }
+                ?>
+                </div>
 
             	<!-- CALENDAR-->
                 <a href=<?= $this->Url->build(['controller' => 'events', 'action' => 'index']) ?>>

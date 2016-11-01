@@ -24,11 +24,14 @@ class DashboardController extends AppController
         $this->loadModel('Projects');
         $this->loadModel('Milestones');
         $this->loadModel('Tasks');
+        $this->loadModel('Notifications');
 
         $projects = $this->Projects->find('all')->toArray();
 
         $dueDate = new \DateTime('-7 days');
         $dueProjects = $this->Projects->find('dueProjects', ['end_date_to' => $dueDate]);
+
+        $notifications = $this->Notifications->find('byUserId', ['user_id' => $this->request->session()->read('Auth.User.id')])->toArray();
 
         $this->set ('dueProjects', $dueProjects);
 
@@ -51,6 +54,9 @@ class DashboardController extends AppController
             $this->set('projects', $projects);
             $this->set('calendar', $calendar);  
         }
+
+
+        $this->set('notifications', $notifications);  
 
     }
       public function view($id = null)

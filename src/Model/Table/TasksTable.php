@@ -56,7 +56,7 @@ class TasksTable extends Table
         $this->belongsTo('Projects', [
             'className'     => 'Milestones',
             'foreignKey'    => 'project_id',
-            'joinType'      => 'INNEER'
+            'joinType'      => 'INNER'
         ]);
 
         // Milestone

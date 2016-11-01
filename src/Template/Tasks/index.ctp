@@ -94,7 +94,7 @@
                                 <tr>
                                     <td><?= h($task->title) ?></td>
                                     <td><?= h($task->start_date) ?></td>
-                                    <td><?= h($task->end_date) ?></td>
+                                    <td><?= h($task->end_date) ?> </td>
                                     <td>
                                         <span class='task-status <?=str_replace(' ', '-', strtolower($task->status))?>'>
                                             <?= h($task->status) ?>

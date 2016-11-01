@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Routing\Router;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -64,7 +65,32 @@ class ResourceRequestHeadersController extends AppController
             $resourceRequestHeader = $this->ResourceRequestHeaders->patchEntity($resourceRequestHeader, $this->request->data, [
                 'associated' => ['Equipment', 'ManpowerTypes', 'Materials']
             ]);
+
             if ($this->ResourceRequestHeaders->save($resourceRequestHeader)) {
+                $this->loadModel('Notifications');
+                $this->loadModel('Projects');
+                $employees = [];
+
+                $project = $this->Projects->get($resourceRequestHeader->from_project_id, [
+                    'contain' => ['Employees', 'EmployeesJoin' => ['EmployeeTypes']]]);
+
+                array_push($employees, $project->employee);
+                for ($i=0; $i < count($project->employees_join); $i++) { 
+                    $userType = $project->employees_join[$i]->employee_type_id;
+                    if($userType == 1 || $userType == 4) {
+                        array_push($employees, $project->employees_join[$i]);
+                    }
+                }
+
+                foreach ($employees as $employee) {
+                    $notification = $this->Notifications->newEntity();
+                    $notification->link = Router::url(['controller' => 'resource-request-headers', 'action' => 'view/'. $project->id ], false);
+                    $notification->message = $project->title.' has made an inventory request. Click to see request.';
+                    $notification->user_id = $employee['user_id'];
+                    $notification->project_id = $resourceRequestHeader->from_project_id;
+                    $this->Notifications->save($notification);
+                }
+
                 $this->Flash->success(__('The resource request number ' . $resourceRequestHeader->id .' has been saved.'));
                 return $this->redirect(['action' => 'index']);
             } else {

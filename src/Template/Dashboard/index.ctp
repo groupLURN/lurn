@@ -133,7 +133,7 @@ MAIN CONTENT
                     for ($i=0; $i < $max; $i++) { 
                  ?>
                     <div class="desc">
-                        <a href=<?= $this->Url->build('').$notifications[$i]['link']  ?>>
+                        <a href=<?= $notifications[$i]['link']  ?>>
                             <p><muted><?= date_format($notifications[$i]['created'], 'F d, Y - g:ia')?></muted><br/>                                 
                                 <?= $notifications[$i]['message']?>
                             </p>

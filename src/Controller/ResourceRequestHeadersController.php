@@ -84,7 +84,8 @@ class ResourceRequestHeadersController extends AppController
 
                 foreach ($employees as $employee) {
                     $notification = $this->Notifications->newEntity();
-                    $notification->link = Router::url(['controller' => 'resource-request-headers', 'action' => 'view/'. $project->id ], false);
+                    $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'resource-request-headers', 'action' => 'view/'. $project->id ], false));
+                    $notification->link = $link;
                     $notification->message = $project->title.' has made an inventory request. Click to see request.';
                     $notification->user_id = $employee['user_id'];
                     $notification->project_id = $resourceRequestHeader->from_project_id;

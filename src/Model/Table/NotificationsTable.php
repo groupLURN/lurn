@@ -90,7 +90,8 @@ class NotificationsTable extends Table
     public function findByUserId(Query $query, array $options)
     {   
         if($options['user_id'] >= 0){
-            return $query->where(['user_id' => $options['user_id']]);
+            return $query->where(['user_id' => $options['user_id']])
+                ->order(['created' =>'DESC']);
         } else {
             return $query;
         }

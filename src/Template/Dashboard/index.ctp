@@ -30,7 +30,7 @@ MAIN CONTENT
                                             <h4> <?= h($project->title) ?></h4>  
                                         </div>
                                         <div class="white-panel dashboard-card-content">
-                                            <canvas id="recent-<?= h($project->title) ?>" height="150" width="150"></canvas>
+                                            <canvas id="recent-<?= h($project->title) ?>" height="130" width="130"></canvas>
                                             <script>
                                                 var doughnutData = [
                                                     {
@@ -84,7 +84,7 @@ MAIN CONTENT
                                         <h4> <?= h($project->title) ?></h4>  
                                         </div>
                                         <div class="white-panel  dashboard-card-content">
-                                            <canvas id="due-<?= h($project->title) ?>" height="150" width="150"></canvas>
+                                            <canvas id="due-<?= h($project->title) ?>" height="130" width="130"></canvas>
                                             <script>
                                                 var doughnutData = [
                                                     {
@@ -120,7 +120,7 @@ MAIN CONTENT
 
             <div class="col-lg-3 ds">
                 <!-- NOTIFICATIONS -->
-                <div class="notifications ">
+                <div id="notifications">
                 <?php 
                     $max = count($notifications) < 4 ? count($notifications) : 4;
                     if($max > 0) {
@@ -132,7 +132,7 @@ MAIN CONTENT
                     }
                     for ($i=0; $i < $max; $i++) { 
                  ?>
-                    <div class="desc">
+                    <div class="notification">
                         <a href=<?= $this->Url->build('/').$notifications[$i]['link']  ?>>
                             <p><muted><?= date_format($notifications[$i]['created'], 'F d, Y - g:ia')?></muted><br/>                                 
                                 <?= $notifications[$i]['message']?>

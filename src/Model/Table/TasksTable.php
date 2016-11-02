@@ -209,8 +209,7 @@ class TasksTable extends Table
                         'conditions' => ['m.id = Tasks.milestone_id']
                     ]
                 ])
-                ->where(['m.project_id' => (int)$options['project_id'],
-                    'Tasks.is_finished' => 1])
+                ->where(['m.project_id' => (int)$options['project_id']])
                 ->order(['Tasks.modified' =>'DESC'])
                 ;
         } else {

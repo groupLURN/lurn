@@ -289,3 +289,7 @@ hr.style-five:after { /* Not really supposed to work, but does */
 #event-calendar ul>li>ul{
     padding-left: 1rem;
 }
+
+#notifications .notification {
+    margin: 1rem;
+}

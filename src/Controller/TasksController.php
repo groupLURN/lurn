@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\Collection\Collection;
+use Cake\Routing\Router;
 use Cake\Event\Event;
 
 /**
@@ -137,7 +138,33 @@ class TasksController extends AppController
 
             if ($this->Tasks->returnToProjectInventory($task, $this->request->data['materials']) &&
                 $this->Tasks->save($task))
-            {
+            {   
+                $this->loadModel('Notifications');
+                $this->loadModel('Projects');
+                $employees = [];
+
+                $project = $this->Projects->get($task->milestone->project_id, [
+                    'contain' => ['Employees', 'EmployeesJoin' => ['EmployeeTypes']]]);
+
+                array_push($employees, $project->employee);
+                for ($i=0; $i < count($project->employees_join); $i++) { 
+                    $userType = $project->employees_join[$i]->employee_type_id;
+                    if($userType == 1 || $userType == 3) {
+                        array_push($employees, $project->employees_join[$i]);
+                    }
+                }
+
+                foreach ($employees as $employee) {
+                    $notification = $this->Notifications->newEntity();
+                    $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'tasks', 
+                        'action' => 'view/'.$task->id.'?project_id='.$project->id ], false));
+                    $notification->link = $link;
+                    $notification->message = $task->title.' has been completed.';
+                    $notification->user_id = $employee['user_id'];
+                    $notification->project_id = $project->id;
+                    $this->Notifications->save($notification);
+                }
+                
                 $this->Flash->success(__('The task has been marked finished!'));
                 return $this->redirect(['action' => 'manage', '?' => ['project_id' => $this->__projectId]]);
             }

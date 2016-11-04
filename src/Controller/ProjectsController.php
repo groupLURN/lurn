@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Routing\Router;
 use Cake\Collection\Collection;
 
 /**
@@ -105,10 +106,20 @@ public function add()
 		array_push($project['employees_join'], $projectManager[0]);		
 		array_push($project['employees_join'], $companyOwner[0]);
 
-		// echo $project;
-
 		if ($this->Projects->save($project))
 		{
+            $this->loadModel('Notifications');
+
+            foreach ($project['employees_join'] as $employee) {
+                $notification = $this->Notifications->newEntity();
+                $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'projects', 
+                    'action' => 'view/'.$project->id ], false));
+                $notification->link = $link;
+                $notification->message = 'You have been added to the '.$project->title.' project.';
+                $notification->user_id = $employee['user_id'];
+                $notification->project_id = $project->id;
+                $this->Notifications->save($notification);
+            }
 
 			$this->Flash->success(__('The project has been saved.'));
 			return $this->redirect(['action' => 'index']);

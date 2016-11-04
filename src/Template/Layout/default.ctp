@@ -20,15 +20,15 @@ $this->start('additional-sidebar');
 </li>
 
 <li class="sub-menu">
-    <a href="javascript:;" >
+    <a href=<?= $this->Url->build(['controller' => 'Projects', 'action' => 'index']) ?> >
         <i class="fa fa-tasks"></i>
         <span>Projects</span>
-        <span class="caret"> </span>
+        <!--span class="caret"> </span-->
     </a>
-    <ul class="sub">
+    <!--<ul class="sub">
        <li><a href=<?= $this->Url->build(['controller' => 'Projects', 'action' => 'index']) ?>>View All Projects</a></li>
        <li><a href=<?= $this->Url->build(['controller' => 'Projects', 'action' => 'index']) ?>>Projects Planning</a></li>
-    </ul>
+    </ul>-->
 </li>
 
 <li class="sub-menu">

@@ -28,6 +28,8 @@ class NotificationsShell extends Shell
     public function initialize()
     {
         parent::initialize();
+        $this->loadModel('Notifications');
+        $this->loadModel('Projects');
     }
 
     public function main()
@@ -37,15 +39,17 @@ class NotificationsShell extends Shell
 
     private function updateNotifications()
     {
-        $this->loadModel('Notifications');
 
-        $notification = $this->Notifications->newEntity();
-        $link =  'This is just a test';
-        $notification->link = $link;
-        $notification->message = 'test message';
-        $notification->user_id = 2;
-        $notification->project_id = 1;
-        $this->Notifications->save($notification);
+        // $notification = $this->Notifications->newEntity();
+        // $link =  'This is just a test';
+        // $notification->link = $link;
+        // $notification->message = 'test message';
+        // $notification->user_id = 2;
+        // $notification->project_id = 1;
+        // $this->Notifications->save($notification);
+        $projects = $this->Projects->find('allWithEmployees')->toArray();
+
+        debug($projects);
 
     }
 }

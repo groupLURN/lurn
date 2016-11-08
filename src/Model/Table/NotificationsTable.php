@@ -96,4 +96,12 @@ class NotificationsTable extends Table
             return $query;
         }
     }
+
+    public function findExactMatch(Query $query, array $options)
+    {   
+        return $query->where(['project_id' => $options['project_id'],
+            'user_id' => $options['user_id'],
+            'message' => $options['message']
+            ]);
+    }
 }

@@ -73,9 +73,8 @@ class ProjectsTable extends Table
             'foreignKey' => 'project_id'
         ]);
         $this->hasMany('Tasks', [
-            'className' => 'Addresses',
-            'bindingKey' => 'project_id',
-            'foreignKey' => 'project_id'
+            'className' => 'Tasks',
+            'foreignKey' => 'milestone_id'
         ]);
         $this->hasMany('Milestones', [
             'className' => 'Milestones',
@@ -204,6 +203,13 @@ class ProjectsTable extends Table
 
     public function findAllWithEmployees(Query $query, array $options){
         return $query->contain(['Employees', 'EmployeesJoin' => [
+        'EmployeeTypes'
+        ]]);
+        
+    }
+
+    public function findAllWithTasks(Query $query, array $options){
+        return $query->contain(['Milestones' => ['Tasks'], 'Employees',  'EmployeesJoin' => [
         'EmployeeTypes'
         ]]);
         

@@ -217,6 +217,13 @@ class TasksTable extends Table
         }
     }
 
+    public function findAllWithProjects(Query $query, array $options){
+        return $query->contain(['Projects', 'Employees',  'EmployeesJoin' => [
+        'EmployeeTypes'
+        ]]);
+        
+    }
+
     public function computeForTaskReplenishmentUsingMilestones($milestones)
     {
         foreach($milestones as $milestone)

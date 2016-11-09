@@ -30,11 +30,13 @@ class NotificationsShell extends Shell
         parent::initialize();
         $this->loadModel('Notifications');
         $this->loadModel('Projects');
+        $this->loadModel('Tasks');
     }
 
     public function main()
     {
         $this->updateNotifications();
+        $this->generateDueTasksNotifications();
     }   
 
     private function updateNotifications()
@@ -49,7 +51,43 @@ class NotificationsShell extends Shell
         // $this->Notifications->save($notification);
         $projects = $this->Projects->find('allWithEmployees')->toArray();
 
-        debug($projects);
 
+    }
+
+    private function generateRentDueNotifications()
+    {
+
+    }
+
+    private function generateDueTasksNotifications()
+    {
+        $projects = $this->Projects->find('allWithTasks')->toArray();
+
+        foreach ($projects as $project) {
+            foreach ($project->milestones as $milestone) {
+                foreach ($milestone->tasks as $task) {
+                    $notification = $this->Notifications->newEntity();
+                    $link =  'This is just a test';
+                    $notification->link = $link;
+                    $notification->message = 'test message';
+                    $notification->user_id = 2;
+                    $notification->project_id = 1;
+                    if(!$this->isNotificationExisting($notification)){
+                        $this->Notifications->save($notification);
+                    }
+                } 
+            }
+        }
+
+        
+    }
+
+    private function isNotificationExisting($notification)
+    {
+        $flag = $this->Notifications->find('exactMatch', ['project_id' => $notification['project_id'],
+            'user_id' => $notification['user_id'],
+            'message' => $notification['message']])->first();
+        
+        return !is_null($flag);
     }
 }

@@ -76,8 +76,8 @@ class ResourceRequestHeadersController extends AppController
 
                 array_push($employees, $project->employee);
                 for ($i=0; $i < count($project->employees_join); $i++) { 
-                    $userType = $project->employees_join[$i]->employee_type_id;
-                    if($userType == 1 || $userType == 4) {
+                    $employeeType = $project->employees_join[$i]->employee_type_id;
+                    if($employeeType == 1 || $employeeType == 4) {
                         array_push($employees, $project->employees_join[$i]);
                     }
                 }

@@ -148,8 +148,8 @@ class TasksController extends AppController
 
                 array_push($employees, $project->employee);
                 for ($i=0; $i < count($project->employees_join); $i++) { 
-                    $userType = $project->employees_join[$i]->employee_type_id;
-                    if($userType == 1 || $userType == 3) {
+                    $employeeType = $project->employees_join[$i]->employee_type_id;
+                    if($employeeType == 1 || $employeeType == 3) {
                         array_push($employees, $project->employees_join[$i]);
                     }
                 }

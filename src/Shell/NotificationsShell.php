@@ -17,7 +17,7 @@ namespace App\Shell;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Console\Shell;
 use Cake\Log\Log;
-use Psy\Shell as PsyShell;
+use Cake\Routing\Router;
 
 /**
  * Simple console wrapper around Psy\Shell.
@@ -35,45 +35,48 @@ class NotificationsShell extends Shell
 
     public function main()
     {
-        $this->updateNotifications();
-        $this->generateDueTasksNotifications();
+        $projects   = $this->Projects->find('allWithTasks')->toArray();    
+
+        $this->generateDueTasksNotifications($projects);
     }   
-
-    private function updateNotifications()
-    {
-
-        // $notification = $this->Notifications->newEntity();
-        // $link =  'This is just a test';
-        // $notification->link = $link;
-        // $notification->message = 'test message';
-        // $notification->user_id = 2;
-        // $notification->project_id = 1;
-        // $this->Notifications->save($notification);
-        $projects = $this->Projects->find('allWithEmployees')->toArray();
-
-
-    }
 
     private function generateRentDueNotifications()
     {
 
     }
 
-    private function generateDueTasksNotifications()
-    {
-        $projects = $this->Projects->find('allWithTasks')->toArray();
+    private function generateDueTasksNotifications($projects)
+    {    
+        $dueDate    = new \DateTime('-7 days');
 
         foreach ($projects as $project) {
             foreach ($project->milestones as $milestone) {
                 foreach ($milestone->tasks as $task) {
-                    $notification = $this->Notifications->newEntity();
-                    $link =  'This is just a test';
-                    $notification->link = $link;
-                    $notification->message = 'test message';
-                    $notification->user_id = 2;
-                    $notification->project_id = 1;
-                    if(!$this->isNotificationExisting($notification)){
-                        $this->Notifications->save($notification);
+                    if(!$task->is_finished && $task->end_date < $dueDate){
+                        $employees = [];
+
+                        array_push($employees, $project->employee);
+                        for ($i=0; $i < count($project->employees_join); $i++) { 
+                            $employeeType = $project->employees_join[$i]->employee_type_id;
+                            if($employeeType == 1) {
+                                array_push($employees, $project->employees_join[$i]);
+                            }
+                        }
+
+                        foreach ($employees as $employee) {
+                            $notification = $this->Notifications->newEntity();
+
+                            $link =  substr( Router::url(['controller' => 'tasks', 
+                            'action' => 'view/'.$task->id], false), 1).'?project_id='.$project->id ;
+                            $notification->link = $link;
+                            $notification->message = $task->title.' is due this week.';
+                            $notification->user_id = $employee->user_id;
+                            $notification->project_id = $project->id;
+
+                            if(!$this->isNotificationExisting($notification)){
+                               $this->Notifications->save($notification);
+                            }
+                        }
                     }
                 } 
             }

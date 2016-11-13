@@ -47,7 +47,7 @@ class CreateNotifications extends AbstractMigration
             'default' => null,
             'limit' => 255,
             'null' => true,
-        ]);
+        ]);    
         $table->addColumn('created', 'datetime', [
             'default' => null,
             'null' => false,

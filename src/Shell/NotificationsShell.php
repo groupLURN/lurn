@@ -30,26 +30,118 @@ class NotificationsShell extends Shell
         parent::initialize();
         $this->loadModel('Notifications');
         $this->loadModel('Projects');
-        $this->loadModel('Tasks');
+        $this->loadModel('RentalReceiveHeaders');
     }
 
     public function main()
     {
         $projects   = $this->Projects->find('allWithTasks')->toArray();   
+        $rentalReceiveHeaders = $this->RentalReceiveHeaders->find('all', [
+            'contain' => ['RentalReceiveDetails.RentalRequestDetails.RentalRequestHeaders' => [
+                'Projects', 'Suppliers'
+            ], 'RentalReceiveDetails.RentalRequestDetails.Equipment']
+        ])->toArray();
 
 
         $this->generateDueTasksNotifications($projects);
         $this->generateDelayedProjectsNotifications($projects);
+        $this->generateDueRentNotifications($rentalReceiveHeaders);
+        $this->generateOverdueRentNotifications($rentalReceiveHeaders);
     }   
 
-    private function generateDueRentNotifications()
-    {
+    private function generateOverdueRentNotifications($rentalReceiveHeaders)
+    {     
+        $currentDate = new \DateTime();
+        foreach ($rentalReceiveHeaders as $rentalReceiveHeader) {
+            foreach ($rentalReceiveHeader->rental_receive_details as $rentalReceiveDetail){
 
+                if($rentalReceiveDetail->end_date < $currentDate){
+                    $equipment = $rentalReceiveDetail->rental_request_detail->equipment;
+
+                    $projectId = $rentalReceiveDetail->rental_request_detail->rental_request_header->project_id;
+                    $project = $this->Projects->find('byProjectId', ['project_id'=>$projectId])->first();
+                    
+                    $employees = [];
+
+                    array_push($employees, $project->employee);
+
+                    for ($i=0; $i < count($project->employees_join); $i++) { 
+                        $employeeType = $project->employees_join[$i]->employee_type_id;
+                        if($employeeType == 1 || $employeeType == 3) {
+                            array_push($employees, $project->employees_join[$i]);
+                        }
+                    }
+
+                    foreach ($employees as $employee) {
+                        $notification = $this->Notifications->newEntity();
+
+                        $link =  substr( Router::url(['controller' => 'rentalReceiveHeaders', 
+                        'action' => 'view/'.$rentalReceiveHeader->id], false), 1);
+                        $notification->link = $link;
+                        $notification->message = '<b>'
+                            .$equipment->name.'</b> is overdue.';
+                        $notification->user_id = $employee->user_id;
+                        $notification->project_id = $project->id;
+
+                        $this->Notifications->save($notification);
+                    }  
+                }
+            }
+        }
     }
 
-    private function generateOverdueRentNotifications()
-    {
+    private function generateDueRentNotifications($rentalReceiveHeaders)
+    {      
+        foreach ($rentalReceiveHeaders as $rentalReceiveHeader) {
+            foreach ($rentalReceiveHeader->rental_receive_details as $rentalReceiveDetail){
+                $duration = date_diff($rentalReceiveDetail->start_date,$rentalReceiveDetail->end_date);
+                $duration = $duration->d;
 
+                $dueDate = new \DateTime();
+
+                if($duration >= 5){
+                    $dueDate = new \DateTime('-2 days');
+                } else {
+                    $dueDate = new \DateTime('-1 days');
+                }
+
+                if($rentalReceiveDetail->end_date <= $dueDate){
+                    $equipment = $rentalReceiveDetail->rental_request_detail->equipment;
+
+                    $projectId = $rentalReceiveDetail->rental_request_detail->rental_request_header->project_id;
+                    $project = $this->Projects->find('byProjectId', ['project_id'=>$projectId])->first();
+                    
+                    $employees = [];
+
+                    array_push($employees, $project->employee);
+
+                    for ($i=0; $i < count($project->employees_join); $i++) { 
+                        $employeeType = $project->employees_join[$i]->employee_type_id;
+                        if($employeeType == 1 || $employeeType == 3) {
+                            array_push($employees, $project->employees_join[$i]);
+                        }
+                    }
+
+                    foreach ($employees as $employee) {
+                        $notification = $this->Notifications->newEntity();
+
+                        $link =  substr( Router::url(['controller' => 'rentalReceiveHeaders', 
+                        'action' => 'view/'.$rentalReceiveHeader->id], false), 1);
+                        $notification->link = $link;
+                        $notification->message = '<b>'
+                            .$equipment->name.'</b> is due on <b>'
+                            .date_format($rentalReceiveDetail->end_date,"F d, Y")
+                            .'</b>.';
+                        $notification->user_id = $employee->user_id;
+                        $notification->project_id = $project->id;
+
+                        if(!$this->isNotificationExisting($notification)){
+                            $this->Notifications->save($notification);
+                        }
+                    }  
+                }
+            }
+        }
     }
 
     private function generateDelayedProjectsNotifications($projects)
@@ -62,6 +154,7 @@ class NotificationsShell extends Shell
                     $employees = [];
 
                     array_push($employees, $project->employee);
+                    array_push($employees, $project->client);
                     for ($i=0; $i < count($project->employees_join); $i++) { 
                         $employeeType = $project->employees_join[$i]->employee_type_id;
                         if($employeeType == 1) {
@@ -79,9 +172,7 @@ class NotificationsShell extends Shell
                         $notification->user_id = $employee->user_id;
                         $notification->project_id = $project->id;
 
-                        if(!$this->isNotificationExisting($notification)){
-                            $this->Notifications->save($notification);
-                        }
+                        $this->Notifications->save($notification);
                     }  
                 }  
             }           

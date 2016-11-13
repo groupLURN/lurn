@@ -196,9 +196,13 @@ class ProjectsTable extends Table
         return $query->where(['Projects.end_date <' => $options['end_date_to']]);
     }
 
-    public function findDueProjects(Query $query, array $options)
+    public function findDueProjects(Query $query)
     {
-        return $query->where(['DATE_SUB(Projects.end_date, INTERVAL 1 WEEK) <= CURDATE()']);
+        return $query
+            ->where(['DATE_SUB(Projects.end_date, INTERVAL 1 WEEK) <= CURDATE()'])
+            ->contain(['Employees', 'EmployeesJoin' => [
+                'EmployeeTypes'
+                ]]);
     }
 
     public function findAllWithEmployees(Query $query, array $options){

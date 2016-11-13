@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\Collection\Collection;
+use Cake\Event\Event;
 use Cake\I18n\Time;
 /**
  * Dashboard Controller
@@ -28,8 +29,7 @@ class DashboardController extends AppController
 
         $projects = $this->Projects->find('all')->toArray();
 
-        $dueDate = new \DateTime('-7 days');
-        $dueProjects = $this->Projects->find('dueProjects', ['end_date_to' => $dueDate]);
+        $dueProjects = $this->Projects->find('dueProjects');
 
         $notifications = $this->Notifications->find('byUserId', ['user_id' => $this->request->session()->read('Auth.User.id')])->toArray();
 
@@ -69,6 +69,14 @@ class DashboardController extends AppController
         $this->Projects->computeProjectStatus($project);
         $this->set('project', $project);
         $this->set('_serialize', ['project']);
+    }
+
+
+
+    public function afterFilter(Event $event)
+    {   
+        $this->markNotificationsAsRead();
+        return parent::beforeFilter($event);
     }
     
 
@@ -185,6 +193,18 @@ class DashboardController extends AppController
 
         foreach ($noUpdates as $key => $value) {
             unset($projects[$value]);
+        }
+    }
+
+    private function markNotificationsAsRead(){      
+        $this->loadModel('Notifications');
+        $notifications = $this->Notifications->find('byUserId', ['user_id' => $this->request->session()->read('Auth.User.id')])->toArray();  
+
+        foreach ($notifications as $notification) {
+            if($notification->unread){
+                $notification->unread = false;
+                $this->Notifications->save($notification);
+            }
         }
     }
 }

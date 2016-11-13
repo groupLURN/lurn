@@ -290,8 +290,18 @@ hr.style-five:after { /* Not really supposed to work, but does */
     padding-left: 1rem;
 }
 
+#notifications {
+    max-height: 200px;
+    margin-bottom: 2rem;
+}
+
+#notifications .unread{
+    border: 1px solid red;
+}
+
 #notifications .notification {
-    margin: 1rem;
+    margin: 1rem 0;
+    padding: 1rem;
 }
 
 #notifications .notification p{

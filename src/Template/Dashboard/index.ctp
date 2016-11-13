@@ -120,20 +120,24 @@ MAIN CONTENT
 
             <div class="col-lg-3 ds">
                 <!-- NOTIFICATIONS -->
-                <div id="notifications">
+                <h3>NOTIFICATIONS</h3>
+                <div id="notifications"  class="scroll-wrapper">
                 <?php 
-                    $max = count($notifications) < 4 ? count($notifications) : 4;
-                    if($max > 0) {
+                    $max = count($notifications);
+                    if($max == 0) {
                         ?>
-                        
-                        <h3>NOTIFICATIONS</h3>
-
+                        <div class="notification">
+                            <p>
+                                NO NOTIFICATIONS<br/>
+                            </p>
+                        </div>                        
                         <?php
                     }
                     for ($i=0; $i < $max; $i++) { 
                  ?>
-                    <div class="notification">
+                    <div class="notification <?= $notifications[$i]['unread'] == true ? 'unread':''?>">
                         <a href=<?= $this->Url->build('/').$notifications[$i]['link']  ?>>
+
                             <p><muted><?= date_format($notifications[$i]['created'], 'F d, Y - g:ia')?></muted><br/>                                 
                                 <?= $notifications[$i]['message']?>
                             </p>

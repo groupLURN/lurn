@@ -35,14 +35,57 @@ class NotificationsShell extends Shell
 
     public function main()
     {
-        $projects   = $this->Projects->find('allWithTasks')->toArray();    
+        $projects   = $this->Projects->find('allWithTasks')->toArray();   
+
 
         $this->generateDueTasksNotifications($projects);
+        $this->generateDelayedProjectsNotifications($projects);
     }   
 
-    private function generateRentDueNotifications()
+    private function generateDueRentNotifications()
     {
 
+    }
+
+    private function generateOverdueRentNotifications()
+    {
+
+    }
+
+    private function generateDelayedProjectsNotifications($projects)
+    {
+        $currentDate = new \DateTime();
+
+        foreach ($projects as $project) {
+            foreach ($project->milestones as $milestone) {
+                if($milestone->end_date < $currentDate){
+                    $employees = [];
+
+                    array_push($employees, $project->employee);
+                    for ($i=0; $i < count($project->employees_join); $i++) { 
+                        $employeeType = $project->employees_join[$i]->employee_type_id;
+                        if($employeeType == 1) {
+                            array_push($employees, $project->employees_join[$i]);
+                        }
+                    }
+
+                    foreach ($employees as $employee) {
+                        $notification = $this->Notifications->newEntity();
+
+                        $link =  substr( Router::url(['controller' => 'projects', 
+                        'action' => 'view/'.$project->id], false), 1);
+                        $notification->link = $link;
+                        $notification->message = 'The milestone: <b>'.$milestone->title.'</b> from the project: <b>'.$project->title.'</b> is behind schedule.';
+                        $notification->user_id = $employee->user_id;
+                        $notification->project_id = $project->id;
+
+                        if(!$this->isNotificationExisting($notification)){
+                            $this->Notifications->save($notification);
+                        }
+                    }  
+                }  
+            }           
+        }
     }
 
     private function generateDueTasksNotifications($projects)
@@ -69,7 +112,7 @@ class NotificationsShell extends Shell
                             $link =  substr( Router::url(['controller' => 'tasks', 
                             'action' => 'view/'.$task->id], false), 1).'?project_id='.$project->id ;
                             $notification->link = $link;
-                            $notification->message = $task->title.' is due this week.';
+                            $notification->message = '<b>'.$task->title.'</b> is due this week.';
                             $notification->user_id = $employee->user_id;
                             $notification->project_id = $project->id;
 
@@ -80,17 +123,15 @@ class NotificationsShell extends Shell
                     }
                 } 
             }
-        }
-
-        
+        }        
     }
 
     private function isNotificationExisting($notification)
     {
-        $flag = $this->Notifications->find('exactMatch', ['project_id' => $notification['project_id'],
+        $notification = $this->Notifications->find('exactMatch', ['project_id' => $notification['project_id'],
             'user_id' => $notification['user_id'],
             'message' => $notification['message']])->first();
         
-        return !is_null($flag);
+        return !is_null($notification);
     }
 }

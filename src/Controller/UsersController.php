@@ -12,7 +12,7 @@ use Cake\ORM\TableRegistry;
  */
 class UsersController extends AppController
 {
-
+    
     /**
      * Index method
      *

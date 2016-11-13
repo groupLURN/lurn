@@ -29,8 +29,8 @@ class AddReadToNotifications extends AbstractMigration
     {
         $table = $this->table('notifications');
 
-        $table->addColumn('read', 'boolean', [
-            'default' => false,
+        $table->addColumn('unread', 'boolean', [
+            'default' => 1,
             'null' => true,
         ]);
 

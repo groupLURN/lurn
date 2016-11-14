@@ -32,7 +32,7 @@
                 'class' => 'mt'
             ],
             'options' => [null => 'General'],
-            'val' => $selectedResourceRequestHeader->to_project_id
+            'val' => isset($selectedResourceRequestHeader->to_project_id) ? $selectedResourceRequestHeader->to_project_id : ''
         ]);
 
         echo $this->Form->input('to_project_id', [
@@ -42,7 +42,7 @@
                 'class' => 'mt'
             ],
             'options' => $projects,
-            'val' => $selectedResourceRequestHeader->from_project_id
+            'val' => isset($selectedResourceRequestHeader->from_project_id) ? $selectedResourceRequestHeader->from_project_id : ''
         ]);
 
         ?>

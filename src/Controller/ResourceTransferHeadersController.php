@@ -62,11 +62,16 @@ class ResourceTransferHeadersController extends AppController
     {
         $resourceTransferHeader = $this->ResourceTransferHeaders->newEntity();
         if ($this->request->is('post')) {
-
             $this->transpose($this->request->data, 'equipment_inventories');
             $this->transpose($this->request->data, 'manpower');
             $this->transpose($this->request->data, 'materials');
+
+
             $resourceTransferHeader = $this->ResourceTransferHeaders->patchEntity($resourceTransferHeader, $this->request->data);
+
+
+            debug($resourceTransferHeader);
+            die();
             if ($this->ResourceTransferHeaders->save($resourceTransferHeader)) {
                 $this->Flash->success(__('The resource transfer number ' . $resourceTransferHeader-> id . ' has been saved.'));
                 return $this->redirect(['action' => 'index']);

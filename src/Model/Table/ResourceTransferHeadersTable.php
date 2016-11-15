@@ -138,7 +138,9 @@ class ResourceTransferHeadersTable extends Table
             $materialGeneralInventory = TableRegistry::get('MaterialsGeneralInventories')
                 ->get($detail->material_id);
             $materialGeneralInventory->quantity -= $detail->quantity;
-            TableRegistry::get('MaterialsGeneralInventories')->save($materialGeneralInventory);
+
+            debug( $materialGeneralInventory);
+            die();
 
             try
             {
@@ -148,6 +150,12 @@ class ResourceTransferHeadersTable extends Table
                         'project_id' => $resourceTransferHeader->project_to->id
                     ]);
                 $materialProjectInventory->quantity += $detail->quantity;
+
+                //TableRegistry::get('MaterialsGeneralInventories')->save($materialGeneralInventory);
+
+                if( $materialGeneralInventory->quantity <= 30) {
+                    //create notification here
+                }
 
             }
             catch(RecordNotFoundException $e)

@@ -66,9 +66,7 @@ class ResourceTransferHeadersController extends AppController
             $this->transpose($this->request->data, 'manpower');
             $this->transpose($this->request->data, 'materials');
 
-
             $resourceTransferHeader = $this->ResourceTransferHeaders->patchEntity($resourceTransferHeader, $this->request->data);
-
 
             if ($this->ResourceTransferHeaders->save($resourceTransferHeader)) {
                 $this->Flash->success(__('The resource transfer number ' . $resourceTransferHeader-> id . ' has been saved.'));

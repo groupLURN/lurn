@@ -97,6 +97,15 @@ class NotificationsTable extends Table
         }
     }
 
+    public function findUnreadNotifications(Query $query, array $options)
+    {   
+        if($options['user_id'] >= 0){
+            return $query->where(['user_id' => $options['user_id'], 'unread' => '1']);
+        } else {
+            return $query;
+        }
+    }
+
     public function findExactMatch(Query $query, array $options)
     {   
         return $query->where(['project_id' => $options['project_id'],

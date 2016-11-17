@@ -224,5 +224,5 @@ class NotificationsShell extends Shell
             'message' => $notification['message']])->first();
         
         return !is_null($notification);
-    }
+    } 
 }

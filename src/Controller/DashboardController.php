@@ -76,7 +76,7 @@ class DashboardController extends AppController
     public function afterFilter(Event $event)
     {   
         $this->markNotificationsAsRead();
-        return parent::beforeFilter($event);
+        return parent::afterFilter($event);
     }
     
 

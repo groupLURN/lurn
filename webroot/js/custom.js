@@ -1,4 +1,6 @@
-$(".chosen").chosen({width: '100%'});
+var link = $('#base-link').text();
+
+$('.chosen').chosen({width: '100%'});
 
 Date.prototype.isValid = function () {
     // An invalid date object returns NaN for getTime() and NaN is the only
@@ -6,22 +8,22 @@ Date.prototype.isValid = function () {
     return this.getTime() === this.getTime();
 };
 
-$(".datetime-picker").each(function(){
+$('.datetime-picker').each(function(){
 
     var value = $(this).val().trim().length > 0? Date.parse($(this).val()) : new Date();
-    $(this).datepicker().datepicker("option","dateFormat", "yy-mm-dd");
+    $(this).datepicker().datepicker('option','dateFormat', 'yy-mm-dd');
 
     if($(this).hasClass('advance-1-day'))
     {
         value.setDate(value.getDate() + 1);
-        $(this).datepicker("setDate", value);
+        $(this).datepicker('setDate', value);
     }
     else
-        $(this).datepicker("setDate", value);
+        $(this).datepicker('setDate', value);
 });
 
 
-$(".number-only").keydown(function (e) {
+$('.number-only').keydown(function (e) {
     // Allow: backspace, delete, tab, escape, enter and .
     if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
             // Allow: Ctrl+A
@@ -41,7 +43,7 @@ $(".number-only").keydown(function (e) {
     }
 });
 
-$(".autocomplete").each(
+$('.autocomplete').each(
     function(index)
     {
         $(this).autocomplete({
@@ -49,3 +51,37 @@ $(".autocomplete").each(
         });
     }
 );
+
+
+$.ajax({ 
+    type: 'GET', 
+    url: link+'/notifications/getUnreadNotificationsCount', 
+    data: { get_param: 'value' }, 
+    success: function (data) { 
+        var count = data.data.count;
+        if(count == 0) {
+            $('#notification-badge').hide();
+        } else {
+            $('#notification-badge').show();
+            $('#notification-badge').text(count);
+        }
+    }
+});
+
+setInterval(function(){  
+    $.ajax({ 
+        type: 'GET', 
+        url: link+'/notifications/getUnreadNotificationsCount', 
+        data: { get_param: 'value' }, 
+        success: function (data) { 
+            var count = data.data.count;
+            if(count == 0) {
+                $('#notification-badge').hide();
+            } else {
+                $('#notification-badge').show();
+                $('#notification-badge').text(count);
+            }
+        }
+    });
+}, 5000);
+

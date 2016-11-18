@@ -105,7 +105,7 @@ TOP BAR CONTENT & NOTIFICATIONS
                         <h5 class="centered"><?=  $this->request->session()->read('Auth.User.username'); ?></h5>
                     <li>
                         <a href=<?= $this->Url->build(['controller' => 'dashboard/', 'action' => 'index']) ?>>
-                            <i class="fa fa-dashboard"></i><span>Dashboard</span>
+                            <i class="fa fa-dashboard"></i><span>Dashboard</span><span id="notification-badge" class="badge pull-right"></span>
                         </a>
                     </li>
                     <li >
@@ -130,6 +130,8 @@ TOP BAR CONTENT & NOTIFICATIONS
             <?= $this->fetch('content'); ?>
         </section>
     </section>
+
+    <span id="base-link"><?= $this->Url->build('/') ?></span>
 
     <?= $this->fetch('script'); ?>
     <?= $this->fetch('script-inline'); ?>

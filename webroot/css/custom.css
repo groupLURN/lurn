@@ -1,3 +1,7 @@
+#base-link {
+    display: none;
+}
+
 div.message.error {
     background-color: #C3232D;
     color: #FFF;
@@ -306,4 +310,11 @@ hr.style-five:after { /* Not really supposed to work, but does */
 
 #notifications .notification p{
     color: #000;
+}
+
+#notification-badge {
+    background-color: #ffd777;
+    color: #797979;
+    display: none;
+    margin-right: 1rem;
 }

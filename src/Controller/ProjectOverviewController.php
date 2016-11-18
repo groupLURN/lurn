@@ -27,6 +27,16 @@ class ProjectOverviewController extends AppController
      * @return void
      */
     public function index($projectId = null)
-    {
+    {   
+
+        $this->loadModel('Projects');
+        $project = $this->Projects->get($projectId, [
+            'contain' => ['Clients', 'Employees', 'EmployeesJoin' => [
+            'EmployeeTypes'
+            ]]
+            ]);
+        $this->Projects->computeProjectStatus($project);
+        $this->set('project', $project);
+        $this->set('_serialize', ['project']);
     }
 }

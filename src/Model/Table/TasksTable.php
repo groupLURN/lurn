@@ -184,7 +184,7 @@ class TasksTable extends Table
     {
         if((int)$options['milestone_id'] > -1 && (int)$options['project_id'] > -1)
             return $query
-                ->where(['milestone_id' => $options['milestone_id'], 'Tasks.is_finished = 1'])
+                ->where(['milestone_id' => $options['milestone_id'], 'Tasks.is_finished = 0'])
                 ->join([
                     'm' => [
                         'table' => 'milestones',

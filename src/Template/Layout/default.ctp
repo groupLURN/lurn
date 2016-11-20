@@ -80,30 +80,17 @@ $this->start('additional-sidebar');
     </ul>
 </li>
 <li class="sub-menu">
-    <a href="javascript:;" >
-        <i class="fa fa-file"></i>
-        <span>General Reports</span>
-    </a>
-    <ul class="sub">
-        <li><a href=<?= $this->Url->build(['controller' => 'EquipmentGeneralInventoryReport']) ?>>Equipment Inventory Report</a></li>
-        <li><a href=<?= $this->Url->build(['controller' => 'MaterialsGeneralInventoryReport']) ?>>Materials Inventory Report</a></li>
-        <li><a href=<?= $this->Url->build(['controller' => 'ManpowerGeneralInventoryReport']) ?>>Manpower Inventory Report</a></li>
-    </ul>
-</li>
-</li>
-<li class="sub-menu">
     <a href="Javascript:;" >
-        <i class="fa fa-recycle"></i>
+        <i class="fa fa-file"></i>
         <span>Reports</span>
         <span class="caret"> </span>
     </a>
     <ul class="sub">
-        <li><a href=<?= $this->Url->build(['controller' => 'ProjectReports', 'action' => 'index']) ?>>Project Invetory</a></li>
-        <li><a href=<?= $this->Url->build(['controller' => 'GeneralReports', 'action' => 'index']) ?>>General Inventory</a></li>
-        <li><a href=<?= $this->Url->build(['controller' => 'TaskReports', 'action' => 'index']) ?>>Task Accomplishment</a></li>
-        <li><a href=<?= $this->Url->build(['controller' => 'IncidentReports', 'action' => 'index']) ?>>Incident</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'EquipmentGeneralInventoryReport']) ?>>Equipment Inventory Report</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'MaterialsGeneralInventoryReport']) ?>>Materials Inventory Report</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'ManpowerGeneralInventoryReport']) ?>>Manpower Inventory Report</a></li>     
+        <li><a href=<?= $this->Url->build(['controller' => 'IncidentReports', 'action' => 'index']) ?>>Incident Report</a></li>
     </ul>
-</li>
 </li>
 <?php $this->end(); ?>
 <?= $this->fetch('content'); ?>

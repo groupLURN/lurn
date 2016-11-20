@@ -333,6 +333,69 @@ class TasksTable extends Table
             $task->replenishment = 0;
     }
 
+    public function fetchFinishedTaskDetails($task)
+    {
+
+        foreach ($task->equipment as $equipment) {
+            $equipment['quantity_used'] = 0;
+            foreach ($task->equipment_replenishment_details as $equipment_replenishment_detail) {
+                if($equipment->id === $equipment_replenishment_detail->equipment_id){
+                    $equipment['quantity_used'] += $equipment_replenishment_detail->quantity;
+                }
+            }
+
+            $equipmentInventories = TableRegistry::get('EquipmentInventories')->find()
+                        ->where([
+                            'project_id' => $task->milestone->project_id,
+                            'task_id' => $task->id,
+                            'equipment_id' => $equipment->id
+                        ])
+                        ->toArray();
+            $size = count($equipmentInventories);
+            $equipment['quantity_in_stock'] = $size;
+
+        } 
+
+        foreach($task->manpower_types as $manpower_type)
+        {
+            $manpower_type['quantity_used'] = 0;
+            foreach ($task->manpower_type_replenishment_details as $manpower_type_replenishment_detail) {
+                if($manpower_type->id === $manpower_type_replenishment_detail->manpower_type_id){
+                    $manpower_type['quantity_used'] += $manpower_type_replenishment_detail->quantity;
+                }
+            }
+            $manpowerInventories = TableRegistry::get('Manpower')->find()
+                ->where([
+                    'project_id' => $task->milestone->project_id,
+                    'task_id IS NULL',
+                    'manpower_type_id' => $manpower_type->id
+                ])
+                ->toArray();
+            $size = count($manpowerInventories);
+            $manpower_type['quantity_in_stock'] = $size;
+
+        }
+
+        foreach ($task->materials as $material) {
+            $material['quantity_used'] = 0;
+            foreach ($task->material_replenishment_details as $material_replenishment_detail) {
+                if($material->id === $material_replenishment_detail->material_id){
+                    $material['quantity_used'] += $material_replenishment_detail->quantity;
+                }
+            }
+
+            $materialInventory = TableRegistry::get('MaterialsTaskInventories')->find()
+                ->where([
+                    'material_id' => $material->id,
+                    'project_id' => $task->milestone->project_id,
+                    'task_id' => $task->id
+                ])
+                ->first();
+            $material['quantity_in_stock'] = $materialInventory->quantity;
+
+        }
+    }    
+
     public function replenish($task)
     {
         return

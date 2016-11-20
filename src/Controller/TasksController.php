@@ -5,6 +5,8 @@ use App\Controller\AppController;
 use Cake\Collection\Collection;
 use Cake\Routing\Router;
 use Cake\Event\Event;
+use Cake\I18n\Time;
+
 
 /**
  * Tasks Controller
@@ -118,6 +120,59 @@ class TasksController extends AppController
         $this->set('_serialize', ['task']);
     }
 
+    public function viewFinished($id = null)
+    {
+        $task = $this->Tasks->get($id, [
+            'contain' => ['Milestones',
+                'Equipment', 'ManpowerTypes', 'Materials',
+                'EquipmentReplenishmentDetails', 'ManpowerTypeReplenishmentDetails', 'MaterialReplenishmentDetails'
+            ]
+        ]);
+
+        $this->Tasks->fetchFinishedTaskDetails($task);
+
+        $this->set('task', $task);
+        $this->set('_serialize', ['task']);
+    }
+
+    public function generateReport($download = null)
+    {
+        if(!isset($this->request->query['task_id']))
+            return $this->redirect(['action' => 'manage', '?' => [
+        'project_id' => $this->request->query['project_id']
+        ]]);
+
+        $this->viewBuilder()->layout('general');
+        
+        $task = $this->Tasks->get($this->request->query['task_id'], [
+            'contain' => ['Milestones',
+                'Equipment', 'ManpowerTypes', 'Materials',
+                'EquipmentReplenishmentDetails', 'ManpowerTypeReplenishmentDetails', 'MaterialReplenishmentDetails'
+            ] 
+        ]);
+
+        $this->Tasks->fetchFinishedTaskDetails($task);
+
+        $this->set('task', $task);
+
+        $currentDate = Time::now();
+        $currentDate = $currentDate->month . "/" . $currentDate->day . "/" . $currentDate->year;
+        $this->set('currentDate', $currentDate);
+
+        if ($download == 1)
+            $download = true;
+        else
+            $download = false;
+
+        $this->viewBuilder()->options([
+            'pdfConfig' => [
+                'orientation' => 'landscape',
+                'filename' => 'Task_Accomplishment_Report_' . $currentDate . '.pdf',
+                'download' => $download
+            ]           
+        ]); 
+    }
+
     public function finish($id = null)
     {
         $task = $this->Tasks->get($id, [
@@ -157,7 +212,7 @@ class TasksController extends AppController
                 foreach ($employees as $employee) {
                     $notification = $this->Notifications->newEntity();
                     $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'tasks', 
-                        'action' => 'view/'.$task->id.'?project_id='.$project->id ], false));
+                        'action' => 'view-finished/'.$task->id.'?project_id='.$project->id ], false));
                     $notification->link = $link;
                     $notification->message = $task->title.' has been completed.';
                     $notification->user_id = $employee['user_id'];

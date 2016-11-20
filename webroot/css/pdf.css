@@ -8,6 +8,7 @@ table {
 
 .text {
     font-size: 24px;
+
 }
 
 .text-left {
@@ -30,7 +31,6 @@ table {
 }
 
 .body table, .body th, .body td {
-    border: 1px solid black;
 }
 
 .report td, .report th {

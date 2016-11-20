@@ -113,7 +113,13 @@
                                         </span>
                                     </td>
                                     <td class="actions">
-                                        <?= $this->dataTableViewButton(__('View'), ['action' => 'ViewStock', $task->id, '?' => ['project_id' => $projectId]]); ?>
+                                        <?php 
+                                            if(!$task->is_finished){
+                                                echo $this->dataTableViewButton(__('View'), ['action' => 'ViewStock', $task->id, '?' => ['project_id' => $projectId]]);
+                                            } else {
+                                                echo $this->dataTableViewButton(__('View'), ['action' => 'ViewFinished', $task->id, '?' => ['project_id' => $projectId]]);
+                                            }
+                                        ?>
                                         <?php if(!$task->is_finished) {
                                             echo $this->dataTableEditButton(__('Replenish'), ['action' => 'replenish', $task->id, '?' => ['project_id' => $projectId]]);
                                             echo h(' ');

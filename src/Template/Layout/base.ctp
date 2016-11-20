@@ -83,7 +83,7 @@ TOP BAR CONTENT & NOTIFICATIONS
         </div>
         <div class="top-menu">
             <ul class="nav pull-right top-menu">
-                <li><a class="logout" href=<?= $this->Url->build(['controller' => 'users/logout', 'action' => 'index']) ?>>Logout</a></li>
+                <li><a class="logout" href=<?= $this->Url->build(['controller' => 'users', 'action' => 'logout']) ?>>Logout</a></li>
             </ul>
         </div>
     </header>

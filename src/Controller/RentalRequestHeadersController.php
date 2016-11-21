@@ -67,6 +67,32 @@ class RentalRequestHeadersController extends AppController
                 'associated' => ['RentalRequestDetails']
             ]);
             if ($this->RentalRequestHeaders->save($rentalRequestHeader)) {
+
+                $this->loadModel('Notifications');
+                $this->loadModel('Projects');
+                $employees = [];
+
+                $project = $this->Projects->get($rentalRequestHeader->project_id, [
+                    'contain' => ['Employees', 'EmployeesJoin' => ['EmployeeTypes']]]);
+
+                array_push($employees, $project->employee);
+                for ($i=0; $i < count($project->employees_join); $i++) { 
+                    $employeeType = $project->employees_join[$i]->employee_type_id;
+                    if($employeeType == 1 || $employeeType == 4) {
+                        array_push($employees, $project->employees_join[$i]);
+                    }
+                }
+
+                foreach ($employees as $employee) {
+                    $notification = $this->Notifications->newEntity();
+                    $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'rental-request-headers', 'action' => 'view/'. $rentalRequestHeader->id ], false));
+                    $notification->link = $link;
+                    $notification->message = $project->title.' has made a rental request. Click to see the request.';
+                    $notification->user_id = $employee['user_id'];
+                    $notification->project_id = $rentalRequestHeader->project_id;
+                    $this->Notifications->save($notification);
+                }
+
                 $this->Flash->success(__('The rental request number ' . $rentalRequestHeader->number . ' has been saved.'));
                 $this->redirect(['action' => 'index']);
             } else {
@@ -78,7 +104,7 @@ class RentalRequestHeadersController extends AppController
         $equipment = TableRegistry::get('Equipment')->find('list', ['limit' => 200])->toArray();
         $this->set(compact('rentalRequestHeader', 'projects', 'suppliers', 'equipment'));
         $this->set('_serialize', ['rentalRequestHeader', 'projects', 'suppliers', 'equipment']);
-    }
+rentalRequestHeader    }
 
 /**
 * Method for getting milestones from the database

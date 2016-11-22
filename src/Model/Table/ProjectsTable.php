@@ -163,7 +163,7 @@ class ProjectsTable extends Table
 
     public function findByProjectId(Query $query, array $options)
     {
-        return $query->contain(['Clients', 'Employees', 'EmployeesJoin' => [
+        return $query->contain(['Clients', 'Milestones' => ['Tasks'], 'Employees',  'EmployeesJoin' => [
         'EmployeeTypes'
         ]])
             ->where(['Projects.id' => $options['project_id']]);

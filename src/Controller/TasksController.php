@@ -135,16 +135,13 @@ class TasksController extends AppController
         $this->set('_serialize', ['task']);
     }
 
-    public function generateReport($download = null)
+    public function generateReport($taskId = null, $download = null)
     {
-        if(!isset($this->request->query['task_id']))
-            return $this->redirect(['action' => 'manage', '?' => [
-        'project_id' => $this->request->query['project_id']
-        ]]);
+       
 
         $this->viewBuilder()->layout('general');
         
-        $task = $this->Tasks->get($this->request->query['task_id'], [
+        $task = $this->Tasks->get($taskId, [
             'contain' => ['Milestones',
                 'Equipment', 'ManpowerTypes', 'Materials',
                 'EquipmentReplenishmentDetails', 'ManpowerTypeReplenishmentDetails', 'MaterialReplenishmentDetails'

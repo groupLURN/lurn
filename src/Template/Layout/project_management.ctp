@@ -57,9 +57,9 @@ $this->start('additional-sidebar');
         <span>Summary Reports</span>
     </a>
     <ul class="sub">
-        <li><a href=<?= $this->Url->build(['controller' => 'EquipmentProjectSummaryReport', '?' => ['project_id' => $projectId]]) ?>>Equipment Summary Report</a></li>
-        <li><a href=<?= $this->Url->build(['controller' => 'MaterialsProjectSummaryReport', '?' => ['project_id' => $projectId]]) ?>>Materials Summary Report</a></li>
-        <li><a href=<?= $this->Url->build(['controller' => 'ManpowerProjectSummaryReport', '?' => ['project_id' => $projectId]]) ?>>Manpower Summary Report</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'EquipmentSummaryReport', 'action' => 'index', $projectId]) ?>>Equipment Summary Report</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'MaterialsSummaryReport', 'action' => 'index', $projectId]) ?>>Materials Summary Report</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'ManpowerSummaryReport', 'action' => 'index', $projectId]) ?>>Manpower Summary Report</a></li>
     </ul>
 </li>
 <?php $this->end(); ?>

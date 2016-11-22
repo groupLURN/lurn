@@ -318,3 +318,18 @@ hr.style-five:after { /* Not really supposed to work, but does */
     display: none;
     margin-right: 1rem;
 }
+
+th.rotate {
+  /* Something you can count on */
+  height: 140px;
+  white-space: nowrap;
+}
+ 
+th.rotate > div {
+  transform: 
+    /* Magic Numbers */
+    translate(7px, 7px)
+    /* 45 is really 360 - 45 */
+    rotate(-90deg);
+  width: 1px;
+}

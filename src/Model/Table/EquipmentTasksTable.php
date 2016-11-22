@@ -71,4 +71,13 @@ class EquipmentTasksTable extends Table
         $rules->add($rules->existsIn(['task_id'], 'Tasks'));
         return $rules;
     }
+
+    public function findByTaskId(Query $query, array $options)
+    {
+        if(!empty($options['task_id']))
+            return $query
+                ->contain(['Equipment'])
+                ->where(['task_id' => $options['task_id']]);
+        return $query;
+    }
 }

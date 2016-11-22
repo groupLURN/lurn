@@ -2,11 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
-use App\Model\Entity\Equipment;
-use Cake\Collection\Collection;
-use Cake\Core\Exception\Exception;
-use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\ORM\TableRegistry;
+use Cake\Event\Event;
 use Cake\I18n\Time;
 
 /**
@@ -16,31 +12,96 @@ use Cake\I18n\Time;
 class  ManpowerSummaryReportController extends AppController
 {
 
+    public function beforeFilter(Event $event)
+    {
+        if(empty($this->request->params['pass']))
+            return $this->redirect(['controller' => 'dashboard']);
+
+        $this->viewBuilder()->layout('project_management');
+        $this->set('projectId', $this->request->params['pass'][0]);
+        return parent::beforeFilter($event);
+    }
     /**
      * Index method
      *
      * @return \Cake\Network\Response|null
      */
-    public function index()
-    {
-        $this->paginate += $this->createFinders($this->request->query, 'Equipment');
-        $this->paginate['finder']['generalInventorySummary'] = [];
-        $equipment = $this->paginate(TableRegistry::get('Equipment'));
-        $this->set(compact('equipment'));
+    public function index($id = null)
+    {        
+        $this->loadModel('Projects');
+        $this->loadModel('Manpower');
 
-        $currentDate = Time::now();
-        $currentDate = $currentDate->month . "/" . $currentDate->day . "/" . $currentDate->year;
-        $this->set('currentDate', $currentDate);
+        $project = $this->Projects->find('byProjectId', ['project_id'=>$id])->first();
+        $manpower = [];
+        $manpowerList = $this->Manpower->find('all')->toArray();
+
+        $skilledWorkers = 0;
+        $laborers = 0;
+
+        foreach ($project->milestones as $milestone){
+            foreach ($milestone->tasks as $task){    
+                $tempManpowerList = [];
+                foreach ($manpowerList as $tempManpower) {
+                    if($task->id === $tempManpower->task_id){
+                        $tempManpowerList[$tempManpower->name] = $tempManpower;
+                        $manpower[$tempManpower->name] = $tempManpower;
+
+                        if($tempManpower->manpower_type_id == 1){
+                            $skilledWorkers++;
+                        } else {
+                            $laborers++;
+                        }
+                    }
+                }
+
+                $manpower['skilledWorkers'] = $skilledWorkers;
+                $manpower['laborers']       = $laborers;
+                $task['manpower']           = $tempManpowerList;
+            }
+        }
+
+        $this->set(compact('project'));
+        $this->set(compact('manpower'));
     }
 
-    public function view($download = null)
+    public function view($id = null, $download = null)
     {
-        $this->viewBuilder()->layout('general');
+        $this->viewBuilder()->layout('summary-report');
         
-        $this->paginate += $this->createFinders($this->request->query, 'Equipment');
-        $this->paginate['finder']['generalInventorySummary'] = [];
-        $equipment = $this->paginate(TableRegistry::get('Equipment'));
-        $this->set(compact('equipment'));
+        $this->loadModel('Projects');
+        $this->loadModel('Manpower');
+
+        $project = $this->Projects->find('byProjectId', ['project_id'=>$id])->first();
+        $manpower = [];
+        $manpowerList = $this->Manpower->find('all')->toArray();
+
+        $skilledWorkers = 0;
+        $laborers = 0;
+
+        foreach ($project->milestones as $milestone){
+            foreach ($milestone->tasks as $task){    
+                $tempManpowerList = [];
+                foreach ($manpowerList as $tempManpower) {
+                    if($task->id === $tempManpower->task_id){
+                        $tempManpowerList[$tempManpower->name] = $tempManpower;
+                        $manpower[$tempManpower->name] = $tempManpower;
+
+                        if($tempManpower->manpower_type_id == 1){
+                            $skilledWorkers++;
+                        } else {
+                            $laborers++;
+                        }
+                    }
+                }
+
+                $manpower['skilledWorkers'] = $skilledWorkers;
+                $manpower['laborers']       = $laborers;
+                $task['manpower']           = $tempManpowerList;
+            }
+        }
+            
+        $this->set(compact('project'));
+        $this->set(compact('manpower'));
 
         $currentDate = Time::now();
         $currentDate = $currentDate->month . "/" . $currentDate->day . "/" . $currentDate->year;

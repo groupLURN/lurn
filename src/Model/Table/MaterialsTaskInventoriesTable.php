@@ -77,4 +77,13 @@ class MaterialsTaskInventoriesTable extends Table
         $rules->add($rules->existsIn(['task_id'], 'Tasks'));
         return $rules;
     }
+
+    public function findByProjectId(Query $query, array $options)
+    {
+        if(!empty($options['project_id']))
+            return $query
+                ->contain(['Materials'])
+                ->where(['project_id' => $options['project_id']]);
+        return $query;
+    }
 }

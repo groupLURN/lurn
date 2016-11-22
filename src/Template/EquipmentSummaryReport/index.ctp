@@ -34,7 +34,7 @@
                     <th class="text-center"><?= __('Duration (Days)') ?></th>
                     <th class="text-center"><?= __('Start Date') ?></th>
                     <th class="text-center"><?= __('Finish Date')?></th>
-                    <th class="text-center"><?= __('Equipment Used')?></th>
+                    <th class="text-center rotate"><div><span><?= __('Equipment Used')?></th>
                     <?php foreach ($equipment as $equipmentName) { ?>
                         <th class="rotate"><div><span><?= $equipmentName->name?></span></div></th>
                     <?php }?>

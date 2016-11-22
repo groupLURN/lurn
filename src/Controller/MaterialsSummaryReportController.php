@@ -2,11 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
-use App\Model\Entity\Equipment;
-use Cake\Collection\Collection;
-use Cake\Core\Exception\Exception;
-use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\ORM\TableRegistry;
+use Cake\Event\Event;
 use Cake\I18n\Time;
 
 /**
@@ -16,31 +12,84 @@ use Cake\I18n\Time;
 class MaterialsSummaryReportController extends AppController
 {
 
+    public function beforeFilter(Event $event)
+    {
+        if(empty($this->request->params['pass']))
+            return $this->redirect(['controller' => 'dashboard']);
+
+        $this->viewBuilder()->layout('project_management');
+        $this->set('projectId', $this->request->params['pass'][0]);
+        return parent::beforeFilter($event);
+    }
     /**
      * Index method
      *
      * @return \Cake\Network\Response|null
      */
-    public function index()
+    public function index($id = null)
     {
-        $this->paginate += $this->createFinders($this->request->query, 'Equipment');
-        $this->paginate['finder']['generalInventorySummary'] = [];
-        $equipment = $this->paginate(TableRegistry::get('Equipment'));
-        $this->set(compact('equipment'));
+        $this->loadModel('Projects');
+        $this->loadModel('MaterialsTaskInventories');
+        $this->loadModel('MaterialsTasks');
 
-        $currentDate = Time::now();
-        $currentDate = $currentDate->month . "/" . $currentDate->day . "/" . $currentDate->year;
-        $this->set('currentDate', $currentDate);
+        $project = $this->Projects->find('byProjectId', ['project_id'=>$id])->first();
+        $materials = [];
+        $materialsInventories = $this->MaterialsTaskInventories->find('byProjectId', ['project_id'=>$id])->toArray();
+
+        foreach ($materialsInventories as $materialsInventory) {
+            $tempmaterials = $materialsInventory->material;
+            $materials[$tempmaterials->name] = $tempmaterials;
+        }
+
+        foreach ($project->milestones as $milestone){
+            foreach ($milestone->tasks as $task){
+                $materialList = [];
+                $materialsTasks = $this->MaterialsTasks->find('byTask', ['task_id'=>$task->id])->toArray();
+                foreach ($materialsTasks  as $materialsTask) {
+                    $materialList[$materialsTask->material->name] = $materialsTask;
+                }
+                $task['materials'] = $materialList;
+            }
+        }
+
+        ksort($materials);
+
+        $this->set(compact('project'));
+        $this->set(compact('materials'));
     }
 
-    public function view($download = null)
+    public function view($id = null, $download = null)
     {
-        $this->viewBuilder()->layout('general');
-        
-        $this->paginate += $this->createFinders($this->request->query, 'Equipment');
-        $this->paginate['finder']['generalInventorySummary'] = [];
-        $equipment = $this->paginate(TableRegistry::get('Equipment'));
-        $this->set(compact('equipment'));
+        $this->viewBuilder()->layout('summary-report');
+
+        $this->loadModel('Projects');
+        $this->loadModel('MaterialsTaskInventories');
+        $this->loadModel('MaterialsTasks');
+
+        $project = $this->Projects->find('byProjectId', ['project_id'=>$id])->first();
+        $materials = [];
+        $materialsInventories = $this->MaterialsTaskInventories->find('byProjectId', ['project_id'=>$id])->toArray();
+
+        foreach ($materialsInventories as $materialsInventory) {
+            $tempmaterials = $materialsInventory->material;
+            $materials[$tempmaterials->name] = $tempmaterials;
+        }
+
+        foreach ($project->milestones as $milestone){
+            foreach ($milestone->tasks as $task){
+                $materialList = [];
+                $materialsTasks = $this->MaterialsTasks->find('byTask', ['task_id'=>$task->id])->toArray();
+                foreach ($materialsTasks  as $materialsTask) {
+                    $materialList[$materialsTask->material->name] = $materialsTask;
+                }
+                $task['materials'] = $materialList;
+            }
+        }
+
+        ksort($materials);
+
+        $this->set(compact('project'));
+        $this->set(compact('materials'));
 
         $currentDate = Time::now();
         $currentDate = $currentDate->month . "/" . $currentDate->day . "/" . $currentDate->year;
@@ -54,7 +103,7 @@ class MaterialsSummaryReportController extends AppController
         $this->viewBuilder()->options([
             'pdfConfig' => [
                 'orientation' => 'landscape',
-                'filename' => 'General_Equipment_Inventory_Report_' . $currentDate . '.pdf',
+                'filename' => 'General_materials_Inventory_Report_' . $currentDate . '.pdf',
                 'download' => $download
             ]           
         ]); 

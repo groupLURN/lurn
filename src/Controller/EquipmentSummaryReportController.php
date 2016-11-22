@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\Event\Event;
+use Cake\I18n\Time;
 
 /**
  * EquipmentProjectSummaryReportController Controller
@@ -90,8 +91,10 @@ class EquipmentSummaryReportController extends AppController
 
         $this->set(compact('project'));
         $this->set(compact('equipment'));
-        
-       
+
+        $currentDate = Time::now();
+        $currentDate = $currentDate->month . "/" . $currentDate->day . "/" . $currentDate->year;
+        $this->set('currentDate', $currentDate);
 
         if ($download == 1)
             $download = true;
@@ -101,7 +104,7 @@ class EquipmentSummaryReportController extends AppController
         $this->viewBuilder()->options([
             'pdfConfig' => [
                 'orientation' => 'landscape',
-                'filename' => 'General_Equipment_Inventory_Report.pdf',
+                'filename' => 'General_materials_Inventory_Report_' . $currentDate . '.pdf',
                 'download' => $download
             ]           
         ]); 

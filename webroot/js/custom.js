@@ -85,3 +85,7 @@ setInterval(function(){
     });
 }, 5000);
 
+function finishProject(){  
+    console.log('eyeyeyey');
+}
+

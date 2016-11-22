@@ -333,3 +333,9 @@ th.rotate > div {
     rotate(-90deg);
   width: 1px;
 }
+
+#finish-project{
+    transform: translateY(40%);
+    margin: auto;
+    width: 40vw;
+}

@@ -1,4 +1,16 @@
-<?= $this->assign('title', 'Project Overview') ?>
+<?= $this->assign('title', 'Project Overview') ?> <!-- Trigger the modal with a button -->
+
+<div class="row mt">
+    <div class="col-xs-12">
+
+    <?php if ($project->is_finished == 0):?>
+
+        <?= $this->Form->button('<i class="fa fa-save"></i> Finish Project', 
+            array('class' => 'btn btn-primary', 'data-toggle' => 'modal', 'data-target'=>'#finish-project')); ?>
+    <?php endif;?>
+
+    </div>
+</div>
 <div class="projects view large-9 medium-8 columns content">
     <h3><?= h($project->title) ?></h3>
     <table class="vertical-table table table-striped">
@@ -56,5 +68,22 @@
                 <?php endforeach; ?>
             </table>
         <?php endif; ?>
+    </div>
+</div>
+
+
+<div id="finish-project" class="modal fade" role="dialog">
+  <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Modal Header</h4>
+        </div>
+        <div class="modal-body">
+            Do you want to mark the project as finished?
+        </div>
+        <div class="modal-footer" >
+            <button type="button" data-dismiss="modal" class="btn btn-primary" onClick="finishProject()">Finish Project</button>
+            <button type="button" data-dismiss="modal" class="btn">Cancel</button>
+        </div>
     </div>
 </div>

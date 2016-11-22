@@ -51,16 +51,19 @@ $this->start('additional-sidebar');
         <li><a href=<?= $this->Url->build(['controller' => 'ManpowerProjectInventoryReport', '?' => ['project_id' => $projectId]]) ?>>Manpower Inventory Report</a></li>
     </ul>
 </li>
+
+<?php if ($project->is_finished):?>
 <li class="sub-menu">
     <a href="javascript:;" >
         <i class="fa fa-file"></i>
         <span>Summary Reports</span>
     </a>
-    <ul class="sub">
-        <li><a href=<?= $this->Url->build(['controller' => 'EquipmentSummaryReport', 'action' => 'index', $projectId]) ?>>Equipment Summary Report</a></li>
-        <li><a href=<?= $this->Url->build(['controller' => 'MaterialsSummaryReport', 'action' => 'index', $projectId]) ?>>Materials Summary Report</a></li>
-        <li><a href=<?= $this->Url->build(['controller' => 'ManpowerSummaryReport', 'action' => 'index', $projectId]) ?>>Manpower Summary Report</a></li>
-    </ul>
+        <ul class="sub">
+            <li><a href=<?= $this->Url->build(['controller' => 'EquipmentSummaryReport', 'action' => 'index', $projectId]) ?>>Equipment Summary Report</a></li>
+            <li><a href=<?= $this->Url->build(['controller' => 'MaterialsSummaryReport', 'action' => 'index', $projectId]) ?>>Materials Summary Report</a></li>
+            <li><a href=<?= $this->Url->build(['controller' => 'ManpowerSummaryReport', 'action' => 'index', $projectId]) ?>>Manpower Summary Report</a></li>
+        </ul>
 </li>
+<?php endif;?>
 <?php $this->end(); ?>
 <?= $this->fetch('content'); ?>

@@ -103,7 +103,7 @@
                 <?php foreach ($manpower as $key => $value) { 
                     if($key != 'laborers' && $key != 'skilledWorkers'){
                 ?>
-                    <td class="text-center"><?= isset($task->manpower[$key])? 'X' : '' ?></th>
+                    <td class="text-center"><?= isset($task->manpower[$key])? '&times;' : '' ?></th>
                 <?php 
                     }
                 }?>

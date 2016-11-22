@@ -39,4 +39,10 @@ class ProjectOverviewController extends AppController
         $this->set('project', $project);
         $this->set('_serialize', ['project']);
     }
+
+    public function finish($projectId = null){        
+        $project = $this->Projects->get($projectId);
+        debug($project);
+        die();
+    }
 }

@@ -35,6 +35,9 @@ class EquipmentSummaryReportController extends AppController
         $this->loadModel('EquipmentTasks');
 
         $project = $this->Projects->find('byProjectId', ['project_id'=>$id])->first();
+        if($project->is_finished == 0) {
+            return $this->redirect(['controller' => 'dashboard']);
+        }
         $equipment = [];
         $equipmentInventories = $this->EquipmentInventories->find('byProjectId', ['project_id'=>$id])->toArray();
 
@@ -68,6 +71,9 @@ class EquipmentSummaryReportController extends AppController
         $this->loadModel('EquipmentTasks');
 
         $project = $this->Projects->find('byProjectId', ['project_id'=>$id])->first();
+        if($project->is_finished == 0) {
+            return $this->redirect(['controller' => 'dashboard']);
+        }
         $equipment = [];
         $equipmentInventories = $this->EquipmentInventories->find('byProjectId', ['project_id'=>$id])->toArray();
 

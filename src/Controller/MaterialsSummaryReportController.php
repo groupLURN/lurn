@@ -33,6 +33,9 @@ class MaterialsSummaryReportController extends AppController
         $this->loadModel('MaterialsTasks');
 
         $project = $this->Projects->find('byProjectId', ['project_id'=>$id])->first();
+        if($project->is_finished == 0) {
+            return $this->redirect(['controller' => 'dashboard']);
+        }
         $materials = [];
         $materialsInventories = $this->MaterialsTaskInventories->find('byProjectId', ['project_id'=>$id])->toArray();
 
@@ -67,6 +70,9 @@ class MaterialsSummaryReportController extends AppController
         $this->loadModel('MaterialsTasks');
 
         $project = $this->Projects->find('byProjectId', ['project_id'=>$id])->first();
+        if($project->is_finished == 0) {
+            return $this->redirect(['controller' => 'dashboard']);
+        }
         $materials = [];
         $materialsInventories = $this->MaterialsTaskInventories->find('byProjectId', ['project_id'=>$id])->toArray();
 

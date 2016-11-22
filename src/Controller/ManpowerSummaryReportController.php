@@ -32,6 +32,9 @@ class  ManpowerSummaryReportController extends AppController
         $this->loadModel('Manpower');
 
         $project = $this->Projects->find('byProjectId', ['project_id'=>$id])->first();
+        if($project->is_finished == 0) {
+            return $this->redirect(['controller' => 'dashboard']);
+        }
         $manpower = [];
         $manpowerList = $this->Manpower->find('all')->toArray();
 
@@ -72,6 +75,9 @@ class  ManpowerSummaryReportController extends AppController
         $this->loadModel('Manpower');
 
         $project = $this->Projects->find('byProjectId', ['project_id'=>$id])->first();
+        if($project->is_finished == 0) {
+            return $this->redirect(['controller' => 'dashboard']);
+        }
         $manpower = [];
         $manpowerList = $this->Manpower->find('all')->toArray();
 

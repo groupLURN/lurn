@@ -66,4 +66,41 @@ class ProjectOverviewController extends AppController
         $this->set('project', $project);
         $this->set('_serialize', ['project']);
     }
+
+
+
+    public function isProjectDone(){
+
+        $response = [];
+        if(!isset($this->request->query['project_id'])){            
+
+            $response['status'] = 'failed';
+            $response['data']   = 'project_id is not given';
+        } else {
+            $projectId          = $this->request->query['project_id'];
+            $tasks              = $this->Tasks->find('byProject', ['project_id' => $projectId])->toArray();
+            $progress           = 0;
+            $finished           = 0;
+
+            foreach ($tasks as $task) {
+                if($task->is_finished == 1) {
+                    $finished += 1;
+                }
+            }
+
+            if($finished > 0) {
+                $progress = $finished / count($tasks) * 100;
+
+                $progress = ceil( $progress * 10)/10;
+            }
+
+            $project['progress'] = $progress;
+
+            $response['status'] = 'success';
+            $response['data']   = ['done' => $progress === 100 ? true : false];
+        }
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        exit();
+    }
 }

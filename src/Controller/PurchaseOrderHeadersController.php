@@ -105,7 +105,7 @@ public function add()
 		}
 	}
 
-	$projects 		= $this->Projects->find('list')->toArray();
+	$projects 		= $this->Projects->find('list')->where(['is_finished' => 0])->toArray();
 	$milestones 	= $this->Milestones->find('list')->toArray();
 	$tasks 			= $this->Tasks->find('list')->toArray();
 	$suppliers 		= $this->Suppliers->find('list')->toArray();

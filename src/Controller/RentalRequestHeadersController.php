@@ -100,7 +100,7 @@ class RentalRequestHeadersController extends AppController
                 $this->Flash->error(__('The rental request could not be saved. Please, try again.'));
             }
         }
-        $projects = $this->RentalRequestHeaders->Projects->find('list', ['limit' => 200])->toArray();
+        $projects = $this->RentalRequestHeaders->Projects->find('list')->where(['is_finished' => 0])->toArray();
         $suppliers = $this->RentalRequestHeaders->Suppliers->find('list', ['limit' => 200]);
         $equipment = TableRegistry::get('Equipment')->find('list', ['limit' => 200])->toArray();
         $this->set(compact('rentalRequestHeader', 'projects', 'suppliers', 'equipment'));

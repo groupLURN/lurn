@@ -1,5 +1,7 @@
 <?= $this->assign('title', 'Project Overview') ?> <!-- Trigger the modal with a button -->
 
+<?= $this->Flash->render()?>
+
 <div class="row mt">
     <div class="col-xs-12">
 
@@ -7,8 +9,8 @@
     if ($project->is_finished == 0):?>
 
         
-        <?= $this->Form->create($project, ['id' => 'finish-form']) ?>
-        <?= $this->Form->button('<i class="fa fa-save"></i> Finish Project', ['class' => 'btn btn-primary']); ?>
+        <?= $this->Form->create('', ['id' => 'finish-form']) ?>
+        <?= $this->Form->button('<i class="fa fa-save"></i> Finish Project', ['class' => 'btn btn-primary', 'id'=>'finish-form-submit']); ?>
         <?= $this->Form->end() ?>
     <?php endif;?>
 
@@ -79,13 +81,13 @@
   <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Modal Header</h4>
+            <h4 class="modal-title">Finish Project</h4>
         </div>
         <div class="modal-body">
             Do you want to mark the project as finished?
         </div>
         <div class="modal-footer" >
-            <button type="button" data-dismiss="modal" class="btn btn-primary" id="confirm-button">Finish Project</button>
+            <button type="button" data-dismiss="modal" class="btn btn-primary" id="finish-project-confirm">Finish Project</button>
             <button type="button" data-dismiss="modal" class="btn">Cancel</button>
         </div>
     </div>

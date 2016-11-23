@@ -278,6 +278,11 @@ class ProjectsTable extends Table
     {
         $query = $this->find()->where(['Projects.id' => $project->id]);
         $query = $this->findProjectStatus($query, []);
-        $project->status = $query->first()->status;
+        $tempProject = $query->first();        
+        if($tempProject->is_finished){
+            $project->status = 'Completed';
+        } else {
+            $project->status = $query->first()->status;
+        }
     }
 }

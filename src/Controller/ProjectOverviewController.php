@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Routing\Router;
 use Cake\Event\Event;
 
 /**
@@ -36,29 +37,46 @@ class ProjectOverviewController extends AppController
             ]]
         ]);
 
-        if ($this->request->is('post')) {
+        if ($this->request->is(array('post', 'put'))) {
+            $this->loadModel('Tasks');
+
+            $tasks= $this->Tasks->find('byProject', ['project_id' => $projectId])->toArray();
+
+            $finished = 0;
+
+            foreach ($tasks as $task) {
+                if($task->is_finished == 1) {
+                    $finished += 1;
+                }
+            }
+
+            if($finished != count($tasks)) {
+                $this->Flash->error(__('Not all of this project\'s tasks are finished.'));
+                return $this->redirect(['action' => 'index', $projectId]);
+            }
+
             $project->is_finished = true;
-            // if ($this->Projects->save($project))
-            // {
-            //     $this->loadModel('Notifications');
 
-            //     foreach ($project['employees_join'] as $employee) {
-            //         $notification = $this->Notifications->newEntity();
-            //         $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'project-overview', 
-            //             'action' => 'index'], false)).'/'.$project->id ;
-            //         $notification->link = $link;
-            //         $notification->message = '<b>'.$project->title.'</b> is now finished.';
-            //         $notification->user_id = $employee['user_id'];
-            //         $notification->project_id = $project->id;
-            //         $this->Notifications->save($notification);
-            //     }
+            if ($this->Projects->save($project))
+            {
+                $this->loadModel('Notifications');
 
-            //     $this->Flash->success(__('The project has been marked as finished.'));
-            //     return $this->redirect(['action' => 'index']);
+                foreach ($project['employees_join'] as $employee) {
+                    $notification = $this->Notifications->newEntity();
+                    $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'project-overview'], false)).'/index/'.$project->id ;
+                    $notification->link = $link;
+                    $notification->message = '<b>'.$project->title.'</b> is now finished. Summary reports can now be generated';
+                    $notification->user_id = $employee['user_id'];
+                    $notification->project_id = $project->id;
+                    $this->Notifications->save($notification);
+                }
 
-            // } else {
-            //     $this->Flash->error(__('The project could not be marked as finished. Please, try again.'));
-            // }
+                $this->Flash->success(__('The project has been marked as finished.'));
+                return $this->redirect(['action' => 'index', $projectId]);
+
+            } else {
+                $this->Flash->error(__('The project could not be marked as finished. Please, try again.'));
+            }
         }
 
         $this->Projects->computeProjectStatus($project);
@@ -69,7 +87,7 @@ class ProjectOverviewController extends AppController
 
 
 
-    public function isProjectDone(){
+    private function isProjectDone(){
 
         $response = [];
         if(!isset($this->request->query['project_id'])){            

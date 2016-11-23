@@ -18,7 +18,7 @@ class ProjectPlanningController extends ProjectOverviewController
      *
      * @return void
      */
-    public function index()
+    public function index($projectId = null)
     {
     }
 
@@ -59,10 +59,22 @@ class ProjectPlanningController extends ProjectOverviewController
             }
         }
         else
-        {
+        {   
+            $this->loadModel('Projects');
+
             $query = TableRegistry::get('Milestones')->find()
                 ->contain('Tasks')
                 ->where(['project_id' => $id]);
+
+
+            $this->loadModel('Projects');
+            $project = $this->Projects->get($projectId, [
+                'contain' => ['Clients', 'Employees', 'EmployeesJoin' => [
+                'EmployeeTypes'
+                ]]
+            ]);  
+
+            $this->set('project', $project);  
 
             $this->set('ganttData', json_encode($this->__ganttFrontEndAdapter($query)));
         }

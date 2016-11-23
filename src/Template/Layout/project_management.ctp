@@ -17,7 +17,7 @@ $this->start('additional-sidebar');
         <li><a href=<?= $this->Url->build(['controller' => 'ProjectPlanning', 'action' => 'CreateGanttChart', $projectId]) ?>>Gantt Chart</a></li>
     </ul>
     <ul class="sub">
-        <li><a href=<?= $this->Url->build(['controller' => 'Tasks', '?' => ['project_id' => $projectId]]) ?>>Tasks</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'Tasks', 'action' => 'index', '?' => ['project_id' => $projectId]]) ?>>Tasks</a></li>
     </ul>
 </li>
 <li class="sub-menu">
@@ -51,7 +51,6 @@ $this->start('additional-sidebar');
         <li><a href=<?= $this->Url->build(['controller' => 'ManpowerProjectInventoryReport', '?' => ['project_id' => $projectId]]) ?>>Manpower Inventory Report</a></li>
     </ul>
 </li>
-
 <?php if ($project->is_finished):?>
 <li class="sub-menu">
     <a href="javascript:;" >

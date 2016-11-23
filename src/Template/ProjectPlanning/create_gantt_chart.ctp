@@ -11,6 +11,10 @@ $this->Html->script('/bower_components/gantt/codebase/sources/dhtmlxgantt', ['bl
 $this->Html->script('gantt-chart', ['block' => 'script-end']);
 ?>
 <?= $this->Flash->render() ?>
+<div class="apb">
+    <h2 class="apc">Create Gantt Chart</h2>
+</div>
+<hr class="style-eight">
 <div class="row mt">
     <div class="col-xs-12">
         <div class="content-panel">

@@ -86,12 +86,12 @@ setInterval(function(){
 }, 5000);
 
 $(function(){
-    $('#finish-form').submit(function () {
+    $('#finish-form-submit').click(function (e) {
+        e.preventDefault();
         $("#finish-project").modal('show');
-        return false;
     });
 
-    $('#confirm-button').click(function () {       
+    $('#finish-project-confirm').click(function () {       
         $('#finish-form').submit();
     });
 

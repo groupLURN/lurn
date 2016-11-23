@@ -39,6 +39,9 @@ class IncidentReportHeadersTable extends Table
 
         $this->belongsTo('Projects', [
             'foreignKey' => 'project_id'
+        ]);        
+        $this->belongsTo('Employees', [
+            'foreignKey' => 'project_engineer'
         ]);
         $this->hasMany('IncidentReportDetails', [
             'foreignKey' => 'incident_report_header_id'

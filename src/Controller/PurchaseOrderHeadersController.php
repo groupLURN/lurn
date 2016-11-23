@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Routing\Router;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -91,7 +92,7 @@ public function add()
                     $notification = $this->Notifications->newEntity();
                     $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'purchase-order-headers', 'action' => 'view/'. $purchaseOrderHeader->id ], false));
                     $notification->link = $link;
-                    $notification->message = $project->title.' has made a purchase order. Click to see the order.';
+                    $notification->message = '<b>'.$project->title.'</b> has made a purchase order. Click to see the order.';
                     $notification->user_id = $employee['user_id'];
                     $notification->project_id = $purchaseOrderHeader->project_id;
                     $this->Notifications->save($notification);

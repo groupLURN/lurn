@@ -115,7 +115,7 @@ public function add()
                 $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'projects', 
                     'action' => 'view/'.$project->id ], false));
                 $notification->link = $link;
-                $notification->message = 'You have been added to the '.$project->title.' project.';
+                $notification->message = 'You have been added to the <b>'.$project->title.'</b> project.';
                 $notification->user_id = $employee['user_id'];
                 $notification->project_id = $project->id;
                 $this->Notifications->save($notification);
@@ -125,9 +125,6 @@ public function add()
 			return $this->redirect(['action' => 'index']);
 
 		} else {
-
-			debug($project->errors());
-
 			$this->Flash->error(__('The project could not be saved. Please, try again.'));
 		}
 

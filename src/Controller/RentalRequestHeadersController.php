@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Routing\Router;
 use Cake\Collection\Collection;
 use Cake\ORM\TableRegistry;
 
@@ -87,7 +88,7 @@ class RentalRequestHeadersController extends AppController
                     $notification = $this->Notifications->newEntity();
                     $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'rental-request-headers', 'action' => 'view/'. $rentalRequestHeader->id ], false));
                     $notification->link = $link;
-                    $notification->message = $project->title.' has made a rental request. Click to see the request.';
+                    $notification->message = '<b>'.$project->title.'</b> has made a rental request. Click to see the request.';
                     $notification->user_id = $employee['user_id'];
                     $notification->project_id = $rentalRequestHeader->project_id;
                     $this->Notifications->save($notification);
@@ -104,7 +105,7 @@ class RentalRequestHeadersController extends AppController
         $equipment = TableRegistry::get('Equipment')->find('list', ['limit' => 200])->toArray();
         $this->set(compact('rentalRequestHeader', 'projects', 'suppliers', 'equipment'));
         $this->set('_serialize', ['rentalRequestHeader', 'projects', 'suppliers', 'equipment']);
-rentalRequestHeader    }
+}
 
 /**
 * Method for getting milestones from the database

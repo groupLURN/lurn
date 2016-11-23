@@ -5,8 +5,9 @@
 
     <?php if ($project->is_finished == 0):?>
 
-        <?= $this->Form->button('<i class="fa fa-save"></i> Finish Project', 
-            array('class' => 'btn btn-primary', 'data-toggle' => 'modal', 'data-target'=>'#finish-project')); ?>
+        <?= $this->Form->create($project) ?>
+        <?= $this->Form->button('<i class="fa fa-save"></i> Finish Project', ['class' => 'btn btn-primary', 'data-toggle' => 'modal', 'data-target'=>'#finish-project', 'onsubmit'=>'return confirmFinish();']); ?>
+        <?= $this->Form->end() ?>
     <?php endif;?>
 
     </div>

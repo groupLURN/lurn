@@ -104,6 +104,17 @@ class RentalReceiveHeadersTable extends Table
             ->innerJoinWith('RentalReceiveDetails.RentalRequestDetails.RentalRequestHeaders.Suppliers')
             ->group('RentalReceiveHeaders.id');
     }
+    
+    public function findById(Query $query, array $options)
+    {
+        if($options['id'] > 0)
+            return $query
+                ->where(['id' => $options['id']])
+                ->contain(['RentalReceiveDetails.RentalRequestDetails.RentalRequestHeaders' => 
+                    ['Projects', 'Suppliers']
+                ]);
+        return $query;
+    }
 
     public function findByProjectId(Query $query, array $options)
     {

@@ -113,6 +113,16 @@ class PurchaseReceiveHeadersTable extends Table
             ->innerJoinWith('PurchaseReceiveDetails.PurchaseOrderDetails.PurchaseOrderHeaders.Suppliers')
             ->group('PurchaseReceiveHeaders.id');
     }
+    public function findById(Query $query, array $options)
+    {
+        if($options['id'] > 0)
+            return $query
+                ->where(['id' => $options['id']])
+                ->contain(['PurchaseReceiveDetails.PurchaseOrderDetails.PurchaseOrderHeaders' => 
+                    ['Projects', 'Suppliers']
+                ]);
+        return $query;
+    }
 
     public function findByProjectId(Query $query, array $options)
     {

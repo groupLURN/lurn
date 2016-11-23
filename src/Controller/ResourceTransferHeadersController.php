@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Routing\Router;
 use Cake\Collection\Collection;
 use Cake\ORM\TableRegistry;
 
@@ -69,6 +70,32 @@ class ResourceTransferHeadersController extends AppController
             $resourceTransferHeader = $this->ResourceTransferHeaders->patchEntity($resourceTransferHeader, $this->request->data);
 
             if ($this->ResourceTransferHeaders->save($resourceTransferHeader)) {
+                $this->loadModel('Notifications');
+                $this->loadModel('Projects');
+                $employees = [];
+
+                $project = $this->Projects->get($resourceTransferHeader->to_project_id, [
+                    'contain' => ['Employees', 'EmployeesJoin' => ['EmployeeTypes']]]);
+
+                array_push($employees, $project->employee);
+                for ($i=0; $i < count($project->employees_join); $i++) { 
+                    $employeeType = $project->employees_join[$i]->employee_type_id;
+                    if($employeeType == 1 || $employeeType == 4) {
+                        array_push($employees, $project->employees_join[$i]);
+                    }
+                }
+
+                foreach ($employees as $employee) {
+                    $notification = $this->Notifications->newEntity();
+                    $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'resource-transfer-headers', 'action' => 'view/'. $resourceTransferHeader->id ], false));
+                    $notification->link = $link;
+                    $notification->message = 'Resources has been transfrred from the general inventory to <b>'.$project->title.'</b>.';
+                    $notification->user_id = $employee['user_id'];
+                    $notification->project_id = $resourceTransferHeader->to_project_id;
+                    $this->Notifications->save($notification);
+                }
+
+
                 $this->Flash->success(__('The resource transfer number ' . $resourceTransferHeader-> id . ' has been saved.'));
                 return $this->redirect(['action' => 'index']);
             } else {

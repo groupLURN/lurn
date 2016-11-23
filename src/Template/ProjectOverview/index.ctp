@@ -3,10 +3,12 @@
 <div class="row mt">
     <div class="col-xs-12">
 
-    <?php if ($project->is_finished == 0):?>
+    <?php 
+    if ($project->is_finished == 0):?>
 
-        <?= $this->Form->create($project) ?>
-        <?= $this->Form->button('<i class="fa fa-save"></i> Finish Project', ['class' => 'btn btn-primary', 'data-toggle' => 'modal', 'data-target'=>'#finish-project', 'onsubmit'=>'return confirmFinish();']); ?>
+        
+        <?= $this->Form->create($project, ['id' => 'finish-form']) ?>
+        <?= $this->Form->button('<i class="fa fa-save"></i> Finish Project', ['class' => 'btn btn-primary']); ?>
         <?= $this->Form->end() ?>
     <?php endif;?>
 
@@ -83,7 +85,7 @@
             Do you want to mark the project as finished?
         </div>
         <div class="modal-footer" >
-            <button type="button" data-dismiss="modal" class="btn btn-primary" onClick="finishProject()">Finish Project</button>
+            <button type="button" data-dismiss="modal" class="btn btn-primary" id="confirm-button">Finish Project</button>
             <button type="button" data-dismiss="modal" class="btn">Cancel</button>
         </div>
     </div>

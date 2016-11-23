@@ -85,7 +85,14 @@ setInterval(function(){
     });
 }, 5000);
 
-function finishProject(){  
-    console.log('eyeyeyey');
-}
+$(function(){
+    $('#finish-form').submit(function () {
+        $("#finish-project").modal('show');
+        return false;
+    });
 
+    $('#confirm-button').click(function () {       
+        $('#finish-form').submit();
+    });
+
+});

@@ -50,18 +50,6 @@
 <?php else: ?>
     <p>No data available.</p>
 <?php endif; ?>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 <legend><h4><?= __('Materials Consumption') ?></h4></legend>
 <?php if (!empty($task->materials)): ?>
     <table cellpadding="0" cellspacing="0" class="table table-striped report">

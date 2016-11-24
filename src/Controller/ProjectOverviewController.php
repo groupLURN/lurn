@@ -55,7 +55,7 @@ class ProjectOverviewController extends AppController
                 return $this->redirect(['action' => 'index', $projectId]);
             }
 
-            $project->is_finished = true;
+            $project->is_finished = 1;
 
             if ($this->Projects->save($project))
             {

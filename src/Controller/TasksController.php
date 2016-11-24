@@ -23,10 +23,15 @@ class TasksController extends AppController
         if(!isset($this->request->query['project_id']))
             return $this->redirect(['controller' => 'dashboard']);
 
+        $this->loadModel('Projects');
+
+        $project = $this->Projects->find('byProjectId', ['project_id'=>(int) $this->request->query['project_id']])->first();
+
         $this->viewBuilder()->layout('project_management');
         $this->__projectId = (int) $this->request->query['project_id'];
 
-        $this->set('projectId', $this->__projectId);
+        $this->set('project', $project);
+        $this->set('projectId', $this->request->query['project_id']);
         $this->set('statusList', array_flip($this->Tasks->status));
         return parent::beforeFilter($event);
     }

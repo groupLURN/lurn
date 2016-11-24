@@ -52,7 +52,7 @@
                     $this->Form->input('purchase_order_details.material_id[]', [
                         'class' => ' form-control chosen',
                         'label' => false,
-                        'options' => ['0' => '-'] + $materials,
+                        'options' => ['0' => '-'] ,
                         'id' => false
                     ]),
                     $this->Form->input('purchase_order_details.quantity[]', [

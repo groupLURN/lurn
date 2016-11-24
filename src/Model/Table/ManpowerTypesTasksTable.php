@@ -75,4 +75,14 @@ class ManpowerTypesTasksTable extends Table
         $rules->add($rules->existsIn(['task_id'], 'Tasks'));
         return $rules;
     }
+
+    public function findByTaskId(Query $query, array $options)
+    {
+        if((float)$options['task_id'] > -1)
+            return $query
+                ->contain(['ManpowerTypes'])
+                ->where(['task_id' => $options['task_id']]);
+        else
+            return $query;
+    }
 }

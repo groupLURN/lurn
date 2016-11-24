@@ -226,4 +226,24 @@ class MaterialsTable extends Table
         }
     }
 
+    public function findByTask(Query $query, array $options)
+    {
+        if((float)$options['task_id'] > -1 ){
+
+            return $query
+                ->join([
+                    'mt' => [
+                        'table' => 'materials_tasks',
+                        'type' => 'INNER',
+                        'conditions' => ['mt.material_id = Materials.id']
+                    ]
+                ])
+                ->where([
+                    'mt.task_id' => $options['task_id']]);
+        } else {
+
+            return $query;
+        }
+    }
+
 }

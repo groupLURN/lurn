@@ -157,4 +157,147 @@ class ResourceRequestHeadersController extends AppController
         }
         return $this->redirect(['action' => 'index']);
     }
+
+
+
+/**
+* Method for getting materials from the database
+*
+* @return json response
+*/
+public function getMaterials() {
+    $this->loadModel('MaterialsTasks');
+    $this->loadModel('Tasks');
+
+    $materials  = [];
+
+    $projectId     = $this->request->query('project_id');
+    if ($projectId != null) {
+        $materialsHolder   = array();
+        $tasks              = array();
+        $task_ids           = array();
+
+        $tasks = $this->Tasks->find('byProject', ['project_id' => $projectId]);
+
+        foreach ($tasks as $row) {
+            array_push($task_ids, $row['id']);
+        }
+
+        $task_ids = array_unique($task_ids);
+
+
+        foreach ($task_ids as $key => $value) {
+
+            $task_id = (float)$value;
+                
+            foreach ( $this->MaterialsTasks->find('byTask', ['task_id' => $task_id]) as $row) {
+                $row['name'] = $row->material->name;
+
+                array_push($materialsHolder, $row);
+            }
+        }
+
+        for($i=0; $i < count($materialsHolder); $i++) {
+            if($i > 0) {
+                if(isset($materials[$materialsHolder[$i]->name])) {
+                    $materials[$materialsHolder[$i]->name]+=$materialsHolder[$i]->quantity;
+                } else {
+                    $materials[$materialsHolder[$i]->name] = $materialsHolder[$i]->quantity;
+                }
+
+            } else {
+                $materials[$materialsHolder[$i]->name] = $materialsHolder[$i]->quantity;
+            }
+        }
+
+    }     
+
+    header('Content-Type: application/json');
+    echo json_encode($materials);
+    exit();
+}
+
+
+/**
+* Method for getting magnpower from the database
+*
+* @return json response
+*/
+public function getManpower() {
+    $this->loadModel('ManpowerTypesTasks');
+    $this->loadModel('Tasks');
+
+    $manpower  = [];
+
+    $projectId     = $this->request->query('project_id');
+    if ($projectId != null) {
+        $manpowerHolder   = [];
+        $tasks = $this->Tasks->find('byProject', ['project_id' => $projectId]);
+
+        foreach ($tasks as $task) {
+            $tempManpowerTypesTasks = $this->ManpowerTypesTasks->find('byTaskId', ['task_id'=>$task->id])->toArray();
+            $manpowerHolder+= $tempManpowerTypesTasks;
+        }
+
+        for($i=0; $i < count($manpowerHolder); $i++) {
+            if($i > 0) {
+                if(isset($manpower[$manpowerHolder[$i]->manpower_type->title])) {
+                    $manpower[$manpowerHolder[$i]->manpower_type->title]+=$manpowerHolder[$i]->quantity;
+                } else {
+                    $manpower[$manpowerHolder[$i]->manpower_type->title] = $manpowerHolder[$i]->quantity;
+                }
+
+            } else {
+                $manpower[$manpowerHolder[$i]->manpower_type->title] = $manpowerHolder[$i]->quantity;
+            }
+        }
+
+    }     
+
+    header('Content-Type: application/json');
+    echo json_encode($manpower);
+    exit();
+}
+
+/**
+* Method for getting equipment from the database
+*
+* @return json response
+*/
+public function getEquipment() {
+    $this->loadModel('EquipmentTasks');
+    $this->loadModel('Tasks');
+
+    $equipment  = [];
+
+    $projectId     = $this->request->query('project_id');
+    if ($projectId != null) {
+        $equipmentHolder   = [];
+        $tasks = $this->Tasks->find('byProject', ['project_id' => $projectId]);
+
+        foreach ($tasks as $task) {
+            $tempEquipmentTasks = $this->EquipmentTasks->find('byTaskId', ['task_id'=>$task->id])->toArray();
+            $equipmentHolder+= $tempEquipmentTasks;
+        }
+
+
+        for($i=0; $i < count($equipmentHolder); $i++) {
+            if($i > 0) {
+                if(isset($equipment[$equipmentHolder[$i]->equipment->name])) {
+                    $equipment[$equipmentHolder[$i]->equipment->name]+=$equipmentHolder[$i]->quantity;
+                } else {
+                    $equipment[$equipmentHolder[$i]->equipment->name] = $equipmentHolder[$i]->quantity;
+                }
+
+            } else {
+                $equipment[$equipmentHolder[$i]->equipment->name] = $equipmentHolder[$i]->quantity;
+            }
+        }
+
+    }     
+
+    header('Content-Type: application/json');
+    echo json_encode($equipment);
+    exit();
+}
 }

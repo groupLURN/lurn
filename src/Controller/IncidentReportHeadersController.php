@@ -62,9 +62,12 @@ class IncidentReportHeadersController extends AppController
                 $this->Flash->error(__('The incident report header could not be saved. Please, try again.'));
             }
         }
-        $projects = $this->IncidentReportHeaders->Projects->find('list', ['limit' => 200]);
+
+        $projects[''] = '-Choose a Project-';
+        $projects += $this->IncidentReportHeaders->Projects->find('list')->toArray();
+
         $this->set(compact('incidentReportHeader', 'projects'));
-        $this->set('_serialize', ['incidentReportHeader']);
+        $this->set('_serialize', ['incidentReportHeader', 'projects']);
     }
 
     /**

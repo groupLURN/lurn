@@ -12,7 +12,7 @@
                     'label' => [
                         'class' => 'mt'
                     ],
-                    'options' => [null => '-Choose a Project-'] + $projects
+                    'options' => $projects
                 ]);
 
                 echo $this->Form->input('type');
@@ -22,7 +22,7 @@
                     'label' => [
                         'class' => 'mt'
                     ],
-                    'options' => [null => '-Choose a Project-'] + $projects
+                    'options' => [null => '-Choose a Project-']
                 ]);
                 echo $this->Form->input('date');
             ?>

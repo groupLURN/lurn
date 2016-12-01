@@ -63,8 +63,7 @@ class IncidentReportHeadersController extends AppController
             }
         }
 
-        $projects[''] = '-Choose a Project-';
-        $projects += $this->IncidentReportHeaders->Projects->find('list')->toArray();
+        $projects = $this->IncidentReportHeaders->Projects->find('list')->toArray();
 
         $this->set(compact('incidentReportHeader', 'projects'));
         $this->set('_serialize', ['incidentReportHeader', 'projects']);

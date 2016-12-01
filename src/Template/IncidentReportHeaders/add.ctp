@@ -8,29 +8,62 @@
             <legend><h3><i class="fa fa-angle-right"></i>Create Incident Report</h3></legend>
             <?php
                 echo $this->Form->input('project_id', [
-                    'data-placeholder' => 'Select A Project',
                     'class' => 'form-control chosen',
                     'label' => [
                         'class' => 'mt'
                     ],
-                    'options' => $projects
+                    'options' => [''=>'-Select A Project-']+$projects
                 ]);
 
-                echo $this->Form->input('type');
+                echo $this->Form->input('incident_type', [
+                    'class' => 'form-control chosen',
+                    'label' => [
+                        'class' => 'mt'
+                    ],
+                    'options' => [''=>'-Select an Incident Type-', 
+                                'acc'=>'Accident', 
+                                'doc'=>'Dangerous Occurrence', 
+                                'inj'=>'Injury', 
+                                'los'=>'Loss']
+                ]);
 
             ?>
             
-            <legend class="mt"><h3><i class="fa fa-angle-right"></i>Injured Personnel</h3></legend>
+            <legend class="mt"><h4><i class="fa fa-angle-right"></i>Incident Details</h4></legend>
+            <?php                
+                echo $this->Form->input('location', [
+                    'class' => 'form-control',
+                    'label' => [
+                        'text' => 'Location',                    
+                        'class' => 'mt'
+                    ]
+                    ]);
+                echo $this->Form->input('task_id', [
+                    'class' => 'form-control chosen',
+                    'label' => [
+                        'class' => 'mt'
+                    ],
+                    'options' => [''=>'-Select A Task-']+$projects
+                ]);
 
-            <?=
-            $this->Form->input('injured_personnel.ids', [
-                'data-placeholder' => 'Add Project Engineers',
-                'options' => null,
-                'class' => 'form-control chosen',
-                'label' => [
-                    'text' => 'Project Engineers',                    
-                    'class' => 'mt'
-                ]
+                echo $this->Form->input('injured_personnel.ids', [
+                    'multiple' => true,
+                    'data-placeholder' => 'Add Persons Involved',
+                    'class' => 'form-control chosen',
+                    'label' => [
+                        'text' => 'Persons Involved',                    
+                        'class' => 'mt'
+                    ],
+                    'options' => $projects
+                    ]);
+
+                echo $this->Form->input('summary', [
+                    'class' => 'form-control',
+                    'label' => [
+                        'class' => 'mt',
+                        'text' => 'Summary of the incident and/or injury caused by the incident (parts of the body and severity)'
+                    ],
+                    'type' => 'textarea'
                 ]);
             ?>
 

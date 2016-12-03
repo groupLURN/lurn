@@ -27,23 +27,6 @@
         </tr>
     </table>
 
-    <h4><?= __('Materials') ?></h4>
-    <?php if (count($materials) == 0): ?>
-
-        <p>No data available.</p>
-    
-    <?php else: ?>
-
-    <table class="vertical-table table table-striped">
-        <?php foreach ($materials as $material): ?>
-        <tr>
-            <th><?= __($material->material->name) ?></th>
-        </tr>
-        <?php endforeach;?>
-    </table>  
-
-    <?php endif; ?>
-
     <h4><?= __('Equipment') ?></h4>
     <?php if (count($equipment) == 0): ?>
 
@@ -55,6 +38,23 @@
         <?php foreach ($equipment as $equipment): ?>
         <tr>
             <th><?= __($equipment->equipment->name) ?></th>
+        </tr>
+        <?php endforeach;?>
+    </table>  
+
+    <?php endif; ?>
+
+    <h4><?= __('Materials') ?></h4>
+    <?php if (count($materials) == 0): ?>
+
+        <p>No data available.</p>
+    
+    <?php else: ?>
+
+    <table class="vertical-table table table-striped">
+        <?php foreach ($materials as $material): ?>
+        <tr>
+            <th><?= __($material->material->name) ?></th>
         </tr>
         <?php endforeach;?>
     </table>  

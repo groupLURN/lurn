@@ -137,7 +137,7 @@ class ResourceTransferHeadersTable extends Table
         foreach($resourceTransferHeader->material_transfer_details as $detail)
         {
             $materialGeneralInventory = TableRegistry::get('MaterialsGeneralInventories')
-                ->get($detail->material_id);
+                ->get($detail->material_id, ['contain' => ['Materials']]);
             $materialGeneralInventory->quantity -= $detail->quantity;
 
             TableRegistry::get('MaterialsGeneralInventories')->save($materialGeneralInventory);
@@ -148,38 +148,8 @@ class ResourceTransferHeadersTable extends Table
                     ->get([
                         'material_id' => $detail->material_id,
                         'project_id' => $resourceTransferHeader->project_to->id
-                    ], ['contain' => ['Materials']]);
+                    ]);
                 $materialProjectInventory->quantity += $detail->quantity;
-
-                $material =  $materialProjectInventory->material;
-
-                if( $materialGeneralInventory->quantity <= 30) {   
-
-                    $employees = [];
-
-                    $project = TableRegistry::get('Projects')->get($resourceTransferHeader->project_to->id, [
-                        'contain' => ['Employees', 'EmployeesJoin' => ['EmployeeTypes']]]);
-
-                    array_push($employees, $project->employee);
-                    for ($i=0; $i < count($project->employees_join); $i++) { 
-                        $employeeType = $project->employees_join[$i]->employee_type_id;
-                        if($employeeType == 3 || $employeeType == 4) {
-                            array_push($employees, $project->employees_join[$i]);
-                        }
-                    }
-
-                    foreach ($employees as $employee) {                 
-                        $notification = TableRegistry::get('Notifications')
-                            ->newEntity();
-                        $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'materials-general-inventories', 'action' => 'view/'. $material->id ], false));
-                        $notification->link = $link;
-                        $plural = substr($material->name, -1) === 's' ? '':'s';
-                        $notification->message = '<b>'.$material->name.'\''.$plural.'</b> quantity has reached critical levels.';
-                        $notification->user_id = $employee['user_id'];
-                        $notification->project_id = $resourceTransferHeader->project_to->id;
-                        TableRegistry::get('Notifications')->save($notification);
-                    }
-                }
 
             }
             catch(RecordNotFoundException $e)
@@ -193,6 +163,36 @@ class ResourceTransferHeadersTable extends Table
             finally
             {
                 TableRegistry::get('MaterialsProjectInventories')->save($materialProjectInventory);
+            }
+            
+            $material =  $materialGeneralInventory->material;
+
+            if( $materialGeneralInventory->quantity <= 30) {   
+
+                $employees = [];
+
+                $project = TableRegistry::get('Projects')->get($resourceTransferHeader->project_to->id, [
+                    'contain' => ['Employees', 'EmployeesJoin' => ['EmployeeTypes']]]);
+
+                array_push($employees, $project->employee);
+                for ($i=0; $i < count($project->employees_join); $i++) { 
+                    $employeeType = $project->employees_join[$i]->employee_type_id;
+                    if($employeeType == 3 || $employeeType == 4) {
+                        array_push($employees, $project->employees_join[$i]);
+                    }
+                }
+
+                foreach ($employees as $employee) {                 
+                    $notification = TableRegistry::get('Notifications')
+                        ->newEntity();
+                    $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'materials-general-inventories', 'action' => 'view/'. $material->id ], false));
+                    $notification->link = $link;
+                    $plural = substr($material->name, -1) === 's' ? '':'s';
+                    $notification->message = '<b>'.$material->name.'\''.$plural.'</b> quantity has reached critical levels.';
+                    $notification->user_id = $employee['user_id'];
+                    $notification->project_id = $resourceTransferHeader->project_to->id;
+                    TableRegistry::get('Notifications')->save($notification);
+                }
             }
         }
     }

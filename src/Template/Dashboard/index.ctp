@@ -123,8 +123,8 @@ MAIN CONTENT
                 <h3>NOTIFICATIONS</h3>
                 <div id="notifications"  class="scroll-wrapper">
                 <?php 
-                    //$max = count($notifications) > 20 ? 20  : count($notifications);
-                    $max = count($notifications);
+                    $max = count($notifications) > 30 ? 30 : count($notifications);
+                    //$max = count($notifications);
                     if($max == 0) {
                         ?>
                         <div class="notification">

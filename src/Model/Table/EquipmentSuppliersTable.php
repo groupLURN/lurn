@@ -80,4 +80,20 @@ class EquipmentSuppliersTable extends Table
 
         return $rules;
     }
+
+    /**
+     * Returns a list of equipment using the supplier given
+     *
+     */
+    public function findBySupplier(Query $query, array $options)
+    {
+        if((int)$options['supplier_id'] > -1)
+            return $query
+                ->where([
+                    'supplier_id' => $options['supplier_id']
+                ])
+                ->contain(['Equipment']);
+        else
+            return $query;
+    }
 }

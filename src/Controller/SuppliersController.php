@@ -41,9 +41,16 @@ class SuppliersController extends AppController
      */
     public function view($id = null)
     {
+        $this->loadModel('MaterialsSuppliers');
+        $this->loadModel('EquipmentSuppliers');
+
         $supplier = $this->Suppliers->get($id);
+        $materials = $this->MaterialsSuppliers->find('bySupplier',['supplier_id' => $id])->toArray();
+        $equipment = $this->EquipmentSuppliers->find('bySupplier',['supplier_id' => $id])->toArray();
 
         $this->set('supplier', $supplier);
+        $this->set('materials', $materials);
+        $this->set('equipment', $equipment);
         $this->set('_serialize', ['supplier']);
     }
 

@@ -80,4 +80,16 @@ class MaterialsSuppliersTable extends Table
 
         return $rules;
     }
+
+    public function findBySupplier(Query $query, array $options)
+    {
+        if((int)$options['supplier_id'] > -1)
+            return $query
+                ->where([
+                    'supplier_id' => $options['supplier_id']
+                ])
+                ->contain(['Materials']);
+        else
+            return $query;
+    }
 }

@@ -2,6 +2,8 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Routing\Router;
+use Cake\Event\Event;
 
 /**
  * IncidentReportHeaders Controller
@@ -11,16 +13,38 @@ use App\Controller\AppController;
 class IncidentReportHeadersController extends AppController
 {
 
+    public function beforeFilter(Event $event)
+    {
+        if(empty($this->request->params['pass']))
+            return $this->redirect(['controller' => 'dashboard']);
+
+        $projectId = $this->request->params['pass'][0];
+
+        $this->loadModel('Projects');
+
+        $project = $this->Projects->get($projectId, [
+            'contain' => ['Clients', 'Employees', 'EmployeesJoin' => [
+            'EmployeeTypes'
+            ]]
+        ]);
+
+        $this->viewBuilder()->layout('project_management');
+        $this->set('projectId', $projectId);
+        $this->set('project', $project);
+        return parent::beforeFilter($event);
+    }
+
     /**
      * Index method
      *
      * @return \Cake\Network\Response|null
      */
-    public function index()
+    public function index($id = null)
     {
         $this->paginate = [
             'contain' => ['Projects']
         ];
+
         $incidentReportHeaders = $this->paginate($this->IncidentReportHeaders);
 
         $this->set(compact('incidentReportHeaders'));
@@ -49,24 +73,27 @@ class IncidentReportHeadersController extends AppController
      *
      * @return \Cake\Network\Response|void Redirects on successful add, renders view otherwise.
      */
-    public function add()
+    public function add($id = null)
     {
         $incidentReportHeader = $this->IncidentReportHeaders->newEntity();
         if ($this->request->is('post')) {
             $incidentReportHeader = $this->IncidentReportHeaders->patchEntity($incidentReportHeader, $this->request->data);
-            if ($this->IncidentReportHeaders->save($incidentReportHeader)) {
-                $this->Flash->success(__('The incident report header has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
-            } else {
-                $this->Flash->error(__('The incident report header could not be saved. Please, try again.'));
-            }
+            debug($incidentReportHeader);
+            die();
+            // if ($this->IncidentReportHeaders->save($incidentReportHeader)) {
+            //     $this->Flash->success(__('The incident report header has been saved.'));
+
+            //     return $this->redirect(['action' => 'index']);
+            // } else {
+            //     $this->Flash->error(__('The incident report header could not be saved. Please, try again.'));
+            // }
         }
 
-        $projects = $this->IncidentReportHeaders->Projects->find('list')->toArray();
+        $project = $this->IncidentReportHeaders->Projects->find('byProjectId', ['project_id' => $id]);
 
-        $this->set(compact('incidentReportHeader', 'projects'));
-        $this->set('_serialize', ['incidentReportHeader', 'projects']);
+        $this->set(compact('incidentReportHeader', 'project'));
+        $this->set('_serialize', ['incidentReportHeader', 'project']);
     }
 
     /**

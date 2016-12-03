@@ -7,15 +7,48 @@
         <fieldset>
             <legend><h3><i class="fa fa-angle-right"></i>Create Incident Report</h3></legend>
             <?php
-                echo $this->Form->input('project_id', [
-                    'class' => 'form-control chosen',
+                echo $this->Form->input('project_name', [
+                    'class' => 'form-control',
                     'label' => [
                         'class' => 'mt'
-                    ],
-                    'options' => [''=>'-Select A Project-']+$projects
+                    ]
+                    'value' => $project->title
                 ]);
 
-                echo $this->Form->input('incident_type', [
+                echo $this->Form->input('project_location', [
+                    'class' => 'form-control',
+                    'disabled' => true,
+                    'label' => [
+                        'text' => 'Project Location',    
+                        'class' => 'mt'
+                    ],
+                    'type' => 'text',
+                    'value' => ''
+                ]);
+
+                echo $this->Form->input('project', [
+                    'class' => 'form-control',
+                    'disabled' => true,
+                    'label' => [
+                        'text' => 'Project Engineer',    
+                        'class' => 'mt'
+                    ],
+                    'type' => 'text',
+                    'value' => ''
+                ]);
+
+                echo $this->Form->input('date', [
+                    'class' => 'form-control',
+                    'disabled' => true,
+                    'label' => [
+                        'text' => 'Date',    
+                        'class' => 'mt'
+                    ],
+                    'type' => 'text',
+                    'value' => ''
+                ]);
+
+                echo $this->Form->input('type', [
                     'class' => 'form-control chosen',
                     'label' => [
                         'class' => 'mt'
@@ -29,7 +62,7 @@
 
             ?>
             
-            <legend class="mt"><h4><i class="fa fa-angle-right"></i>Incident Details</h4></legend>
+            <legend class="mt"><h4></i>Incident Details</h4></legend>
             <?php                
                 echo $this->Form->input('location', [
                     'class' => 'form-control',
@@ -43,10 +76,10 @@
                     'label' => [
                         'class' => 'mt'
                     ],
-                    'options' => [''=>'-Select A Task-']+$projects
+                    'options' => [''=>'-Select A Task-']
                 ]);
 
-                echo $this->Form->input('injured_personnel.ids', [
+                echo $this->Form->input('injured_personnel', [
                     'multiple' => true,
                     'data-placeholder' => 'Add Persons Involved',
                     'class' => 'form-control chosen',
@@ -54,7 +87,7 @@
                         'text' => 'Persons Involved',                    
                         'class' => 'mt'
                     ],
-                    'options' => $projects
+                    'options' => null
                     ]);
 
                 echo $this->Form->input('summary', [

@@ -17,8 +17,10 @@ class ProjectOverviewController extends AppController
         if(empty($this->request->params['pass']))
             return $this->redirect(['controller' => 'dashboard']);
 
+        $projectId = $this->request->params['pass'][0];
+        
         $this->viewBuilder()->layout('project_management');
-        $this->set('projectId', $this->request->params['pass'][0]);
+        $this->set('projectId', $projectId );
         return parent::beforeFilter($event);
     }
 
@@ -30,12 +32,13 @@ class ProjectOverviewController extends AppController
     public function index($projectId = null)
     {   
 
+
         $this->loadModel('Projects');
         $project = $this->Projects->get($projectId, [
             'contain' => ['Clients', 'Employees', 'EmployeesJoin' => [
             'EmployeeTypes'
             ]]
-        ]);
+        ])
 
         if ($this->request->is(array('post', 'put'))) {
             $this->loadModel('Tasks');

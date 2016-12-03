@@ -2,7 +2,7 @@
 <?= $this->assign('title', 'Incident Reports') ?>
 <div class="row mt">
     <div class="col-xs-12">
-        <?= $this->newButton(__('Create Incident Report'), ['action' => 'add']); ?>
+        <?= $this->newButton(__('Create Incident Report'), ['action' => 'add',$projectId]); ?>
     </div>
 </div>
 <div class="row mt">

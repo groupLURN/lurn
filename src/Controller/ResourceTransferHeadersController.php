@@ -89,7 +89,7 @@ class ResourceTransferHeadersController extends AppController
                     $notification = $this->Notifications->newEntity();
                     $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'resource-transfer-headers', 'action' => 'view/'. $resourceTransferHeader->id ], false));
                     $notification->link = $link;
-                    $notification->message = 'Resources has been transfrred from the general inventory to <b>'.$project->title.'</b>.';
+                    $notification->message = 'Resources has been transferred from the general inventory to <b>'.$project->title.'</b>.';
                     $notification->user_id = $employee['user_id'];
                     $notification->project_id = $resourceTransferHeader->to_project_id;
                     $this->Notifications->save($notification);

@@ -38,7 +38,7 @@ class ProjectOverviewController extends AppController
             'contain' => ['Clients', 'Employees', 'EmployeesJoin' => [
             'EmployeeTypes'
             ]]
-        ])
+        ]);
 
         if ($this->request->is(array('post', 'put'))) {
             $this->loadModel('Tasks');

@@ -48,6 +48,11 @@ if(strpos($request_uri, 'rental-request-header') !== false) {
     $this->Html->script('rental-request-header', ['block' => true]);
 }
 
+if(strpos($request_uri, 'incident-report-headers') !== false) {    
+    $this->Html->script('incident-report-headers', ['block' => true]);
+}
+
+
 
 ?>
 

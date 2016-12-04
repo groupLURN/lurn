@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Controller\AppController;
 use Cake\Routing\Router;
 use Cake\Event\Event;
+use DateTime;
 
 /**
  * IncidentReportHeaders Controller
@@ -20,17 +21,8 @@ class IncidentReportHeadersController extends AppController
 
         $projectId = $this->request->params['pass'][0];
 
-        $this->loadModel('Projects');
-
-        $project = $this->Projects->get($projectId, [
-            'contain' => ['Clients', 'Employees', 'EmployeesJoin' => [
-            'EmployeeTypes'
-            ]]
-        ]);
-
         $this->viewBuilder()->layout('project_management');
         $this->set('projectId', $projectId);
-        $this->set('project', $project);
         return parent::beforeFilter($event);
     }
 
@@ -75,7 +67,30 @@ class IncidentReportHeadersController extends AppController
      */
     public function add($id = null)
     {
+
+        $this->loadModel('Projects');
+        $this->loadModel('Tasks');
+        $tasks  = [];
+
+        $projectMembers = [];
+
+        $project = $this->Projects->get($id, [
+            'contain' => ['Employees', 'EmployeesJoin' => [
+            'EmployeeTypes'
+            ]]
+        ]);
+
+        foreach ($project->employees_join as $employee) {
+            $projectMembers[$employee->id] = $employee->name;
+            if($employee->employee_type_id === 3){
+                $project['project_engineer'] = $employee;
+            }
+        }
+
+        $project['date_now'] = date_format(new DateTime(),"F d, Y");
+
         $incidentReportHeader = $this->IncidentReportHeaders->newEntity();
+
         if ($this->request->is('post')) {
             $incidentReportHeader = $this->IncidentReportHeaders->patchEntity($incidentReportHeader, $this->request->data);
 
@@ -90,10 +105,17 @@ class IncidentReportHeadersController extends AppController
             // }
         }
 
-        $project = $this->IncidentReportHeaders->Projects->find('byProjectId', ['project_id' => $id]);
+        $tempTasks  = $this->Tasks->find('byProject', ['project_id' => $id])->toArray();
 
-        $this->set(compact('incidentReportHeader', 'project'));
-        $this->set('_serialize', ['incidentReportHeader', 'project']);
+        foreach ($tempTasks as $task) {
+            $tasks[$task->id] = $task->title;
+        }
+
+        $this->set('project', $project);
+        $this->set('tasks', $tasks);
+        $this->set('projectMembers', $projectMembers);
+        $this->set(compact('incidentReportHeader'));
+        $this->set('_serialize', ['incidentReportHeader', 'project', 'projectMembers']);
     }
 
     /**
@@ -142,4 +164,26 @@ class IncidentReportHeadersController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
+
+ /**
+* Method for getting manpower from the database
+*
+* @return json response
+*/
+public function getManpower($id = null) {
+    $this->loadModel('Manpower');
+    $manpower  = array();
+
+    $projectId  = $id;
+    $taskId   = $this->request->query('task_id');
+
+    if ($projectId != null && $taskId != null) {
+        $manpower = $this->Manpower->find('byProjectAndTask', ['project_id' => $projectId, 'task_id' => $taskId]);
+
+    }
+
+    header('Content-Type: application/json');
+    echo json_encode($manpower);
+    exit();
+}
 }

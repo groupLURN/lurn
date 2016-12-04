@@ -10,7 +10,7 @@ $(function(){
 
 		$.ajax({ 
 			type: "GET", 
-			url: link+"/purchase-order-headers/get-milestones?project_id="+projectId, 
+			url: link+"purchase-order-headers/get-milestones?project_id="+projectId, 
 			data: { get_param: 'value' }, 
 			success: function (data) { 
 				var milestones = data;
@@ -42,7 +42,7 @@ $(function(){
 
 		$.ajax({ 
 			type: "GET", 
-			url: link+"/purchase-order-headers/get-tasks?project_id="+projectId+"&milestone_id="+milestoneId, 
+			url: link+"purchase-order-headers/get-tasks?project_id="+projectId+"&milestone_id="+milestoneId, 
 			data: { get_param: 'value' }, 
 			success: function (data) { 
 				var tasks = data;
@@ -80,7 +80,7 @@ $(function(){
 
 		$.ajax({ 
 			type: "GET", 
-			url: link+"/purchase-order-headers/get-suppliers?project_id="+projectId+"&milestone_id="+milestoneId+"&task_id="+taskId, 
+			url: link+"purchase-order-headers/get-suppliers?project_id="+projectId+"&milestone_id="+milestoneId+"&task_id="+taskId, 
 			data: { get_param: 'value' }, 
 			success: function (data) { 
 				var suppliers = data;
@@ -111,7 +111,7 @@ $(function(){
 
 		$.ajax({ 
 			type: "GET", 
-			url: link+"/purchase-order-headers/get-materials?project_id="+projectId
+			url: link+"purchase-order-headers/get-materials?project_id="+projectId
 				+"&milestone_id="+milestoneId
 				+"&task_id="+taskId
 				+"&supplier_id="+supplierId, 

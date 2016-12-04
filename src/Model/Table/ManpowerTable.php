@@ -95,6 +95,13 @@ class ManpowerTable extends Table
         return $query;
     }
 
+    public function findByProjectAndTask(Query $query, array $options)
+    {
+        if($options['project_id'] > 0 && $options['task_id'] > 0)
+            return $query->where(['project_id' => $options['project_id'], 'task_id' => $options['task_id']]);
+        return $query;
+    }
+
     public function findByManpowerTypeId(Query $query, array $options)
     {
         if((int)$options['manpower_type_id'] > 0)

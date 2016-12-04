@@ -7,15 +7,16 @@
         <fieldset>
             <legend><h3><i class="fa fa-angle-right"></i>Create Incident Report</h3></legend>
             <?php
-                echo $this->Form->input('project_name', [
+                echo $this->Form->input('project-name', [
                     'class' => 'form-control',
+                    'disabled' => true,
                     'label' => [
                         'class' => 'mt'
-                    ]
+                    ],
                     'value' => $project->title
                 ]);
 
-                echo $this->Form->input('project_location', [
+                echo $this->Form->input('project-location', [
                     'class' => 'form-control',
                     'disabled' => true,
                     'label' => [
@@ -23,7 +24,7 @@
                         'class' => 'mt'
                     ],
                     'type' => 'text',
-                    'value' => ''
+                    'value' => $project->location
                 ]);
 
                 echo $this->Form->input('project', [
@@ -34,7 +35,7 @@
                         'class' => 'mt'
                     ],
                     'type' => 'text',
-                    'value' => ''
+                    'value' => $project->project_engineer->name
                 ]);
 
                 echo $this->Form->input('date', [
@@ -45,7 +46,7 @@
                         'class' => 'mt'
                     ],
                     'type' => 'text',
-                    'value' => ''
+                    'value' => $project->date_now
                 ]);
 
                 echo $this->Form->input('type', [
@@ -71,15 +72,15 @@
                         'class' => 'mt'
                     ]
                     ]);
-                echo $this->Form->input('task_id', [
+                echo $this->Form->input('task', [
                     'class' => 'form-control chosen',
                     'label' => [
                         'class' => 'mt'
                     ],
-                    'options' => [''=>'-Select A Task-']
+                    'options' => [''=>'-Select A Task-']+$tasks
                 ]);
 
-                echo $this->Form->input('injured_personnel', [
+                echo $this->Form->input('involved-personnel', [
                     'multiple' => true,
                     'data-placeholder' => 'Add Persons Involved',
                     'class' => 'form-control chosen',
@@ -87,7 +88,8 @@
                         'text' => 'Persons Involved',                    
                         'class' => 'mt'
                     ],
-                    'options' => null
+                    'options' => $projectMembers,
+                    'data-count' => count($projectMembers)
                     ]);
 
                 echo $this->Form->input('summary', [

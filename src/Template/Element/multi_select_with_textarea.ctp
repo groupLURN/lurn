@@ -1,7 +1,7 @@
 <?php
 
 $defaults = [
-    'resource' => 'equipment',
+    'resource' => 'manpower',
     'quantity' => 'true', // Shows/Hides the quantity text field.
     'namespaces' => [], // Namespaces for the fields.
     'values' => [], // Pre-set values.
@@ -35,8 +35,8 @@ for ($i = 0; $i < count($namespaces); $i++)
         </div>
         <div class="child-center">
             <?php if ($quantity) : ?>
-                Quantity
-                <input type="text" class='number-only resource-quantity' style="text-align: center;">
+                Description
+                <input type="textarea" class='resource-quantity' style="text-align: center;">
             <?php endif; ?>
             &nbsp;
             <img src=<?$this->Url->build(['controller' => '/img/add.png', 'action' => 'index'] alt="Add" style="cursor: pointer;" onclick="if(<?= $checker ?> === true) add_<?= $resource ?>(this);">

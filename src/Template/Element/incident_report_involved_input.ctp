@@ -21,21 +21,34 @@ for ($i = 0; $i < count($namespaces); $i++)
         $nameHolder .= '[' . $namespaces[$i] . ']';
 ?>
 
-<div class="content-panel multi-select-with-input" id="<?= $id ?>" <?= $hidden ? 'hidden' : '' ?>>
-    <div class="mt parent-center">
-        <div class="child-center" style="width: 32%;">
-            <?= $this->Form->input('list', [
-                'label' => false,
-                'type' => 'select',
-                'data-placeholder' => 'Select persons involved.',
-                'class' => 'chosen resource form-control',
-                'options' => $options
-            ]) ?>
-        </div>
-        <div class="child-center">
-            <img src=<?=$this->Url->build(['controller' => '/img/add.png', 'action' => 'index'])?> alt="Add" style="cursor: pointer;" onclick="if(<?= $checker ?> === true) add_<?= $resource ?>(this);">
-        </div>
+<div class="incident-report-involved-input" id="<?= $id ?>" <?= $hidden ? 'hidden' : '' ?>>
+    <div class="" style="width: 94%; display: inline-block;">
+        <?= $this->Form->input('persons-involved', [
+            'class' => 'chosen form-control mt',
+            'data-placeholder' => 'Add Persons involved',
+            'label' => [
+                        'class' => 'mt'
+                    ],
+            'options' => $options
+        ]) ?>
     </div>
+    <div class="" style=" display: inline-block;">
+        <img src=<?=$this->Url->build(['controller' => '/img/add.png', 'action' => 'index'])?> alt="Add" style="cursor: pointer;" onclick="if(<?= $checker ?> === true) add_<?= $resource ?>(this);">
+    </div>
+
+    <?php
+        echo $this->Form->input('involved-summary', [
+            'class' => 'form-control',
+            'label' => [
+                'class' => 'mt',
+                'text' => 'Summary of the incident and/or injury caused by the incident (parts of the body and severity)'
+            ],
+            'type' => 'textarea'
+        ]);
+    ?>
+
+    <!--
+
     <ul class="options">
         <?php foreach ($values as $value) : ?>
             <li onclick="$(this).remove();">
@@ -44,6 +57,7 @@ for ($i = 0; $i < count($namespaces); $i++)
             </li>
         <?php endforeach; ?>
     </ul>
+    -->
 </div>
 
 <script>

@@ -16,13 +16,7 @@ class IncidentReportHeadersController extends AppController
 
     public function beforeFilter(Event $event)
     {
-        if(empty($this->request->params['pass']))
-            return $this->redirect(['controller' => 'dashboard']);
-
-        $projectId = $this->request->params['pass'][0];
-
-        $this->viewBuilder()->layout('project_management');
-        $this->set('projectId', $projectId);
+        $this->viewBuilder()->layout('default');
         return parent::beforeFilter($event);
     }
 
@@ -65,7 +59,7 @@ class IncidentReportHeadersController extends AppController
      *
      * @return \Cake\Network\Response|void Redirects on successful add, renders view otherwise.
      */
-    public function add($id = null)
+    public function add()
     {
 
         $this->loadModel('Projects');
@@ -73,7 +67,9 @@ class IncidentReportHeadersController extends AppController
         $tasks  = [];
 
         $projectMembers = [];
-
+        $project = null;
+        
+        /**
         $project = $this->Projects->get($id, [
             'contain' => ['Employees', 'EmployeesJoin' => [
             'EmployeeTypes'
@@ -88,9 +84,9 @@ class IncidentReportHeadersController extends AppController
         }
 
         $project['date_now'] = date_format(new DateTime(),"F d, Y");
+                **/
 
         $incidentReportHeader = $this->IncidentReportHeaders->newEntity();
-
         if ($this->request->is('post')) {
             $incidentReportHeader = $this->IncidentReportHeaders->patchEntity($incidentReportHeader, $this->request->data);
 

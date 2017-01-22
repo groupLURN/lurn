@@ -65,11 +65,6 @@ $this->start('additional-sidebar');
 </li>
 <?php endif;?>
 
-<li class="sub-menu">
-    <span><a href=<?= $this->Url->build(['controller' => 'IncidentReportHeaders', 'action' => 'index', $projectId]) ?>>
-    <i class="fa fa-file"></i>Incident Reports</a>
-</li>
-
 <span id="project-id"><?= $projectId ?></span>
 <?php $this->end(); ?>
 <?= $this->fetch('content'); ?>

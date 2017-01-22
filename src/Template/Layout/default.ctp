@@ -89,7 +89,7 @@ $this->start('additional-sidebar');
         <li><a href=<?= $this->Url->build(['controller' => 'EquipmentGeneralInventoryReport']) ?>>Equipment Inventory Report</a></li>
         <li><a href=<?= $this->Url->build(['controller' => 'MaterialsGeneralInventoryReport']) ?>>Materials Inventory Report</a></li>
         <li><a href=<?= $this->Url->build(['controller' => 'ManpowerGeneralInventoryReport']) ?>>Manpower Inventory Report</a></li>     
-        <li><a href=<?= $this->Url->build(['controller' => 'IncidentReports', 'action' => 'index']) ?>>Incident Report</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'IncidentReportHeaders', 'action' => 'index']) ?>>Incident Reports</a></li>
     </ul>
 </li>
 <?php $this->end(); ?>

@@ -9,11 +9,10 @@
 			<?php
 				echo $this->Form->input('project', [
 					'class' => 'form-control chosen',
-					'disabled' => true,
 					'label' => [
 						'class' => 'mt'
 					],
-					'options' => [''=>'-Select A Project-']
+					'options' => [''=>'-Select A Project-']+$projects
 				]);
 
 				echo $this->Form->input('project-location', [
@@ -38,7 +37,6 @@
 
 				echo $this->Form->input('date', [
 					'class' => 'form-control',
-					'disabled' => true,
 					'label' => [
 						'text' => 'Date',    
 						'class' => 'mt'

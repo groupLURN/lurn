@@ -64,10 +64,22 @@ class IncidentReportHeadersController extends AppController
 
         $this->loadModel('Projects');
         $this->loadModel('Tasks');
-        $tasks  = [];
 
-        $projectMembers = [];
-        $project = null;
+        if ($this->request->is('post')) {
+            $incidentReportHeader = $this->IncidentReportHeaders->patchEntity($incidentReportHeader, $this->request->data);
+
+            debug($incidentReportHeader);
+            die();
+            // if ($this->IncidentReportHeaders->save($incidentReportHeader)) {
+            //     $this->Flash->success(__('The incident report header has been saved.'));
+
+            //     return $this->redirect(['action' => 'index']);
+            // } else {
+            //     $this->Flash->error(__('The incident report header could not be saved. Please, try again.'));
+            // }
+        }
+
+        $projects       = $this->Projects->find('list')->where(['is_finished' => 0])->toArray();
         
         /**
         $project = $this->Projects->get($id, [
@@ -87,31 +99,9 @@ class IncidentReportHeadersController extends AppController
                 **/
 
         $incidentReportHeader = $this->IncidentReportHeaders->newEntity();
-        if ($this->request->is('post')) {
-            $incidentReportHeader = $this->IncidentReportHeaders->patchEntity($incidentReportHeader, $this->request->data);
 
-            debug($incidentReportHeader);
-            die();
-            // if ($this->IncidentReportHeaders->save($incidentReportHeader)) {
-            //     $this->Flash->success(__('The incident report header has been saved.'));
-
-            //     return $this->redirect(['action' => 'index']);
-            // } else {
-            //     $this->Flash->error(__('The incident report header could not be saved. Please, try again.'));
-            // }
-        }
-
-        $tempTasks  = $this->Tasks->find('byProject', ['project_id' => $id])->toArray();
-
-        foreach ($tempTasks as $task) {
-            $tasks[$task->id] = $task->title;
-        }
-
-        $this->set('project', $project);
-        $this->set('tasks', $tasks);
-        $this->set('projectMembers', $projectMembers);
-        $this->set(compact('incidentReportHeader'));
-        $this->set('_serialize', ['incidentReportHeader', 'project', 'projectMembers']);
+        $this->set(compact('incidentReportHeader', 'projects'));
+        $this->set('_serialize', ['incidentReportHeader', 'project']);
     }
 
     /**
@@ -161,25 +151,45 @@ class IncidentReportHeadersController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 
- /**
-* Method for getting manpower from the database
-*
-* @return json response
-*/
-public function getManpower($id = null) {
-    $this->loadModel('Manpower');
-    $manpower  = array();
+     /**
+    * Method for getting manpower from the database
+    *
+    * @return json response
+    */
+    public function getManpower($id = null) {
+        $this->loadModel('Manpower');
+        $manpower  = array();
 
-    $projectId  = $id;
-    $taskId   = $this->request->query('task_id');
+        $projectId  = $id;
+        $taskId   = $this->request->query('task_id');
 
-    if ($projectId != null && $taskId != null) {
-        $manpower = $this->Manpower->find('byProjectAndTask', ['project_id' => $projectId, 'task_id' => $taskId]);
+        if ($projectId != null && $taskId != null) {
+            $manpower = $this->Manpower->find('byProjectAndTask', ['project_id' => $projectId, 'task_id' => $taskId]);
 
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode($manpower);
+        exit();
     }
 
-    header('Content-Type: application/json');
-    echo json_encode($manpower);
-    exit();
-}
+    /**
+    * Method for getting tasks from the database
+    *
+    * @return json response
+    */
+    public function getTasks() {
+        $this->loadModel('Tasks');
+        $tasks  = array();
+
+        $project_id     = $this->request->query('project_id');
+
+        if ($project_id != null) {
+            $tasks = $this->Tasks->find('byProject', ['project_id' => $project_id]);
+        } 
+
+        header('Content-Type: application/json');
+        echo json_encode($tasks);
+        exit();
+    }   
 }

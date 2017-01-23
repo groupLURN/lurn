@@ -2,6 +2,40 @@ $(function(){
 	var link = $('#base-link').text();
 	var projectId =  $('#project-id').text();
 
+
+	$("#project").chosen().change(function() {
+		projectId 	=  $("#project").val();
+		milestoneId =  $(this).val();
+
+		updateSuppliers();
+
+		$("#task-id option").not(":first").remove();
+
+		$.ajax({ 
+			type: "GET", 
+			url: link+"rental-request-headers/get-tasks?project_id="+projectId+"&milestone_id="+milestoneId, 
+			data: { get_param: 'value' }, 
+			success: function (data) { 
+				var tasks = data;
+
+				for(var i=0; i < tasks.length; i++) {
+					var option = "<option value=\"" 
+					+ tasks[i].id + "\">" 
+					+ tasks[i].title 
+					+ "</option>";
+					$("#task-id option:last-child").after(
+						option	            	
+						);
+				}
+
+				$("#task-id").trigger("chosen:updated");
+				
+			}
+		});
+	});	
+
+
+
 	$("#task").chosen().change(function() {
 		var taskId =  $(this).val();
 
@@ -40,6 +74,7 @@ $(function(){
 		});
 
 	});
+
 
 
 });

@@ -7,13 +7,13 @@
 		<fieldset>
 			<legend><h3><i class="fa fa-angle-right"></i>Create Incident Report</h3></legend>
 			<?php
-				echo $this->Form->input('project-name', [
-					'class' => 'form-control',
+				echo $this->Form->input('project', [
+					'class' => 'form-control chosen',
 					'disabled' => true,
 					'label' => [
 						'class' => 'mt'
 					],
-					'value' => $project->title
+					'options' => [''=>'-Select A Project-']
 				]);
 
 				echo $this->Form->input('project-location', [
@@ -23,8 +23,7 @@
 						'text' => 'Project Location',    
 						'class' => 'mt'
 					],
-					'type' => 'text',
-					'value' => $project->location
+					'type' => 'text'
 				]);
 
 				echo $this->Form->input('project', [
@@ -34,8 +33,7 @@
 						'text' => 'Project Engineer',    
 						'class' => 'mt'
 					],
-					'type' => 'text',
-					'value' => $project->project_engineer->name
+					'type' => 'text'
 				]);
 
 				echo $this->Form->input('date', [
@@ -45,8 +43,7 @@
 						'text' => 'Date',    
 						'class' => 'mt'
 					],
-					'type' => 'text',
-					'value' => $project->date_now
+					'type' => 'text'
 				]);
 
 				echo $this->Form->input('type', [
@@ -77,7 +74,7 @@
 					'label' => [
 						'class' => 'mt'
 					],
-					'options' => [''=>'-Select A Task-']+$tasks
+					'options' => [''=>'-Select A Task-']
 				]);
 
 

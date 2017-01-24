@@ -25,6 +25,7 @@ for ($i = 0; $i < count($namespaces); $i++)
     <div class="" style="width: 94%; display: inline-block;">
         <?= $this->Form->input('persons-involved', [
             'class' => 'chosen form-control mt',
+            'data-count' => 0,
             'data-placeholder' => 'Add Persons involved',
             'label' => [
                         'class' => 'mt'

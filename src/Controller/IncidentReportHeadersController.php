@@ -96,7 +96,7 @@ class IncidentReportHeadersController extends AppController
         }
 
         $project['date_now'] = date_format(new DateTime(),"F d, Y");
-                **/
+        **/
 
         $incidentReportHeader = $this->IncidentReportHeaders->newEntity();
 
@@ -183,7 +183,7 @@ class IncidentReportHeadersController extends AppController
         $tasks  = array();
 
         $project_id     = $this->request->query('project_id');
-
+        
         if ($project_id != null) {
             $tasks = $this->Tasks->find('byProject', ['project_id' => $project_id]);
         } 

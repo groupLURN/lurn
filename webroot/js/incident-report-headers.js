@@ -1,19 +1,15 @@
 $(function(){
 	var link = $('#base-link').text();
-	var projectId =  $('#project-id').text();
-
 
 	$("#project").chosen().change(function() {
-		projectId 	=  $("#project").val();
+		var projectId 	=  $("#project").val();
 		milestoneId =  $(this).val();
 
-		updateSuppliers();
-
-		$("#task-id option").not(":first").remove();
+		$("#task option").not(":first").remove();
 
 		$.ajax({ 
 			type: "GET", 
-			url: link+"rental-request-headers/get-tasks?project_id="+projectId+"&milestone_id="+milestoneId, 
+			url: link+"incident-report-headers/get-tasks?project_id="+projectId, 
 			data: { get_param: 'value' }, 
 			success: function (data) { 
 				var tasks = data;
@@ -23,33 +19,32 @@ $(function(){
 					+ tasks[i].id + "\">" 
 					+ tasks[i].title 
 					+ "</option>";
-					$("#task-id option:last-child").after(
+					$("#task option:last-child").after(
 						option	            	
 						);
 				}
 
-				$("#task-id").trigger("chosen:updated");
+				$("#task").trigger("chosen:updated");
 				
 			}
 		});
 	});	
-
-
-
+	
 	$("#task").chosen().change(function() {
-		var taskId =  $(this).val();
 
-		var originalCount = $("#involved-personnel").data("count");
+		var projectId 	=  $("#project").val();
+		var taskId 		=  $(this).val();
 
-		var currentCount = $('#involved-personnel').children('option').length;
+		var originalCount 	= $("#persons-involved").data("count");
+		var currentCount 	= $('#persons-involved').children('option').length;
 
 		for (i = 0; i < currentCount ; i++) {
 			if(originalCount < i+1) {
 					console.log(currentCount);
-				$('#involved-personnel option').eq(i).remove(); 
+				$('#persons-involved option').eq(i).remove(); 
 			}
 		}
-		$("#involved-personnel").trigger("chosen:updated");
+		$("#persons-involved").trigger("chosen:updated");
 
 		$.ajax({ 
 			type: "GET", 
@@ -63,18 +58,16 @@ $(function(){
 					+ manpower[i].id + "\">" 
 					+ manpower[i].name 
 					+ "</option>";
-					$("#involved-personnel option:last-child").after(
+					$("#persons-involved option:last-child").after(
 						option	            	
 						);
 				}
 
-				$("#involved-personnel").trigger("chosen:updated");
+				$("#persons-involved").trigger("chosen:updated");
 				
 			}
 		});
 
 	});
-
-
 
 });

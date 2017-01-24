@@ -25,11 +25,10 @@
 					'type' => 'text'
 				]);
 
-				echo $this->Form->input('project', [
+				echo $this->Form->input('project-engineer', [
 					'class' => 'form-control',
 					'disabled' => true,
-					'label' => [
-						'text' => 'Project Engineer',    
+					'label' => [ 
 						'class' => 'mt'
 					],
 					'type' => 'text'
@@ -77,7 +76,7 @@
 
 
 				echo $this->element('incident_report_involved_input', [
-						'options' => $projectMembers,
+						'options' => null,
 						'resource' => 'involved_person'
 					]);
 				/*

@@ -35,15 +35,32 @@ $(function(){
 		var projectId 	=  $("#project").val();
 		var taskId 		=  $(this).val();
 
-		var originalCount 	= $("#persons-involved").data("count");
-		var currentCount 	= $('#persons-involved').children('option').length;
 
-		for (i = 0; i < currentCount ; i++) {
+		var defaultOption = "<option value=\"\">-Select Persons Involved</option>";
+
+		/**
+
+			var originalCount 	= $("#persons-involved").data("count");
+			var currentCount 	= $('#persons-involved').children('option').length;
+
+		 	for (i = 0; i < currentCount ; i++) {
+		 	@param  {[type]} originalCount <             i+1 [description]
+		 	@return {[type]}               [description]
 			if(originalCount < i+1) {
-					console.log(currentCount);
+				console.log(currentCount);
 				$('#persons-involved option').eq(i).remove(); 
 			}
 		}
+		**/
+
+		$("#persons-involved").empty();
+
+
+		$("#persons-involved option:last-child").append(
+			defaultOption	            	
+		);
+
+
 		$("#persons-involved").trigger("chosen:updated");
 
 		$.ajax({ 
@@ -54,13 +71,13 @@ $(function(){
 				var manpower = data;
 
 				for(var i=0; i < manpower.length; i++) {
-					var option = "<option value=\"manpower-" 
+					var option = "<option value=\""
 					+ manpower[i].id + "\">" 
 					+ manpower[i].name 
 					+ "</option>";
 					$("#persons-involved option:last-child").after(
 						option	            	
-						);
+					);
 				}
 
 				$("#persons-involved").trigger("chosen:updated");

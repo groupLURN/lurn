@@ -156,15 +156,31 @@ class IncidentReportHeadersController extends AppController
     *
     * @return json response
     */
-    public function getManpower($id = null) {
+    public function getManpower() {
+        $this->loadModel('Projects');
         $this->loadModel('Manpower');
+
         $manpower  = array();
 
-        $projectId  = $id;
-        $taskId   = $this->request->query('task_id');
+        $projectId  = $this->request->query('project_id');
+        $taskId     = $this->request->query('task_id');
+
+        $project = $this->Projects->get($projectId, [
+            'contain' => ['Employees', 'EmployeesJoin' => [
+            'EmployeeTypes'
+            ]]
+        ]);
+
+        foreach ($project->employees_join as $employee) {
+            array_push($manpower, ['id' => $employee->id, 'name' => $employee->name]);
+        }   
 
         if ($projectId != null && $taskId != null) {
-            $manpower = $this->Manpower->find('byProjectAndTask', ['project_id' => $projectId, 'task_id' => $taskId]);
+            $taskManpower = $this->Manpower->find('byProjectAndTask', ['project_id' => $projectId, 'task_id' => $taskId]);
+
+            foreach ($taskManpower as $manpowerRow) {
+                array_push($manpower, ['id' => $manpowerRow->id, 'name' => $manpowerRow->name]);
+            }
 
         }
 

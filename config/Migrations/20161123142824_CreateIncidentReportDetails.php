@@ -41,9 +41,8 @@ class CreateIncidentReportDetails extends AbstractMigration
             'default' => null,
             'null' => false,
         ]);
-        $table->addColumn('user_id', 'integer', [
+        $table->addColumn('user_id', 'string', [
             'default' => null,
-            'limit' => 11,
             'null' => true,
         ]);
         $table->addColumn('created', 'datetime', [

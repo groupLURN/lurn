@@ -36,6 +36,7 @@
 
 				echo $this->Form->input('date', [
 					'class' => 'form-control',
+					'disabled' => true,
 					'label' => [
 						'text' => 'Date',    
 						'class' => 'mt'
@@ -66,6 +67,7 @@
 						'class' => 'mt'
 					]
 					]);
+
 				echo $this->Form->input('task', [
 					'class' => 'form-control chosen',
 					'label' => [
@@ -74,25 +76,20 @@
 					'options' => [''=>'-Select A Task-']
 				]);
 
+		        echo $this->Form->input('involved-summary', [
+		            'class' => 'form-control',
+		            'label' => [
+		                'class' => 'mt',
+		                'text' => 'Summary of the incident and/or injury caused by the incident (parts of the body and severity)'
+		            ],
+		            'type' => 'textarea'
+		        ]);
 
 				echo $this->element('incident_report_involved_input', [
 						'options' => ['' => '-Add Persons Involved-'],
 						'resource' => 'involved_person'
 					]);
-				/*
-				
-				echo $this->Form->input('involved-personnel', [
-					'multiple' => true,
-					'data-placeholder' => 'Add Persons Involved',
-					'class' => 'form-control chosen',
-					'label' => [
-						'text' => 'Persons Involved',                    
-						'class' => 'mt'
-					],
-					'options' => $projectMembers,
-					'data-count' => count($projectMembers)
-					]);
-					*/
+
 			?>
 
 			<br>

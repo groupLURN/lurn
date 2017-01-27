@@ -37,18 +37,73 @@ for ($i = 0; $i < count($namespaces); $i++)
     <div class="" style=" display: inline-block;">
         <img src=<?=$this->Url->build(['controller' => '/img/add.png', 'action' => 'index'])?> alt="Add" style="cursor: pointer;" onclick="if(<?= $checker ?> === true) add_<?= $resource ?>(this);">
     </div>
+            
+    <div id="injured-details">
+        <legend class="mt"><h4></i>Details of Injured Person/s</h4></legend>
 
-    <?php
-        echo $this->Form->input('involved-summary', [
-            'class' => 'form-control',
-            'label' => [
-                'class' => 'mt',
-                'text' => 'Summary of the incident and/or injury caused by the incident (parts of the body and severity)'
-            ],
-            'type' => 'textarea'
-        ]);
-    ?>
+        <?php
 
+            echo $this->Form->input('name', [
+                'class' => 'form-control',
+                'readonly' => true,
+                'label' => [                   
+                    'class' => 'mt'
+                ]
+            ]);
+
+            echo $this->Form->input('age', [
+                'class' => 'form-control',
+                'label' => [
+                    'text' => 'Age/Date of Birth',                    
+                    'class' => 'mt'
+                ]
+            ]);
+
+            echo $this->Form->input('address', [
+                'class' => 'form-control',
+                'label' => [
+                    'text' => 'Address of Injured Person',                    
+                    'class' => 'mt'
+                ]
+            ]);
+
+            echo $this->Form->input('contact-number', [
+                'class' => 'form-control',
+                'label' => [                
+                    'class' => 'mt'
+                ]
+            ]);
+
+            echo $this->Form->input('Occupation', [
+                'class' => 'form-control',
+                'label' => [                 
+                    'class' => 'mt'
+                ]
+            ]);
+
+            echo $this->Form->input('involved-summary', [
+                'class' => 'form-control',
+                'label' => [
+                    'class' => 'mt',
+                    'text' => 'Summary of the injury caused by the incident (parts of the body and severity)'
+                ],
+                'type' => 'textarea'
+            ]);
+        ?>
+    </div>
+
+    <div id="lost-items-details">
+        <legend class="mt"><h4></i>Lost Items/Materials</h4></legend>
+        <?php                
+            echo $this->Form->input('item', [
+                'class' => 'form-control',
+                'label' => [                   
+                    'class' => 'mt'
+                ]
+            ]);
+
+        ?>
+    </div>
     <!--
 
     <ul class="options">

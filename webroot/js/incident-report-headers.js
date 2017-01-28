@@ -1,6 +1,10 @@
 $(function(){
 	var link = $('#base-link').text();
 
+	$("#injured-details-header").hide();
+	$("#injured-details").hide();
+	$("#lost-items-details").hide();
+
 	$("#project").chosen().change(function() {
 		var projectId 	=  $("#project").val();
 		milestoneId =  $(this).val();
@@ -71,6 +75,31 @@ $(function(){
 				
 			}
 		});
+
+	});
+
+
+	$("#type").chosen().change(function() {
+		var typeVal 	= $("#type").val();
+
+		switch(typeVal) {
+			case "acc":
+			case "doc":
+			case "inj":
+				$("#injured-details-header").show();
+				$("#injured-details").show();
+				$("#lost-items-details").hide();
+			break;
+			case "los":
+				$("#injured-details-header").hide();
+				$("#injured-details").hide();
+				$("#lost-items-details").show();
+			break;
+			default:
+				$("#injured-details-header").hide();
+				$("#injured-details").hide();
+				$("#lost-items-details").hide();
+		}
 
 	});
 

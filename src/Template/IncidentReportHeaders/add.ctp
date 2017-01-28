@@ -87,8 +87,7 @@
 
 				echo $this->element('incident_report_involved_input', [
 						'options' => ['' => '-Add Persons Involved-'],
-						'resource' => 'involved_person'
-					]);
+				]);
 
 			?>
 

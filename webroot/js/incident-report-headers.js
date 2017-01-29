@@ -39,16 +39,7 @@ $(function(){
 		var projectId 	=  $("#project").val();
 		var taskId 		=  $(this).val();
 
-
-		var defaultOption = "<option value=\"\">-Select Persons Involved-</option>";
-
-		$("#persons-involved").empty();
-
-
-		$("#persons-involved").append(
-			defaultOption	            	
-		);
-
+		$("#persons-involved option").not(":first").remove();
 
 		$("#persons-involved").trigger("chosen:updated");
 
@@ -61,15 +52,22 @@ $(function(){
 
 				for(var i=0; i < manpower.length; i++) {
 					var option = "<option value=\""
-					+ manpower[i].id + "\">" 
+					+ manpower[i].id + "\""
+					+ " data-address=\""
+					+ manpower[i].address + "\""
+					+ " data-age=\""
+					+ manpower[i].age + "\""
+					+ " data-contact=\""
+					+ manpower[i].contact + "\""
+					+ " data-occupation=\""
+					+ manpower[i].occupation + "\""
+					+">" 
 					+ manpower[i].name 
 					+ "</option>";
 					$("#persons-involved option:last-child").after(
 						option	            	
-					);
+						);
 				}
-
-				console.log(option);
 
 				$("#persons-involved").trigger("chosen:updated");
 				
@@ -80,25 +78,54 @@ $(function(){
 
 
 	$("#type").chosen().change(function() {
-		var typeVal 	= $("#type").val();
+		var type	= $("#type").val();
 
-		switch(typeVal) {
+		switch(type) {
 			case "acc":
 			case "doc":
 			case "inj":
-				$("#injured-details-header").show();
-				$("#injured-details").show();
-				$("#lost-items-details").hide();
+			$("#injured-details-header").show();
+			$("#injured-details").show();
+			$("#lost-items-details").hide();
 			break;
 			case "los":
-				$("#injured-details-header").hide();
-				$("#injured-details").hide();
-				$("#lost-items-details").show();
+			$("#injured-details-header").hide();
+			$("#injured-details").hide();
+			$("#lost-items-details").show();
 			break;
 			default:
-				$("#injured-details-header").hide();
-				$("#injured-details").hide();
-				$("#lost-items-details").hide();
+			$("#injured-details-header").hide();
+			$("#injured-details").hide();
+			$("#lost-items-details").hide();
+		}
+
+	});
+
+	$("#persons-involved").chosen().change(function(){	
+		var $context		= $("#persons-involved option:selected");
+		var selectedIndex	= $($context).index();
+		var type     		= $("#type").val();        	
+
+		switch(type) {
+			case "acc":
+			case "doc":
+			case "inj":
+			if(selectedIndex != 0){
+				var userName    	= $($context).text();
+				var userAddress		= $($context).data("address");
+				var userAge    		= $($context).data("age");
+				var userContact   	= $($context).data("contact");
+				var userOccupation	= $($context).data("occupation");
+
+				$("#injured-name").val(userName);
+				$("#injured-address").val(userAddress);
+				$("#injured-age").val(userAge);
+				$("#injured-contact").val(userContact);
+				$("#injured-occupation").val(userOccupation);
+			} else {
+				resetInjuredInput();
+			}
+			break;
 		}
 
 	});

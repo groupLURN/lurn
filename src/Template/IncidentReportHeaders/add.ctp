@@ -12,7 +12,7 @@
 					'label' => [
 						'class' => 'mt'
 					],
-					'options' => [''=>'-Select A Project-']+$projects
+					'options' => [''=>'-Select A Project-' , '1' => 'For Testing Purposes']+$projects
 				]);
 
 				echo $this->Form->input('project-location', [
@@ -85,9 +85,7 @@
 		            'type' => 'textarea'
 		        ]);
 
-				echo $this->element('incident_report_involved_input', [
-						'options' => ['' => '-Add Persons Involved-'],
-				]);
+				echo $this->element('incident_report_involved_input', []);
 
 			?>
 

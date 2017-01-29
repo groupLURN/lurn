@@ -1,27 +1,20 @@
 <?php
 
 $defaults = [
-    'namespaces' => [], // Namespaces for the fields.
-    'values' => [], // Pre-set values.
-    'hidden' => false, // Shows/Hides this element,
+    'id'        => 'incident-report-involved-input',
+    'values'    => ['' => '-Add Persons Involved-'], // Pre-set values.
+    'hidden'    => false, // Shows/Hides this element,
 ];
 
 extract($defaults, EXTR_SKIP);
 
-$namespaces[] = $resource;
-
-for ($i = 0; $i < count($namespaces); $i++)
-    if ($i === 0)
-        $nameHolder = $namespaces[$i];
-    else
-        $nameHolder .= '[' . $namespaces[$i] . ']';
 ?>
 
-<div class="incident-report-involved-input" id="<?= $id ?>" <?= $hidden ? 'hidden' : '' ?>>
+<div id=<?= $id ?>>
 
     <legend id="injured-details-header" class="mt"><h4></i>Details of Injured Person/s</h4></legend>
 
-    <div class="" style="width: 94%; display: inline-block;">
+    <div class="" style="width: 90%; display: inline-block;">
         <?= 
         $this->Form->input('persons-involved', [
             'class' => 'chosen form-control',
@@ -29,19 +22,20 @@ for ($i = 0; $i < count($namespaces); $i++)
             'label' => [
                         'class' => 'mt'
                     ],
-            'options' => $options
+            'options' => isset($options) ? $options : $values
         ]) 
-        ?>
+    ?>
     </div>
 
     <div class="" style=" display: inline-block;">
-        <img src=<?=$this->Url->build(['controller' => '/img/add.png', 'action' => 'index'])?> alt="Add" style="cursor: pointer;" onclick="addManpower(this);">
+
+        <button type="button" onclick="addManpower();">Add Involved Person</button>
     </div>
             
     <div id="injured-details">
         <?php
 
-            echo $this->Form->input('name', [
+            echo $this->Form->input('injured-name', [
                 'class' => 'form-control',
                 'disabled' => true,
                 'label' => [                   
@@ -49,7 +43,7 @@ for ($i = 0; $i < count($namespaces); $i++)
                 ]
             ]);
 
-            echo $this->Form->input('age', [
+            echo $this->Form->input('injured-age', [
                 'class' => 'form-control',
                 'disabled' => true,
                 'label' => [
@@ -58,7 +52,7 @@ for ($i = 0; $i < count($namespaces); $i++)
                 ]
             ]);
 
-            echo $this->Form->input('address', [
+            echo $this->Form->input('injured-address', [
                 'class' => 'form-control',
                 'disabled' => true,
                 'label' => [
@@ -67,7 +61,7 @@ for ($i = 0; $i < count($namespaces); $i++)
                 ]
             ]);
 
-            echo $this->Form->input('contact-number', [
+            echo $this->Form->input('injured-contact', [
                 'class' => 'form-control',
                 'disabled' => true,
                 'label' => [                
@@ -75,7 +69,7 @@ for ($i = 0; $i < count($namespaces); $i++)
                 ]
             ]);
 
-            echo $this->Form->input('Occupation', [
+            echo $this->Form->input('injured-occupation', [
                 'class' => 'form-control',
                 'disabled' => true,
                 'label' => [                 
@@ -83,19 +77,17 @@ for ($i = 0; $i < count($namespaces); $i++)
                 ]
             ]);
 
-            echo $this->Form->input('involved-summary', [
+            echo $this->Form->input('injured-summary', [
                 'class' => 'form-control',
                 'label' => [
                     'class' => 'mt',
                     'text' => 'Summary of the injury caused by the incident (parts of the body and severity)'
                 ],
+                'name' => null,
                 'type' => 'textarea'
             ]);
         ?>
 
-
-        <ul class="involved-summaries">
-        </ul>
     </div>
 
     <div id="lost-items-details">
@@ -110,12 +102,56 @@ for ($i = 0; $i < count($namespaces); $i++)
 
         ?>
     </div>
+
+    <ul id="incident-list">
+    </ul>
 </div>
 
-<script>
-    function addManpower(object) {
-        var $context = $(object).closest("div.multi-select-with-input");
-        var $select = $("select.chosen", $context);
-        //append description, name, etc to list.
+<script type="text/javascript">
+
+    function resetInjuredInput() {        
+        $("#injured-name").val("");
+        $("#injured-address").val("");
+        $("#injured-age").val("");
+        $("#injured-contact").val("");
+        $("#injured-occupation").val("");
+        $("#injured-summary").val("");
     }
+    
+    function addManpower() {
+        var userId      = $("#persons-involved").val();
+        var userName    = $("#persons-involved option:selected").text();        
+        var userSummary = "";
+
+        var typeVal     = $("#type").val();
+
+        switch(typeVal) {
+            case "acc":
+            case "doc":
+            case "inj":
+
+                userSummary = $("#injured-summary").val();
+                
+
+                var itemList = "<li>"
+                        + userName
+                        + "<input type=\"hidden\" name=\"injured-id\" value="+userId+">"
+                        + "<input type=\"hidden\" name=\"injured-summary\" value=\""+userSummary+"\">"
+                        + "</li>";
+
+                resetInjuredInput();               
+
+                $("#persons-involved option[value=\""+userId+"\"]").remove();
+                $("#persons-involved").trigger("chosen:updated");
+
+                $("#incident-list").append(
+                    itemList                  
+                    );
+
+
+            break;
+        }
+
+    }
+
 </script>

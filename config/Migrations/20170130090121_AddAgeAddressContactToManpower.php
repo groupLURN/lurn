@@ -19,7 +19,7 @@ class AddAgeAddressContactToManpower extends AbstractMigration
             'null' => true,
         ]);
 		
-        $table->addColumn('age', 'int', [
+        $table->addColumn('age', 'integer', [
             'default' => 0,
             'null' => true,
         ]);

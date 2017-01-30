@@ -36,8 +36,8 @@ $(function(){
 	
 	$("#task").chosen().change(function() {
 
-		var projectId 	=  $("#project").val();
-		var taskId 		=  $(this).val();
+		var projectId 	= $("#project").val();
+		var taskId 		= $(this).val();	
 
 		$("#persons-involved option").not(":first").remove();
 
@@ -45,24 +45,24 @@ $(function(){
 
 		$.ajax({ 
 			type: "GET", 
-			url: link+"incident-report-headers/get-manpower/?project_id="+projectId+"&task_id="+taskId, 
+			url: link+"incident-report-headers/get-persons/?project_id="+projectId+"&task_id="+taskId, 
 			data: { get_param: 'value' }, 
 			success: function (data) { 
-				var manpower = data;
+				var persons = data;
 
-				for(var i=0; i < manpower.length; i++) {
+				for(var i=0; i < persons.length; i++) {
 					var option = "<option value=\""
-					+ manpower[i].id + "\""
+					+ persons[i].id + "\""
 					+ " data-address=\""
-					+ manpower[i].address + "\""
+					+ persons[i].address + "\""
 					+ " data-age=\""
-					+ manpower[i].age + "\""
+					+ persons[i].age + "\""
 					+ " data-contact=\""
-					+ manpower[i].contact + "\""
+					+ persons[i].contact + "\""
 					+ " data-occupation=\""
-					+ manpower[i].occupation + "\""
+					+ persons[i].occupation + "\""
 					+">" 
-					+ manpower[i].name 
+					+ persons[i].name 
 					+ "</option>";
 					$("#persons-involved option:last-child").after(
 						option	            	
@@ -74,6 +74,8 @@ $(function(){
 			}
 		});
 
+
+		updateItemList();
 	});
 
 
@@ -84,19 +86,21 @@ $(function(){
 			case "acc":
 			case "doc":
 			case "inj":
-			$("#injured-details-header").show();
-			$("#injured-details").show();
-			$("#lost-items-details").hide();
+				$("#injured-details-header").show();
+				$("#injured-details").show();
+				$("#lost-items-details").hide();
 			break;
 			case "los":
-			$("#injured-details-header").hide();
-			$("#injured-details").hide();
-			$("#lost-items-details").show();
+				$("#injured-details-header").hide();
+				$("#injured-details").hide();
+				$("#lost-items-details").show();
+
+				updateItemList();
 			break;
 			default:
-			$("#injured-details-header").hide();
-			$("#injured-details").hide();
-			$("#lost-items-details").hide();
+				$("#injured-details-header").hide();
+				$("#injured-details").hide();
+				$("#lost-items-details").hide();
 		}
 
 	});
@@ -129,5 +133,38 @@ $(function(){
 		}
 
 	});
+
+	function updateItemList(){
+		var taskId 		= $("#task").val();	
+		var type		= $("#type").val();
+
+		if(taskId != 0 && type == "los") {
+
+			$("#items option").not(":first").remove();
+
+			$.ajax({ 
+				type: "GET", 
+				url: link+"incident-report-headers/get-items/?task_id="+taskId, 
+				data: { get_param: 'value' }, 
+				success: function (data) { 
+					var items = data;
+
+					for(var i=0; i < items.length; i++) {
+						var option = "<option value=\""
+						+ items[i] + "\""
+						+">" 
+						+ items[i]
+						+ "</option>";
+						$("#items option:last-child").after(
+							option	            	
+							);
+					}
+
+					$("#items").trigger("chosen:updated");
+					
+				}
+			});
+		}
+	}
 
 });

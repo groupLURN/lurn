@@ -2,7 +2,8 @@
 
 $defaults = [
     'id'        => 'incident-report-involved-input',
-    'values'    => ['' => '-Add Persons Involved-'], // Pre-set values.
+    'personsDefault'    => ['' => '-Add Persons Involved-'], 
+    'itemsDefault'    => ['' => '-Add Items Lost-'], // Pre-set values.
     'hidden'    => false, // Shows/Hides this element,
 ];
 
@@ -22,7 +23,7 @@ extract($defaults, EXTR_SKIP);
             'label' => [
                         'class' => 'mt'
                     ],
-            'options' => isset($options) ? $options : $values
+            'options' => isset($personsInvolved) ? $personsInvolved : $personsDefault
         ]) 
     ?>
     </div>
@@ -92,15 +93,25 @@ extract($defaults, EXTR_SKIP);
 
     <div id="lost-items-details">
         <legend class="mt"><h4></i>Lost Items/Materials</h4></legend>
+
+        <div class="" style="width: 90%; display: inline-block;">
         <?php                
-            echo $this->Form->input('item', [
-                'class' => 'form-control',
+            echo $this->Form->input('items', [
+                'class' => 'chosen form-control',
                 'label' => [                   
                     'class' => 'mt'
-                ]
+                ],
+                'options' => $itemsDefault
             ]);
 
         ?>
+        </div>
+
+        <div class="" style=" display: inline-block;">
+
+            <button type="button" onclick="addItem();">Add Item</button>
+        </div>
+               
     </div>
 
     <ul id="incident-list">

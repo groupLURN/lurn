@@ -136,11 +136,11 @@ class IncidentReportHeadersController extends AppController
     }
 
      /**
-    * Method for getting manpower from the database
+    * Method for getting all the employees and manpower assigned to a project
     *
     * @return json response
     */
-    public function getManpower() {
+    public function getPersons() {
         $this->loadModel('Projects');
         $this->loadModel('Manpower');
 
@@ -211,13 +211,12 @@ class IncidentReportHeadersController extends AppController
 
         if ($taskId != null) {                   
             foreach ( $this->MaterialsTasks->find('byTask', ['task_id' => $taskId]) as $material) {
-                $materialName = $row->material->name;
-
+                $materialName = $material->material->name;
                 array_push($items, $materialName);
             }   
 
-            foreach ($this->EquipmentTasks->find('byTaskId', ['task_id'=>$task->id]) as $equipment) {
-                $equipmentName = $row->equipment->name;
+            foreach ($this->EquipmentTasks->find('byTaskId', ['task_id'=>$taskId]) as $equipment) {
+                $equipmentName = $equipment->equipment->name;
 
                 array_push($items, $equipmentName);
             }

@@ -24,7 +24,7 @@ class AddAgeAddressContactToManpower extends AbstractMigration
             'null' => true,
         ]);
 		
-        $table->addColumn('contact-number', 'string', [
+        $table->addColumn('contact_number', 'string', [
             'default' => null,
             'null' => true,
         ]);

@@ -65,6 +65,9 @@ class IncidentReportHeadersController extends AppController
         $this->loadModel('Projects');
         $this->loadModel('Tasks');
 
+
+        $incidentReportHeader = $this->IncidentReportHeaders->newEntity();
+
         if ($this->request->is('post')) {
             $incidentReportHeader = $this->IncidentReportHeaders->patchEntity($incidentReportHeader, $this->request->data);
 
@@ -80,25 +83,6 @@ class IncidentReportHeadersController extends AppController
         }
 
         $projects       = $this->Projects->find('list')->where(['is_finished' => 0])->toArray();
-        
-        /**
-        $project = $this->Projects->get($id, [
-            'contain' => ['Employees', 'EmployeesJoin' => [
-            'EmployeeTypes'
-            ]]
-        ]);
-
-        foreach ($project->employees_join as $employee) {
-            $projectMembers[$employee->id] = $employee->name;
-            if($employee->employee_type_id === 3){
-                $project['project_engineer'] = $employee;
-            }
-        }
-
-        $project['date_now'] = date_format(new DateTime(),"F d, Y");
-        **/
-
-        $incidentReportHeader = $this->IncidentReportHeaders->newEntity();
 
         $this->set(compact('incidentReportHeader', 'projects'));
         $this->set('_serialize', ['incidentReportHeader', 'project']);
@@ -208,4 +192,45 @@ class IncidentReportHeadersController extends AppController
         echo json_encode($tasks);
         exit();
     }   
+
+
+
+    /**
+    * Method for getting materials and equipment from the database
+    *
+    * @return json response
+    */
+    public function getItems() {
+        $this->loadModel('EquipmentTasks');
+        $this->loadModel('MaterialsTasks');
+        $this->loadModel('Tasks');
+
+        $items  = [];
+
+        $taskId     = $this->request->query('task_id');
+
+        if ($taskId != null) {                   
+            foreach ( $this->MaterialsTasks->find('byTask', ['task_id' => $taskId]) as $material) {
+                $materialName = $row->material->name;
+
+                array_push($items, $materialName);
+            }   
+
+            foreach ($this->EquipmentTasks->find('byTaskId', ['task_id'=>$task->id]) as $equipment) {
+                $equipmentName = $row->equipment->name;
+
+                array_push($items, $equipmentName);
+            }
+
+            $items = array_unique($items);
+        }
+
+            
+
+        header('Content-Type: application/json');
+        echo json_encode($items);
+        exit();
+    }
+
+
 }

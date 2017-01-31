@@ -13,25 +13,21 @@ extract($defaults, EXTR_SKIP);
 
 <div id=<?= $id ?>>
 
-    <legend id="injured-details-header" class="mt"><h4></i>Details of Injured Person/s</h4></legend>
+    <h4 id="injured-details-header" class="mt"></i>Details of Injured Person/s</h4>
 
-    <div class="" style="width: 90%; display: inline-block;">
         <?= 
-        $this->Form->input('persons-involved', [
+        $this->Form->input('person-list', [
             'class' => 'chosen form-control',
             'data-count' => 0,
             'label' => [
-                        'class' => 'mt'
+                        'class' => 'mt',
+                        'text' => 'Add Persons involved'
                     ],
+            'name' => false,
             'options' => isset($personsInvolved) ? $personsInvolved : $personsDefault
         ]) 
     ?>
-    </div>
 
-    <div class="" style=" display: inline-block;">
-
-        <button type="button" onclick="addManpower();">Add Involved Person</button>
-    </div>
             
     <div id="injured-details">
         <?php
@@ -91,31 +87,40 @@ extract($defaults, EXTR_SKIP);
 
     </div>
 
-    <div id="lost-items-details">
-        <legend class="mt"><h4></i>Lost Items/Materials</h4></legend>
+    <div>
+        <button type="button" class="mt" onclick="addInvolved();">Add Person</button>
+    </div>
 
-        <div class="" style="width: 90%; display: inline-block;">
+    <label class="mt">Persons Involved</label>
+    <ol id="persons-involved">
+        None.
+    </ol>
+
+    <div id="items-lost-details">
+        <h4></i>Lost Items/Materials</h4>
+
         <?php                
-            echo $this->Form->input('items', [
+            echo $this->Form->input('item-list', [
                 'class' => 'chosen form-control',
                 'label' => [                   
-                    'class' => 'mt'
+                    'class' => 'mt',
+                    'text' => 'Add Lost Items'
                 ],
+                'name' => false,
                 'options' => $itemsDefault
             ]);
 
         ?>
+
+        <div>
+            <button type="button" class="mt" onclick="addItem();">Add Item</button>
         </div>
 
-        <div class="" style=" display: inline-block;">
-
-            <button type="button" onclick="addItem();">Add Item</button>
-        </div>
-               
+        <label class="mt">Lost Items</label>
+        <ol id="items-lost">
+            None.
+        </ol>               
     </div>
-
-    <ul id="incident-list">
-    </ul>
 </div>
 
 <script type="text/javascript">
@@ -129,40 +134,85 @@ extract($defaults, EXTR_SKIP);
         $("#injured-summary").val("");
     }
     
-    function addManpower() {
-        var userId      = $("#persons-involved").val();
-        var userName    = $("#persons-involved option:selected").text();        
+    function addInvolved() {
+        var userId      = $("#person-list").val();
+        var userName    = $("#person-list option:selected").text();        
         var userSummary = "";
 
-        var typeVal     = $("#type").val();
+        if(userId > 0) {
+            var typeVal     = $("#type").val();
 
-        switch(typeVal) {
-            case "acc":
-            case "doc":
-            case "inj":
+            var index       = $("#persons-involved li:last").index() + 1;
 
-                userSummary = $("#injured-summary").val();
-                
+            var involved    = "<li>"
+                    + userName
+                    + "<input type=\"hidden\" name=\"involved-id[" + index + "]\" value=" + userId + ">";
 
-                var itemList = "<li>"
-                        + userName
-                        + "<input type=\"hidden\" name=\"injured-id\" value="+userId+">"
-                        + "<input type=\"hidden\" name=\"injured-summary\" value=\""+userSummary+"\">"
-                        + "</li>";
+            switch(typeVal) {
+                case "acc":
+                case "doc":
+                case "inj":
 
-                resetInjuredInput();               
+                    userSummary = $("#injured-summary").val();
+                         
+                    involved     = involved + "<input type=\"hidden\" name=\"injured-summary[" + index + "]\" value=\""+userSummary+"\">"
 
-                $("#persons-involved option[value=\""+userId+"\"]").remove();
-                $("#persons-involved").trigger("chosen:updated");
+                    resetInjuredInput();         
+                break;
+            }
 
-                $("#incident-list").append(
-                    itemList                  
-                    );
+            involved = involved + "</li>";
 
+            if(index == 0) {
+                $("#persons-involved").empty();
+            }
 
-            break;
+            $("#person-list option[value=\"" + userId + "\"]").remove();
+
+            $("#person-list").trigger("chosen:updated");
+
+            $("#persons-involved").append(
+                involved                  
+            );
         }
 
     }
+
+    function addItem() {
+            var typeVal     = $("#type").val();
+
+            switch(typeVal) {
+                case "los":
+
+                var itemId      = $("#item-list").val();
+                var itemName    = $("#item-list option:selected").text();
+
+                if(itemId != "") {
+
+                    var index       = $("#items-lost li:last").index() + 1;
+
+                    var item    = "<li>"
+                    + itemName
+                    + "<input type=\"hidden\" name=\"item-id[" + index + "]\" value=" + itemId + ">"
+                    + "</li>";
+
+                    if(index == 0) {
+                        $("#items-lost").empty();
+                    }
+
+                    $("#item-list option[value=\"" + itemId + "\"]").remove();
+
+                    $("#item-list").trigger("chosen:updated");
+
+                    $("#items-lost").append(
+                        item                  
+                    );
+
+
+                }
+                break;
+            }
+
+        }
 
 </script>

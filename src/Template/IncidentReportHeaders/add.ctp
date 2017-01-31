@@ -5,12 +5,13 @@
 	<div class="col-md-12">
 		<?= $this->Form->create($incidentReportHeader) ?>
 		<fieldset>
-			<legend><h3><i class="fa fa-angle-right"></i>Create Incident Report</h3></legend>
+			<h3><i class="fa fa-angle-right"></i>Create Incident Report</h3>
 			<?php
-				echo $this->Form->input('project', [
+				echo $this->Form->input('project_id', [
 					'class' => 'form-control chosen',
 					'label' => [
-						'class' => 'mt'
+						'class' => 'mt',
+						'text' => 'Project'
 					],
 					'options' => [''=>'-Select A Project-' , '1' => 'For Testing Purposes']+$projects
 				]);
@@ -58,7 +59,7 @@
 
 			?>
 			
-			<legend class="mt"><h4></i>Incident Details</h4></legend>
+			<h4 class="mt"></i>Incident Details</h4>
 			<?php                
 				echo $this->Form->input('location', [
 					'class' => 'form-control',
@@ -69,7 +70,7 @@
 					]);
 
 				echo $this->Form->input('task', [
-					'class' => 'form-control chosen',
+					'class' => 'form-control chosen',	
 					'label' => [
 						'class' => 'mt'
 					],

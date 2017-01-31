@@ -69,7 +69,10 @@ class IncidentReportHeadersController extends AppController
         $incidentReportHeader = $this->IncidentReportHeaders->newEntity();
 
         if ($this->request->is('post')) {
-            $incidentReportHeader = $this->IncidentReportHeaders->patchEntity($incidentReportHeader, $this->request->data);
+
+            $postData = $this->request->data;
+
+            $incidentReportHeader = $this->IncidentReportHeaders->patchEntity($incidentReportHeader, $postData);
 
             debug($incidentReportHeader);
             die();

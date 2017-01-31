@@ -3,10 +3,10 @@ $(function(){
 
 	$("#injured-details-header").hide();
 	$("#injured-details").hide();
-	$("#lost-items-details").hide();
+	$("#items-lost-details").hide();
 
-	$("#project").chosen().change(function() {
-		var projectId 	=  $("#project").val();
+	$("#project-id").chosen().change(function() {
+		var projectId 	=  $("#project-id").val();
 		milestoneId =  $(this).val();
 
 		$("#task option").not(":first").remove();
@@ -36,12 +36,12 @@ $(function(){
 	
 	$("#task").chosen().change(function() {
 
-		var projectId 	= $("#project").val();
+		var projectId 	= $("#project-id").val();
 		var taskId 		= $(this).val();	
 
-		$("#persons-involved option").not(":first").remove();
+		$("#person-list option").not(":first").remove();
 
-		$("#persons-involved").trigger("chosen:updated");
+		$("#person-list").trigger("chosen:updated");
 
 		$.ajax({ 
 			type: "GET", 
@@ -64,12 +64,12 @@ $(function(){
 					+">" 
 					+ persons[i].name 
 					+ "</option>";
-					$("#persons-involved option:last-child").after(
+					$("#person-list option:last-child").after(
 						option	            	
 						);
 				}
 
-				$("#persons-involved").trigger("chosen:updated");
+				$("#person-list").trigger("chosen:updated");
 				
 			}
 		});
@@ -88,25 +88,28 @@ $(function(){
 			case "inj":
 				$("#injured-details-header").show();
 				$("#injured-details").show();
-				$("#lost-items-details").hide();
+				$("#items-lost-details").hide();
+				$("#items-lost-details input").each().prop("disabled", true);
 			break;
 			case "los":
 				$("#injured-details-header").hide();
 				$("#injured-details").hide();
-				$("#lost-items-details").show();
+				$("#items-lost-details").show();
+				$("#items-lost-details input").each().prop("disabled", false);
 
 				updateItemList();
 			break;
 			default:
 				$("#injured-details-header").hide();
 				$("#injured-details").hide();
-				$("#lost-items-details").hide();
+				$("#items-lost-details").hide();
+				$("#items-lost-details input").each().prop("disabled", true);
 		}
 
 	});
 
-	$("#persons-involved").chosen().change(function(){	
-		var $context		= $("#persons-involved option:selected");
+	$("#person-list").chosen().change(function(){	
+		var $context		= $("#person-list option:selected");
 		var selectedIndex	= $($context).index();
 		var type     		= $("#type").val();        	
 
@@ -140,7 +143,7 @@ $(function(){
 
 		if(taskId != 0 && type == "los") {
 
-			$("#items option").not(":first").remove();
+			$("#item-list option").not(":first").remove();
 
 			$.ajax({ 
 				type: "GET", 
@@ -155,12 +158,12 @@ $(function(){
 						+">" 
 						+ items[i]
 						+ "</option>";
-						$("#items option:last-child").after(
+						$("#item-list option:last-child").after(
 							option	            	
 							);
 					}
 
-					$("#items").trigger("chosen:updated");
+					$("#item-list").trigger("chosen:updated");
 					
 				}
 			});

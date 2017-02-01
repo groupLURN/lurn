@@ -147,28 +147,44 @@ class IncidentReportHeadersController extends AppController
         $this->loadModel('Projects');
         $this->loadModel('Manpower');
 
-        $manpower  = array();
+        $manpower  = [];
 
         $projectId  = $this->request->query('project_id');
         $taskId     = $this->request->query('task_id');
 
-        $project = $this->Projects->get($projectId, [
-            'contain' => ['Employees', 'EmployeesJoin' => [
-            'EmployeeTypes'
-            ]]
-        ]);
+        if($projectId > 0 && $taskId > 0) {
+            $project = $this->Projects->get($projectId, [
+                'contain' => ['Employees', 'EmployeesJoin' => [
+                'EmployeeTypes'
+                ]]
+            ]);
 
-        foreach ($project->employees_join as $employee) {
-            array_push($manpower, ['id' => $employee->id, 'name' => $employee->name]);
-        }   
+            foreach ($project->employees_join as $employee) {
+                array_push($manpower, [
+                    'id' => $employee->id, 
+                    'name' => $employee->name,
+                    'age' => $employee->age,
+                    'address' => $employee->address,
+                    'contact' => $employee->contact,
+                    'occupation' => 'Employee'
+                ]);
+            }   
 
-        if ($projectId != null && $taskId != null) {
-            $taskManpower = $this->Manpower->find('byProjectAndTask', ['project_id' => $projectId, 'task_id' => $taskId]);
+            if ($projectId != null && $taskId != null) {
+                $taskManpower = $this->Manpower->find('byProjectAndTask', ['project_id' => $projectId, 'task_id' => $taskId]);
 
-            foreach ($taskManpower as $manpowerRow) {
-                array_push($manpower, ['id' => $manpowerRow->id, 'name' => $manpowerRow->name]);
+                foreach ($taskManpower as $manpowerRow) {
+                    array_push($manpower, [
+                        'id' => $manpowerRow->id, 
+                        'name' => $manpowerRow->name,
+                        'age' => $manpowerRow->age,
+                        'address' => $manpowerRow->address,
+                        'contact' => $manpowerRow->contact,
+                        'occupation' => $manpowerRow->manpower_type->title
+                    ]);
+                }
+
             }
-
         }
 
         header('Content-Type: application/json');

@@ -18,7 +18,6 @@ extract($defaults, EXTR_SKIP);
         <?= 
         $this->Form->input('person-list', [
             'class' => 'chosen form-control',
-            'data-count' => 0,
             'label' => [
                         'class' => 'mt',
                         'text' => 'Add Persons involved'
@@ -135,16 +134,32 @@ extract($defaults, EXTR_SKIP);
     }
     
     function addInvolved() {
-        var userId      = $("#person-list").val();
-        var userName    = $("#person-list option:selected").text();        
+        var $context        = $("#person-list option:selected");
+        var userId          = $("#person-list").val();
+        var userName        = $($context).text();
+        var userAddress     = $($context).data("address");
+        var userAge         = $($context).data("age");
+        var userContact     = $($context).data("contact");
+        var userOccupation  = $($context).data("occupation");  
         var userSummary = "";
 
-        if(userId > 0) {
+        if(userId != "") {
             var typeVal     = $("#type").val();
+
+            if(typeVal == "") {
+                alert("Please select an incident type first.");
+
+                return 0;
+            } 
 
             var index       = $("#persons-involved li:last").index() + 1;
 
-            var involved    = "<li>"
+            var involved    = "<li"
+                    + " data-id=\""
+                    + userId + "\""
+                    + " data-name=\""
+                    + userName + "\""
+                    + ">"
                     + userName
                     + "<input type=\"hidden\" name=\"involved-id[" + index + "]\" value=" + userId + ">";
 
@@ -161,13 +176,15 @@ extract($defaults, EXTR_SKIP);
                 break;
             }
 
-            involved = involved + "</li>";
+            involved = involved 
+                + "<button type=\"button\" class=\"ml\" onclick=\"removeInvolved(this);\">Remove</button>"
+                + "</li>";
 
             if(index == 0) {
                 $("#persons-involved").empty();
             }
 
-            $("#person-list option[value=\"" + userId + "\"]").remove();
+            $("#person-list option[value=\"" + userId + "\"]").prop("disabled", true);
 
             $("#person-list").trigger("chosen:updated");
 
@@ -191,16 +208,22 @@ extract($defaults, EXTR_SKIP);
 
                     var index       = $("#items-lost li:last").index() + 1;
 
-                    var item    = "<li>"
+                    var item    = "<li"
+                    + " data-id=\""
+                    + itemId + "\""
+                    + " data-name=\""
+                    + itemName + "\""
+                    + ">"
                     + itemName
                     + "<input type=\"hidden\" name=\"item-id[" + index + "]\" value=" + itemId + ">"
+                    + "<button type=\"button\" class=\"ml\" onclick=\"removeItem(this);\">Remove</button>"
                     + "</li>";
 
                     if(index == 0) {
                         $("#items-lost").empty();
                     }
 
-                    $("#item-list option[value=\"" + itemId + "\"]").remove();
+                    $("#item-list option[value=\"" + itemId + "\"]").prop("disabled", true);
 
                     $("#item-list").trigger("chosen:updated");
 
@@ -214,5 +237,53 @@ extract($defaults, EXTR_SKIP);
             }
 
         }
+
+    function removeItem(person) {        
+        var $context        = $(person).closest("li");
+        var itemId          = $($context).data("id");
+        var itemName        = $($context).data("name");
+
+        var confirmMessage = "Are you sure you want to remove " + itemName + " from lost items?"
+
+        if(confirm(confirmMessage)) {
+            var option = "<option value=\""
+            + itemId + "\""
+            +">" 
+            + itemName
+            + "</option>";
+
+            $("#item-listoption[value=\"" + itemId + "\"]").prop("disabled", false);
+
+            $("#item-list").trigger("chosen:updated");
+
+            $($context).remove();
+
+            if($("#items-lost li").length < 1) {
+                $("#items-lost").html("None.");
+            }
+
+        }
+    }
+
+    function removeInvolved(person) {        
+        var $context        = $(person).closest("li");
+        var userId          = $($context).data("id");
+        var userName        = $($context).data("name");
+
+        var confirmMessage = "Are you sure you want to remove " + userName + " from involved persons?"
+        if(confirm(confirmMessage)) {
+
+            $("#person-list option[value=\"" + userId + "\"]").prop("disabled", false);
+
+            $("#person-list").trigger("chosen:updated");
+
+            $($context).remove();
+
+            if($("#persons-involved li").length < 1) {
+                $("#persons-involved").html("None.");
+            }
+
+        }
+    }
 
 </script>

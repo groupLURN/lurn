@@ -47,6 +47,7 @@
 
 				echo $this->Form->input('type', [
 					'class' => 'form-control chosen',
+            		'data-old-type' => '',
 					'label' => [
 						'class' => 'mt'
 					],
@@ -71,6 +72,7 @@
 
 				echo $this->Form->input('task', [
 					'class' => 'form-control chosen',	
+            		'data-old-task' => '',
 					'label' => [
 						'class' => 'mt'
 					],

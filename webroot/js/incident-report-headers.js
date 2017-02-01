@@ -35,76 +35,101 @@ $(function(){
 	});	
 	
 	$("#task").chosen().change(function() {
+		var taskId 			= $("#task").val();	
+		var taskName 		= $("#task option:selected").text();	
+		var oldTaskId 		= $("#task").data("old-task");	
 
-		var projectId 	= $("#project-id").val();
-		var taskId 		= $(this).val();	
+		var flag = true;
 
-		$("#person-list option").not(":first").remove();
-
-		$("#person-list").trigger("chosen:updated");
-
-		$.ajax({ 
-			type: "GET", 
-			url: link+"incident-report-headers/get-persons/?project_id="+projectId+"&task_id="+taskId, 
-			data: { get_param: 'value' }, 
-			success: function (data) { 
-				var persons = data;
-
-				for(var i=0; i < persons.length; i++) {
-					var option = "<option value=\""
-					+ persons[i].id + "\""
-					+ " data-address=\""
-					+ persons[i].address + "\""
-					+ " data-age=\""
-					+ persons[i].age + "\""
-					+ " data-contact=\""
-					+ persons[i].contact + "\""
-					+ " data-occupation=\""
-					+ persons[i].occupation + "\""
-					+">" 
-					+ persons[i].name 
-					+ "</option>";
-					$("#person-list option:last-child").after(
-						option	            	
-						);
-				}
-
-				$("#person-list").trigger("chosen:updated");
-				
+		if(oldTaskId != "" && oldTaskId != taskId) {
+			var confirmMessage = "Changing the task to " + taskName + " would reset the inputs below. Do you want to continue?"
+			if(!confirm(confirmMessage)) {
+				$("#task option[value=\"" + oldTaskId + "\"]").prop('selected', true);
+				$("#task").trigger("chosen:updated");
+				flag = false;
 			}
-		});
+		}
 
+		if(flag) {
+			resetPersonsInvolved();
+			resetItemsLost();
 
-		updateItemList();
+			updatePersonList();
+			updateItemList();
+
+			$("#task").data("old-task", taskId);
+		}
 	});
 
 
 	$("#type").chosen().change(function() {
 		var type	= $("#type").val();
+		var oldType	= $("#type").data("old-type");
+
+		var confirmMessage = "Changing the incident type to " + $("#type option:selected").text() + " would change the input fields below."
+			+ " Also, involved persons will be reset."
+			+ " Do you want to continue?"
 
 		switch(type) {
 			case "acc":
 			case "doc":
 			case "inj":
-				$("#injured-details-header").show();
-				$("#injured-details").show();
-				$("#items-lost-details").hide();
-				$("#items-lost-details input").each().prop("disabled", true);
+				var flag = true;
+				if(oldType != "acc" && oldType != "doc" && oldType != "inj" && oldType != "") {		
+					if(!confirm(confirmMessage)){
+						$("#type option[value=\"" + oldType + "\"]").prop('selected', true);
+						$("#type").trigger("chosen:updated");
+						flag = false;
+					} else {						
+						resetPersonsInvolved();
+						resetItemsLost();
+
+						updatePersonList();
+					}
+				} 
+
+				if(flag) {	
+					$("#type").data("old-type", type);
+
+					$("#injured-details-header").show();
+					$("#injured-details").show();
+					$("#items-lost-details").hide();
+					$("#items-lost input").prop("disabled", true);		
+				}
+
 			break;
 			case "los":
-				$("#injured-details-header").hide();
-				$("#injured-details").hide();
-				$("#items-lost-details").show();
-				$("#items-lost-details input").each().prop("disabled", false);
+				var flag = true;
+				if(oldType != "los" && oldType != "") {				
+					if(!confirm(confirmMessage)){
+						$("#type option[value=\"" + oldType + "\"]").prop('selected', true);
+						$("#type").trigger("chosen:updated");
+						flag = false;
+					} else {						
+						resetPersonsInvolved();
 
-				updateItemList();
+						updatePersonList();
+					}
+				}
+
+				if(flag) {	
+					$("#type").data("old-type", type);
+
+					$("#injured-details-header").hide();
+					$("#injured-details").hide();
+					$("#items-lost-details").show();
+					$("#items-lost input").prop("disabled", false);
+
+					updateItemList();	
+				}
 			break;
 			default:
 				$("#injured-details-header").hide();
 				$("#injured-details").hide();
 				$("#items-lost-details").hide();
-				$("#items-lost-details input").each().prop("disabled", true);
+				$("#items-lost input").prop("disabled", true);
 		}
+
 
 	});
 
@@ -130,7 +155,7 @@ $(function(){
 				$("#injured-contact").val(userContact);
 				$("#injured-occupation").val(userOccupation);
 			} else {
-				resetInjuredInput();
+				clearInjuredInput();
 			}
 			break;
 		}
@@ -170,4 +195,57 @@ $(function(){
 		}
 	}
 
+	function updatePersonList(){
+
+		var projectId 	= $("#project-id").val();
+		var taskId 		= $("#task").val();	
+
+		$("#person-list option").not(":first").remove();
+
+		$("#person-list").trigger("chosen:updated");
+
+		$.ajax({ 
+			type: "GET", 
+			url: link+"incident-report-headers/get-persons/?project_id="+projectId+"&task_id="+taskId, 
+			data: { get_param: 'value' }, 
+			success: function (data) { 
+				var persons = data;
+
+				for(var i=0; i < persons.length; i++) {
+					var option = "<option value=\""
+					+ persons[i].occupation + "-" + persons[i].id + "\""
+					+ " data-address=\""
+					+ persons[i].address + "\""
+					+ " data-age=\""
+					+ persons[i].age + "\""
+					+ " data-contact=\""
+					+ persons[i].contact + "\""
+					+ " data-occupation=\""
+					+ persons[i].occupation + "\""
+					+">" 
+					+ persons[i].name 
+					+ "</option>";
+					$("#person-list option:last-child").after(
+						option	            	
+						);
+				}
+
+				$("#person-list").trigger("chosen:updated");
+				
+			}
+		});
+
+	}
+
+	function resetPersonsInvolved() {
+        $("#persons-involved").empty();
+
+        $("#persons-involved").html("None.");
+	}
+
+	function resetItemsLost() {
+		$("#items-lost").empty();
+
+        $("#items-lost").html("None.");
+	}
 });

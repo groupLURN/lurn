@@ -85,10 +85,23 @@ class IncidentReportHeadersController extends AppController
             // }
         }
 
-        $projects       = $this->Projects->find('list')->where(['is_finished' => 0])->toArray();
+        $projects = [];
+
+        $tempProjects = $this->Projects->find('all')->where(['is_finished' => 0])->toArray();
+
+        foreach ($tempProjects as $tempProject) {
+            $project = [
+                'text' => $tempProject->title,
+                'value' => $tempProject->id,
+                'data-project-engineer' => $tempProject->id,
+                'data-location' => $tempProject->id
+            ];
+
+            array_push($projects, $project);
+        }
 
         $this->set(compact('incidentReportHeader', 'projects'));
-        $this->set('_serialize', ['incidentReportHeader', 'project']);
+        $this->set('_serialize', ['incidentReportHeader', 'projects']);
     }
 
     /**

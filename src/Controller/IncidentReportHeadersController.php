@@ -65,12 +65,25 @@ class IncidentReportHeadersController extends AppController
         $this->loadModel('Projects');
         $this->loadModel('Tasks');
 
-
         $incidentReportHeader = $this->IncidentReportHeaders->newEntity();
 
         if ($this->request->is('post')) {
 
-            $postData = $this->request->data;
+            $postData           = $this->request->data;
+            $postData['date']   = new DateTime($postData['date']);
+
+            $project = $this->Projects->get($postData['project_id'], [
+                'contain' => ['EmployeesJoin' => [
+                    'EmployeeTypes'
+                ]]
+            ]);
+            
+
+            foreach($project->employees_join as $employee) {
+                if($employee->employee_type->id == 3) {
+                    $postData['project_engineer'] = $employee->employee_type->id;            
+                }
+            }
 
             $incidentReportHeader = $this->IncidentReportHeaders->patchEntity($incidentReportHeader, $postData);
 
@@ -87,14 +100,27 @@ class IncidentReportHeadersController extends AppController
 
         $projects = [];
 
-        $tempProjects = $this->Projects->find('all')->where(['is_finished' => 0])->toArray();
+        $tempProjects = $this->Projects->find('all')
+            ->where(['is_finished' => 0])
+            ->contain(['EmployeesJoin' => [
+                'EmployeeTypes'
+                ]])
+            ->toArray();
 
         foreach ($tempProjects as $tempProject) {
+            $projectEngineer = null;
+
+            foreach($tempProject->employees_join as $employee) {
+                if($employee->employee_type->id == 3) {
+                    $projectEgineer = $employee;            
+                }
+            }
+
             $project = [
                 'text' => $tempProject->title,
                 'value' => $tempProject->id,
-                'data-project-engineer' => $tempProject->id,
-                'data-location' => $tempProject->id
+                'data-project-engineer' => $projectEgineer->name,
+                'data-location' => $tempProject->location
             ];
 
             array_push($projects, $project);

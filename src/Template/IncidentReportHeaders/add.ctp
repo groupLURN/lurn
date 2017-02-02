@@ -36,8 +36,7 @@
 				]);
 
 				echo $this->Form->input('date', [
-					'class' => 'form-control',
-					'disabled' => true,
+					'class' => 'form-control datetime-picker',
 					'label' => [
 						'text' => 'Date',    
 						'class' => 'mt'
@@ -61,15 +60,7 @@
 			?>
 			
 			<h4 class="mt"></i>Incident Details</h4>
-			<?php                
-				echo $this->Form->input('location', [
-					'class' => 'form-control',
-					'label' => [
-						'text' => 'Location',                    
-						'class' => 'mt'
-					]
-					]);
-
+			<?php        
 				echo $this->Form->input('task', [
 					'class' => 'form-control chosen',	
             		'data-old-task' => '',

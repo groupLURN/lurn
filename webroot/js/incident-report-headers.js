@@ -6,8 +6,12 @@ $(function(){
 	$("#items-lost-details").hide();
 
 	$("#project-id").chosen().change(function() {
-		var projectId 	=  $("#project-id").val();
-		milestoneId =  $(this).val();
+		var projectId 		= $("#project-id").val();
+		var projectEngineer = $("#project-id option:selected").data("project-engineer");
+		var location 		= $("#project-id option:selected").data("location");
+
+		$("#project-engineer").val(projectEngineer);
+		$("#project-location").val(location);
 
 		$("#task option").not(":first").remove();
 

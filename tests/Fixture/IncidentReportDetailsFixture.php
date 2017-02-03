@@ -47,7 +47,7 @@ class IncidentReportDetailsFixture extends TestFixture
             'incident_report_header_id' => 1,
             'type' => 'Lorem ipsum dolor sit amet',
             'value' => 'Lorem ipsum dolor sit amet',
-            'created' => '2016-11-23 22:57:28'
+            'created' => '2017-02-03 15:53:02'
         ],
     ];
 }

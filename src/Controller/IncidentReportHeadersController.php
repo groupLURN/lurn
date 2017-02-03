@@ -64,6 +64,7 @@ class IncidentReportHeadersController extends AppController
 
         $this->loadModel('Projects');
         $this->loadModel('Tasks');
+        $this->loadModel('IncidentReportDetails');
 
         $incidentReportHeader = $this->IncidentReportHeaders->newEntity();
 
@@ -87,15 +88,29 @@ class IncidentReportHeadersController extends AppController
 
             $incidentReportHeader = $this->IncidentReportHeaders->patchEntity($incidentReportHeader, $postData);
 
-            debug($incidentReportHeader);
-            die();
-            // if ($this->IncidentReportHeaders->save($incidentReportHeader)) {
-            //     $this->Flash->success(__('The incident report header has been saved.'));
+            if ($this->IncidentReportHeaders->save($incidentReportHeader)) {
+                $incidentReportDetails = [];
 
-            //     return $this->redirect(['action' => 'index']);
-            // } else {
-            //     $this->Flash->error(__('The incident report header could not be saved. Please, try again.'));
-            // }
+                $personsInvolved = $postData['involved_id'];
+
+                if($incidentReportHeader->type === 'los') {
+                    $itemsLost = $postData['item_id'];
+                    for($i = 0; $i < count($personsInvolved); i++) {
+                        $incidentReportDetail = $this->IncidentReportDetails->newEntity();
+                    }
+                } else {
+                    $personsSummaries = $postData['injures_summary'];
+                    for($i = 0; $i < count($personsInvolved); i++) {
+                        $incidentReportDetail = $this->IncidentReportDetails->newEntity();
+
+                    }
+                }
+
+                $this->Flash->success(__('The incident report header has been saved.'));
+                return $this->redirect(['action' => 'index']);
+            } else {
+                $this->Flash->error(__('The incident report header could not be saved. Please, try again.'));
+            }
         }
 
         $projects = [];

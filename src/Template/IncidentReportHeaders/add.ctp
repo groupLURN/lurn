@@ -1,4 +1,4 @@
-
+<?= $this->Flash->render() ?>
 <?= $this->assign('title', 'Create Incident Report') ?>
 
 <div class="row mt">
@@ -18,7 +18,7 @@
 
 				echo $this->Form->input('project-location', [
 					'class' => 'form-control',
-					'disabled' => true,
+					'readonly' => true,
 					'label' => [
 						'text' => 'Project Location',    
 						'class' => 'mt'
@@ -28,7 +28,7 @@
 
 				echo $this->Form->input('project-engineer', [
 					'class' => 'form-control',
-					'disabled' => true,
+					'readonly' => true,
 					'label' => [ 
 						'class' => 'mt'
 					],

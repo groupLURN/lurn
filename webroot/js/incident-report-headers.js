@@ -5,37 +5,16 @@ $(function(){
 	$("#injured-details").hide();
 	$("#items-lost-details").hide();
 
+	initialize();
+
 	$("#project-id").chosen().change(function() {
-		var projectId 		= $("#project-id").val();
 		var projectEngineer = $("#project-id option:selected").data("project-engineer");
 		var location 		= $("#project-id option:selected").data("location");
 
 		$("#project-engineer").val(projectEngineer);
 		$("#project-location").val(location);
 
-		$("#task option").not(":first").remove();
-
-		$.ajax({ 
-			type: "GET", 
-			url: link+"incident-report-headers/get-tasks?project_id="+projectId, 
-			data: { get_param: 'value' }, 
-			success: function (data) { 
-				var tasks = data;
-
-				for(var i=0; i < tasks.length; i++) {
-					var option = "<option value=\"" 
-					+ tasks[i].id + "\">" 
-					+ tasks[i].title 
-					+ "</option>";
-					$("#task option:last-child").after(
-						option	            	
-						);
-				}
-
-				$("#task").trigger("chosen:updated");
-				
-			}
-		});
+		updateTasks();
 	});	
 	
 	$("#task").chosen().change(function() {
@@ -67,6 +46,59 @@ $(function(){
 
 
 	$("#type").chosen().change(function() {
+		displayProperInput();
+	});
+
+	$("#person-list").chosen().change(function(){	
+		var $context		= $("#person-list option:selected");
+		var selectedIndex	= $($context).index();
+		var type     		= $("#type").val();        	
+
+		switch(type) {
+			case "acc":
+			case "doc":
+			case "inj":
+			if(selectedIndex != 0){
+				var userName    	= $($context).text();
+				var userAddress		= $($context).data("address");
+				var userAge    		= $($context).data("age");
+				var userContact   	= $($context).data("contact");
+				var userOccupation	= $($context).data("occupation");
+
+				$("#injured-name").val(userName);
+				$("#injured-address").val(userAddress);
+				$("#injured-age").val(userAge);
+				$("#injured-contact").val(userContact);
+				$("#injured-occupation").val(userOccupation);
+			} else {
+				clearInjuredInput();
+			}
+			break;
+		}
+
+	});
+
+	function initialize() {
+
+		var projectEngineer = $("#project-id option:selected").data("project-engineer");
+		var location 		= $("#project-id option:selected").data("location");
+
+		resetPersonsInvolved();
+		resetItemsLost();
+
+		updatePersonList();
+		updateItemList();
+		updateTasks();
+
+		$("#project-engineer").val(projectEngineer);
+		$("#project-location").val(location);
+
+		displayProperInput();
+
+	}
+
+	function displayProperInput(){
+
 		var type	= $("#type").val();
 		var oldType	= $("#type").data("old-type");
 
@@ -134,37 +166,35 @@ $(function(){
 				$("#items-lost input").prop("disabled", true);
 		}
 
+	}
 
-	});
+	function updateTasks() {
+		var projectId 		= $("#project-id").val();
 
-	$("#person-list").chosen().change(function(){	
-		var $context		= $("#person-list option:selected");
-		var selectedIndex	= $($context).index();
-		var type     		= $("#type").val();        	
+		$("#task option").not(":first").remove();
 
-		switch(type) {
-			case "acc":
-			case "doc":
-			case "inj":
-			if(selectedIndex != 0){
-				var userName    	= $($context).text();
-				var userAddress		= $($context).data("address");
-				var userAge    		= $($context).data("age");
-				var userContact   	= $($context).data("contact");
-				var userOccupation	= $($context).data("occupation");
+		$.ajax({ 
+			type: "GET", 
+			url: link+"incident-report-headers/get-tasks?project_id="+projectId, 
+			data: { get_param: 'value' }, 
+			success: function (data) { 
+				var tasks = data;
 
-				$("#injured-name").val(userName);
-				$("#injured-address").val(userAddress);
-				$("#injured-age").val(userAge);
-				$("#injured-contact").val(userContact);
-				$("#injured-occupation").val(userOccupation);
-			} else {
-				clearInjuredInput();
+				for(var i=0; i < tasks.length; i++) {
+					var option = "<option value=\"" 
+					+ tasks[i].id + "\">" 
+					+ tasks[i].title 
+					+ "</option>";
+					$("#task option:last-child").after(
+						option	            	
+						);
+				}
+
+				$("#task").trigger("chosen:updated");
+				
 			}
-			break;
-		}
-
-	});
+		});
+	}
 
 	function updateItemList(){
 		var taskId 		= $("#task").val();	

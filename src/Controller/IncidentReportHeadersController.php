@@ -28,7 +28,7 @@ class IncidentReportHeadersController extends AppController
     public function index($id = null)
     {
         $this->paginate = [
-            'contain' => ['Projects']
+        'contain' => ['Projects']
         ];
 
         $incidentReportHeaders = $this->paginate($this->IncidentReportHeaders);
@@ -48,7 +48,7 @@ class IncidentReportHeadersController extends AppController
     {
         $incidentReportHeader = $this->IncidentReportHeaders->get($id, [
             'contain' => ['Projects', 'IncidentReportDetails']
-        ]);
+            ]);
 
         $this->set('incidentReportHeader', $incidentReportHeader);
         $this->set('_serialize', ['incidentReportHeader']);
@@ -69,15 +69,15 @@ class IncidentReportHeadersController extends AppController
         $incidentReportHeader = $this->IncidentReportHeaders->newEntity();
 
         if ($this->request->is('post')) {
-
+            $valid = true;
             $postData           = $this->request->data;
             $postData['date']   = new DateTime($postData['date']);
 
             $project = $this->Projects->get($postData['project_id'], [
                 'contain' => ['EmployeesJoin' => [
-                    'EmployeeTypes'
+                'EmployeeTypes'
                 ]]
-            ]);
+                ]);
             
 
             foreach($project->employees_join as $employee) {
@@ -88,39 +88,104 @@ class IncidentReportHeadersController extends AppController
 
             $incidentReportHeader = $this->IncidentReportHeaders->patchEntity($incidentReportHeader, $postData);
 
-            if ($this->IncidentReportHeaders->save($incidentReportHeader)) {
-                $incidentReportDetails = [];
-
-                $personsInvolved = $postData['involved_id'];
-
-                if($incidentReportHeader->type === 'los') {
-                    $itemsLost = $postData['item_id'];
-                    for($i = 0; $i < count($personsInvolved); i++) {
-                        $incidentReportDetail = $this->IncidentReportDetails->newEntity();
-                    }
-                } else {
-                    $personsSummaries = $postData['injures_summary'];
-                    for($i = 0; $i < count($personsInvolved); i++) {
-                        $incidentReportDetail = $this->IncidentReportDetails->newEntity();
-
-                    }
-                }
-
-                $this->Flash->success(__('The incident report header has been saved.'));
-                return $this->redirect(['action' => 'index']);
-            } else {
-                $this->Flash->error(__('The incident report header could not be saved. Please, try again.'));
+            if(!isset($postData['involved-id'])) {
+                $valid = false;
+                $this->Flash->error(__('Please add involved persons.'));
             }
+
+
+            if($incidentReportHeader->type === 'los') {               
+                if(!isset($postData['item-id'])) {
+                    $valid = false;
+                    $this->Flash->error(__('Please add lost items.'));
+                }
+            } 
+
+            if($valid) {
+                if ($this->IncidentReportHeaders->save($incidentReportHeader)) {
+                    $incidentReportDetails = [];
+                    $dateNow = new DateTime();
+
+                    $taskDetail     = $this->IncidentReportDetails->newEntity();
+                    $taskDetail['incident_report_header_id'] = $incidentReportHeader->id;
+                    $taskDetail['type'] = 'task';
+                    $taskDetail['value'] = $postData['task'];
+                    $taskDetail['created'] = $dateNow;
+
+                    array_push($incidentReportDetails, $taskDetail);
+
+                    $summaryDetail  = $this->IncidentReportDetails->newEntity();
+                    $summaryDetail['incident_report_header_id'] = $incidentReportHeader->id;
+                    $summaryDetail['type'] = 'incident_summary';
+                    $summaryDetail['value'] = $postData['involved-summary'];
+                    $summaryDetail['created'] = $dateNow;
+
+                    array_push($incidentReportDetails, $summaryDetail);
+
+                    $personsInvolved = $postData['involved-id'];
+
+                    for($i = 0; $i < count($personsInvolved); $i++) {
+                        $incidentReportDetail = $this->IncidentReportDetails->newEntity();
+
+                        $incidentReportDetail['incident_report_header_id'] = $incidentReportHeader->id;
+                        $incidentReportDetail['type'] = 'persons_involved';
+                        $incidentReportDetail['value'] = $personsInvolved[$i];
+                        $incidentReportDetail['created'] = $dateNow;
+
+                        array_push($incidentReportDetails, $incidentReportDetail);
+                    }
+
+                    if($incidentReportHeader->type === 'los') {
+                        $itemsLost = $postData['item-id'];
+                        for($i = 0; $i < count($itemsLost); $i++) {
+                            $incidentReportDetail = $this->IncidentReportDetails->newEntity();
+
+                            $incidentReportDetail['incident_report_header_id'] = $incidentReportHeader->id;
+                            $incidentReportDetail['type'] = 'item_lost';
+                            $incidentReportDetail['value'] = $itemsLost[$i];
+                            $incidentReportDetail['created'] = $dateNow;
+
+                            array_push($incidentReportDetails, $incidentReportDetail);
+                        }
+                    } else {
+                        $injuredSummaries = $postData['injured-summary'];
+                        for($i = 0; $i < count($injuredSummaries); $i++) {
+                            $incidentReportDetail = $this->IncidentReportDetails->newEntity();
+
+                            $incidentReportDetail['incident_report_header_id'] = $incidentReportHeader->id;
+                            $incidentReportDetail['type'] = 'injured_summary';
+                            $incidentReportDetail['value'] = $injuredSummaries[$i];
+                            $incidentReportDetail['user_id'] = $personsInvolved[$i];
+                            $incidentReportDetail['created'] = $dateNow;
+
+                            array_push($incidentReportDetails, $incidentReportDetail);
+                        }
+                    }
+
+                    foreach($incidentReportDetails as $incidentReportDetail) {
+                        if(!($this->IncidentReportDetails->save($incidentReportDetail))) {
+
+                            $this->Flash->error(__('The incident report could not be saved. Please, try again.'));
+                        }
+                    }
+
+                    $this->Flash->success(__('The incident report has been saved.'));
+                    return $this->redirect(['action' => 'index']);
+                } else {
+                    $this->Flash->error(__('The incident report could not be saved. Please, try again.'));
+                }
+            }
+            
         }
 
         $projects = [];
 
         $tempProjects = $this->Projects->find('all')
-            ->where(['is_finished' => 0])
-            ->contain(['EmployeesJoin' => [
-                'EmployeeTypes'
-                ]])
-            ->toArray();
+        ->where(['is_finished' => 0])
+        ->contain(['EmployeesJoin' => [
+            'EmployeeTypes'
+            ]])
+        ->toArray();
 
         foreach ($tempProjects as $tempProject) {
             $projectEngineer = null;
@@ -132,10 +197,10 @@ class IncidentReportHeadersController extends AppController
             }
 
             $project = [
-                'text' => $tempProject->title,
-                'value' => $tempProject->id,
-                'data-project-engineer' => $projectEgineer->name,
-                'data-location' => $tempProject->location
+            'text' => $tempProject->title,
+            'value' => $tempProject->id,
+            'data-project-engineer' => $projectEgineer->name,
+            'data-location' => $tempProject->location
             ];
 
             array_push($projects, $project);
@@ -156,7 +221,7 @@ class IncidentReportHeadersController extends AppController
     {
         $incidentReportHeader = $this->IncidentReportHeaders->get($id, [
             'contain' => []
-        ]);
+            ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $incidentReportHeader = $this->IncidentReportHeaders->patchEntity($incidentReportHeader, $this->request->data);
             if ($this->IncidentReportHeaders->save($incidentReportHeader)) {
@@ -181,12 +246,29 @@ class IncidentReportHeadersController extends AppController
      */
     public function delete($id = null)
     {
+        $valid = true;
+        $this->loadModel('IncidentReportDetails');
+
         $this->request->allowMethod(['post', 'delete']);
-        $incidentReportHeader = $this->IncidentReportHeaders->get($id);
-        if ($this->IncidentReportHeaders->delete($incidentReportHeader)) {
-            $this->Flash->success(__('The incident report header has been deleted.'));
-        } else {
-            $this->Flash->error(__('The incident report header could not be deleted. Please, try again.'));
+        $incidentReportHeader = $this->IncidentReportHeaders->get($id, [
+            'contain' => ['IncidentReportDetails']
+            ]);
+        
+
+        foreach($incidentReportHeader['incident_report_details'] as $incidentReportDetail) {
+            if (!($this->IncidentReportDetails->delete($incidentReportDetail))) {
+                $this->Flash->error(__('The incident report header could not be deleted. Please, try again.'));
+            } else {
+                $valid = false;
+            }
+        }
+
+        if($valid) {
+            if ($this->IncidentReportHeaders->delete($incidentReportHeader)) {
+                $this->Flash->success(__('The incident report has been deleted.'));
+            } else {
+                $this->Flash->error(__('The incident report could not be deleted. Please, try again.'));
+            }
         }
 
         return $this->redirect(['action' => 'index']);
@@ -197,7 +279,7 @@ class IncidentReportHeadersController extends AppController
     *
     * @return json response
     */
-    public function getPersons() {
+     public function getPersons() {
         $this->loadModel('Projects');
         $this->loadModel('Manpower');
 
@@ -211,7 +293,7 @@ class IncidentReportHeadersController extends AppController
                 'contain' => ['Employees', 'EmployeesJoin' => [
                 'EmployeeTypes'
                 ]]
-            ]);
+                ]);
 
             foreach ($project->employees_join as $employee) {
                 array_push($manpower, [
@@ -221,7 +303,7 @@ class IncidentReportHeadersController extends AppController
                     'address' => $employee->address,
                     'contact' => $employee->contact,
                     'occupation' => 'Employee'
-                ]);
+                    ]);
             }   
 
             if ($projectId != null && $taskId != null) {
@@ -235,7 +317,7 @@ class IncidentReportHeadersController extends AppController
                         'address' => $manpowerRow->address,
                         'contact' => $manpowerRow->contact,
                         'occupation' => $manpowerRow->manpower_type->title
-                    ]);
+                        ]);
                 }
 
             }
@@ -297,7 +379,7 @@ class IncidentReportHeadersController extends AppController
             $items = array_unique($items);
         }
 
-            
+
 
         header('Content-Type: application/json');
         echo json_encode($items);

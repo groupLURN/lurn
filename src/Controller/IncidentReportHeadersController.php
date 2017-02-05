@@ -47,9 +47,23 @@ class IncidentReportHeadersController extends AppController
     public function view($id = null)
     {
         $incidentReportHeader = $this->IncidentReportHeaders->get($id, [
-            'contain' => ['Projects', 'IncidentReportDetails']
+            'contain' => ['Projects' => [
+                    'EmployeesJoin' => [
+                        'EmployeeTypes'
+                    ]
+                ], 
+                'IncidentReportDetails']
             ]);
 
+        foreach($incidentReportHeader->project->employees_join as $employee) {
+            if($employee->employee_type->id == 3) {
+                $incidentReportHeader['project_engineer'] = $employee;            
+            }
+        }
+
+        unset($incidentReportHeader->project['employees_join']);
+        debug($incidentReportHeader);
+        die();
         $this->set('incidentReportHeader', $incidentReportHeader);
         $this->set('_serialize', ['incidentReportHeader']);
     }

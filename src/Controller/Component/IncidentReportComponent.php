@@ -60,6 +60,8 @@ class IncidentReportComponent extends Component
 					$employeeId = str_replace('Employee-', '', $incidentReportDetail->value);
 					$employee = $this->Employees->get($employeeId);
 					$employee->occupation = $occupation;
+					$employee->injured_summary = $this->getInjuredSummary($incidentReportDetail->value, 
+						$incidentReportHeader->incident_report_details);
 					array_push($personsInvolved, $employee);
 				} else {
 					$occupation = preg_replace('/-[0-9]+/', '', $incidentReportDetail->value);
@@ -67,6 +69,8 @@ class IncidentReportComponent extends Component
 					$manpowerId = str_replace('Skilled Worker-', '', $manpowerId);
 					$manpower = $this->Manpower->get($manpowerId);
 					$manpower->occupation = $occupation;
+					$manpower->injured_summary = $this->getInjuredSummary($incidentReportDetail->value, 
+						$incidentReportHeader->incident_report_details);
 					array_push($personsInvolved, $manpower);
 				}
 			}
@@ -103,5 +107,20 @@ class IncidentReportComponent extends Component
 
 		unset($incidentReportHeader->project['employees_join']);
 		return $incidentReportHeader;
+	}
+
+	private function getInjuredSummary($attribute, $incidentReportDetails){
+		if(!isset($incidentReportDetails)){				
+			return '';
+		}
+
+		foreach ($incidentReportDetails as $incidentReportDetail) {
+			if($incidentReportDetail->type == 'injured_summary' 
+				&& $incidentReportDetail->attribute == $attribute) {
+				return $incidentReportDetail->value;
+			} 
+		}
+
+		return '';
 	}
 }

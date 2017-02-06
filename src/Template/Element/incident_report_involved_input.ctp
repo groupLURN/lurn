@@ -61,7 +61,8 @@ extract($defaults, EXTR_SKIP);
                 'class' => 'form-control',
                 'disabled' => true,
                 'label' => [                
-                    'class' => 'mt'
+                    'class' => 'mt',
+                    'text' => 'Injrued Contact Number'
                 ]
             ]);
 

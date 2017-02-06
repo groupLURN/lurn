@@ -84,44 +84,37 @@
 			<?php endforeach;?>
 		</table>
 		<?php else: ?>
+        <label class="mt">Details of Injured Person/s</label>
 
-		<label class="mt">Incident Details</label>
-		<table class="vertical-table table table-striped">
-			<tr>
-				<th><?= __('Type') ?></th>
-				<td><?= h($incidentReport->type_full); ?></td>
-			</tr>
-			<tr>
-				<th><?= __('Location') ?></th>
-				<td><?= $this->Text->autoParagraph(h($incidentReport->location)); ?></td>
-			</tr>
-			<tr>
-				<th><?= __('Task') ?></th>
-				<td><?= h($incidentReport->task) ?></td>
-			</tr>
-			<tr>
-				<th><?= __('Persons Involved') ?></th>
-				<td>
-				<?php 
-					for($i=0; $i<count($incidentReport->persons_involved); $i++){
-						$personInvolved = $incidentReport->persons_involved[$i];
-						echo $personInvolved->name;
-
-						if($i<count($incidentReport->persons_involved)-1){
-							echo ', ';
-						}
-
-					}
-
-				 ?>
-					
-				</td>
-			</tr>
-			<tr>
-				<th><?= __('Summary of the Incident') ?></th>
-				<td><?= $this->Text->autoParagraph(h($incidentReport->incident_summary)); ?></td>
-			</tr>
-		</table>
+        <?php foreach ($incidentReport->persons_involved as $personInvolved):?>
+        <table class="vertical-table table table-striped">
+            <tr>
+                <th><?= __('Name') ?></th>
+                <td><?= h($personInvolved['name']); ?></td>
+            </tr>
+            <tr>
+                <th><?= __('Age') ?></th>
+                <td><?= h($personInvolved['age']); ?></td>                  
+            </tr>
+            <tr>
+                <th><?= __('Address') ?></th>
+                <td><?= h($personInvolved['address']); ?></td>                  
+            </tr>
+            <tr>
+                <th><?= __('Contact Number') ?></th>
+                <td><?= h($personInvolved['contact']); ?></td>                  
+            </tr>
+            <tr>
+                <th><?= __('Occupation') ?></th>
+                <td><?= h($personInvolved['occupation']); ?></td>                  
+            </tr>
+            <tr>
+                <th><?= __('Summary of Injury') ?></th>
+                <td><?= $this->Text->autoParagraph(h($personInvolved['injured_summary'])); ?></td>               
+            </tr>
+        </table>
+        <br>
+        <?php endforeach;?>
 		<?php endif;?>
 	</div>
 </div>

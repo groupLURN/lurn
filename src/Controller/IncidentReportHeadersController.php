@@ -15,7 +15,7 @@ class IncidentReportHeadersController extends AppController
 {
 
     public function beforeFilter(Event $event)
-    {
+    {   
         $this->viewBuilder()->layout('default');
         return parent::beforeFilter($event);
     }
@@ -45,27 +45,13 @@ class IncidentReportHeadersController extends AppController
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function view($id = null)
-    {
-        $incidentReportHeader = $this->IncidentReportHeaders->get($id, [
-            'contain' => ['Projects' => [
-                    'EmployeesJoin' => [
-                        'EmployeeTypes'
-                    ]
-                ], 
-                'IncidentReportDetails']
-            ]);
+    {   
+        $this->loadComponent('IncidentReport', []);
 
-        foreach($incidentReportHeader->project->employees_join as $employee) {
-            if($employee->employee_type->id == 3) {
-                $incidentReportHeader['project_engineer'] = $employee;            
-            }
-        }
+        $incidentReportHeader = $this->IncidentReport->prepareIncidentReport($id);
 
-        unset($incidentReportHeader->project['employees_join']);
-        debug($incidentReportHeader);
-        die();
-        $this->set('incidentReportHeader', $incidentReportHeader);
-        $this->set('_serialize', ['incidentReportHeader']);
+        $this->set('incidentReport', $incidentReportHeader);
+        $this->set('_serialize', ['incidentReport']);
     }
 
     /**
@@ -136,6 +122,14 @@ class IncidentReportHeadersController extends AppController
 
                     array_push($incidentReportDetails, $summaryDetail);
 
+                    $locationDetail  = $this->IncidentReportDetails->newEntity();
+                    $locationDetail['incident_report_header_id'] = $incidentReportHeader->id;
+                    $locationDetail['type'] = 'incident_summary';
+                    $locationDetail['value'] = $postData['location'];
+                    $locationDetail['created'] = $dateNow;
+
+                    array_push($incidentReportDetails, $locationDetail);
+
                     $personsInvolved = $postData['involved-id'];
 
                     for($i = 0; $i < count($personsInvolved); $i++) {
@@ -150,13 +144,15 @@ class IncidentReportHeadersController extends AppController
                     }
 
                     if($incidentReportHeader->type === 'los') {
-                        $itemsLost = $postData['item-id'];
+                        $itemsLost      = $postData['item-id'];
+                        $itemsQuantity  = $postData['item-quantity'];
                         for($i = 0; $i < count($itemsLost); $i++) {
                             $incidentReportDetail = $this->IncidentReportDetails->newEntity();
 
                             $incidentReportDetail['incident_report_header_id'] = $incidentReportHeader->id;
                             $incidentReportDetail['type'] = 'item_lost';
                             $incidentReportDetail['value'] = $itemsLost[$i];
+                            $incidentReportDetail['attribute'] = $itemsQuantity[$i];
                             $incidentReportDetail['created'] = $dateNow;
 
                             array_push($incidentReportDetails, $incidentReportDetail);
@@ -169,7 +165,7 @@ class IncidentReportHeadersController extends AppController
                             $incidentReportDetail['incident_report_header_id'] = $incidentReportHeader->id;
                             $incidentReportDetail['type'] = 'injured_summary';
                             $incidentReportDetail['value'] = $injuredSummaries[$i];
-                            $incidentReportDetail['user_id'] = $personsInvolved[$i];
+                            $incidentReportDetail['attribute'] = $personsInvolved[$i];
                             $incidentReportDetail['created'] = $dateNow;
 
                             array_push($incidentReportDetails, $incidentReportDetail);

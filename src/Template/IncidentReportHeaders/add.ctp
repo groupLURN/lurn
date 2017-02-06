@@ -60,7 +60,13 @@
 			?>
 			
 			<h4 class="mt"></i>Incident Details</h4>
-			<?php        
+			<?php         
+				echo $this->Form->input('location', [
+					'class' => 'form-control',	
+					'label' => [
+						'class' => 'mt'
+					]
+				]);       
 				echo $this->Form->input('task', [
 					'class' => 'form-control chosen',	
             		'data-old-task' => '',

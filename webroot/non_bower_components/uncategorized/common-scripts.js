@@ -3,7 +3,7 @@ $(function() {
     $('#nav-accordion').dcAccordion({
         eventType: 'click',
         autoClose: true,
-        saveState: true,
+        saveState: false,
         disableLink: true,
         speed: 'slow',
         showCount: false,
@@ -71,11 +71,11 @@ var Script = function () {
     });
 
 // custom scrollbar
-    $("#sidebar").niceScroll({styler:"fb",cursorcolor:"#4ECDC4", cursorwidth: '3', cursorborderradius: '10px', background: '#eeeeee', spacebarenabled:false, cursorborder: ''});
+    $("#sidebar").niceScroll({styler:"fb",cursorcolor:"#5B6376", cursorwidth: '3', cursorborderradius: '10px', background: '#eeeeee', spacebarenabled:false, cursorborder: ''});
 
-    $("html").niceScroll({styler:"fb",cursorcolor:"#4ECDC4", cursorwidth: '6', cursorborderradius: '10px', background: '#eeeeee', spacebarenabled:false,  cursorborder: '', zindex: '1000'});
+    $("html").niceScroll({styler:"fb",cursorcolor:"#5B6376", cursorwidth: '6', cursorborderradius: '10px', background: '#eeeeee', spacebarenabled:false,  cursorborder: '', zindex: '1000'});
 
-    $(".scroll-wrapper").niceScroll({styler:"fb",cursorcolor:"#4ECDC4", cursorwidth: '3', cursorborderradius: '10px', background: '#eeeeee', spacebarenabled:false,  cursorborder: '', zindex: '1000'});
+    $(".scroll-wrapper").niceScroll({styler:"fb",cursorcolor:"#5B6376", cursorwidth: '3', cursorborderradius: '10px', background: '#eeeeee', spacebarenabled:false,  cursorborder: '', zindex: '1000'});
 
 
 // widget tools

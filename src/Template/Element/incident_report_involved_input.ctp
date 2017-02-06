@@ -109,6 +109,14 @@ extract($defaults, EXTR_SKIP);
                 'options' => $itemsDefault
             ]);
 
+            echo $this->Form->input('item-quantity', [
+                'class' => 'form-control',
+                'label' => [
+                    'class' => 'mt'
+                ],
+                'name' => false
+            ]);
+
         ?>
 
         <div>
@@ -131,6 +139,10 @@ extract($defaults, EXTR_SKIP);
         $("#injured-contact").val("");
         $("#injured-occupation").val("");
         $("#injured-summary").val("");
+    }
+
+    function resetItemsInput() {        
+        $("#item-quantity").val("");
     }
     
     function addInvolved() {
@@ -201,8 +213,9 @@ extract($defaults, EXTR_SKIP);
             switch(typeVal) {
                 case "los":
 
-                var itemId      = $("#item-list").val();
-                var itemName    = $("#item-list option:selected").text();
+                var itemId          = $("#item-list").val();
+                var itemQuantity    = $("#item-quantity").val();
+                var itemName        = $("#item-list option:selected").text();
 
                 if(itemId != "") {
 
@@ -216,13 +229,15 @@ extract($defaults, EXTR_SKIP);
                     + ">"
                     + itemName
                     + "<input type=\"hidden\" name=\"item-id[" + index + "]\" value=" + itemId + ">"
+                    + "<input type=\"hidden\" name=\"item-quantity[" + index + "]\" value=" + itemQuantity + ">"
                     + "<button type=\"button\" class=\"ml\" onclick=\"removeItem(this);\">Remove</button>"
                     + "</li>";
 
+                    resetItemsInput();
+                    
                     if(index == 0) {
                         $("#items-lost").empty();
                     }
-
                     $("#item-list option[value=\"" + itemId + "\"]").prop("disabled", true);
 
                     $("#item-list").trigger("chosen:updated");

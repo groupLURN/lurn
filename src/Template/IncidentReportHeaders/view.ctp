@@ -1,91 +1,127 @@
 <?= $this->Flash->render() ?>
-<?= $this->assign('title', 'Create Incident Report') ?>
+<?= $this->assign('title', 'Incident Report') ?>
 
 <div class="row mt">
 	<div class="col-md-12">
-		<?= $this->Form->create($incidentReportHeader) ?>
-		<fieldset>
-			<h3><i class="fa fa-angle-right"></i>Create Incident Report</h3>
-			<?php
-				echo $this->Form->input('project_id', [
-					'class' => 'form-control chosen',
-					'label' => [
-						'class' => 'mt',
-						'text' => 'Project'
-					],
-					'options' => [''=>'-Select A Project-' , '1' => 'For Testing Purposes']+$projects
-				]);
+		<?= $this->Html->image('logo.jpg', array('class' => 'float-right')) ?>
+		<h5>
+			Incident Report<br>
+			J.I. Espino Construction
+		</h5>
+		<br>
+		<br>
+		<br>
 
-				echo $this->Form->input('project-location', [
-					'class' => 'form-control',
-					'readonly' => true,
-					'label' => [
-						'text' => 'Project Location',    
-						'class' => 'mt'
-					],
-					'type' => 'text'
-				]);
+		<label class="mt">Project Details</label>
+		<table class="vertical-table table table-striped">
+			<tr>
+				<th><?= __('Project Name') ?></th>
+				<td><?= h($incidentReport->project->title) ?></td>
+			</tr>
+			<tr>
+				<th><?= __('Project Location') ?></th>
+				<td><?= $this->Text->autoParagraph(h($incidentReport->project->location)); ?></td>
+			</tr>
+			<tr>
+				<th><?= __('Project Engineer') ?></th>
+				<td><?= h($incidentReport->project_engineer->name) ?></td>
+			</tr>
+			<tr>
+				<th><?= __('Date') ?></th>
+				<td><?= date_format($incidentReport->date,"F d, Y") ?></td>
+			</tr>
+		</table>
+		<label class="mt">Incident Details</label>
+		<table class="vertical-table table table-striped">
+			<tr>
+				<th><?= __('Type') ?></th>
+				<td><?= h($incidentReport->type_full); ?></td>
+			</tr>
+			<tr>
+				<th><?= __('Location') ?></th>
+				<td><?= $this->Text->autoParagraph(h($incidentReport->location)); ?></td>
+			</tr>
+			<tr>
+				<th><?= __('Task') ?></th>
+				<td><?= h($incidentReport->task) ?></td>
+			</tr>
+			<tr>
+				<th><?= __('Persons Involved') ?></th>
+				<td>
+				<?php 
+					for($i=0; $i<count($incidentReport->persons_involved); $i++){
+						$personInvolved = $incidentReport->persons_involved[$i];
+						echo $personInvolved->name;
 
-				echo $this->Form->input('project-engineer', [
-					'class' => 'form-control',
-					'readonly' => true,
-					'label' => [ 
-						'class' => 'mt'
-					],
-					'type' => 'text'
-				]);
+						if($i<count($incidentReport->persons_involved)-1){
+							echo ', ';
+						}
 
-				echo $this->Form->input('date', [
-					'class' => 'form-control datetime-picker',
-					'label' => [
-						'text' => 'Date',    
-						'class' => 'mt'
-					],
-					'type' => 'text'
-				]);
+					}
 
-				echo $this->Form->input('type', [
-					'class' => 'form-control chosen',
-            		'data-old-type' => '',
-					'label' => [
-						'class' => 'mt'
-					],
-					'options' => [''=>'-Select an Incident Type-', 
-								'acc'=>'Accident', 
-								'doc'=>'Dangerous Occurrence', 
-								'inj'=>'Injury', 
-								'los'=>'Loss']
-				]);
+				 ?>
+					
+				</td>
+			</tr>
+			<tr>
+				<th><?= __('Summary of the Incident') ?></th>
+				<td><?= $this->Text->autoParagraph(h($incidentReport->incident_summary)); ?></td>
+			</tr>
+		</table>
 
-			?>
-			
-			<h4 class="mt"></i>Incident Details</h4>
-			<?php        
-				echo $this->Form->input('task', [
-					'class' => 'form-control chosen',	
-            		'data-old-task' => '',
-					'label' => [
-						'class' => 'mt'
-					],
-					'options' => [''=>'-Select A Task-']
-				]);
+		<?php if($incidentReport->type == 'los'):?>
+		<label class="mt">Lost Items/Materials</label>
+		<table class="vertical-table table table-striped">
+			<tr>
+				<th><?= __('Item') ?></th>
+				<th><?= __('Quantity') ?></th>
+			</tr>
+			<?php foreach ($incidentReport->items_lost as $itemLost):?>
+			<tr>
+				<td><?= h($itemLost['name']); ?></td>	
+				<td><?= h($itemLost['quantity']); ?></td>				
+			</tr>
+			<?php endforeach;?>
+		</table>
+		<?php else: ?>
 
-		        echo $this->Form->input('involved-summary', [
-		            'class' => 'form-control',
-		            'label' => [
-		                'class' => 'mt',
-		                'text' => 'Summary of the incident and/or injury caused by the incident (parts of the body and severity)'
-		            ],
-		            'type' => 'textarea'
-		        ]);
+		<label class="mt">Incident Details</label>
+		<table class="vertical-table table table-striped">
+			<tr>
+				<th><?= __('Type') ?></th>
+				<td><?= h($incidentReport->type_full); ?></td>
+			</tr>
+			<tr>
+				<th><?= __('Location') ?></th>
+				<td><?= $this->Text->autoParagraph(h($incidentReport->location)); ?></td>
+			</tr>
+			<tr>
+				<th><?= __('Task') ?></th>
+				<td><?= h($incidentReport->task) ?></td>
+			</tr>
+			<tr>
+				<th><?= __('Persons Involved') ?></th>
+				<td>
+				<?php 
+					for($i=0; $i<count($incidentReport->persons_involved); $i++){
+						$personInvolved = $incidentReport->persons_involved[$i];
+						echo $personInvolved->name;
 
-				echo $this->element('incident_report_involved_input', []);
+						if($i<count($incidentReport->persons_involved)-1){
+							echo ', ';
+						}
 
-			?>
+					}
 
-			<br>
-		</fieldset>
-		<?= $this->Form->button(__('Submit')) ?>
-		<?= $this->Form->end() ?>
+				 ?>
+					
+				</td>
+			</tr>
+			<tr>
+				<th><?= __('Summary of the Incident') ?></th>
+				<td><?= $this->Text->autoParagraph(h($incidentReport->incident_summary)); ?></td>
+			</tr>
+		</table>
+		<?php endif;?>
 	</div>
 </div>

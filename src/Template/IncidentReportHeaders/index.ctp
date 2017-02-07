@@ -26,12 +26,16 @@
                         <td><?= $this->Number->format($incidentReportHeader->id) ?></td>
                         <td><?= $incidentReportHeader->has('project') ? $this->Html->link($incidentReportHeader->project->title, ['controller' => 'Projects', 'action' => 'view', $incidentReportHeader->project->id]) : '' ?></td>
                         <td><?= $this->Number->format($incidentReportHeader->project_engineer) ?></td>
-                        <td><?= h($incidentReportHeader->type) ?></td>
-                        <td><?= h($incidentReportHeader->date) ?></td>
+                        <td><?= h($incidentReportHeader->type_full) ?></td>
+                        <td><?= h(date_format($incidentReportHeader->date,"F d, Y"))?></td>
                         <td class="actions">
-                            <?= $this->Html->link(__('View'), ['action' => 'view', $incidentReportHeader->id]) ?>
-                            <?= $this->Html->link(__('Edit'), ['action' => 'edit', $incidentReportHeader->id]) ?>
-                            <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $incidentReportHeader->id], ['confirm' => __('Are you sure you want to delete # {0}?', $incidentReportHeader->id)]) ?>
+                            <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $incidentReportHeader->id]); ?>
+                            <?= $this->dataTableEditButton(__('Edit'), ['action' => 'edit', $incidentReportHeader->id]); ?>
+                            <?= $this->dataTableDeleteButton(__('Delete'),
+                                ['action' => 'delete', $incidentReportHeader->id],
+                                __('Are you sure you want to delete {0}?', $incidentReportHeader->title)
+                            );
+                            ?>
                         </td>
                     </tr>
                     <?php endforeach; ?>

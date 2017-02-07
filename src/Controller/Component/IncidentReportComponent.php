@@ -13,7 +13,7 @@ class IncidentReportComponent extends Component
 		$this->IncidentReportHeaders = TableRegistry::get('IncidentReportHeaders');
 	}
 
-	public function prepareIncidentReport($id)
+	public function prepareIncidentReportView($id)
 	{	
 		$personsInvolved	= [];
 		$itemsLost			= [];
@@ -79,17 +79,96 @@ class IncidentReportComponent extends Component
 		$incidentReportHeader->items_lost		= $itemsLost;
 		$incidentReportHeader->persons_involved = $personsInvolved;
 
-		switch($incidentReportHeader->type) {
-			case 'acc':
-			case 'doc':
-			case 'inj':
+		$incidentReportHeader = $this->addProperType($incidentReportHeader);
 
-			break;
-			case 'los':
+		unset($incidentReportHeader->project['employees_join']);
+		return $incidentReportHeader;
+	}
 
-			break;
+	public function prepareIncidentReportDetailsSave($incidentReportHeader, $postData){
+		$incidentReportDetails = [];
+		
+        $dateNow = new DateTime();
+
+        $taskDetail     = $this->IncidentReportDetails->newEntity();
+        $taskDetail['incident_report_header_id'] = $incidentReportHeader->id;
+        $taskDetail['type'] = 'task';
+        $taskDetail['value'] = $postData['task'];
+        $taskDetail['created'] = $dateNow;
+
+        array_push($incidentReportDetails, $taskDetail);
+
+        $summaryDetail  = $this->IncidentReportDetails->newEntity();
+        $summaryDetail['incident_report_header_id'] = $incidentReportHeader->id;
+        $summaryDetail['type'] = 'incident_summary';
+        $summaryDetail['value'] = $postData['involved-summary'];
+        $summaryDetail['created'] = $dateNow;
+
+        array_push($incidentReportDetails, $summaryDetail);
+
+        $locationDetail  = $this->IncidentReportDetails->newEntity();
+        $locationDetail['incident_report_header_id'] = $incidentReportHeader->id;
+        $locationDetail['type'] = 'incident_summary';
+        $locationDetail['value'] = $postData['location'];
+        $locationDetail['created'] = $dateNow;
+
+        array_push($incidentReportDetails, $locationDetail);
+
+        $personsInvolved = $postData['involved-id'];
+
+        for($i = 0; $i < count($personsInvolved); $i++) {
+            $incidentReportDetail = $this->IncidentReportDetails->newEntity();
+
+            $incidentReportDetail['incident_report_header_id'] = $incidentReportHeader->id;
+            $incidentReportDetail['type'] = 'persons_involved';
+            $incidentReportDetail['value'] = $personsInvolved[$i];
+            $incidentReportDetail['created'] = $dateNow;
+
+            array_push($incidentReportDetails, $incidentReportDetail);
+        }
+
+        if($incidentReportHeader->type === 'los') {
+            $itemsLost      = $postData['item-id'];
+            $itemsQuantity  = $postData['item-quantity'];
+            for($i = 0; $i < count($itemsLost); $i++) {
+                $incidentReportDetail = $this->IncidentReportDetails->newEntity();
+
+                $incidentReportDetail['incident_report_header_id'] = $incidentReportHeader->id;
+                $incidentReportDetail['type'] = 'item_lost';
+                $incidentReportDetail['value'] = $itemsLost[$i];
+                $incidentReportDetail['attribute'] = $itemsQuantity[$i];
+                $incidentReportDetail['created'] = $dateNow;
+
+                array_push($incidentReportDetails, $incidentReportDetail);
+            }
+        } else {
+            $injuredSummaries = $postData['injured-summary'];
+            for($i = 0; $i < count($injuredSummaries); $i++) {
+                $incidentReportDetail = $this->IncidentReportDetails->newEntity();
+
+                $incidentReportDetail['incident_report_header_id'] = $incidentReportHeader->id;
+                $incidentReportDetail['type'] = 'injured_summary';
+                $incidentReportDetail['value'] = $injuredSummaries[$i];
+                $incidentReportDetail['attribute'] = $personsInvolved[$i];
+                $incidentReportDetail['created'] = $dateNow;
+
+                array_push($incidentReportDetails, $incidentReportDetail);
+            }
+        }
+
+		return $incidentReportDetails;
+	}
+
+	public function prepeareIncidentReportsForList($incidentReportHeaders){
+		foreach ($incidentReportHeaders as $incidentReportHeader) {
+			$incidentReportHeader = $this->addProperType($incidentReportHeader);
 		}
 
+		return $incidentReportHeaders;
+
+	}
+
+	private function addProperType($incidentReportHeader){
 		switch($incidentReportHeader->type) {
 			case 'acc':
 			$incidentReportHeader->type_full = "Accident";
@@ -105,7 +184,6 @@ class IncidentReportComponent extends Component
 			break;
 		}
 
-		unset($incidentReportHeader->project['employees_join']);
 		return $incidentReportHeader;
 	}
 

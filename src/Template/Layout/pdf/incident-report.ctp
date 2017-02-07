@@ -27,20 +27,20 @@ $this->Html->css('pdf', ['block' => true, 'fullBase' => true]);
 
 <div class="header">
     <?= $this->Html->image('logo.jpg', array('fullBase' => true, 'class' => 'float-right')) ?>
-    <h3 class="text-left">
-        <?= h($project->title) ?><br>
-        <?= h($project->client->company_name) ?><br>
-        J.I. Espino Construction<br>
-        <?= h($project->employee->name) ?><br>
-        <?= h($project->location) ?><br>
-    </h3>
-    <br>
+    <h1>J.I. Espino Construction</h1>
+    <h2>Unit K-3 Emerald Green Building Cv Star Avenue Las Pinas Metro Manila</h2>
+
 </div>
 
+<hr>
+<h2>Incident Report</h2>
 <div class="body">
     <?= $this->fetch('content'); ?>
 </div>
 
+<br>
+<br>
+<br>
 <div class="footer">
     <div>
         <h2><i>Authorized By:</i></h2>
@@ -54,6 +54,7 @@ $this->Html->css('pdf', ['block' => true, 'fullBase' => true]);
         </div>
     </div>
 </div>
+
 
 </body>
 </html>

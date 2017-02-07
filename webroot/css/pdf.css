@@ -31,13 +31,18 @@ table {
 
 .body td, .body th {
     padding: 10px 0;
-    font-size: 24px;
+    font-size: 18px;
 }
 
 .report td, .report th {
     padding: 3px 3px;
     font-size: 18px;
+} 
+
+.incident-report th {
+    width: 30%;
 }
+
 
 .signatory {
     padding: 24px 0;
@@ -75,6 +80,13 @@ th.rotate > div {
     translate(-65px, 7px);
 
   width: 2px;
+}
+
+.page-break {
+    clear: both;
+    display: block;
+    border :1px solid transparent;
+    page-break-after: always;
 }
 
 

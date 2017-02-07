@@ -5,6 +5,8 @@ use App\Controller\AppController;
 use Cake\Routing\Router;
 use Cake\Event\Event;
 use DateTime;
+use Cake\I18n\Time;
+
 
 /**
  * IncidentReportHeaders Controller
@@ -27,11 +29,13 @@ class IncidentReportHeadersController extends AppController
      */
     public function index($id = null)
     {
+        $this->loadComponent('IncidentReport', []);
         $this->paginate = [
         'contain' => ['Projects']
         ];
 
         $incidentReportHeaders = $this->paginate($this->IncidentReportHeaders);
+        $incidentReportHeaders = $this->IncidentReport->prepeareIncidentReportsForList($incidentReportHeaders);
 
         $this->set(compact('incidentReportHeaders'));
         $this->set('_serialize', ['incidentReportHeaders']);
@@ -48,7 +52,7 @@ class IncidentReportHeadersController extends AppController
     {   
         $this->loadComponent('IncidentReport', []);
 
-        $incidentReportHeader = $this->IncidentReport->prepareIncidentReport($id);
+        $incidentReportHeader = $this->IncidentReport->prepareIncidentReportView($id);
 
         $this->set('incidentReport', $incidentReportHeader);
         $this->set('_serialize', ['incidentReport']);
@@ -61,6 +65,7 @@ class IncidentReportHeadersController extends AppController
      */
     public function add()
     {
+        $this->loadComponent('IncidentReport', []);
 
         $this->loadModel('Projects');
         $this->loadModel('Tasks');
@@ -103,74 +108,7 @@ class IncidentReportHeadersController extends AppController
 
             if($valid) {
                 if ($this->IncidentReportHeaders->save($incidentReportHeader)) {
-                    $incidentReportDetails = [];
-                    $dateNow = new DateTime();
-
-                    $taskDetail     = $this->IncidentReportDetails->newEntity();
-                    $taskDetail['incident_report_header_id'] = $incidentReportHeader->id;
-                    $taskDetail['type'] = 'task';
-                    $taskDetail['value'] = $postData['task'];
-                    $taskDetail['created'] = $dateNow;
-
-                    array_push($incidentReportDetails, $taskDetail);
-
-                    $summaryDetail  = $this->IncidentReportDetails->newEntity();
-                    $summaryDetail['incident_report_header_id'] = $incidentReportHeader->id;
-                    $summaryDetail['type'] = 'incident_summary';
-                    $summaryDetail['value'] = $postData['involved-summary'];
-                    $summaryDetail['created'] = $dateNow;
-
-                    array_push($incidentReportDetails, $summaryDetail);
-
-                    $locationDetail  = $this->IncidentReportDetails->newEntity();
-                    $locationDetail['incident_report_header_id'] = $incidentReportHeader->id;
-                    $locationDetail['type'] = 'incident_summary';
-                    $locationDetail['value'] = $postData['location'];
-                    $locationDetail['created'] = $dateNow;
-
-                    array_push($incidentReportDetails, $locationDetail);
-
-                    $personsInvolved = $postData['involved-id'];
-
-                    for($i = 0; $i < count($personsInvolved); $i++) {
-                        $incidentReportDetail = $this->IncidentReportDetails->newEntity();
-
-                        $incidentReportDetail['incident_report_header_id'] = $incidentReportHeader->id;
-                        $incidentReportDetail['type'] = 'persons_involved';
-                        $incidentReportDetail['value'] = $personsInvolved[$i];
-                        $incidentReportDetail['created'] = $dateNow;
-
-                        array_push($incidentReportDetails, $incidentReportDetail);
-                    }
-
-                    if($incidentReportHeader->type === 'los') {
-                        $itemsLost      = $postData['item-id'];
-                        $itemsQuantity  = $postData['item-quantity'];
-                        for($i = 0; $i < count($itemsLost); $i++) {
-                            $incidentReportDetail = $this->IncidentReportDetails->newEntity();
-
-                            $incidentReportDetail['incident_report_header_id'] = $incidentReportHeader->id;
-                            $incidentReportDetail['type'] = 'item_lost';
-                            $incidentReportDetail['value'] = $itemsLost[$i];
-                            $incidentReportDetail['attribute'] = $itemsQuantity[$i];
-                            $incidentReportDetail['created'] = $dateNow;
-
-                            array_push($incidentReportDetails, $incidentReportDetail);
-                        }
-                    } else {
-                        $injuredSummaries = $postData['injured-summary'];
-                        for($i = 0; $i < count($injuredSummaries); $i++) {
-                            $incidentReportDetail = $this->IncidentReportDetails->newEntity();
-
-                            $incidentReportDetail['incident_report_header_id'] = $incidentReportHeader->id;
-                            $incidentReportDetail['type'] = 'injured_summary';
-                            $incidentReportDetail['value'] = $injuredSummaries[$i];
-                            $incidentReportDetail['attribute'] = $personsInvolved[$i];
-                            $incidentReportDetail['created'] = $dateNow;
-
-                            array_push($incidentReportDetails, $incidentReportDetail);
-                        }
-                    }
+                    $incidentReportDetails = $this->IncidentReport->prepareIncidentReportDetailsSave($incidentReportHeader, $postData);
 
                     foreach($incidentReportDetails as $incidentReportDetail) {
                         if(!($this->IncidentReportDetails->save($incidentReportDetail))) {
@@ -251,8 +189,6 @@ class IncidentReportHeadersController extends AppController
      * Delete method
      *
      * @param string|null $id Incident Report Header id.
-     * @return \Cake\Network\Response|null Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function delete($id = null)
     {
@@ -284,6 +220,40 @@ class IncidentReportHeadersController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 
+    /**
+     * Generate pdf output method.
+     *
+     * @param string $id Incident Report Header id.
+     * @param integer $download Flag for downloading.
+     */
+    public function generateReport($id, $download = null)
+    {
+        $this->loadComponent('IncidentReport', []);
+        $this->viewBuilder()->layout('incident-report');
+
+        $currentDate = Time::now();
+        $currentDate = sprintf('%02d', $currentDate->month) . sprintf('%02d', $currentDate->day) . $currentDate->year;
+
+        $incidentReportHeader = $this->IncidentReport->prepareIncidentReportView($id);
+        $this->set('incidentReport', $incidentReportHeader);
+        $this->set('_serialize', ['incidentReport']);
+
+        if ($download == 1){
+            $download = true;
+        }else{
+            $download = false;
+        }
+
+        $this->viewBuilder()->options([
+            'pdfConfig' => [
+                'orientation' => 'portrait',
+                'filename' => 'Incident_Report_' . $currentDate . '.pdf',
+                'download' => $download
+            ]           
+        ])->template('pdf'); 
+
+
+    }
      /**
     * Method for getting all the employees and manpower assigned to a project
     *

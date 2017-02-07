@@ -3,17 +3,14 @@
 
 <div class="row mt">
 	<div class="col-md-12">
-		<?= $this->Html->image('logo.jpg', array('class' => 'float-right')) ?>
-		<h5>
-			Incident Report<br>
-			J.I. Espino Construction
-		</h5>
-		<br>
-		<br>
-		<br>
 
-		<label class="mt">Project Details</label>
-		<table class="vertical-table table table-striped">
+        <?= $this->Form->button('<i class="fa fa-save"></i> Save as PDF', 
+            array('onclick' => "location.href='" . $this->Url->build(['action' => 'generate-report', $incidentReport->id, '1.pdf'])."'", 'class' => 'btn btn-primary')); ?>
+        <?= $this->Form->button('<i class="fa fa-print"></i> Print', 
+            array('onclick' => "location.href='" . $this->Url->build(['action' => 'generate-report', $incidentReport->id, '0.pdf'])."'", 'class' => 'btn btn-warning')); ?>
+		<h4>Incident Report</h4>
+		<h5 class="mt">Project Details</h5>
+		<table class="vertical-table table table-striped incident-report">
 			<tr>
 				<th><?= __('Project Name') ?></th>
 				<td><?= h($incidentReport->project->title) ?></td>
@@ -31,8 +28,8 @@
 				<td><?= date_format($incidentReport->date,"F d, Y") ?></td>
 			</tr>
 		</table>
-		<label class="mt">Incident Details</label>
-		<table class="vertical-table table table-striped">
+		<h5 class="mt">Incident Details</h5>
+		<table class="vertical-table table table-striped incident-report">
 			<tr>
 				<th><?= __('Type') ?></th>
 				<td><?= h($incidentReport->type_full); ?></td>
@@ -70,8 +67,8 @@
 		</table>
 
 		<?php if($incidentReport->type == 'los'):?>
-		<label class="mt">Lost Items/Materials</label>
-		<table class="vertical-table table table-striped">
+		<h5 class="mt">Lost Items/Materials</h5>
+		<table class="vertical-table table table-striped incident-report">
 			<tr>
 				<th><?= __('Item') ?></th>
 				<th><?= __('Quantity') ?></th>
@@ -84,10 +81,10 @@
 			<?php endforeach;?>
 		</table>
 		<?php else: ?>
-        <label class="mt">Details of Injured Person/s</label>
+        <h5 class="mt">Details of Injured Person/s</h5>
 
         <?php foreach ($incidentReport->persons_involved as $personInvolved):?>
-        <table class="vertical-table table table-striped">
+        <table class="vertical-table table table-striped incident-report">
             <tr>
                 <th><?= __('Name') ?></th>
                 <td><?= h($personInvolved['name']); ?></td>

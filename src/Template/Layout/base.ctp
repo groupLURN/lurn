@@ -5,8 +5,6 @@ $this->Html->meta('icon', null, ['block' => true]);
 // Third Party CSS
 $this->Html->css('/bower_components/bootstrap/dist/css/bootstrap.min', ['block' => true]);
 $this->Html->css('/bower_components/font-awesome/css/font-awesome.min', ['block' => true]);
-$this->Html->css('/bower_components/zabuto_calendar/zabuto_calendar.min', ['block' => true]);
-$this->Html->css('/bower_components/jquery.gritter/css/jquery.gritter', ['block' => true]);
 $this->Html->css('/bower_components/jquery-ui/themes/base/jquery-ui.min', ['block' => true]);
 $this->Html->css('/bower_components/chosen/chosen', ['block' => true]);
 $this->Html->css('/non_bower_components/lineicons/style', ['block' => true]);
@@ -17,12 +15,10 @@ $this->Html->css('/non_bower_components/dashgum/style-responsive', ['block' => t
 $this->Html->css('custom', ['block' => true]);
 
 // Third Party Javascript
-$this->Html->script('/bower_components/jquery/dist/jquery.min', ['block' => true]);
 $this->Html->script('/bower_components/bootstrap/dist/js/bootstrap.min', ['block' => true]);
-$this->Html->script('/bower_components/zabuto_calendar/zabuto_calendar.min', ['block' => true]);
-$this->Html->script('/bower_components/jquery.gritter/js/jquery.gritter.min', ['block' => true]);
+$this->Html->script('/bower_components/jquery/dist/jquery.min', ['block' => 'script-header']);
+$this->Html->script('/bower_components/jquery-ui/jquery-ui.min', ['block' => 'script-header']);
 $this->Html->script('/bower_components/chosen/chosen.jquery', ['block' => true]);
-$this->Html->script('/bower_components/jquery-ui/jquery-ui.min', ['block' => true]);
 //$this->Html->script('jquery-ui-1.9.2.custom.min', ['block' => true]);
 $this->Html->script('/bower_components/jquery.scrollTo/jquery.scrollTo.min', ['block' => true]);
 $this->Html->script('/bower_components/jquery.nicescroll/dist/jquery.nicescroll.min', ['block' => true]);
@@ -32,10 +28,8 @@ $this->Html->script('/bower_components/DateJS/build/date', ['block' => true]);
 $this->Html->script('/non_bower_components/jquery.backstretch/jquery.backstretch.min', ['block' => true]);
 $this->Html->script('/non_bower_components/uncategorized/jquery.dcjqaccordion.2.7', ['block' => true]);
 $this->Html->script('/non_bower_components/uncategorized/common-scripts', ['block' => true]);
-$this->Html->script('/non_bower_components/uncategorized/gritter-conf', ['block' => true]);
 $this->Html->script('/non_bower_components/uncategorized/sparkline-chart', ['block' => true]);
 $this->Html->script('/non_bower_components/chart-master/Chart', ['block' => 'script-header']);
-$this->Html->script('back-end', ['block' => true]);
 $this->Html->script('custom', ['block' => true]);
 
 $request_uri = $_SERVER['REQUEST_URI'];

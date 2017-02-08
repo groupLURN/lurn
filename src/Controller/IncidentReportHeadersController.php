@@ -2,10 +2,11 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use App\Utility\DatabaseConstants;
 use Cake\Routing\Router;
 use Cake\Event\Event;
-use DateTime;
 use Cake\I18n\Time;
+use DateTime;
 
 
 /**
@@ -35,7 +36,7 @@ class IncidentReportHeadersController extends AppController
         ];
 
         $incidentReportHeaders = $this->paginate($this->IncidentReportHeaders);
-        $incidentReportHeaders = $this->IncidentReport->prepeareIncidentReportsForList($incidentReportHeaders);
+        $incidentReportHeaders = $this->IncidentReport->prepareIncidentReportsForList($incidentReportHeaders);
 
         $this->set(compact('incidentReportHeaders'));
         $this->set('_serialize', ['incidentReportHeaders']);
@@ -71,7 +72,8 @@ class IncidentReportHeadersController extends AppController
         $this->loadModel('Tasks');
         $this->loadModel('IncidentReportDetails');
 
-        $incidentReportHeader = $this->IncidentReportHeaders->newEntity();
+        $incidentReportHeader   = $this->IncidentReportHeaders->newEntity();
+        $projects               = $this->IncidentReport->initializeProjectsList();
 
         if ($this->request->is('post')) {
             $valid = true;
@@ -83,7 +85,6 @@ class IncidentReportHeadersController extends AppController
                 'EmployeeTypes'
                 ]]
                 ]);
-            
 
             foreach($project->employees_join as $employee) {
                 if($employee->employee_type->id == 3) {
@@ -126,33 +127,6 @@ class IncidentReportHeadersController extends AppController
             
         }
 
-        $projects = [];
-
-        $tempProjects = $this->Projects->find('all')
-        ->where(['is_finished' => 0])
-        ->contain(['EmployeesJoin' => [
-            'EmployeeTypes'
-            ]])
-        ->toArray();
-
-        foreach ($tempProjects as $tempProject) {
-            $projectEngineer = null;
-
-            foreach($tempProject->employees_join as $employee) {
-                if($employee->employee_type->id == 3) {
-                    $projectEgineer = $employee;            
-                }
-            }
-
-            $project = [
-            'text' => $tempProject->title,
-            'value' => $tempProject->id,
-            'data-project-engineer' => $projectEgineer->name,
-            'data-location' => $tempProject->location
-            ];
-
-            array_push($projects, $project);
-        }
 
         $this->set(compact('incidentReportHeader', 'projects'));
         $this->set('_serialize', ['incidentReportHeader', 'projects']);
@@ -167,9 +141,16 @@ class IncidentReportHeadersController extends AppController
      */
     public function edit($id = null)
     {
-        $incidentReportHeader = $this->IncidentReportHeaders->get($id, [
-            'contain' => []
-            ]);
+        $this->loadComponent('IncidentReport', []);
+
+        $incidentReportHeader   = $this->IncidentReport->prepareIncidentReportView($id);
+        if(is_int($incidentReportHeader) && $incidentReportHeader == DatabaseConstants::RECORDNOTFOUND) {
+            $this->Flash->error(__('The record was not found.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
+        $projects = $this->IncidentReport->initializeProjectsList($incidentReportHeader->project_id);        
+
         if ($this->request->is(['patch', 'post', 'put'])) {
             $incidentReportHeader = $this->IncidentReportHeaders->patchEntity($incidentReportHeader, $this->request->data);
             if ($this->IncidentReportHeaders->save($incidentReportHeader)) {
@@ -180,9 +161,9 @@ class IncidentReportHeadersController extends AppController
                 $this->Flash->error(__('The incident report header could not be saved. Please, try again.'));
             }
         }
-        $projects = $this->IncidentReportHeaders->Projects->find('list', ['limit' => 200]);
+
         $this->set(compact('incidentReportHeader', 'projects'));
-        $this->set('_serialize', ['incidentReportHeader']);
+        $this->set('_serialize', ['incidentReportHeader', 'projects']);
     }
 
     /**

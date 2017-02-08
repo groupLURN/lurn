@@ -1,11 +1,14 @@
 <?= $this->Flash->render() ?>
-<?= $this->assign('title', 'Create Incident Report') ?>
+<?= $this->assign('title', 'Edit Incident Report') ?>
 
+<script id="incident-report-data" type="application/json">
+	<?= $incidentReportHeader?>
+</script>
 <div class="row mt">
 	<div class="col-md-12">
 		<?= $this->Form->create($incidentReportHeader) ?>
 		<fieldset>
-			<h3><i class="fa fa-angle-right"></i>Create Incident Report</h3>
+			<h3><i class="fa fa-angle-right"></i>Edit Incident Report</h3>
 			<?php
 				echo $this->Form->input('project_id', [
 					'class' => 'form-control chosen',
@@ -13,7 +16,8 @@
 						'class' => 'mt',
 						'text' => 'Project'
 					],
-					'options' => [''=>'-Select A Project-' , '1' => 'For Testing Purposes']+$projects
+					'options' => [''=>'-Select A Project-' , '1' => 'For Testing Purposes']+$projects,
+					'value' => $incidentReportHeader->id
 				]);
 
 				echo $this->Form->input('project-location', [
@@ -46,7 +50,7 @@
 
 				echo $this->Form->input('type', [
 					'class' => 'form-control chosen',
-            		'data-old-type' => '',
+            		'data-old-type' => $incidentReportHeader->type,
 					'label' => [
 						'class' => 'mt'
 					],
@@ -60,17 +64,23 @@
 			?>
 			
 			<h4 class="mt"></i>Incident Details</h4>
-			<?php        
+			<?php         
+				echo $this->Form->input('location', [
+					'class' => 'form-control',	
+					'label' => [
+						'class' => 'mt'
+					]
+				]);       
 				echo $this->Form->input('task', [
 					'class' => 'form-control chosen',	
-            		'data-old-task' => '',
+            		'data-old-task' => $incidentReportHeader->task,
 					'label' => [
 						'class' => 'mt'
 					],
 					'options' => [''=>'-Select A Task-']
 				]);
 
-		        echo $this->Form->input('involved-summary', [
+		        echo $this->Form->input('incident_summary', [
 		            'class' => 'form-control',
 		            'label' => [
 		                'class' => 'mt',
@@ -79,13 +89,13 @@
 		            'type' => 'textarea'
 		        ]);
 
-				echo $this->element('incident_report_involved_input', []);
+				echo $this->element('incident_report_involved_input', ['action' => 'edit']);
 
 			?>
 
 			<br>
 		</fieldset>
-		<?= $this->Form->button(__('Submit')) ?>
+		<?= $this->Form->button(__('Update')) ?>
 		<?= $this->Form->end() ?>
 	</div>
 </div>

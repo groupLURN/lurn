@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller\Component;
 
+use App\Utility\DatabaseConstants;
 use Cake\Controller\Component;
 use Cake\ORM\TableRegistry;
 
@@ -22,14 +23,18 @@ class IncidentReportComponent extends Component
 		$this->Manpower 	= TableRegistry::get('Manpower');
 		$this->Tasks 		= TableRegistry::get('Tasks');
 
-		$incidentReportHeader = $this->IncidentReportHeaders->get($id, [
-			'contain' => ['Projects' => [
-			'EmployeesJoin' => [
-			'EmployeeTypes'
-			]
-			], 
-			'IncidentReportDetails']
-			]);
+		try{
+			$incidentReportHeader = $this->IncidentReportHeaders->get($id, [
+				'contain' => ['Projects' => [
+				'EmployeesJoin' => [
+				'EmployeeTypes'
+				]
+				], 
+				'IncidentReportDetails']
+				]);
+		} catch(\Exception $e) {
+			return DatabaseConstants::RECORDNOTFOUND;
+		}
 
 		foreach($incidentReportHeader->project->employees_join as $employee) {
 			if($employee->employee_type->id == 3) {
@@ -39,22 +44,25 @@ class IncidentReportComponent extends Component
 
 		for($i=0; $i < count($incidentReportHeader->incident_report_details); $i++) {
 			$incidentReportDetail = $incidentReportHeader->incident_report_details[$i];
-			if($incidentReportDetail->type == 'task') {
+			switch($incidentReportDetail->type) {
+				case 'task':
 				$task = $this->Tasks->get($incidentReportDetail->value);
 				if($task->id == $incidentReportDetail->value) {
-					$incidentReportHeader->task = $task->title;
+					$incidentReportHeader->task 		= $task->id;
+					$incidentReportHeader->task_title 	= $task->title;
 				}
-			} else if($incidentReportDetail->type == 'incident_summary') {
+				break;
+			case 'incident_summary':
 				$incidentReportHeader->incident_summary = $incidentReportDetail->value;
-
-			} else if($incidentReportDetail->type == 'location') {
+				break;
+			case 'location':
 				$incidentReportHeader->location = $incidentReportDetail->value;
-
-			} else if($incidentReportDetail->type == 'item_lost') {
+				break;
+			case 'item_lost':
 				$itemLost = ['name' => $incidentReportDetail->value, 'quantity' => $incidentReportDetail->attribute];
 				array_push($itemsLost, $itemLost); 
-
-			} else if($incidentReportDetail->type == 'persons_involved') {
+				break;
+			case 'persons_involved':
 				if(strpos($incidentReportDetail->value, 'Employee') !== false) {
 					$occupation = preg_replace('/-[0-9]+/', '', $incidentReportDetail->value);
 					$employeeId = str_replace('Employee-', '', $incidentReportDetail->value);
@@ -73,6 +81,7 @@ class IncidentReportComponent extends Component
 						$incidentReportHeader->incident_report_details);
 					array_push($personsInvolved, $manpower);
 				}
+				break;
 			}
 		}
 
@@ -82,6 +91,7 @@ class IncidentReportComponent extends Component
 		$incidentReportHeader = $this->addProperType($incidentReportHeader);
 
 		unset($incidentReportHeader->project['employees_join']);
+		unset($incidentReportHeader['incident_report_details']);
 		return $incidentReportHeader;
 	}
 
@@ -101,14 +111,14 @@ class IncidentReportComponent extends Component
         $summaryDetail  = $this->IncidentReportDetails->newEntity();
         $summaryDetail['incident_report_header_id'] = $incidentReportHeader->id;
         $summaryDetail['type'] = 'incident_summary';
-        $summaryDetail['value'] = $postData['involved-summary'];
+        $summaryDetail['value'] = $postData['incident_summary'];
         $summaryDetail['created'] = $dateNow;
 
         array_push($incidentReportDetails, $summaryDetail);
 
         $locationDetail  = $this->IncidentReportDetails->newEntity();
         $locationDetail['incident_report_header_id'] = $incidentReportHeader->id;
-        $locationDetail['type'] = 'incident_summary';
+        $locationDetail['type'] = 'location';
         $locationDetail['value'] = $postData['location'];
         $locationDetail['created'] = $dateNow;
 
@@ -159,13 +169,51 @@ class IncidentReportComponent extends Component
 		return $incidentReportDetails;
 	}
 
-	public function prepeareIncidentReportsForList($incidentReportHeaders){
+	public function prepareIncidentReportsForList($incidentReportHeaders){
 		foreach ($incidentReportHeaders as $incidentReportHeader) {
 			$incidentReportHeader = $this->addProperType($incidentReportHeader);
 		}
 
 		return $incidentReportHeaders;
 
+	}
+
+	public function initializeProjectsList($id = null){
+		$this->Projects 	= TableRegistry::get('Projects');
+
+        $projects = [];
+
+        $tempProjects = $this->Projects->find('all')
+        ->where(['is_finished' => 0])
+        ->contain(['EmployeesJoin' => [
+            'EmployeeTypes'
+            ]])
+        ->toArray();
+
+        foreach ($tempProjects as $tempProject) {
+            $projectEngineer = null;
+
+            foreach($tempProject->employees_join as $employee) {
+                if($employee->employee_type->id == 3) {
+                    $projectEgineer = $employee;            
+                }
+            }
+
+            $project = [
+            'text' => $tempProject->title,
+            'value' => $tempProject->id,
+            'data-project-engineer' => $projectEgineer->name,
+            'data-location' => $tempProject->location
+            ];
+
+            if(isset($id) && $id == $tempProject->id) {
+            	$project['selected'] = true;
+            }
+
+            array_push($projects, $project);
+        }
+
+        return $projects;
 	}
 
 	private function addProperType($incidentReportHeader){

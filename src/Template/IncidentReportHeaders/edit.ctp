@@ -17,7 +17,7 @@
 						'class' => 'mt',
 						'text' => 'Project'
 					],
-					'options' => [''=>'-Select A Project-' , '1' => 'For Testing Purposes']+$projects
+					'options' => [''=>'-Select A Project-']+$projects
 				]);
 
 				echo $this->Form->input('project-location', [

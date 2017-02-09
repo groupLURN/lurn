@@ -24,8 +24,8 @@
                     <?php foreach ($incidentReportHeaders as $incidentReportHeader): ?>
                     <tr>
                         <td><?= $this->Number->format($incidentReportHeader->id) ?></td>
-                        <td><?= $incidentReportHeader->has('project') ? $this->Html->link($incidentReportHeader->project->title, ['controller' => 'Projects', 'action' => 'view', $incidentReportHeader->project->id]) : '' ?></td>
-                        <td><?= $this->Number->format($incidentReportHeader->project_engineer) ?></td>
+                        <td><?= $this->Html->link($incidentReportHeader->project->title, ['controller' => 'Projects', 'action' => 'view', $incidentReportHeader->project->id]) ?></td>
+                        <td><?= h($incidentReportHeader->project_engineer->name) ?></td>
                         <td><?= h($incidentReportHeader->type_full) ?></td>
                         <td><?= h(date_format($incidentReportHeader->date,"F d, Y"))?></td>
                         <td class="actions">

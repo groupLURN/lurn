@@ -39,7 +39,8 @@ class IncidentReportComponent extends Component
 
 		foreach($incidentReportHeader->project->employees_join as $employee) {
 			if($employee->employee_type->id == 3) {
-				$incidentReportHeader['project_engineer'] = $employee;            
+				$incidentReportHeader['project_engineer'] = $employee;  
+				break;          
 			}
 		}
 
@@ -168,8 +169,10 @@ class IncidentReportComponent extends Component
 	}
 
 	public function prepareIncidentReportsForList($incidentReportHeaders){
+		$this->Employees 	= TableRegistry::get('Employees');
 		foreach ($incidentReportHeaders as $incidentReportHeader) {
 			$incidentReportHeader = $this->addProperType($incidentReportHeader);
+			$incidentReportHeader->project_engineer = $this->Employees->get($incidentReportHeader->project_engineer);
 		}
 
 		return $incidentReportHeaders;
@@ -196,6 +199,9 @@ class IncidentReportComponent extends Component
                     $projectEgineer = $employee;            
                 }
             }
+            debug($tempProject->employees_join );
+            die();
+
 
             $project = [
             'text' => $tempProject->title,

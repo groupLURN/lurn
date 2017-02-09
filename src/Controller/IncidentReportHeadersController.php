@@ -32,7 +32,7 @@ class IncidentReportHeadersController extends AppController
     {
         $this->loadComponent('IncidentReport', []);
         $this->paginate = [
-        'contain' => ['Projects']
+            'contain' => ['Projects']
         ];
 
         $incidentReportHeaders = $this->paginate($this->IncidentReportHeaders);
@@ -87,7 +87,8 @@ class IncidentReportHeadersController extends AppController
 
             foreach($project->employees_join as $employee) {
                 if($employee->employee_type->id == 3) {
-                    $postData['project_engineer'] = $employee->employee_type->id;            
+                    $postData['project_engineer'] = $employee->id;  
+                    break;          
                 }
             }
 
@@ -129,7 +130,6 @@ class IncidentReportHeadersController extends AppController
 
             
         }
-
 
         $this->set(compact('incidentReportHeader', 'projects'));
         $this->set('_serialize', ['incidentReportHeader', 'projects']);
@@ -179,7 +179,8 @@ class IncidentReportHeadersController extends AppController
 
             foreach($project->employees_join as $employee) {
                 if($employee->employee_type->id == 3) {
-                    $postData['project_engineer'] = $employee->employee_type->id;            
+                    $postData['project_engineer'] = $employee->id; 
+                    break;           
                 }
             }
 

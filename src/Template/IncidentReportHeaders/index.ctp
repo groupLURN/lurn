@@ -33,7 +33,7 @@
                             <?= $this->dataTableEditButton(__('Edit'), ['action' => 'edit', $incidentReportHeader->id]); ?>
                             <?= $this->dataTableDeleteButton(__('Delete'),
                                 ['action' => 'delete', $incidentReportHeader->id],
-                                __('Are you sure you want to delete {0}?', $incidentReportHeader->title)
+                                __('Are you sure you want to delete invident report {0}?', $incidentReportHeader->id)
                             );
                             ?>
                         </td>

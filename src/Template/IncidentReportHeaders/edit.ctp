@@ -12,12 +12,12 @@
 			<?php
 				echo $this->Form->input('project_id', [
 					'class' => 'form-control chosen',
+            		'data-old-project' => $incidentReportHeader->id,
 					'label' => [
 						'class' => 'mt',
 						'text' => 'Project'
 					],
-					'options' => [''=>'-Select A Project-' , '1' => 'For Testing Purposes']+$projects,
-					'value' => $incidentReportHeader->id
+					'options' => [''=>'-Select A Project-' , '1' => 'For Testing Purposes']+$projects
 				]);
 
 				echo $this->Form->input('project-location', [
@@ -80,7 +80,7 @@
 					'options' => [''=>'-Select A Task-']
 				]);
 
-		        echo $this->Form->input('incident_summary', [
+		        echo $this->Form->input('incident-summary', [
 		            'class' => 'form-control',
 		            'label' => [
 		                'class' => 'mt',

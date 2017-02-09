@@ -8,13 +8,33 @@ $(function(){
 	initialize();
 
 	$("#project-id").chosen().change(function() {
+		var projectId 		= $("#project-id").val();
+		var projectName		= $("#project-id option:selected").text();
 		var projectEngineer = $("#project-id option:selected").data("project-engineer");
 		var location 		= $("#project-id option:selected").data("location");
+		var oldProjectId	= $("#project-id ").data("old-project");	
 
 		$("#project-engineer").val(projectEngineer);
 		$("#project-location").val(location);
 
-		updateTasks();
+		var flag = true;
+
+		if(oldProjectId != "" && oldProjectId != projectId) {
+			var confirmMessage = "Changing the project to " + projectName + " would reset the inputs below. Do you want to continue?"
+			if(!confirm(confirmMessage)) {
+				$("#project-id option[value=\"" + oldProjectId + "\"]").prop('selected', true);
+				$("#project-id").trigger("chosen:updated");
+				flag = false;
+			}
+		}
+
+		if(flag) {
+			resetPersonsInvolved();
+			resetItemsLost();
+
+			$("#project-id").data("old-project", projectId);
+			updateTasks();
+		}
 	});	
 	
 	$("#task").chosen().change(function() {
@@ -313,7 +333,7 @@ $(function(){
 
 					for(var i=0; i < items.length; i++) {
 						var option = "<option value=\""
-						+ items[i] + "\""
+						+ items[i].split(" ").join("-") + "\""
 						+">" 
 						+ items[i]
 						+ "</option>";
@@ -346,8 +366,10 @@ $(function(){
 				var persons = data;
 
 				for(var i=0; i < persons.length; i++) {
+					var value 	= persons[i].occupation + "-" + persons[i].id;
+					value 		= value.split(" ").join("-");
 					var option = "<option value=\""
-					+ persons[i].occupation + "-" + persons[i].id + "\""
+					+ value + "\""
 					+ " data-address=\""
 					+ persons[i].address + "\""
 					+ " data-age=\""
@@ -465,121 +487,6 @@ $(function(){
 			);
 	}
 
-	function updateTasks() {
-		var projectId       = $("#project-id").val();
-
-		$("#task option").not(":first").remove();
-
-		$.ajax({ 
-			type: "GET", 
-			url: link+"incident-report-headers/get-tasks?project_id="+projectId, 
-			data: { get_param: 'value' }, 
-			success: function (data) { 
-				var tasks = data;
-
-				for(var i=0; i < tasks.length; i++) {
-					var option = "<option value=\"" 
-					+ tasks[i].id + "\">" 
-					+ tasks[i].title 
-					+ "</option>";
-					$("#task option:last-child").after(
-						option                  
-						);
-				}
-
-				$("#task").trigger("chosen:updated");
-
-			}
-		});
-	}
-
-	function updateItemList(){
-		var taskId      = $("#task").val(); 
-		var type        = $("#type").val();
-
-		if(taskId != 0 && type == "los") {
-
-			$("#item-list option").not(":first").remove();
-
-			$.ajax({ 
-				type: "GET", 
-				url: link+"incident-report-headers/get-items/?task_id="+taskId, 
-				data: { get_param: 'value' }, 
-				success: function (data) { 
-					var items = data;
-
-					for(var i=0; i < items.length; i++) {
-						var option = "<option value=\""
-						+ items[i] + "\""
-						+">" 
-						+ items[i]
-						+ "</option>";
-						$("#item-list option:last-child").after(
-							option                  
-							);
-					}
-
-					$("#item-list").trigger("chosen:updated");
-
-				}
-			});
-		}
-	}
-
-	function updatePersonList(){
-
-		var projectId   = $("#project-id").val();
-		var taskId      = $("#task").val(); 
-
-		$("#person-list option").not(":first").remove();
-
-		$("#person-list").trigger("chosen:updated");
-
-		$.ajax({ 
-			type: "GET", 
-			url: link+"incident-report-headers/get-persons/?project_id="+projectId+"&task_id="+taskId, 
-			data: { get_param: 'value' }, 
-			success: function (data) { 
-				var persons = data;
-
-				for(var i=0; i < persons.length; i++) {
-					var option = "<option value=\""
-					+ persons[i].occupation + "-" + persons[i].id + "\""
-					+ " data-address=\""
-					+ persons[i].address + "\""
-					+ " data-age=\""
-					+ persons[i].age + "\""
-					+ " data-contact=\""
-					+ persons[i].contact + "\""
-					+ " data-occupation=\""
-					+ persons[i].occupation + "\""
-					+">" 
-					+ persons[i].name 
-					+ "</option>";
-					$("#person-list option:last-child").after(
-						option                  
-						);
-				}
-
-				$("#person-list").trigger("chosen:updated");
-
-			}
-		});
-
-	}
-
-	function resetPersonsInvolved() {
-		$("#persons-involved").empty();
-
-		$("#persons-involved").html("None.");
-	}
-
-	function resetItemsLost() {
-		$("#items-lost").empty();
-
-		$("#items-lost").html("None.");
-	}
-
 	window.onload = function() {
 
 		var incidentReportData = jQuery.parseJSON($("#incident-report-data").text());
@@ -596,9 +503,10 @@ $(function(){
 			setTimeout(function() { 
 
 				for (var i = 0; i < incidentReportData.persons_involved.length; i++) {
-					var person 			= incidentReportData.persons_involved[i];
-					var personId 		= person.occupation + "-" + person.id;
-					var personSummary 	= person.injured_summary;
+					var person 				= incidentReportData.persons_involved[i];
+					var personOccupation	= person.occupation;
+					var personId 			= personOccupation.split(" ").join("-") + "-" + person.id;
+					var personSummary 		= person.injured_summary;
 					
 					$("#person-list option[value=\"" + personId + "\"]").prop("disabled", true);
 
@@ -606,7 +514,7 @@ $(function(){
 				}
 				$("#person-list").trigger("chosen:updated");
 
-			}, 500);
+			}, 1000);
 
 			setTimeout(function() { 
 
@@ -620,7 +528,7 @@ $(function(){
 				}
 				$("#item-list").trigger("chosen:updated");
 
-			}, 500);
+			}, 1000);
 		}
 
 	}

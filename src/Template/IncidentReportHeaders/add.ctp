@@ -9,6 +9,7 @@
 			<?php
 				echo $this->Form->input('project_id', [
 					'class' => 'form-control chosen',
+            		'data-old-project' => '',
 					'label' => [
 						'class' => 'mt',
 						'text' => 'Project'
@@ -76,7 +77,7 @@
 					'options' => [''=>'-Select A Task-']
 				]);
 
-		        echo $this->Form->input('involved-summary', [
+		        echo $this->Form->input('incident-summary', [
 		            'class' => 'form-control',
 		            'label' => [
 		                'class' => 'mt',

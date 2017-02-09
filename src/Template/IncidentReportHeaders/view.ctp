@@ -40,7 +40,7 @@
 			</tr>
 			<tr>
 				<th><?= __('Task') ?></th>
-				<td><?= h($incidentReport->task) ?></td>
+				<td><?= h($incidentReport->task_title) ?></td>
 			</tr>
 			<tr>
 				<th><?= __('Persons Involved') ?></th>

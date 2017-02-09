@@ -4,6 +4,7 @@ namespace App\Controller\Component;
 use App\Utility\DatabaseConstants;
 use Cake\Controller\Component;
 use Cake\ORM\TableRegistry;
+use DateTime;
 
 class IncidentReportComponent extends Component
 {
@@ -15,7 +16,7 @@ class IncidentReportComponent extends Component
 	}
 
 	public function prepareIncidentReportView($id)
-	{	
+	{
 		$personsInvolved	= [];
 		$itemsLost			= [];
 
@@ -74,7 +75,7 @@ class IncidentReportComponent extends Component
 				} else {
 					$occupation = preg_replace('/-[0-9]+/', '', $incidentReportDetail->value);
 					$manpowerId = str_replace('Laborer-', '', $incidentReportDetail->value);
-					$manpowerId = str_replace('Skilled Worker-', '', $manpowerId);
+					$manpowerId = str_replace('Skilled-Worker-', '', $manpowerId);
 					$manpower = $this->Manpower->get($manpowerId);
 					$manpower->occupation = $occupation;
 					$manpower->injured_summary = $this->getInjuredSummary($incidentReportDetail->value, 
@@ -95,13 +96,15 @@ class IncidentReportComponent extends Component
 		return $incidentReportHeader;
 	}
 
-	public function prepareIncidentReportDetailsSave($incidentReportHeader, $postData){
+	public function prepareIncidentReportDetailsSave($postData)
+	{
+		$this->IncidentReportDetails= TableRegistry::get('IncidentReportDetails');
 		$incidentReportDetails = [];
+
 		
         $dateNow = new DateTime();
 
         $taskDetail     = $this->IncidentReportDetails->newEntity();
-        $taskDetail['incident_report_header_id'] = $incidentReportHeader->id;
         $taskDetail['type'] = 'task';
         $taskDetail['value'] = $postData['task'];
         $taskDetail['created'] = $dateNow;
@@ -109,27 +112,24 @@ class IncidentReportComponent extends Component
         array_push($incidentReportDetails, $taskDetail);
 
         $summaryDetail  = $this->IncidentReportDetails->newEntity();
-        $summaryDetail['incident_report_header_id'] = $incidentReportHeader->id;
         $summaryDetail['type'] = 'incident_summary';
-        $summaryDetail['value'] = $postData['incident_summary'];
+        $summaryDetail['value'] = $postData['incident-summary'];
         $summaryDetail['created'] = $dateNow;
 
         array_push($incidentReportDetails, $summaryDetail);
 
         $locationDetail  = $this->IncidentReportDetails->newEntity();
-        $locationDetail['incident_report_header_id'] = $incidentReportHeader->id;
         $locationDetail['type'] = 'location';
         $locationDetail['value'] = $postData['location'];
         $locationDetail['created'] = $dateNow;
 
         array_push($incidentReportDetails, $locationDetail);
 
-        $personsInvolved = $postData['involved-id'];
+        $personsInvolved = array_values($postData['involved-id']);
 
         for($i = 0; $i < count($personsInvolved); $i++) {
             $incidentReportDetail = $this->IncidentReportDetails->newEntity();
 
-            $incidentReportDetail['incident_report_header_id'] = $incidentReportHeader->id;
             $incidentReportDetail['type'] = 'persons_involved';
             $incidentReportDetail['value'] = $personsInvolved[$i];
             $incidentReportDetail['created'] = $dateNow;
@@ -137,13 +137,12 @@ class IncidentReportComponent extends Component
             array_push($incidentReportDetails, $incidentReportDetail);
         }
 
-        if($incidentReportHeader->type === 'los') {
-            $itemsLost      = $postData['item-id'];
-            $itemsQuantity  = $postData['item-quantity'];
+        if($postData['type'] === 'los') {
+            $itemsLost      = array_values($postData['item-id']);
+            $itemsQuantity  = array_values($postData['item-quantity']);
             for($i = 0; $i < count($itemsLost); $i++) {
                 $incidentReportDetail = $this->IncidentReportDetails->newEntity();
 
-                $incidentReportDetail['incident_report_header_id'] = $incidentReportHeader->id;
                 $incidentReportDetail['type'] = 'item_lost';
                 $incidentReportDetail['value'] = $itemsLost[$i];
                 $incidentReportDetail['attribute'] = $itemsQuantity[$i];
@@ -152,11 +151,10 @@ class IncidentReportComponent extends Component
                 array_push($incidentReportDetails, $incidentReportDetail);
             }
         } else {
-            $injuredSummaries = $postData['injured-summary'];
+            $injuredSummaries = array_values($postData['injured-summary']);
             for($i = 0; $i < count($injuredSummaries); $i++) {
                 $incidentReportDetail = $this->IncidentReportDetails->newEntity();
 
-                $incidentReportDetail['incident_report_header_id'] = $incidentReportHeader->id;
                 $incidentReportDetail['type'] = 'injured_summary';
                 $incidentReportDetail['value'] = $injuredSummaries[$i];
                 $incidentReportDetail['attribute'] = $personsInvolved[$i];
@@ -214,6 +212,20 @@ class IncidentReportComponent extends Component
         }
 
         return $projects;
+	}
+
+	public function deleteIncidentReportDetails($incidentReportDetails) {
+		$this->IncidentReportDetails= TableRegistry::get('IncidentReportDetails');
+
+		$valid = true;
+
+        foreach($incidentReportDetails as $incidentReportDetail) {
+			if (!($this->IncidentReportDetails->delete($incidentReportDetail))) {
+	            $valid = false;
+	        }
+        } 
+
+        return $valid;
 	}
 
 	private function addProperType($incidentReportHeader){

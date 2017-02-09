@@ -226,4 +226,3 @@ Configure::write('CakePdf', [
     'pageSize' => 'Letter'
 ]);
 
-Plugin::load('Calendar', ['bootstrap' => false, 'routes' => true]);

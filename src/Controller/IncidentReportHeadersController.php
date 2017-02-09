@@ -69,14 +69,13 @@ class IncidentReportHeadersController extends AppController
         $this->loadComponent('IncidentReport', []);
 
         $this->loadModel('Projects');
-        $this->loadModel('Tasks');
         $this->loadModel('IncidentReportDetails');
 
         $incidentReportHeader   = $this->IncidentReportHeaders->newEntity();
         $projects               = $this->IncidentReport->initializeProjectsList();
 
         if ($this->request->is('post')) {
-            $valid = true;
+            $valid              = true;
             $postData           = $this->request->data;
             $postData['date']   = new DateTime($postData['date']);
 
@@ -94,11 +93,12 @@ class IncidentReportHeadersController extends AppController
 
             $incidentReportHeader = $this->IncidentReportHeaders->patchEntity($incidentReportHeader, $postData);
 
+            $incidentReportDetails = $this->IncidentReport->prepareIncidentReportDetailsSave($postData);
+
             if(!isset($postData['involved-id'])) {
                 $valid = false;
                 $this->Flash->error(__('Please add involved persons.'));
             }
-
 
             if($incidentReportHeader->type === 'los') {               
                 if(!isset($postData['item-id'])) {
@@ -109,9 +109,9 @@ class IncidentReportHeadersController extends AppController
 
             if($valid) {
                 if ($this->IncidentReportHeaders->save($incidentReportHeader)) {
-                    $incidentReportDetails = $this->IncidentReport->prepareIncidentReportDetailsSave($incidentReportHeader, $postData);
 
                     foreach($incidentReportDetails as $incidentReportDetail) {
+                        $incidentReportDetail['incident_report_header_id'] = $incidentReportHeader->id;
                         if(!($this->IncidentReportDetails->save($incidentReportDetail))) {
 
                             $this->Flash->error(__('The incident report could not be saved. Please, try again.'));
@@ -124,6 +124,9 @@ class IncidentReportHeadersController extends AppController
                     $this->Flash->error(__('The incident report could not be saved. Please, try again.'));
                 }
             }
+
+            $incidentReportHeader->incident_report_details = $incidentReportDetails;
+
             
         }
 
@@ -143,7 +146,11 @@ class IncidentReportHeadersController extends AppController
     {
         $this->loadComponent('IncidentReport', []);
 
+        $this->loadModel('Projects');
+        $this->loadModel('IncidentReportDetails');
+
         $incidentReportHeader   = $this->IncidentReport->prepareIncidentReportView($id);
+
         if(is_int($incidentReportHeader) && $incidentReportHeader == DatabaseConstants::RECORDNOTFOUND) {
             $this->Flash->error(__('The record was not found.'));
             return $this->redirect(['action' => 'index']);
@@ -152,13 +159,55 @@ class IncidentReportHeadersController extends AppController
         $projects = $this->IncidentReport->initializeProjectsList($incidentReportHeader->project_id);        
 
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $incidentReportHeader = $this->IncidentReportHeaders->patchEntity($incidentReportHeader, $this->request->data);
-            if ($this->IncidentReportHeaders->save($incidentReportHeader)) {
-                $this->Flash->success(__('The incident report header has been saved.'));
+            $incidentReportHeader = $this->IncidentReportHeaders->get($id, [
+                'contain' => ['Projects' => [
+                'EmployeesJoin' => [
+                'EmployeeTypes'
+                ]
+                ], 
+                'IncidentReportDetails']
+                ]);
+            $postData = $this->request->data;
+            $postData['date']   = new DateTime($postData['date']);
+
+            $project = $this->Projects->get($postData['project_id'], [
+                'contain' => ['EmployeesJoin' => [
+                'EmployeeTypes'
+                ]]
+                ]);
+
+            foreach($project->employees_join as $employee) {
+                if($employee->employee_type->id == 3) {
+                    $postData['project_engineer'] = $employee->employee_type->id;            
+                }
+            }
+
+            $newIncidentReportHeader = $this->IncidentReportHeaders->patchEntity($incidentReportHeader, $postData, [
+                'associated' => [
+                    'Projects'
+                ]
+            ]);   
+
+            $incidentReportDetails = $this->IncidentReport->prepareIncidentReportDetailsSave($postData);
+
+            if ($this->IncidentReportHeaders->save($newIncidentReportHeader)) {
+
+                $oldIncidentReportDetails = $incidentReportHeader['incident_report_details'];
+                $this->IncidentReport->deleteIncidentReportDetails($oldIncidentReportDetails);
+
+                foreach($incidentReportDetails as $incidentReportDetail) {
+                    $incidentReportDetail['incident_report_header_id'] = $incidentReportHeader->id;
+                    if(!($this->IncidentReportDetails->save($incidentReportDetail))) {
+
+                        $this->Flash->error(__('The incident report could not be saved. Please, try again.'));
+                    }
+                }
+
+                $this->Flash->success(__('The incident report header has been updated.'));
 
                 return $this->redirect(['action' => 'index']);
             } else {
-                $this->Flash->error(__('The incident report header could not be saved. Please, try again.'));
+                $this->Flash->error(__('The incident report header could not be updated. Please, try again.'));
             }
         }
 
@@ -173,29 +222,22 @@ class IncidentReportHeadersController extends AppController
      */
     public function delete($id = null)
     {
+        $this->loadComponent('IncidentReport', []);
+
         $valid = true;
-        $this->loadModel('IncidentReportDetails');
 
         $this->request->allowMethod(['post', 'delete']);
         $incidentReportHeader = $this->IncidentReportHeaders->get($id, [
             'contain' => ['IncidentReportDetails']
             ]);
         
+        $incidentReportDetails = $incidentReportHeader['incident_report_details'];
+        $valid = $this->IncidentReport->deleteIncidentReportDetails($incidentReportDetails);
 
-        foreach($incidentReportHeader['incident_report_details'] as $incidentReportDetail) {
-            if (!($this->IncidentReportDetails->delete($incidentReportDetail))) {
-                $this->Flash->error(__('The incident report header could not be deleted. Please, try again.'));
-            } else {
-                $valid = false;
-            }
-        }
-
-        if($valid) {
-            if ($this->IncidentReportHeaders->delete($incidentReportHeader)) {
-                $this->Flash->success(__('The incident report has been deleted.'));
-            } else {
-                $this->Flash->error(__('The incident report could not be deleted. Please, try again.'));
-            }
+        if($valid && $this->IncidentReportHeaders->delete($incidentReportHeader)) {
+            $this->Flash->success(__('The incident report has been deleted.'));
+        } else {
+            $this->Flash->error(__('The incident report could not be deleted. Please, try again.'));
         }
 
         return $this->redirect(['action' => 'index']);

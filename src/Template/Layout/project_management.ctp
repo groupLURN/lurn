@@ -65,6 +65,6 @@ $this->start('additional-sidebar');
 </li>
 <?php endif;?>
 
-<span id="project-id"><?= $projectId ?></span>
+<span id="project-id" style="display:none"><?= $projectId ?></span>
 <?php $this->end(); ?>
 <?= $this->fetch('content'); ?>

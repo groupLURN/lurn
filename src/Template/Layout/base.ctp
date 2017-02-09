@@ -130,7 +130,7 @@ TOP BAR CONTENT & NOTIFICATIONS
         </section>
     </section>
 
-    <span id="base-link"><?= $this->Url->build('/') ?></span>
+    <span id="base-link" style="display:none"><?= $this->Url->build('/') ?></span>
 
     <?= $this->fetch('script'); ?>
     <?= $this->fetch('script-inline'); ?>

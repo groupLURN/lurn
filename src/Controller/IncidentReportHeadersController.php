@@ -167,7 +167,8 @@ class IncidentReportHeadersController extends AppController
                 ], 
                 'IncidentReportDetails']
                 ]);
-            $postData = $this->request->data;
+
+            $postData           = $this->request->data;
             $postData['date']   = new DateTime($postData['date']);
 
             $project = $this->Projects->get($postData['project_id'], [

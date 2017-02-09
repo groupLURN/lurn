@@ -75,7 +75,7 @@ class IncidentReportComponent extends Component
 				} else {
 					$occupation = preg_replace('/-[0-9]+/', '', $incidentReportDetail->value);
 					$manpowerId = str_replace('Laborer-', '', $incidentReportDetail->value);
-					$manpowerId = str_replace('Skilled-Worker-', '', $manpowerId);
+					$manpowerId = str_replace('Skilled Worker-', '', $manpowerId);
 					$manpower = $this->Manpower->get($manpowerId);
 					$manpower->occupation = $occupation;
 					$manpower->injured_summary = $this->getInjuredSummary($incidentReportDetail->value, 

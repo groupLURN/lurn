@@ -333,7 +333,7 @@ $(function(){
 
 					for(var i=0; i < items.length; i++) {
 						var option = "<option value=\""
-						+ items[i].split(" ").join("-") + "\""
+						+ items[i] + "\""
 						+">" 
 						+ items[i]
 						+ "</option>";
@@ -367,7 +367,6 @@ $(function(){
 
 				for(var i=0; i < persons.length; i++) {
 					var value 	= persons[i].occupation + "-" + persons[i].id;
-					value 		= value.split(" ").join("-");
 					var option = "<option value=\""
 					+ value + "\""
 					+ " data-address=\""
@@ -428,7 +427,7 @@ $(function(){
 			+ personName + "\""
 			+ ">"
 			+ personName
-			+ "<input type=\"hidden\" name=\"involved-id[" + index + "]\" value=" + personId + ">";
+			+ "<input type=\"hidden\" name=\"involved-id[" + index + "]\" value=\"" + personId + "\">";
 
 			switch(type) {
 				case "acc":
@@ -468,8 +467,8 @@ $(function(){
 		+ itemName + "\""
 		+ ">"
 		+ itemName
-		+ "<input type=\"hidden\" name=\"item-id[" + index + "]\" value=" + itemId + ">"
-		+ "<input type=\"hidden\" name=\"item-quantity[" + index + "]\" value=" + itemQuantity + ">"
+		+ "<input type=\"hidden\" name=\"item-id[" + index + "]\" value=\"" + itemId + "\">"
+		+ "<input type=\"hidden\" name=\"item-quantity[" + index + "]\" value=\"" + itemQuantity + "\">"
 		+ "<button class=\"remove-item ml\" type=\"button\">Remove</button>"
 		+ "</li>";
 
@@ -504,8 +503,7 @@ $(function(){
 
 				for (var i = 0; i < incidentReportData.persons_involved.length; i++) {
 					var person 				= incidentReportData.persons_involved[i];
-					var personOccupation	= person.occupation;
-					var personId 			= personOccupation.split(" ").join("-") + "-" + person.id;
+					var personId 			= person.occupation + "-" + person.id;
 					var personSummary 		= person.injured_summary;
 					
 					$("#person-list option[value=\"" + personId + "\"]").prop("disabled", true);

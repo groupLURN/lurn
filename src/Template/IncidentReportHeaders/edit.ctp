@@ -1,5 +1,5 @@
 <?= $this->Flash->render() ?>
-<?= $this->assign('title', 'Edit Incident Report') ?>
+<?= $this->assign('title', 'Incident Reports') ?>
 
 <script id="incident-report-data" type="application/json">
 	<?= $incidentReportHeader?>
@@ -95,7 +95,9 @@
 
 			<br>
 		</fieldset>
-		<?= $this->Form->button(__('Update')) ?>
+		<?= $this->Form->button(__('Update'), [
+			'class' => 'btn btn-primary btn-submit'
+			]) ?>
 		<?= $this->Form->end() ?>
 	</div>
 </div>

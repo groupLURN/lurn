@@ -1,5 +1,5 @@
 <?= $this->Flash->render() ?>
-<?= $this->assign('title', 'Incident Report') ?>
+<?= $this->assign('title', 'Incident Reports') ?>
 
 <div class="row mt">
 	<div class="col-md-12">

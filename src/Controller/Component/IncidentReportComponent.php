@@ -199,10 +199,7 @@ class IncidentReportComponent extends Component
                     $projectEgineer = $employee;            
                 }
             }
-            debug($tempProject->employees_join );
-            die();
-
-
+            
             $project = [
             'text' => $tempProject->title,
             'value' => $tempProject->id,

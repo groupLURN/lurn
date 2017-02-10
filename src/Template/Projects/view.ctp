@@ -28,10 +28,11 @@
         <tr>
             <th><?= __('Start Date') ?></th>
             <td><?= h($project->start_date) ?></td>
+            <td><?= h(isset($project->start_date) ? date_format($project->start_date, 'F d, Y') : '') ?></td>
         </tr>
         <tr>
             <th><?= __('End Date') ?></th>
-            <td><?= h($project->end_date) ?></td>
+            <td><?= h(isset($project->end_date) ? date_format($project->end_date, 'F d, Y') : '') ?></td>
         </tr>
     </table>
 
@@ -49,8 +50,8 @@
                     <tr>
                         <td><?= h($employees_join->name) ?></td>
                         <td><?= $this->Html->link($employees_join->employee_type->title, ['controller' => 'employees', 'action' => 'view', $employees_join->id]) ?></td>
-                        <td><?= h($employees_join->employment_date) ?></td>
-                        <td><?= h($employees_join->termination_date) ?></td>
+                        <td><?= h(date_format($employees_join->employment_date, 'F d, Y')) ?></td>
+                        <td><?= h(isset($employees_join->termination_date) ? date_format($employees_join->termination_date, 'F d, Y') : '') ?></td>
                     </tr>
                 <?php endforeach; ?>
             </table>

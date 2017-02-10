@@ -122,8 +122,8 @@
                         <td><?= h($project->title) ?></td>
                         <td><?= $project->has('client') ? $this->Html->link($project->client->company_name, ['controller' => 'Clients', 'action' => 'view', $project->client->id]) : '' ?></td>
                         <td><?= $project->has('employee') ? $this->Html->link($project->employee->name, ['controller' => 'Employees', 'action' => 'view', $project->employee->id]) : '' ?></td>
-                        <td><?= h($project->start_date) ?></td>
-                        <td><?= h($project->end_date) ?></td>
+                        <td><?= h(isset($project->start_date) ? date_format($project->start_date, 'F d, Y') : '') ?></td>
+                        <td><?= h(isset($project->end_date) ? date_format($project->end_date, 'F d, Y') : '') ?></td>
                         <td><?= h($project->location) ?></td>
                         <td>
                             <div class="progress">

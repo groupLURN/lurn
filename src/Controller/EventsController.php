@@ -24,12 +24,6 @@ class EventsController extends AppController
         $this->loadModel('Tasks');    
 
         $projects = $this->Projects->find('all')->toArray();
-
-        $calendar = [];
-
-        $calendar['year']       = date('Y');
-        $calendar['month']      = date('F');
-        $calendar['dayNames']   = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         $days               = [];
         $dueProjects        = [];
         $dueProjectIds      = [];
@@ -38,6 +32,10 @@ class EventsController extends AppController
         $updatedTaskIds     = [];
         $noOfWeeks          = 0;
 
+        $tempYear           = isset($this->request->query['year']) ? $this->request->query['year'] : date('Y');
+        $tempMonth          = isset($this->request->query['month']) ? $this->request->query['month'] : date('n');
+        $tempDate           = $tempYear.'-'.$tempMonth .'-1';
+        $noOfDays           = date('t', strtotime($tempDate))+1;
         foreach ($projects as $project) { 
             $updatedTasks = $this->Tasks->find('latestTaskOfProject', ['project_id' => $project['id']])->toArray();
 
@@ -46,11 +44,10 @@ class EventsController extends AppController
             }
         }
 
-
         //create the calendar
-        for ($day = 1; $day < date('t')+1; $day++) { 
+        for ($day = 1; $day < $noOfDays; $day++) { 
 
-            $tempDate = date('Y').'-'.date('n').'-'.$day;
+            $tempDate = $tempYear.'-'.$tempMonth .'-'.$day;
             
             $dayOfTheWeek = date('w', strtotime($tempDate));
 
@@ -105,11 +102,15 @@ class EventsController extends AppController
                 $noOfWeeks++;
 
                 $days[$noOfWeeks] = [];
-            } else if($day == date('t') && $dayOfTheWeek < 6){
+            } else if($day == $noOfDays-1 && $dayOfTheWeek < 6){
                 $noOfWeeks++;
             }
         }
 
+        $calendar                       = [];
+        $calendar['year']               = $tempYear;
+        $calendar['month']              = date('F', strtotime($tempDate));
+        $calendar['dayNames']           = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         $calendar['noOfWeeks']          = $noOfWeeks;
         $calendar['days']               = $days;        
         $calendar['dueProjects']        = $dueProjects;
@@ -117,7 +118,8 @@ class EventsController extends AppController
         $calendar['updates']            = $updates;
         $calendar['updatedProjectIds']  = $updatedProjectIds;
         $calendar['updatedTaskIds']     = $updatedTaskIds;
-        $calendar['currentDay']         = date('d');
+        $calendar['currentDay']         = isset($this->request->query['year']) ||
+                                            isset($this->request->query['month']) ? '' : date('d');
 
         $this->set('calendar', $calendar);  
 

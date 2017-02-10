@@ -76,7 +76,7 @@ public function view($id = null)
 		'contain' => ['Clients', 'Employees', 'EmployeesJoin' => [
 		'EmployeeTypes'
 		]]
-		]);
+	]);
 	$this->Projects->computeProjectStatus($project);
 	$this->set('project', $project);
 	$this->set('_serialize', ['project']);
@@ -93,13 +93,18 @@ public function add()
 	$this->loadModel('Employees');
 
 	$project 		= $this->Projects->newEntity();
-	$loggedInUser 	= $this->Auth->user();
-	$projectManager = $this->Employees->find('byUserId', ['user_id' => $loggedInUser['id']])->toArray();
-	$companyOwner	= $this->Employees->find('byEmployeeTypeId', ['employee_type_id' => 1])->toArray();
 
 	if ($this->request->is('post'))
-	{
-		$project = $this->Projects->patchEntity($project, $this->request->data);
+	{	
+		$loggedInUser 	= $this->Auth->user();
+		$projectManager = $this->Employees->find('byUserId', ['user_id' => $loggedInUser['id']])->toArray();
+		$companyOwner	= $this->Employees->find('byEmployeeTypeId', ['employee_type_id' => 1])->toArray();
+		$postData = $this->request->data;
+		$postData['employees_join']['_ids'] = [];
+		array_push($postData['employees_join']['_ids'], $postData['project-engineer']);
+		array_push($postData['employees_join']['_ids'], $postData['warehouse-keeper']);
+
+		$project = $this->Projects->patchEntity($project, $postData);		
 
 		$project['project_manager_id'] = $projectManager[0]['id'];
 		
@@ -108,18 +113,18 @@ public function add()
 
 		if ($this->Projects->save($project))
 		{
-            $this->loadModel('Notifications');
+			$this->loadModel('Notifications');
 
-            foreach ($project['employees_join'] as $employee) {
-                $notification = $this->Notifications->newEntity();
-                $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'projects', 
-                    'action' => 'view/'.$project->id ], false));
-                $notification->link = $link;
-                $notification->message = 'You have been added to the <b>'.$project->title.'</b> project.';
-                $notification->user_id = $employee['user_id'];
-                $notification->project_id = $project->id;
-                $this->Notifications->save($notification);
-            }
+			foreach ($project['employees_join'] as $employee) {
+				$notification = $this->Notifications->newEntity();
+				$link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'projects', 
+					'action' => 'view/'.$project->id ], false));
+				$notification->link = $link;
+				$notification->message = 'You have been added to the <b>'.$project->title.'</b> project.';
+				$notification->user_id = $employee['user_id'];
+				$notification->project_id = $project->id;
+				$this->Notifications->save($notification);
+			}
 
 			$this->Flash->success(__('The project has been saved.'));
 			return $this->redirect(['action' => 'index']);

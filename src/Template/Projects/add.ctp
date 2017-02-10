@@ -1,4 +1,6 @@
 <?= $this->Flash->render() ?>
+
+
 <div class="row mt">
 	<div class="col-md-12">
 		<?= $this->Form->create($project) ?>
@@ -52,44 +54,33 @@
 				]);
 
 				?>
+				<h3>Core Team Assignment</h3>
 
-				<legend class="mt"><h3><i class="fa fa-angle-right"></i>Core Team Assignment</h3></legend>
-
-				<?=
-				$this->Form->input('employees_join._ids', [
-					'type' => 'select',
-					'data-placeholder' => 'Add Project Engineers',
-					'multiple' => true,
-					'options' => $projectEngineers,
-					'class' => 'form-control chosen',
-					'label' => [
-					'text' => 'Project Engineers'
-					]
+				<?php
+					echo $this->Form->input('project-engineer', [
+						'class' => 'form-control',
+						'label' => [
+							'text' => 'Project Engineers'
+						],
+						'options' => [''=>'-Add a Project Engineer-']+$projectEngineers
 					]);
-					?>
 
-				<br>
-
-				<?=
-				$this->Form->input('employees_join._ids', [
-					'type' => 'select',
-					'data-placeholder' => 'Add Warehouse Keepers',
-					'multiple' => true,
-					'options' => $warehouseKeepers,
-					'class' => 'form-control chosen',
-					'label' => [
-					'text' => 'Warehouse Keepers'
-					],
-					'hiddenField' => false
+					echo $this->Form->input('warehouse-keeper', [
+						'class' => 'form-control',
+						'label' => [
+							'class' => 'mt',
+							'text' => 'Warehouse Keepers'
+						],
+						'options' => [''=>'-Add a Warehouse Keeper-']+$warehouseKeepers
 					]);
-					?>
+				?>
 
 			</fieldset>
 
-						<?= $this->Form->button(__('Submit'), [
-							'class' => 'btn btn-primary btn-submit'
-							]) ?>
-							<?= $this->Form->end() ?>
+			<?= $this->Form->button(__('Submit'), [
+				'class' => 'btn btn-primary btn-submit'
+				]) ?>
+			<?= $this->Form->end() ?>
 
 	</div>
 </div>

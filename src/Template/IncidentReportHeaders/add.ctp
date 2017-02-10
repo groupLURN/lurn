@@ -1,5 +1,5 @@
 <?= $this->Flash->render() ?>
-<?= $this->assign('title', 'Create Incident Report') ?>
+<?= $this->assign('title', 'Incident Reports') ?>
 
 <div class="row mt">
 	<div class="col-md-12">
@@ -92,7 +92,9 @@
 
 			<br>
 		</fieldset>
-		<?= $this->Form->button(__('Submit')) ?>
+		<?= $this->Form->button(__('Submit'), [
+			'class' => 'btn btn-primary btn-submit'
+			]) ?>
 		<?= $this->Form->end() ?>
 	</div>
 </div>

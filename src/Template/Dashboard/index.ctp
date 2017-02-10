@@ -14,115 +14,67 @@ MAIN CONTENT
         <div class="row">
         	<div class="col-lg-9 main-chart">     
 
-                <div class="row mt">
-        			<div class="col-md-6 col-sm-6 mb">
-        				<div class="white-panel donut-chart" >
-        					<div class="white-header">
-        						<h3><p class="text-success">RECENT ACTIVITY</p></h3>
-        					</div>
+                <table class="table table-striped table-advance table-hover">
+                    <h4><?= __('Projects') ?> </h4>
+                    <hr>
+                    <thead>
+                        <tr>
+                            <th><?= $this->Paginator->sort('title') ?></th>
+                            <th><?= $this->Paginator->sort('project_manager_id') ?></th>
+                            <th><?= $this->Paginator->sort('start_date') ?></th>
+                            <th><?= $this->Paginator->sort('end_date') ?></th>
+                            <th><?= $this->Paginator->sort('progress') ?></th>
+                            <th><?= $this->Paginator->sort('project_phase') ?></th>
+                            <th><?= $this->Paginator->sort('project_status_id') ?></th>
+                            <th><?= $this->Paginator->sort('Actions') ?></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($projects as $project): ?>
+                            <tr>
+                                <td><?= h($project->title) ?></td>
+                                <td><?= $project->has('employee') ? $this->Html->link($project->employee->name, ['controller' => 'Employees', 'action' => 'view', $project->employee->id]) : '' ?></td>
+                                <td><?= h(isset($project->start_date) ? date_format($project->start_date, 'F d, Y') : '') ?></td>
+                                <td><?= h(isset($project->end_date) ? date_format($project->end_date, 'F d, Y') : '') ?></td>
+                                <td>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar"
+                                        aria-valuenow="<?=$project->progress ?>"
+                                        aria-valuemin="0" aria-valuemax="100" style="margin-right: -<?=$project->progress ?>%;
+                                        width: <?=$project->progress ?>%">
+                                    </div>
+                                    <div style="text-align:center; color:black;"><?= h(number_format($project->progress, 2)).'% Complete'?></div>
+                                </div>
+                            </td>
+                            <td>Phase here</td>
+                            <td><?= h($project->status) ?></td>
+                            <td class="actions">
+                                <?= $this->dataTableManageButton(__('Manage'), ['controller' => 'ProjectOverview', 'action' => 'index', $project->id]); ?>
+                                <?= $this->dataTableViewButton(__('View'), ['controller' => 'Projects', 'action' => 'view', $project->id]); ?>
 
-                            <div class="scroll-wrapper dashboard-card">
-                                <?php foreach ($projects as $project): ?>
-                                <a href=<?= ($this->Url->build(['controller' => 'tasks', 'action' => 'view/'.$project->latestTaskId, 'project_id' => $project->id ]))?>>
-                                <div class="row">
-                                    <div class="panel">            
-                                        <div class="white-header"> 
-                                            <h4> <?= h($project->title) ?></h4>  
-                                        </div>
-                                        <div class="white-panel dashboard-card-content">
-                                            <canvas id="recent-<?= h($project->title) ?>" height="130" width="130"></canvas>
-                                            <script>
-                                                var doughnutData = [
-                                                    {
-                                                        value : <?= ceil($project->progress) ?>,
-                                                        color:"#68dff0"
-                                                    },
-                                                    {
-                                                        value: <?= 100-ceil($project->progress) ?>,
-                                                        color : "#fdfdfd"
-                                                    }
-                                                ];
-                                                var myDoughnut = new Chart(document.getElementById("recent-<?= h($project->title) ?>").getContext("2d")).Doughnut(doughnutData);
-                                            </script>   
-                                            <div class="col-sm-6 col-xs-6 goleft">
-                                                <p>
-                                                    Progress: <?= $project->progress ?>%<br><br>
-                                                    Recent Update<br> 
-                                                    Milestone: <?= h($project->latestMilestone) ?><br>
-                                                    Task: <?= h($project->latestTask) ?><br>
-                                                    Date: <?= h(strcmp($project->updatedDate, "N/A") == 0 ? $project->updatedDate : date_format($project->updatedDate,"F d, Y")) ?>
-                                                </p>
-                                            </div>           
-                                        </div>           
-                                    </div> 
-                                </div> 
-                                </a>                               
-                                <?php endforeach; ?>
-                            </div>
-
-
-                        </div><!--grey-panel -->
-                    </div><!-- /col-md-4-->
-
-
-                    <div class="col-md-6 col-sm-6 mb">
-                    	<div class="white-panel">
-                    		<div class="white-header">
-                    			<h3><p class="text-danger">DUE PROJECTS</p></h3>
-                    		</div>
-                    		<?php if (sizeof($dueProjects) == 0): ?>
-                    			<div> <h3> No Projects On Due Today </h3> </div>
-                    		<?php endif; ?>
-                            <div class="scroll-wrapper dashboard-card">
-                                
-                            <?php foreach ($dueProjects as $project): ?>
-
-                                <a href=<?= ($this->Url->build(['controller' => 'projects', 'action' => 'view/'. $project->id ]))?>>
-                                <div class="row">
-                                    <div class="panel ">      
-                                        <div class="white-header"> 
-                                        <h4> <?= h($project->title) ?></h4>  
-                                        </div>
-                                        <div class="white-panel  dashboard-card-content">
-                                            <canvas id="due-<?= h($project->title) ?>" height="130" width="130"></canvas>
-                                            <script>
-                                                var doughnutData = [
-                                                    {
-                                                        value : <?= ceil($project->progress) ?>,
-                                                        color:"#68dff0"
-                                                    },
-                                                    {
-                                                        value: <?= 100-ceil($project->progress) ?>,
-                                                        color : "#fdfdfd"
-                                                    }
-                                                ];
-                                                var myDoughnut = new Chart(document.getElementById("due-<?= h($project->title) ?>").getContext("2d")).Doughnut(doughnutData);
-                                            </script>   
-                                            <div class="col-sm-6 col-xs-6 goleft">
-                                                <p>
-                                                    Progress: <?= $project->progress ?>%<br><br>
-                                                    Due date:<br><?= h(date_format($project->end_date,"F d, Y")) ?>
-                                                </p>
-                                            </div>                     
-                                        </div>           
-                                    </div>    
-                                </div>           
-                                </a>                 
-                            <?php endforeach; ?>
-                            </div>
-                    	</div>
-                    </div><!-- /col-md-4 -->
-                </div><!-- /row -->
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+                <div class="paginator">
+                    <ul class="pagination">
+                        <?= $this->Paginator->prev('< ' . __('previous')) ?>
+                        <?= $this->Paginator->numbers() ?>
+                        <?= $this->Paginator->next(__('next') . ' >') ?>
+                    </ul>
+                    <p><?= $this->Paginator->counter() ?></p>
+                </div>
             </div><!-- /col-lg-9 END SECTION MIDDLE -->
 
 
-        <!--RIGHT SIDEBAR CONTENT-->
+            <!--RIGHT SIDEBAR CONTENT-->
 
             <div class="col-lg-3 ds">
                 <!-- NOTIFICATIONS -->
                 <h3>NOTIFICATIONS</h3>
                 <div id="notifications"  class="scroll-wrapper">
-                <?php 
+                    <?php 
                     $max = count($notifications) > 30 ? 30 : count($notifications);
                     //$max = count($notifications);
                     if($max == 0) {
@@ -135,8 +87,8 @@ MAIN CONTENT
                         <?php
                     }
                     for ($i=0; $i < $max; $i++) { 
-                 ?>
-                    <div class="notification <?= $notifications[$i]['unread'] == true ? 'unread':''?>">
+                       ?>
+                       <div class="notification <?= $notifications[$i]['unread'] == true ? 'unread':''?>">
                         <a href=<?= $this->Url->build('/').$notifications[$i]['link']  ?>>
 
                             <p><muted><?= date_format($notifications[$i]['created'], 'F d, Y - g:ia')?></muted><br/>                                 
@@ -144,65 +96,65 @@ MAIN CONTENT
                             </p>
                         </a>
                     </div>
-                <?php   
+                    <?php   
                 }
                 ?>
-                </div>
+            </div>
 
-            	<!-- CALENDAR-->
-                <a href=<?= $this->Url->build(['controller' => 'events', 'action' => 'index']) ?>>
-        		<div class="panel green-panel ">
-        			<div class="panel-body">
-            			<table id="calendar">
-                            <tr>
-                                <th colspan="7" class="month-year"><?= $calendar['month']?> <?= $calendar['year']?></th>
-                            </tr>  
-                            <tr>
-                                <?php foreach ($calendar['dayNames'] as $day): ?>
-                                     <th class="day-name"><?= $day?></th>
-                                <?php endforeach;?>
-                            </tr>   
-                            <?php for ($week=0; $week < $calendar['noOfWeeks']; $week++){?>
-                                <tr>
-                                    <?php for ($day=0; $day < 7; $day++){?>
-                                            <td class="
-                                                <?php 
+            <!-- CALENDAR-->
+            <a href=<?= $this->Url->build(['controller' => 'events', 'action' => 'index']) ?>>
+              <div class="panel green-panel ">
+                 <div class="panel-body">
+                     <table id="calendar">
+                        <tr>
+                            <th colspan="7" class="month-year"><?= $calendar['month']?> <?= $calendar['year']?></th>
+                        </tr>  
+                        <tr>
+                            <?php foreach ($calendar['dayNames'] as $day): ?>
+                               <th class="day-name"><?= $day?></th>
+                           <?php endforeach;?>
+                       </tr>   
+                       <?php for ($week=0; $week < $calendar['noOfWeeks']; $week++){?>
+                       <tr>
+                        <?php for ($day=0; $day < 7; $day++){?>
+                        <td class="
+                        <?php 
 
-                                                    if (isset($calendar['days'][$week][$day]) && $calendar['currentDay'] == $calendar['days'][$week][$day]) {
-                                                        echo 'current';
-                                                    }
+                        if (isset($calendar['days'][$week][$day]) && $calendar['currentDay'] == $calendar['days'][$week][$day]) {
+                            echo 'current';
+                        }
 
-                                                    if (isset($calendar['events'][$week][$day])) {
-                                                        if(isset($calendar['days'][$week][$day]) && $calendar['currentDay'] == $calendar['days'][$week][$day]){
-                                                            echo '-';
-                                                        } else {
-                                                            echo ' ';
-                                                        }
-                                                        echo 'event';
-                                                    }
+                        if (isset($calendar['events'][$week][$day])) {
+                            if(isset($calendar['days'][$week][$day]) && $calendar['currentDay'] == $calendar['days'][$week][$day]){
+                                echo '-';
+                            } else {
+                                echo ' ';
+                            }
+                            echo 'event';
+                        }
 
-                                                    if (isset($calendar['days'][$week][$day])) {
-                                                        echo ' day'; 
-                                                    }
+                        if (isset($calendar['days'][$week][$day])) {
+                            echo ' day'; 
+                        }
 
-                                                ?>  ">
-                                                <?php 
-                                                    if (isset($calendar['days'][$week][$day])) {
-                                                        echo $calendar['days'][$week][$day]; 
-                                                    }
+                        ?>  ">
+                        <?php 
+                        if (isset($calendar['days'][$week][$day])) {
+                            echo $calendar['days'][$week][$day]; 
+                        }
 
-                                                ?>                                            
-                                            </td>     
-                                    <?php }?>  
-                                </tr>
-                            <?php }?>
-                        </table>
-            		</div>
-            	</div><!-- / calendar -->
-                </a>
-            </div><!-- /col-lg-3 -->
+                        ?>                                            
+                    </td>     
+                    <?php }?>  
+                </tr>
+                <?php }?>
+            </table>
         </div>
-    </section>
+    </div><!-- / calendar -->
+</a>
+</div><!-- /col-lg-3 -->
+</div>
+</section>
 </section>
 
 <!--main content end-->

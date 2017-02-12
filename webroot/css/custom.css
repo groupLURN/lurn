@@ -340,6 +340,16 @@ th.rotate > div {
     width: 40vw;
 }
 
+#change-phase{
+    transform: translateY(40%);
+    margin: auto;
+    width: 40vw;
+}
+
+#finish-form, #change-phase-form {
+    display: inline-block;
+}
+
 .incident-report th {
     width: 20%;
 }

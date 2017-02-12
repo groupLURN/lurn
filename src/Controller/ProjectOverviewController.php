@@ -14,13 +14,14 @@ class ProjectOverviewController extends AppController
 
     public function beforeFilter(Event $event)
     {
-        if(empty($this->request->params['pass']))
-            return $this->redirect(['controller' => 'dashboard']);
-
+        if(empty($this->request->params['pass'])){
+           return $this->redirect(['controller' => 'dashboard']);
+        }
         $projectId = $this->request->params['pass'][0];
         
         $this->viewBuilder()->layout('project_management');
         $this->set('projectId', $projectId );
+        $this->loadModel('Projects');
         return parent::beforeFilter($event);
     }
 
@@ -31,7 +32,6 @@ class ProjectOverviewController extends AppController
      */
     public function index($projectId = null)
     {  
-        $this->loadModel('Projects');
         $this->loadModel('ProjectPhases');
 
         $project = $this->Projects->get($projectId, [
@@ -40,9 +40,21 @@ class ProjectOverviewController extends AppController
             ]]
         ]);
 
-        $projectPhases = $this->ProjectPhases->find('all')->toArray();
+        $projectPhases = $this->ProjectPhases->find('list')->toArray();
 
+        $this->Projects->computeProjectStatus($project);
+
+        $this->set(compact('project', 'projectPhases'));
+        $this->set('_serialize', ['project']);
+    }
+
+    public function finishProject($projectId = null){
         if ($this->request->is(array('post', 'put'))) {
+            $project = $this->Projects->get($projectId, [
+                'contain' => ['Clients', 'Employees', 'EmployeesJoin' => [
+                'EmployeeTypes'
+                ]]
+            ]);
             $this->loadModel('Tasks');
 
             $tasks = $this->Tasks->find('byProject', ['project_id' => $projectId])->toArray();
@@ -70,7 +82,7 @@ class ProjectOverviewController extends AppController
                     $notification = $this->Notifications->newEntity();
                     $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'project-overview'], false)).'/index/'.$project->id ;
                     $notification->link = $link;
-                    $notification->message = '<b>'.$project->title.'</b> is now finished. Summary reports can now be generated';
+                    $notification->message = '<b>'.$project->title.'</b> is now finished. Summary reports can now be generated.';
                     $notification->user_id = $employee['user_id'];
                     $notification->project_id = $project->id;
                     $this->Notifications->save($notification);
@@ -83,14 +95,42 @@ class ProjectOverviewController extends AppController
                 $this->Flash->error(__('The project could not be marked as finished. Please, try again.'));
             }
         }
-
-        $this->Projects->computeProjectStatus($project);
-
-        $this->set(compact('project', 'projectPhases'));
-        $this->set('_serialize', ['project']);
     }
 
+    public function changePhase($projectId = null){
+        if ($this->request->is(array('post', 'put'))) {
+            $project = $this->Projects->get($projectId, [
+                'contain' => ['Clients', 'Employees', 'EmployeesJoin' => [
+                'EmployeeTypes'
+                ]]
+            ]);
+            $postData = $this->request->data;
 
+            $project->phase = $postData['phase'];
+
+
+            if ($this->Projects->save($project))
+            {
+                $this->loadModel('Notifications');
+
+                foreach ($project['employees_join'] as $employee) {
+                    $notification = $this->Notifications->newEntity();
+                    $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'project-overview'], false)).'/index/'.$project->id ;
+                    $notification->link = $link;
+                    $notification->message = '<b>'.$project->title.'</b> has changed phase.';
+                    $notification->user_id = $employee['user_id'];
+                    $notification->project_id = $project->id;
+                    $this->Notifications->save($notification);
+                }
+
+                $this->Flash->success(__('The project has changed phase'));
+                return $this->redirect(['action' => 'index', $projectId]);
+
+            } else {
+                $this->Flash->error(__('The project could not change phase.'));
+            }
+        }
+    }
 
     private function isProjectDone(){
 

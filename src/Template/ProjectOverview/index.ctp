@@ -6,15 +6,16 @@
     <div class="col-xs-12">
 
     <?php 
-    if ($project->is_finished == 0 && $project->phase == 4):?>
-
+    if ($project->is_finished == 0):?>
         
-        <?= $this->Form->create('', ['id' => 'finish-form']) ?>
+        <?= $this->Form->create('', ['id' => 'finish-form', 'url' => ['action' => 'finish-project', $projectId]]) ?>
         <?= $this->Form->button('<i class="fa fa-save"></i> Finish Project', ['class' => 'btn btn-primary', 'id'=>'finish-form-submit']); ?>
         <?= $this->Form->end() ?>
     <?php endif;?>
     
-    <button class="btn btn-success" type="button"><i class="fa fa-wrench"></i> Change Phase</button>
+    <?= $this->Form->create('', ['id' => 'change-phase-form', 'url' => ['action' => 'change-phase', $projectId]]) ?>
+        <?= $this->Form->button('<i class="fa fa-wrench"></i> Change Phase', ['class' => 'btn btn-success', 'id'=>'change-phase-submit']); ?>
+    <?= $this->Form->end() ?>
 
     </div>
 </div>
@@ -94,3 +95,28 @@
         </div>
     </div>
 </div>
+
+
+<div id="change-phase" class="modal fade" role="dialog">
+  <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Change Project Phase</h4>
+        </div>
+        <div class="modal-body">
+            <?= $this->Form->input('phase', [
+                    'class' => 'form-control',
+                    'label' => [ 
+                        'class' => 'mt'
+                    ],
+                    'options' => $projectPhases
+                ]);?>
+        </div>
+        <div class="modal-footer" >
+            <button type="button" data-dismiss="modal" class="btn btn-primary" id="change-phase-confirm">Update Phase</button>
+            <button type="button" data-dismiss="modal" class="btn">Cancel</button>
+        </div>
+    </div>
+</div>
+
+

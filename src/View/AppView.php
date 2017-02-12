@@ -53,6 +53,13 @@ class AppView extends View
         return $this->Form->button($title, $options);
     }
 
+    public function createButton($title, $url, $style)
+    {
+        $options['class'] = 'btn btn-theme';
+        $icon = '<i class="fa fa-'.$style.'"></i>';
+        return $this->dataTableGetButton($title, $url, $options, $icon);
+    }
+
     public function newButton($title, $url)
     {
         $options['class'] = 'btn btn-theme';

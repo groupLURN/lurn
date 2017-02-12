@@ -21,7 +21,7 @@ class ProjectsController extends AppController
 public function index()
 {
 	$this->paginate = [
-	'contain' => ['Clients', 'Employees', 'Milestones' => ['Tasks']]
+	'contain' => ['Clients', 'Employees', 'Milestones' => ['Tasks'], 'ProjectPhases']
 	];
 
 	$this->paginate += [

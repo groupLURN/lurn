@@ -112,6 +112,7 @@
                     <th><?= $this->Paginator->sort('end_date') ?></th>
                     <th><?= $this->Paginator->sort('location') ?></th>
                     <th><?= $this->Paginator->sort('progress') ?></th>
+                    <th><?= $this->Paginator->sort('phase') ?></th>
                     <th><?= $this->Paginator->sort('project_status_id') ?></th>
                     <th></th>
                 </tr>
@@ -135,6 +136,7 @@
                                 <div style="text-align:center; color:black;"><?= h(number_format($project->progress, 2)).'% Complete'?></div>
                             </div>
                         </td>
+                        <td><?= h($project->project_phase->name) ?></td>
                         <td><?= h($project->status) ?></td>
                         <td class="actions">
                             <?= $this->dataTableManageButton(__('Manage'), ['controller' => 'ProjectOverview', 'action' => 'index', $project->id]); ?>

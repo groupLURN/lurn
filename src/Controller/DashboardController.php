@@ -26,7 +26,7 @@ class DashboardController extends AppController
         $this->loadModel('Notifications');
 
         $this->paginate = [
-        'contain' => ['Clients', 'Employees', 'Milestones' => ['Tasks']]
+        'contain' => ['Clients', 'Employees', 'Milestones' => ['Tasks'], 'ProjectPhases']
         ];
 
         $this->paginate += [
@@ -40,6 +40,7 @@ class DashboardController extends AppController
         ];
 
         $projects = $this->paginate($this->Projects);
+        
         foreach($projects as $project)
         {
             $this->Projects->computeProjectStatus($project);

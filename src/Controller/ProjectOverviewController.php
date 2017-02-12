@@ -30,20 +30,22 @@ class ProjectOverviewController extends AppController
      * @return void
      */
     public function index($projectId = null)
-    {   
-
-
+    {  
         $this->loadModel('Projects');
+        $this->loadModel('ProjectPhases');
+
         $project = $this->Projects->get($projectId, [
             'contain' => ['Clients', 'Employees', 'EmployeesJoin' => [
             'EmployeeTypes'
             ]]
         ]);
 
+        $projectPhases = $this->ProjectPhases->find('all')->toArray();
+
         if ($this->request->is(array('post', 'put'))) {
             $this->loadModel('Tasks');
 
-            $tasks= $this->Tasks->find('byProject', ['project_id' => $projectId])->toArray();
+            $tasks = $this->Tasks->find('byProject', ['project_id' => $projectId])->toArray();
 
             $finished = 0;
 
@@ -84,7 +86,7 @@ class ProjectOverviewController extends AppController
 
         $this->Projects->computeProjectStatus($project);
 
-        $this->set('project', $project);
+        $this->set(compact('project', 'projectPhases'));
         $this->set('_serialize', ['project']);
     }
 

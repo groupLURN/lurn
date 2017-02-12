@@ -6,13 +6,15 @@
     <div class="col-xs-12">
 
     <?php 
-    if ($project->is_finished == 0):?>
+    if ($project->is_finished == 0 && $project->phase == 4):?>
 
         
         <?= $this->Form->create('', ['id' => 'finish-form']) ?>
         <?= $this->Form->button('<i class="fa fa-save"></i> Finish Project', ['class' => 'btn btn-primary', 'id'=>'finish-form-submit']); ?>
         <?= $this->Form->end() ?>
     <?php endif;?>
+    
+    <button class="btn btn-success" type="button"><i class="fa fa-wrench"></i> Change Phase</button>
 
     </div>
 </div>

@@ -86,6 +86,11 @@ class ProjectsTable extends Table
             'targetForeignKey' => 'employee_id',
             'joinTable' => 'employees_projects'
         ]);
+        
+        $this->belongsTo('ProjectPhases', [
+            'foreignKey' => 'phase',
+            'joinType' => 'INNER'
+        ]);
     }
 
     /**

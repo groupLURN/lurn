@@ -280,14 +280,18 @@ class ProjectsTable extends Table
     }
 
     public function computeProjectStatus($project)
-    {
-        $query = $this->find()->where(['Projects.id' => $project->id]);
-        $query = $this->findProjectStatus($query, []);
-        $tempProject = $query->first();        
-        if($tempProject->is_finished){
-            $project->status = 'Completed';
-        } else {
-            $project->status = $query->first()->status;
+    {   
+        if($project->phase == 1) {
+            $project->status = self::STATUS_PLANNING_PHASE;
+        } else {            
+            $query = $this->find()->where(['Projects.id' => $project->id]);
+            $query = $this->findProjectStatus($query, []);
+            $tempProject = $query->first();        
+            if($tempProject->is_finished && $project->phase == 4){
+                $project->status = self::STATUS_COMPLETED;
+            } else {
+                $project->status = $query->first()->status;
+            }
         }
     }
 }

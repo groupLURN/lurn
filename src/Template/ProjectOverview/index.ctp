@@ -5,17 +5,17 @@
 <div class="row mt">
     <div class="col-xs-12">
 
-    <?php 
-    if ($project->is_finished == 0):?>
-        
+    <?php if ($project->is_finished == 0 && $project->phase == 4):?>        
         <?= $this->Form->create('', ['id' => 'finish-form', 'url' => ['action' => 'finish-project', $projectId]]) ?>
         <?= $this->Form->button('<i class="fa fa-save"></i> Finish Project', ['class' => 'btn btn-primary', 'id'=>'finish-form-submit']); ?>
         <?= $this->Form->end() ?>
     <?php endif;?>
     
-    <?= $this->Form->create('', ['id' => 'change-phase-form', 'url' => ['action' => 'change-phase', $projectId]]) ?>
-        <?= $this->Form->button('<i class="fa fa-wrench"></i> Change Phase', ['class' => 'btn btn-success', 'id'=>'change-phase-submit']); ?>
-    <?= $this->Form->end() ?>
+    <?php if ($project->is_finished == 0):?>
+        <?= $this->Form->create('', ['id' => 'change-phase-form', 'url' => ['action' => 'change-phase', $projectId]]) ?>
+            <?= $this->Form->button('<i class="fa fa-wrench"></i> Change Phase', ['class' => 'btn btn-success', 'id'=>'change-phase-submit']); ?>
+        <?= $this->Form->end() ?>
+    <?php endif;?>
 
     </div>
 </div>

@@ -114,6 +114,15 @@ class ResourceRequestHeadersTable extends Table
         return $rules;
     }
 
+    public function findById(Query $query, array $options)
+    {
+        if($options['id'] > 0)
+            return $query
+            ->where(['ResourceRequestHeaders.id' => $options['id']])
+            ->contain(['ProjectFrom', 'ProjectTo', 'Equipment', 'ManpowerTypes', 'Materials']);
+        return $query;
+    }
+
     public function findByProjectId(Query $query, array $options)
     {
         if($options['project_id'] > 0)

@@ -168,9 +168,8 @@ class ProjectsTable extends Table
 
     public function findByProjectId(Query $query, array $options)
     {
-        return $query->contain(['Clients', 'Milestones' => ['Tasks'], 'Employees',  'EmployeesJoin' => [
-        'EmployeeTypes'
-        ]])
+        return $query->contain(['Clients', 'Milestones' => ['Tasks'], 'Employees',  
+            'EmployeesJoin' => ['EmployeeTypes'], 'ProjectPhases'])
             ->where(['Projects.id' => $options['project_id']]);
     }
 
@@ -207,7 +206,7 @@ class ProjectsTable extends Table
         return $query
             ->where(['DATE_SUB(Projects.end_date, INTERVAL 1 WEEK) <= CURDATE()'])
             ->contain(['Employees', 'EmployeesJoin' => [
-                'EmployeeTypes'
+                'EmployeeTypes', 'ProjectPhases'
                 ]]);
     }
 

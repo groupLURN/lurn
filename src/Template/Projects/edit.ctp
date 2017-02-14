@@ -3,7 +3,7 @@
     <div class="col-md-12">
         <?= $this->Form->create($project) ?>
         <fieldset>
-            <legend><h3><i class="fa fa-angle-right"></i> <?= __('Edit Project') ?></h3></legend>
+            <legend><h3><i class="fa fa-angle-right"></i>Edit Project</h3></legend>
             <?php
 
             echo $this->Form->input('title', [
@@ -35,7 +35,7 @@
             ]);
 
             echo $this->Form->input('project_manager_id', [
-                'options' => $employees,
+                'options' => $projectManagers,
                 'class' => 'form-control',
                 'label' => [
                     'class' => 'mt'
@@ -59,25 +59,31 @@
             ]);
 
             ?>
+            <h3>Core Team Assignment</h3>
 
-            <legend class="mt"><h3><i class="fa fa-angle-right"></i> <?= __('Core Team Assignment') ?></h3></legend>
+            <?php
+                echo $this->Form->input('project-engineer', [
+                    'class' => 'form-control',
+                    'default' => $projectEngineer,
+                    'label' => [
+                        'text' => 'Project Engineers'
+                    ],
+                    'options' => [''=>'-Add a Project Engineer-']+$projectEngineers
+                ]);
 
-            <?=
-            $this->Form->input('employees_join._ids', [
-                'type' => 'select',
-                'data-placeholder' => 'Add Core Team Members',
-                'multiple' => true,
-                'options' => $employeesJoin,
-                'class' => 'form-control chosen',
-                'label' => [
-                    'text' => 'Assigned Employees'
-                ],
-                'value' => $currentEmployeesJoin
-            ]);
+                echo $this->Form->input('warehouse-keeper', [
+                    'class' => 'form-control',
+                    'default' => $warehouseKeeper,
+                    'label' => [
+                        'class' => 'mt',
+                        'text' => 'Warehouse Keepers'
+                    ],
+                    'options' => [''=>'-Add a Warehouse Keeper-']+$warehouseKeepers
+                ]);
             ?>
         </fieldset>
 
-        <?= $this->Form->button(__('Submit'), [
+        <?= $this->Form->button(__('Update'), [
             'class' => 'btn btn-primary btn-submit'
         ]) ?>
         <?= $this->Form->end() ?>

@@ -39,6 +39,10 @@
             <td><?= $project->has('client') ? $this->Html->link($project->client->company_name, ['controller' => 'Clients', 'action' => 'view', $project->client->id]) : '' ?></td>
         </tr>
         <tr>
+            <th><?= __('Project Phase') ?></th>
+            <td><?= h($project->project_phase->name) ?></td>
+        </tr>
+        <tr>
             <th><?= __('Project Status') ?></th>
             <td><?= h($project->status) ?></td>
         </tr>

@@ -72,11 +72,10 @@ public function index()
 */
 public function view($id = null)
 {
-	$project = $this->Projects->get($id, [
-		'contain' => ['Clients', 'Employees', 'EmployeesJoin' => [
-		'EmployeeTypes'
-		]]
-	]);
+	$project = $this->Projects->find('byProjectId', [
+		'project_id' => $id
+		])->first();
+
 	$this->Projects->computeProjectStatus($project);
 	$this->set('project', $project);
 	$this->set('_serialize', ['project']);
@@ -149,14 +148,8 @@ public function add()
 
 		])->toArray();
 
-	$skilledWorkers = $this->Employees->find('list', [
-		'conditions' => ['employee_type_id =' => 5],
-		'limit' => 200
-
-		])->toArray();
-
 	$employees = $this->Employees->find('list', ['limit' => 200]);
-	$this->set(compact('project', 'clients', 'employees', 'projectEngineers', 'warehouseKeepers', 'skilledWorkers'));
+	$this->set(compact('project', 'clients', 'employees', 'projectEngineers', 'warehouseKeepers'));
 	$this->set('_serialize', ['project']);
 }
 
@@ -169,11 +162,29 @@ public function add()
 */
 public function edit($id = null)
 {
+	$this->loadModel('Clients');
+	$this->loadModel('Employees');
 	$project = $this->Projects->get($id, [
 		'contain' => ['Employees', 'EmployeesJoin']
 		]);
-	if ($this->request->is(['patch', 'post', 'put'])) {
-		$project = $this->Projects->patchEntity($project, $this->request->data);
+
+	if ($this->request->is(['patch', 'post', 'put']))
+	{	
+		$loggedInUser 	= $this->Auth->user();
+		$projectManager = $this->Employees->find('byUserId', ['user_id' => $loggedInUser['id']])->toArray();
+		$companyOwner	= $this->Employees->find('byEmployeeTypeId', ['employee_type_id' => 1])->toArray();
+		$postData = $this->request->data;
+		$postData['employees_join']['_ids'] = [];
+		array_push($postData['employees_join']['_ids'], $postData['project-engineer']);
+		array_push($postData['employees_join']['_ids'], $postData['warehouse-keeper']);
+
+		$project = $this->Projects->patchEntity($project, $postData);		
+
+		$project['project_manager_id'] = $projectManager[0]['id'];
+		
+		array_push($project['employees_join'], $projectManager[0]);		
+		array_push($project['employees_join'], $companyOwner[0]);
+
 		if ($this->Projects->save($project)) {
 			$this->Flash->success(__('The project has been saved.'));
 			return $this->redirect(['action' => 'index']);
@@ -181,15 +192,47 @@ public function edit($id = null)
 			$this->Flash->error(__('The project could not be saved. Please, try again.'));
 		}
 	}
-	$clients = $this->Projects->Clients->find('list', ['limit' => 200]);
-	$employees = $this->Projects->Employees->find('list', ['limit' => 200]);
-	$employeesJoin = $this->Projects->EmployeesJoin->find('list', ['limit' => 200])->toArray();
+	$projectEngineer = '';
+	$warehouseKeeper = '';
+
+	$clients = $this->Projects->find('list', ['limit' => 200]);
 
 	$currentEmployeesJoin = [];
-	foreach($project->employees_join as $employee)
+	foreach($project->employees_join as $employee){
 		$currentEmployeesJoin[] = $employee->id;
 
-	$this->set(compact('project', 'clients', 'employees', 'employeesJoin', 'currentEmployeesJoin'));
+		if($employee->employee_type_id == 3) {
+			$projectEngineer = $employee->id;
+		} else if($employee->employee_type_id == 4) {
+			$warehouseKeeper = $employee->id;
+		}
+	}
+
+	$projectManagers = $this->Employees->find('list', [
+		'conditions' => ['employee_type_id =' => 2],
+		'limit' => 200
+
+		])->toArray();
+
+	$projectEngineers = $this->Employees->find('list', [
+		'conditions' => ['employee_type_id =' => 3],
+		'limit' => 200
+
+		])->toArray();
+
+
+	$warehouseKeepers = $this->Employees->find('list', [
+		'conditions' => ['employee_type_id =' => 4],
+		'limit' => 200
+
+		])->toArray();
+
+	$this->set(compact('project', 'clients', 'projectManagers', 'currentEmployeesJoin', 'projectEngineers', 'warehouseKeepers'));
+
+	$this->set('projectEngineer', $projectEngineer);
+	$this->set('warehouseKeeper', $warehouseKeeper);
+
+
 	$this->set('_serialize', ['project']);
 }
 

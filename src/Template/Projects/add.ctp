@@ -1,6 +1,4 @@
 <?= $this->Flash->render() ?>
-
-
 <div class="row mt">
 	<div class="col-md-12">
 		<?= $this->Form->create($project) ?>

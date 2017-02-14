@@ -111,7 +111,7 @@
                     <th><?= $this->Paginator->sort('start_date') ?></th>
                     <th><?= $this->Paginator->sort('end_date') ?></th>
                     <th><?= $this->Paginator->sort('location') ?></th>
-                    <th><?= $this->Paginator->sort('progress') ?></th>
+                    <th>Progress</th>
                     <th><?= $this->Paginator->sort('phase') ?></th>
                     <th><?= $this->Paginator->sort('project_status_id') ?></th>
                     <th></th>

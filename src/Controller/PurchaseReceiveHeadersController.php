@@ -46,11 +46,7 @@ class PurchaseReceiveHeadersController extends AppController
      */
     public function view($id = null)
     {
-        $purchaseReceiveHeader = $this->PurchaseReceiveHeaders->get($id, [
-            'contain' => ['PurchaseReceiveDetails.PurchaseOrderDetails.PurchaseOrderHeaders' => [
-                'Projects', 'Suppliers'
-            ], 'PurchaseReceiveDetails.PurchaseOrderDetails.Materials']
-        ]);
+        $purchaseReceiveHeader = $this->PurchaseReceiveHeaders->find('byId', ['id' => $id])->first();
 
         $this->set('purchaseReceiveHeader', $purchaseReceiveHeader);
         $this->set('_serialize', ['purchaseReceiveHeader']);

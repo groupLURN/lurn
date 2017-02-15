@@ -42,10 +42,7 @@ class ResourceRequestHeadersController extends AppController
      */
     public function view($id = null)
     {
-        $resourceRequestHeader = $this->ResourceRequestHeaders->find('byId', ['id' => $id]);
-
-        debug($resourceRequestHeader);
-        die();
+        $resourceRequestHeader = $this->ResourceRequestHeaders->find('byId', ['id' => $id])->first();
 
         $this->set('resourceRequestHeader', $resourceRequestHeader);
         $this->set('_serialize', ['resourceRequestHeader']);

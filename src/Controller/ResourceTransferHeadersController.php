@@ -24,6 +24,7 @@ class ResourceTransferHeadersController extends AppController
         $this->paginate = [
             'contain' => ['ResourceRequestHeaders', 'ProjectTo', 'ProjectFrom']
         ];
+
         $this->paginate += $this->createFinders($this->request->query);
         $resourceTransferHeaders = $this->paginate($this->ResourceTransferHeaders);
         $projects = TableRegistry::get('Projects')->find('list')->toArray();
@@ -42,13 +43,7 @@ class ResourceTransferHeadersController extends AppController
      */
     public function view($id = null)
     {
-        $resourceTransferHeader = $this->ResourceTransferHeaders->get($id, [
-            'contain' => ['ResourceRequestHeaders', 'ProjectFrom', 'ProjectTo',
-                'EquipmentTransferDetails' => ['EquipmentInventories' => ['Equipment']],
-                'ManpowerTransferDetails' => ['Manpower' => ['ManpowerTypes']],
-                'MaterialTransferDetails' => ['Materials']
-            ]
-        ]);
+        $resourceTransferHeader = $this->ResourceTransferHeaders->find('byId', ['id' => $id])->first();
 
         $this->set('resourceTransferHeader', $resourceTransferHeader);
         $this->set('_serialize', ['resourceTransferHeader']);

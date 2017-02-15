@@ -43,9 +43,7 @@ public function index()
 */
 public function view($id = null)
 {
-	$purchaseOrderHeader = $this->PurchaseOrderHeaders->get($id, [
-		'contain' => ['Projects', 'Suppliers', 'PurchaseOrderDetails' => ['Materials', 'PurchaseReceiveDetails']]
-		]);
+	$purchaseOrderHeader = $this->PurchaseOrderHeaders->find('byId', ['id' => $id])->first();
 
 	$this->PurchaseOrderHeaders->computeQuantityRemaining($purchaseOrderHeader);
 	$this->set('purchaseOrderHeader', $purchaseOrderHeader);

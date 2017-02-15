@@ -75,6 +75,16 @@ class PurchaseOrderHeadersTable extends Table
         return $rules;
     }
 
+    public function findById(Query $query, array $options)
+    {
+        if($options['id'] > 0)
+            return $query
+                ->where(['PurchaseOrderHeaders.id' => $options['id']])
+                ->contain(['Projects', 'Suppliers', 
+                    'PurchaseOrderDetails' => ['Materials', 'PurchaseReceiveDetails']]);
+        return $query;
+    }
+
     public function findByProjectId(Query $query, array $options)
     {
         if($options['project_id'] > 0)

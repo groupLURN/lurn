@@ -119,8 +119,9 @@ class PurchaseReceiveHeadersTable extends Table
             return $query
                 ->where(['id' => $options['id']])
                 ->contain(['PurchaseReceiveDetails.PurchaseOrderDetails.PurchaseOrderHeaders' => 
-                    ['Projects', 'Suppliers']
-                ]);
+                    ['Projects', 'Suppliers'], 
+                    'PurchaseReceiveDetails.PurchaseOrderDetails.Materials']
+            );
         return $query;
     }
 

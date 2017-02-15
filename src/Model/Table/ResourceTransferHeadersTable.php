@@ -197,6 +197,19 @@ class ResourceTransferHeadersTable extends Table
         }
     }
 
+    public function findById(Query $query, array $options)
+    {
+        if($options['id'] > 0)
+            return $query
+                ->where(['ResourceTransferHeaders.id' => $options['id']])
+                ->contain(['ResourceRequestHeaders', 'ProjectFrom', 'ProjectTo',
+                'EquipmentTransferDetails' => ['EquipmentInventories' => ['Equipment']],
+                'ManpowerTransferDetails' => ['Manpower' => ['ManpowerTypes']],
+                'MaterialTransferDetails' => ['Materials']
+                ]);
+        return $query;
+    }
+
     public function findByProjectId(Query $query, array $options)
     {
         if($options['project_id'] > 0)

@@ -357,3 +357,9 @@ th.rotate > div {
 #sidebar {
     z-index: 1001;
 }
+
+.calendar-input {
+    display: inline-block;
+    margin-left: 5px;
+    width: auto;
+}

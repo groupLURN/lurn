@@ -110,6 +110,7 @@ class EventsController extends AppController
         $calendar                       = [];
         $calendar['year']               = $tempYear;
         $calendar['month']              = date('F', strtotime($tempDate));
+        $calendar['month-number']       = $tempMonth;
         $calendar['dayNames']           = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         $calendar['noOfWeeks']          = $noOfWeeks;
         $calendar['days']               = $days;        

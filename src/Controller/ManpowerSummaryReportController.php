@@ -17,8 +17,17 @@ class  ManpowerSummaryReportController extends AppController
         if(empty($this->request->params['pass']))
             return $this->redirect(['controller' => 'dashboard']);
 
+        $this->loadModel('Projects');
         $this->viewBuilder()->layout('project_management');
-        $this->set('projectId', $this->request->params['pass'][0]);
+        $projectId = (int) $this->request->params['pass'][0];
+        
+        $this->set('projectId', $projectId);
+        
+        $project = $this->Projects->find('byId', ['project_id' => $projectId])->first();
+        
+        $this->set('isFinished', $project->is_finished );
+
+        $this->set('projectId', $projectId);
         return parent::beforeFilter($event);
     }
     /**
@@ -31,7 +40,7 @@ class  ManpowerSummaryReportController extends AppController
         $this->loadModel('Projects');
         $this->loadModel('Manpower');
 
-        $project = $this->Projects->find('byProjectId', ['project_id'=>$id])->first();
+        $project = $this->Projects->find('byId', ['project_id'=>$id])->first();
         if($project->is_finished == 0) {
             return $this->redirect(['controller' => 'dashboard']);
         }
@@ -74,7 +83,7 @@ class  ManpowerSummaryReportController extends AppController
         $this->loadModel('Projects');
         $this->loadModel('Manpower');
 
-        $project = $this->Projects->find('byProjectId', ['project_id'=>$id])->first();
+        $project = $this->Projects->find('byId', ['project_id'=>$id])->first();
         if($project->is_finished == 0) {
             return $this->redirect(['controller' => 'dashboard']);
         }

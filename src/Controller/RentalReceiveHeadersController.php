@@ -47,11 +47,7 @@ class RentalReceiveHeadersController extends AppController
      */
     public function view($id = null)
     {
-        $rentalReceiveHeader = $this->RentalReceiveHeaders->get($id, [
-            'contain' => ['RentalReceiveDetails.RentalRequestDetails.RentalRequestHeaders' => [
-                'Projects', 'Suppliers'
-            ], 'RentalReceiveDetails.RentalRequestDetails.Equipment']
-        ]);
+        $rentalReceiveHeader = $this->RentalReceiveHeaders->find('byId', ['id' => $id])->first();
 
         $this->set('rentalReceiveHeader', $rentalReceiveHeader);
         $this->set('_serialize', ['rentalReceiveHeader']);
@@ -92,8 +88,7 @@ class RentalReceiveHeadersController extends AppController
                     $projectId = $tempRentalReceiveDetail->rental_request_detail->rental_request_header->project_id;
                 }
 
-                $project = $this->Projects->get($projectId, [
-                    'contain' => ['Employees', 'EmployeesJoin' => ['EmployeeTypes']]]);
+                $project = $this->Projects->find('byId', ['project_id' => $projectId])->first();
 
                 array_push($employees, $project->employee);
                 for ($i=0; $i < count($project->employees_join); $i++) { 

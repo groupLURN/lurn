@@ -101,8 +101,7 @@ class AppController extends Controller
                 else
                     $query = $query->find($finder, $options);
             }
-            // debug($query);
-            // die();
+            
             $object = $query;
             unset($this->paginate['finder']);
         }

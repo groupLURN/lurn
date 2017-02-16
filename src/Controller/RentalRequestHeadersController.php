@@ -43,11 +43,7 @@ class RentalRequestHeadersController extends AppController
      */
     public function view($id = null)
     {
-        $rentalRequestHeader = $this->RentalRequestHeaders->get($id, [
-            'contain' => ['Projects', 'Suppliers', 'RentalRequestDetails' => [
-                'Equipment', 'RentalReceiveDetails']
-            ]
-        ]);
+        $rentalRequestHeader = $this->RentalRequestHeaders->find('byId', ['id' => $id])->first();
 
         $this->RentalRequestHeaders->computeQuantityRemaining($rentalRequestHeader);
         $this->set('rentalRequestHeader', $rentalRequestHeader);
@@ -73,8 +69,7 @@ class RentalRequestHeadersController extends AppController
                 $this->loadModel('Projects');
                 $employees = [];
 
-                $project = $this->Projects->get($rentalRequestHeader->project_id, [
-                    'contain' => ['Employees', 'EmployeesJoin' => ['EmployeeTypes']]]);
+                $project = $this->Projects->find('byId', ['project_id' => $rentalRequestHeader->project_id])->first();
 
                 array_push($employees, $project->employee);
                 for ($i=0; $i < count($project->employees_join); $i++) { 

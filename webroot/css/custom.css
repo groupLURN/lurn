@@ -238,7 +238,7 @@ hr.style-five:after { /* Not really supposed to work, but does */
 }
 
 #calendar .current, #event-calendar .current{
-    background-color: #1fbcd2;
+    background-color: #1A2339;
 }
 
 #calendar .current-event, #event-calendar .current-event{
@@ -246,7 +246,7 @@ hr.style-five:after { /* Not really supposed to work, but does */
 }
 
 #calendar .day, #event-calendar .day{
-    border: 1px solid #1fbcd2;
+    border: 1px solid #424a5d;
 }
 
 #calendar .current{

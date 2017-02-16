@@ -72,9 +72,7 @@ public function index()
 */
 public function view($id = null)
 {
-	$project = $this->Projects->find('byProjectId', [
-		'project_id' => $id
-		])->first();
+	$project = $this->Projects->find('byId', ['project_id' => $id])->first();
 
 	$this->Projects->computeProjectStatus($project);
 	$this->set('project', $project);
@@ -164,10 +162,8 @@ public function edit($id = null)
 {
 	$this->loadModel('Clients');
 	$this->loadModel('Employees');
-	$project = $this->Projects->get($id, [
-		'contain' => ['Employees', 'EmployeesJoin']
-		]);
-
+	$project = $this->Projects->find('byId', ['project_id' => $id])->first();
+	
 	if ($this->request->is(['patch', 'post', 'put']))
 	{	
 		$loggedInUser 	= $this->Auth->user();
@@ -246,7 +242,7 @@ public function edit($id = null)
 public function delete($id = null)
 {
 	$this->request->allowMethod(['post', 'delete']);
-	$project = $this->Projects->get($id);
+	$project = $this->Projects->find('byId', ['project_id'=>$projectId])->first();
 	if ($this->Projects->delete($project)) {
 		$this->Flash->success(__('The project has been deleted.'));
 	} else {

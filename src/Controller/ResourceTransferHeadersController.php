@@ -69,8 +69,7 @@ class ResourceTransferHeadersController extends AppController
                 $this->loadModel('Projects');
                 $employees = [];
 
-                $project = $this->Projects->get($resourceTransferHeader->to_project_id, [
-                    'contain' => ['Employees', 'EmployeesJoin' => ['EmployeeTypes']]]);
+                $project = $this->Projects->find('byId', ['project_id' => $resourceTransferHeader->to_project_id])->first();
 
                 array_push($employees, $project->employee);
                 for ($i=0; $i < count($project->employees_join); $i++) { 

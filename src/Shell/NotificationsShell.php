@@ -59,7 +59,7 @@ class NotificationsShell extends Shell
                     $equipment = $rentalReceiveDetail->rental_request_detail->equipment;
 
                     $projectId = $rentalReceiveDetail->rental_request_detail->rental_request_header->project_id;
-                    $project = $this->Projects->find('byProjectId', ['project_id'=>$projectId])->first();
+                    $project = $this->Projects->find('byId', ['project_id'=>$projectId])->first();
                     
                     $employees = [];
 
@@ -109,7 +109,7 @@ class NotificationsShell extends Shell
                     $equipment = $rentalReceiveDetail->rental_request_detail->equipment;
 
                     $projectId = $rentalReceiveDetail->rental_request_detail->rental_request_header->project_id;
-                    $project = $this->Projects->find('byProjectId', ['project_id'=>$projectId])->first();
+                    $project = $this->Projects->find('byId', ['project_id'=>$projectId])->first();
                     
                     $employees = [];
 

@@ -23,10 +23,15 @@ class EquipmentProjectInventoryReportController extends AppController
         if(!isset($this->request->query['project_id']))
             return $this->redirect(['controller' => 'dashboard']);
 
+        $this->loadModel('Projects');
         $this->viewBuilder()->layout('project_management');
         $this->_projectId = (int) $this->request->query['project_id'];
-
+        
         $this->set('projectId', $this->_projectId);
+        
+        $project = $this->Projects->find('byId', ['project_id' => $this->_projectId])->first();
+
+        $this->set('isFinished', $project->is_finished );
         return parent::beforeFilter($event);
     }
 
@@ -48,7 +53,7 @@ class EquipmentProjectInventoryReportController extends AppController
         $equipmentInventories = $this->paginate(TableRegistry::get('EquipmentInventories'));
 
         $this->paginate += $this->createFinders($this->request->query, 'Projects');
-        $this->paginate['finder']['ByProjectId'] = ['project_id' => $this->_projectId];
+        $this->paginate['finder']['ById'] = ['project_id' => $this->_projectId];
         $projects = $this->paginate(TableRegistry::get('Projects'));
 
         if (isset($this->request->query['start_date']) && isset($this->request->query['end_date'])):
@@ -81,7 +86,7 @@ class EquipmentProjectInventoryReportController extends AppController
         $equipmentInventories = $this->paginate(TableRegistry::get('EquipmentInventories'));
 
         $this->paginate += $this->createFinders($this->request->query, 'Projects');
-        $this->paginate['finder']['ByProjectId'] = ['project_id' => $this->_projectId];
+        $this->paginate['finder']['ById'] = ['project_id' => $this->_projectId];
         $projects = $this->paginate(TableRegistry::get('Projects'));
 
         if (isset($this->request->query['start_date']) && isset($this->request->query['end_date'])):

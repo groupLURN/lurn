@@ -68,11 +68,7 @@ class ProjectPlanningController extends ProjectOverviewController
 
 
             $this->loadModel('Projects');
-            $project = $this->Projects->get($id, [
-                'contain' => ['Clients', 'Employees', 'EmployeesJoin' => [
-                'EmployeeTypes'
-                ]]
-            ]);  
+            $project = $this->Projects->find('byId', ['project_id' => $id])->first();
 
             $this->set('project', $project);  
 

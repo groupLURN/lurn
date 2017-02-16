@@ -25,14 +25,7 @@ class IncidentReportComponent extends Component
 		$this->Tasks 		= TableRegistry::get('Tasks');
 
 		try{
-			$incidentReportHeader = $this->IncidentReportHeaders->get($id, [
-				'contain' => ['Projects' => [
-				'EmployeesJoin' => [
-				'EmployeeTypes'
-				]
-				], 
-				'IncidentReportDetails']
-				]);
+			$incidentReportHeader = $this->IncidentReportHeaders->find('byId', ['id' => $id])->first();
 		} catch(\Exception $e) {
 			return DatabaseConstants::RECORDNOTFOUND;
 		}

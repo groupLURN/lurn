@@ -90,4 +90,18 @@ class IncidentReportHeadersTable extends Table
 
         return $rules;
     }
+
+    public function findById(Query $query, array $options)
+    {
+        if($options['id'] > 0)
+            return $query        
+                ->where(['IncidentReportHeaders.id' => $options['id']])
+                ->contain(['Projects' => [
+                    'EmployeesJoin' => [
+                        'EmployeeTypes'
+                    ]
+                ], 
+                'IncidentReportDetails']);
+        return $query;
+    }
 }

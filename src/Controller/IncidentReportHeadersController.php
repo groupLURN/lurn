@@ -79,11 +79,7 @@ class IncidentReportHeadersController extends AppController
             $postData           = $this->request->data;
             $postData['date']   = new DateTime($postData['date']);
 
-            $project = $this->Projects->get($postData['project_id'], [
-                'contain' => ['EmployeesJoin' => [
-                'EmployeeTypes'
-                ]]
-                ]);
+            $project = $this->Projects->find('byId', ['project_id' => $postData['project_id']])->first();
 
             foreach($project->employees_join as $employee) {
                 if($employee->employee_type->id == 3) {
@@ -171,11 +167,7 @@ class IncidentReportHeadersController extends AppController
             $postData           = $this->request->data;
             $postData['date']   = new DateTime($postData['date']);
 
-            $project = $this->Projects->get($postData['project_id'], [
-                'contain' => ['EmployeesJoin' => [
-                'EmployeeTypes'
-                ]]
-                ]);
+            $project = $this->Projects->find('byId', ['project_id' => $postData['project_id']])->first();
 
             foreach($project->employees_join as $employee) {
                 if($employee->employee_type->id == 3) {
@@ -294,11 +286,7 @@ class IncidentReportHeadersController extends AppController
         $taskId     = $this->request->query('task_id');
 
         if($projectId > 0 && $taskId > 0) {
-            $project = $this->Projects->get($projectId, [
-                'contain' => ['Employees', 'EmployeesJoin' => [
-                'EmployeeTypes'
-                ]]
-                ]);
+            $project = $this->Projects->find('byId', ['project_id' => $projectId])->first();
 
             foreach ($project->employees_join as $employee) {
                 array_push($manpower, [

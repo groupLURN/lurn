@@ -24,14 +24,16 @@ class TasksController extends AppController
             return $this->redirect(['controller' => 'dashboard']);
 
         $this->loadModel('Projects');
-
-        $project = $this->Projects->find('byProjectId', ['project_id'=>(int) $this->request->query['project_id']])->first();
-
         $this->viewBuilder()->layout('project_management');
-        $this->__projectId = (int) $this->request->query['project_id'];
+        $this->_projectId = (int) $this->request->query['project_id'];
+        
+        $this->set('projectId', $this->_projectId);
+        
+        $project = $this->Projects->find('byId', ['project_id' => $this->_projectId])->first();
 
-        $this->set('project', $project);
-        $this->set('projectId', $this->request->query['project_id']);
+        $this->set('isFinished', $project->is_finished );
+
+        $this->set('projectId', $this->_projectId);
         $this->set('statusList', array_flip($this->Tasks->status));
         return parent::beforeFilter($event);
     }
@@ -200,8 +202,7 @@ class TasksController extends AppController
                 $this->loadModel('Projects');
                 $employees = [];
 
-                $project = $this->Projects->get($task->milestone->project_id, [
-                    'contain' => ['Employees', 'EmployeesJoin' => ['EmployeeTypes']]]);
+                $project = $this->Projects->find('byId', ['project_id' => $task->milestone->project_id])->first();
 
                 array_push($employees, $project->employee);
                 for ($i=0; $i < count($project->employees_join); $i++) { 

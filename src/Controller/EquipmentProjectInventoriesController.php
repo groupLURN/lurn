@@ -22,8 +22,15 @@ class EquipmentProjectInventoriesController extends AppController
         if(!isset($this->request->query['project_id']))
             return $this->redirect(['controller' => 'dashboard']);
 
+        $this->loadModel('Projects');
         $this->viewBuilder()->layout('project_management');
         $this->_projectId = (int) $this->request->query['project_id'];
+        
+        $this->set('projectId', $this->_projectId);
+        
+        $project = $this->Projects->find('byId', ['project_id' => $this->_projectId])->first();
+
+        $this->set('isFinished', $project->is_finished );
 
         $this->set('projectId', $this->_projectId);
         return parent::beforeFilter($event);

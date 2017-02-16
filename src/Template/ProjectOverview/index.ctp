@@ -117,7 +117,7 @@
                 ]);?>
         </div>
         <div class="modal-footer" >
-            <button type="button" data-dismiss="modal" class="btn btn-primary" id="change-phase-confirm">Update Phase</button>
+            <button type="button" data-dismiss="modal" class="btn btn-success" id="change-phase-confirm">Update Phase</button>
             <button type="button" data-dismiss="modal" class="btn">Cancel</button>
         </div>
     </div>

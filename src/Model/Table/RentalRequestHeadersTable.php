@@ -76,6 +76,16 @@ class RentalRequestHeadersTable extends Table
         return $rules;
     }
 
+    public function findById(Query $query, array $options)
+    {
+        if($options['id'] > 0)
+            return $query
+                ->where(['RentalRequestHeaders.id' => $options['id']])
+                ->contain(['Projects', 'Suppliers', 'RentalRequestDetails' => [
+                    'Equipment', 'RentalReceiveDetails']]);
+        return $query;
+    }
+
     public function findByProjectId(Query $query, array $options)
     {
         if($options['project_id'] > 0)

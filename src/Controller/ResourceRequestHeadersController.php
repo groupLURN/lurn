@@ -69,9 +69,8 @@ class ResourceRequestHeadersController extends AppController
                 $this->loadModel('Projects');
                 $employees = [];
 
-                $project = $this->Projects->get($resourceRequestHeader->from_project_id, [
-                    'contain' => ['Employees', 'EmployeesJoin' => ['EmployeeTypes']]]);
-
+                $project = $this->Projects->find('byId', ['project_id' => $resourceRequestHeader->from_project_id])->first();
+                
                 array_push($employees, $project->employee);
                 for ($i=0; $i < count($project->employees_join); $i++) { 
                     $employeeType = $project->employees_join[$i]->employee_type_id;

@@ -110,9 +110,11 @@ class RentalReceiveHeadersTable extends Table
         if($options['id'] > 0)
             return $query
                 ->where(['id' => $options['id']])
-                ->contain(['RentalReceiveDetails.RentalRequestDetails.RentalRequestHeaders' => 
-                    ['Projects', 'Suppliers']
-                ]);
+                ->contain([
+                    'RentalReceiveDetails.RentalRequestDetails.RentalRequestHeaders' => [
+                        'Projects', 'Suppliers'
+                    ], 
+                    'RentalReceiveDetails.RentalRequestDetails.Equipment']);
         return $query;
     }
 

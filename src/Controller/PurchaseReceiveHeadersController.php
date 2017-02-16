@@ -79,8 +79,7 @@ class PurchaseReceiveHeadersController extends AppController
                     $projectId = $tempPurchaseReceiveDetail->purchase_order_detail->purchase_order_header->project_id;
                 }
 
-                $project = $this->Projects->get($projectId, [
-                    'contain' => ['Employees', 'EmployeesJoin' => ['EmployeeTypes']]]);
+                $project = $this->Projects->find('byId', ['project_id' => $projectId])->first();
 
                 array_push($employees, $project->employee);
                 for ($i=0; $i < count($project->employees_join); $i++) { 

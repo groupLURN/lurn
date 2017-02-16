@@ -82,11 +82,7 @@ class DashboardController extends AppController
     }
     public function view($id = null)
     {         
-        $project = $this->Projects->get($id, [
-            'contain' => ['Clients', 'Employees', 'EmployeesJoin' => [
-            'EmployeeTypes'
-            ]]
-            ]);
+        $project = $this->Projects->find('byId', ['project_id' => $id])->first();
         $this->Projects->computeProjectStatus($project);
         $this->set('project', $project);
         $this->set('_serialize', ['project']);
@@ -105,7 +101,7 @@ class DashboardController extends AppController
 
         $calendar['year']       = date('Y');
         $calendar['month']      = date('F');
-        $calendar['dayNames']   = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
+        $calendar['dayNames']   = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
         $days       = [];
         $events     = [];
         $noOfWeeks  = 0;

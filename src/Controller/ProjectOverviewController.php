@@ -17,11 +17,16 @@ class ProjectOverviewController extends AppController
         if(empty($this->request->params['pass'])){
            return $this->redirect(['controller' => 'dashboard']);
         }
-        $projectId = $this->request->params['pass'][0];
+        $this->loadModel('Projects');
         
         $this->viewBuilder()->layout('project_management');
+
+        $projectId = $this->request->params['pass'][0];
         $this->set('projectId', $projectId );
-        $this->loadModel('Projects');
+        
+        $project = $this->Projects->find('byId', ['project_id' => $projectId])->first();
+        
+        $this->set('isFinished', $project->is_finished );
         return parent::beforeFilter($event);
     }
 
@@ -34,11 +39,7 @@ class ProjectOverviewController extends AppController
     {  
         $this->loadModel('ProjectPhases');
 
-        $project = $this->Projects->get($projectId, [
-            'contain' => ['Clients', 'Employees', 'EmployeesJoin' => [
-            'EmployeeTypes'
-            ]]
-        ]);
+        $project = $this->Projects->find('byId', ['project_id' => $projectId])->first();
 
         $projectPhases = $this->ProjectPhases->find('list')->toArray();
 
@@ -50,12 +51,8 @@ class ProjectOverviewController extends AppController
 
     public function finishProject($projectId = null){
         if ($this->request->is(array('post', 'put'))) {
-            $project = $this->Projects->get($projectId, [
-                'contain' => ['Clients', 'Employees', 'EmployeesJoin' => [
-                'EmployeeTypes'
-                ]]
-            ]);
             $this->loadModel('Tasks');
+            $project = $this->Projects->find('byId', ['project_id' => $projectId])->first();
 
             $tasks = $this->Tasks->find('byProject', ['project_id' => $projectId])->toArray();
 
@@ -99,11 +96,7 @@ class ProjectOverviewController extends AppController
 
     public function changePhase($projectId = null){
         if ($this->request->is(array('post', 'put'))) {
-            $project = $this->Projects->get($projectId, [
-                'contain' => ['Clients', 'Employees', 'EmployeesJoin' => [
-                'EmployeeTypes'
-                ]]
-            ]);
+            $project = $this->Projects->find('byId', ['project_id' => $projectId])->first();
             $postData = $this->request->data;
 
             $project->phase = $postData['phase'];

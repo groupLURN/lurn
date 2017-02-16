@@ -161,16 +161,18 @@ class ProjectsTable extends Table
             ];
     }
 
+    public function findById(Query $query, array $options)
+    {
+        if($options['project_id'] > 0)
+            return $query->contain(['Clients', 'Milestones' => ['Tasks'], 'Employees',  
+                'EmployeesJoin' => ['EmployeeTypes'], 'ProjectPhases'])
+                ->where(['Projects.id' => $options['project_id']]);
+        return $query;
+    }
+
     public function findByTitle(Query $query, array $options)
     {
         return $query->where($query->newExpr()->like('Projects.title', '%' . $options['title'] . '%'));
-    }
-
-    public function findByProjectId(Query $query, array $options)
-    {
-        return $query->contain(['Clients', 'Milestones' => ['Tasks'], 'Employees',  
-            'EmployeesJoin' => ['EmployeeTypes'], 'ProjectPhases'])
-            ->where(['Projects.id' => $options['project_id']]);
     }
 
     public function findByProjectStatusId(Query $query, array $options)

@@ -155,6 +155,8 @@ class IncidentReportHeadersController extends AppController
         $projects = $this->IncidentReport->initializeProjectsList($incidentReportHeader->project_id);        
 
         if ($this->request->is(['patch', 'post', 'put'])) {
+            $valid = true;
+
             $incidentReportHeader = $this->IncidentReportHeaders->get($id, [
                 'contain' => ['Projects' => [
                 'EmployeesJoin' => [
@@ -180,28 +182,42 @@ class IncidentReportHeadersController extends AppController
                 'associated' => [
                     'Projects'
                 ]
-            ]);   
+            ]); 
 
-            $incidentReportDetails = $this->IncidentReport->prepareIncidentReportDetailsSave($postData);
+            if(!isset($postData['involved-id'])) {
+                $valid = false;
+                $this->Flash->error(__('Please add involved persons.'));
+            }
 
-            if ($this->IncidentReportHeaders->save($newIncidentReportHeader)) {
-
-                $oldIncidentReportDetails = $incidentReportHeader['incident_report_details'];
-                $this->IncidentReport->deleteIncidentReportDetails($oldIncidentReportDetails);
-
-                foreach($incidentReportDetails as $incidentReportDetail) {
-                    $incidentReportDetail['incident_report_header_id'] = $incidentReportHeader->id;
-                    if(!($this->IncidentReportDetails->save($incidentReportDetail))) {
-
-                        $this->Flash->error(__('The incident report could not be saved. Please, try again.'));
-                    }
+            if($newIncidentReportHeader->type === 'los') {               
+                if(!isset($postData['item-id'])) {
+                    $valid = false;
+                    $this->Flash->error(__('Please add lost items.'));
                 }
+            } 
 
-                $this->Flash->success(__('The incident report header has been updated.'));
+            if($valid) {
+                $incidentReportDetails = $this->IncidentReport->prepareIncidentReportDetailsSave($postData);
 
-                return $this->redirect(['action' => 'index']);
-            } else {
-                $this->Flash->error(__('The incident report header could not be updated. Please, try again.'));
+                if ($this->IncidentReportHeaders->save($newIncidentReportHeader)) {
+
+                    $oldIncidentReportDetails = $incidentReportHeader['incident_report_details'];
+                    $this->IncidentReport->deleteIncidentReportDetails($oldIncidentReportDetails);
+
+                    foreach($incidentReportDetails as $incidentReportDetail) {
+                        $incidentReportDetail['incident_report_header_id'] = $incidentReportHeader->id;
+                        if(!($this->IncidentReportDetails->save($incidentReportDetail))) {
+
+                            $this->Flash->error(__('The incident report could not be saved. Please, try again.'));
+                        }
+                    }
+
+                    $this->Flash->success(__('The incident report header has been updated.'));
+
+                    return $this->redirect(['action' => 'index']);
+                } else {
+                    $this->Flash->error(__('The incident report header could not be updated. Please, try again.'));
+                }
             }
         }
 

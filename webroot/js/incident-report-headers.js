@@ -34,6 +34,10 @@ $(function(){
 
 			$("#project-id").data("old-project", projectId);
 			updateTasks();
+			
+			$("#person-list option").not(":first").remove();
+
+			$("#person-list").trigger("chosen:updated");
 		}
 	});	
 	

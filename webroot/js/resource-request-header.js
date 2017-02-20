@@ -6,7 +6,6 @@ $(function(){
 
 	});
 
-
 	function updateEquipment(){
 		projectId 	=  $("#from-project-id").val();
 		$("select[name='rental_request_details[equipment_id][]']:last option").not(":first").remove();

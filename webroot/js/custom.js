@@ -52,7 +52,6 @@ $(".autocomplete").each(
     }
 );
 
-
 $.ajax({ 
     type: "GET", 
     url: link+"/notifications/getUnreadNotificationsCount", 

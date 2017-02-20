@@ -47,7 +47,9 @@ if(strpos($request_uri, 'incident-report-headers') !== false) {
 }
 
 
-
+if(strpos($request_uri, 'events') !== false) {    
+    $this->Html->script('events', ['block' => true]);
+}
 ?>
 
 <!DOCTYPE html>

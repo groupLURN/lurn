@@ -119,8 +119,7 @@ class EventsController extends AppController
         $calendar['updates']            = $updates;
         $calendar['updatedProjectIds']  = $updatedProjectIds;
         $calendar['updatedTaskIds']     = $updatedTaskIds;
-        $calendar['currentDay']         = isset($this->request->query['year']) ||
-                                            isset($this->request->query['month']) ? '' : date('d');
+        $calendar['currentDay']         = date('d');
 
         $this->set('calendar', $calendar);  
 

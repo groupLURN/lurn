@@ -33,7 +33,8 @@ $(function(){
 			resetItemsLost();
 
 			$("#project-id").data("old-project", projectId);
-			updateTasks();
+			updateTasks();			
+			updatePersonList();
 		}
 	});	
 	

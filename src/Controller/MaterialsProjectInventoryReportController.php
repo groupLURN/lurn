@@ -20,19 +20,21 @@ class MaterialsProjectInventoryReportController extends AppController
 
     public function beforeFilter(Event $event)
     {
-        if(!isset($this->request->query['project_id']))
+        if(empty($this->request->params['pass'])) {
             return $this->redirect(['controller' => 'dashboard']);
+        }
 
         $this->loadModel('Projects');
         $this->viewBuilder()->layout('project_management');
-        $this->_projectId = (int) $this->request->query['project_id'];
+        $projectId = (int) $this->request->params['pass'][0];
         
-        $this->set('projectId', $this->_projectId);
+        $this->set('projectId', $projectId);
         
-        $project = $this->Projects->find('byId', ['project_id' => $this->_projectId])->first();
+        $project = $this->Projects->find('byId', ['project_id' => $projectId])->first();
 
         $this->set('isFinished', $project->is_finished );
-        return parent::beforeFilter($event);
+
+        $this->set('projectId', $projectId);
     }
 
     /**
@@ -40,28 +42,29 @@ class MaterialsProjectInventoryReportController extends AppController
      *
      * @return \Cake\Network\Response|null
      */
-    public function index()
+    public function index($id = null)
     {
         $this->paginate += $this->createFinders($this->request->query, 'Materials');
         
-        if(!isset($this->request->query['milestone_id']))
+        if(!isset($this->request->query['milestone_id'])) {
             $this->request->query['milestone_id'] = 0;
+        }
 
         if (isset($this->request->query['start_date']) && isset($this->request->query['end_date']))
             $this->paginate['finder']['projectInventorySummary'] = [
-                'project_id' => $this->_projectId,
+                'project_id' => $id,
                 'milestone_id' => $this->request->query['milestone_id'],
                 'start_date' => $this->request->query['start_date'], 
                 'end_date' => $this->request->query['end_date']];
         else 
             $this->paginate['finder']['projectInventorySummary'] = [
-                'project_id' => $this->_projectId,
+                'project_id' => $id,
                 'milestone_id' => $this->request->query['milestone_id']
             ];
         $materials = $this->paginate(TableRegistry::get('Materials'));
 
         $this->paginate += $this->createFinders($this->request->query, 'Projects');
-        $this->paginate['finder']['ById'] = ['project_id' => $this->_projectId];
+        $this->paginate['finder']['ById'] = ['project_id' => $id];
         $projects = $this->paginate(TableRegistry::get('Projects'));
 
         if (isset($this->request->query['start_date']) && isset($this->request->query['end_date'])):
@@ -79,30 +82,31 @@ class MaterialsProjectInventoryReportController extends AppController
         $this->set('_serialize', ['materials', 'projects']);
     }
 
-    public function view($download = null)
+    public function view($id = null, $download = null)
     {
         $this->viewBuilder()->layout('project');
 
         $this->paginate += $this->createFinders($this->request->query, 'Materials');
         
-        if(!isset($this->request->query['milestone_id']))
+        if(!isset($this->request->query['milestone_id'])) {
             $this->request->query['milestone_id'] = 0;
+        }
 
         if (isset($this->request->query['start_date']) && isset($this->request->query['end_date']))
             $this->paginate['finder']['projectInventorySummary'] = [
-                'project_id' => $this->_projectId,
+                'project_id' => $id,
                 'milestone_id' => $this->request->query['milestone_id'],
                 'start_date' => $this->request->query['start_date'], 
                 'end_date' => $this->request->query['end_date']];
         else 
             $this->paginate['finder']['projectInventorySummary'] = [
-                'project_id' => $this->_projectId,
+                'project_id' => $id,
                 'milestone_id' => $this->request->query['milestone_id']
             ];
         $materials = $this->paginate(TableRegistry::get('Materials'));
 
         $this->paginate += $this->createFinders($this->request->query, 'Projects');
-        $this->paginate['finder']['ById'] = ['project_id' => $this->_projectId];
+        $this->paginate['finder']['ById'] = ['project_id' => $id];
         $projects = $this->paginate(TableRegistry::get('Projects'));
 
         if (isset($this->request->query['start_date']) && isset($this->request->query['end_date'])):

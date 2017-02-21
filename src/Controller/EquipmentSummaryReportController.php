@@ -15,8 +15,9 @@ class EquipmentSummaryReportController extends AppController
 
     public function beforeFilter(Event $event)
     {
-        if(empty($this->request->params['pass']))
+        if(empty($this->request->params['pass'])) {
             return $this->redirect(['controller' => 'dashboard']);
+        }
 
         $this->loadModel('Projects');
         $this->viewBuilder()->layout('project_management');
@@ -47,6 +48,7 @@ class EquipmentSummaryReportController extends AppController
         if($project->is_finished == 0) {
             return $this->redirect(['controller' => 'dashboard']);
         }
+
         $equipment = [];
         $equipmentInventories = $this->EquipmentInventories->find('byProjectId', ['project_id'=>$id])->toArray();
 
@@ -83,6 +85,7 @@ class EquipmentSummaryReportController extends AppController
         if($project->is_finished == 0) {
             return $this->redirect(['controller' => 'dashboard']);
         }
+        
         $equipment = [];
         $equipmentInventories = $this->EquipmentInventories->find('byProjectId', ['project_id'=>$id])->toArray();
 

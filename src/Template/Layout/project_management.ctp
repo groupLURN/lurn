@@ -46,9 +46,9 @@ $this->start('additional-sidebar');
         <span>Inventory Reports</span>
     </a>
     <ul class="sub">
-        <li><a href=<?= $this->Url->build(['controller' => 'EquipmentProjectInventoryReport', '?' => ['project_id' => $projectId]]) ?>>Equipment Inventory Report</a></li>
-        <li><a href=<?= $this->Url->build(['controller' => 'MaterialsProjectInventoryReport', '?' => ['project_id' => $projectId]]) ?>>Materials Inventory Report</a></li>
-        <li><a href=<?= $this->Url->build(['controller' => 'ManpowerProjectInventoryReport', '?' => ['project_id' => $projectId]]) ?>>Manpower Inventory Report</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'EquipmentProjectInventoryReport', $projectId]) ?>>Equipment Inventory Report</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'MaterialsProjectInventoryReport', $projectId]) ?>>Materials Inventory Report</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'ManpowerProjectInventoryReport', $projectId]) ?>>Manpower Inventory Report</a></li>
     </ul>
 </li>
 <?php if ($isFinished == 1):?>
@@ -58,6 +58,7 @@ $this->start('additional-sidebar');
         <span>Summary Reports</span>
     </a>
         <ul class="sub">
+            <li><a href=<?= $this->Url->build(['controller' => 'SummaryReport', $projectId]) ?>>Summary Report</a></li>
             <li><a href=<?= $this->Url->build(['controller' => 'EquipmentSummaryReport', $projectId]) ?>>Equipment Summary Report</a></li>
             <li><a href=<?= $this->Url->build(['controller' => 'MaterialsSummaryReport', $projectId]) ?>>Materials Summary Report</a></li>
             <li><a href=<?= $this->Url->build(['controller' => 'ManpowerSummaryReport', $projectId]) ?>>Manpower Summary Report</a></li>

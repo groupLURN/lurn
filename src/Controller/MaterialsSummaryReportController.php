@@ -14,8 +14,9 @@ class MaterialsSummaryReportController extends AppController
 
     public function beforeFilter(Event $event)
     {
-        if(empty($this->request->params['pass']))
+        if(empty($this->request->params['pass'])){
             return $this->redirect(['controller' => 'dashboard']);
+        }
 
         $this->loadModel('Projects');
         $this->viewBuilder()->layout('project_management');
@@ -84,6 +85,7 @@ class MaterialsSummaryReportController extends AppController
         if($project->is_finished == 0) {
             return $this->redirect(['controller' => 'dashboard']);
         }
+        
         $materials = [];
         $materialsInventories = $this->MaterialsTaskInventories->find('byProjectId', ['project_id'=>$id])->toArray();
 

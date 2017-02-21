@@ -71,10 +71,19 @@ MAIN CONTENT
                                             if (isset($calendar['updates'][$week][$day])) {
                                                 echo 'data-updates="'.h(json_encode($calendar['updates'][$week][$day])).'"'; 
                                             }
+                                            
+                                            if (isset($calendar['updatedTaskIds'][$week][$day])) {
+                                                echo 'data-updates-id="'.h(json_encode($calendar['updatedTaskIds'][$week][$day])).'"'; 
+                                            }
 
                                             if (isset($calendar['dueProjects'][$week][$day])) {
                                                 echo 'data-due-projects="'.h(json_encode($calendar['dueProjects'][$week][$day])).'"'; 
                                             }
+
+                                            if (isset($calendar['dueProjectIds'][$week][$day])) {
+                                                echo 'data-due-projects-id="'.h(json_encode($calendar['dueProjectIds'][$week][$day])).'"'; 
+                                            }
+
                                         ?>
                                         >
                                         <span>

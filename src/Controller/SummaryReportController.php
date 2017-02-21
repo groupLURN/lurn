@@ -15,8 +15,9 @@ class SummaryReportController extends AppController
 
     public function beforeFilter(Event $event)
     {
-        if(empty($this->request->params['pass']))
+        if(empty($this->request->params['pass'])) {
             return $this->redirect(['controller' => 'dashboard']);
+        }
 
         $this->loadModel('Projects');
         $this->viewBuilder()->layout('project_management');
@@ -46,11 +47,11 @@ class SummaryReportController extends AppController
         $this->loadModel('MaterialsTasks');
         $this->loadModel('Manpower');
 
-
         $project = $this->Projects->find('byId', ['project_id'=>$id])->first();
         if($project->is_finished == 0) {
             return $this->redirect(['controller' => 'dashboard']);
         }
+
         $equipment = [];
         $equipmentInventories = $this->EquipmentInventories->find('byProjectId', ['project_id'=>$id])->toArray();
         
@@ -136,9 +137,10 @@ class SummaryReportController extends AppController
 
 
         $project = $this->Projects->find('byId', ['project_id'=>$id])->first();
-        // if($project->is_finished == 0) {
-        //     return $this->redirect(['controller' => 'dashboard']);
-        // }
+        if($project->is_finished == 0) {
+            return $this->redirect(['controller' => 'dashboard']);
+        }
+        
         $equipment = [];
         $equipmentInventories = $this->EquipmentInventories->find('byProjectId', ['project_id'=>$id])->toArray();
         

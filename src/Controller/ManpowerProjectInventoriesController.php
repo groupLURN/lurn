@@ -18,20 +18,21 @@ class ManpowerProjectInventoriesController extends AppController
 
     public function beforeFilter(Event $event)
     {
-        if(!isset($this->request->query['project_id']))
+        if(empty($this->request->params['pass'])) {
             return $this->redirect(['controller' => 'dashboard']);
+        }
 
         $this->loadModel('Projects');
         $this->viewBuilder()->layout('project_management');
-        $this->_projectId = (int) $this->request->query['project_id'];
+        $projectId = (int) $this->request->params['pass'][0];
         
-        $this->set('projectId', $this->_projectId);
+        $this->set('projectId', $projectId);
         
-        $project = $this->Projects->find('byId', ['project_id' => $this->_projectId])->first();
-        
+        $project = $this->Projects->find('byId', ['project_id' => $projectId])->first();
+
         $this->set('isFinished', $project->is_finished );
 
-        $this->set('projectId', $this->_projectId);
+        $this->set('projectId', $projectId);
         return parent::beforeFilter($event);
     }
 
@@ -40,7 +41,7 @@ class ManpowerProjectInventoriesController extends AppController
      *
      * @return \Cake\Network\Response|null
      */
-    public function index()
+    public function index($id = null)
     {
         $this->paginate = [
             'sortWhitelist' => [
@@ -52,12 +53,12 @@ class ManpowerProjectInventoriesController extends AppController
         ];
 
         $this->paginate += $this->createFinders($this->request->query, 'Manpower');
-        $this->paginate['finder']['projectInventorySummary'] = ['project_id' => $this->_projectId];
+        $this->paginate['finder']['projectInventorySummary'] = ['project_id' => $id];
         $manpower = $this->paginate(TableRegistry::get('Manpower'));
         $manpowerTypes = $this->Manpower->ManpowerTypes->find('list', ['limit' => 200])->toArray();
 
         $milestones = TableRegistry::get('Milestones')->find('list')
-            ->where(['project_id' => $this->_projectId])
+            ->where(['project_id' => $id])
             ->toArray();
 
         $this->set(compact('manpower', 'manpowerTypes', 'milestones'));
@@ -74,9 +75,11 @@ class ManpowerProjectInventoriesController extends AppController
      */
     public function view($id = null)
     {
+
+        $manpowerTypeId = $this->request->query['manpower_type_id'];
         $summary = TableRegistry::get('Manpower')->find('projectInventorySummary', [
-            'id' => $id,
-            'project_id' => $this->_projectId
+            'id' => $manpowerTypeId,
+            'project_id' => $id
         ])->first();
 
         $manpower = TableRegistry::get('Manpower')->find()
@@ -85,7 +88,7 @@ class ManpowerProjectInventoriesController extends AppController
             {
                 return $query->where(['ManpowerTypes.id' => $id]);
             })
-            ->where(['Manpower.project_id' => $this->_projectId])
+            ->where(['Manpower.project_id' => $id])
             ->orderAsc('Milestones.title')
             ->all();
 
@@ -139,18 +142,19 @@ class ManpowerProjectInventoriesController extends AppController
      */
     public function edit($id = null)
     {
+        $manpowerTypeId = $this->request->query['manpower_type_id'];
         try
         {
             $equipmentProjectInventory = $this->ManpowerProjectInventories->get([
                 'equipment_id' => $id,
-                'project_id' => $this->_projectId
+                'project_id' => $id
             ]);
         }
         catch(RecordNotFoundException $e)
         {
             $equipmentProjectInventory = $this->ManpowerProjectInventories->newEntity([
                 'equipment_id' => $id,
-                'project_id' => $this->_projectId,
+                'project_id' => $id,
                 'quantity' => 0
             ]);
         }
@@ -158,7 +162,7 @@ class ManpowerProjectInventoriesController extends AppController
             $equipmentProjectInventory = $this->ManpowerProjectInventories->patchEntity($equipmentProjectInventory, $this->request->data);
             if ($this->ManpowerProjectInventories->save($equipmentProjectInventory)) {
                 $this->Flash->success(__('The equipment project inventory has been saved.'));
-                return $this->redirect(['action' => 'index', '?' => ['project_id' => $this->_projectId]]);
+                return $this->redirect(['action' => 'index', '?' => ['project_id' => $id]]);
             } else {
                 $this->Flash->error(__('The equipment project inventory could not be saved. Please, try again.'));
             }

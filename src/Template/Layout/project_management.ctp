@@ -35,9 +35,9 @@ $this->start('additional-sidebar');
         <span>Project Inventories</span>
     </a>
     <ul class="sub">
-        <li><a href=<?= $this->Url->build(['controller' => 'EquipmentProjectInventories', '?' => ['project_id' => $projectId]]) ?>>Equipment Inventory</a></li>
-        <li><a href=<?= $this->Url->build(['controller' => 'MaterialsProjectInventories', '?' => ['project_id' => $projectId]]) ?>>Materials Inventory</a></li>
-        <li><a href=<?= $this->Url->build(['controller' => 'ManpowerProjectInventories', '?' => ['project_id' => $projectId]]) ?>>Manpower Inventory</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'EquipmentProjectInventories', $projectId]) ?>>Equipment Inventory</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'MaterialsProjectInventories', $projectId]) ?>>Materials Inventory</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'ManpowerProjectInventories', $projectId]) ?>>Manpower Inventory</a></li>
     </ul>
 </li>
 <li class="sub-menu">

@@ -76,7 +76,7 @@
                         <td><?= $this->Number->format($manpower_->unavailable_quantity) ?></td>
                         <td><?= $this->Number->format($manpower_->total_quantity) ?></td>
                         <td class="actions">
-                            <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $manpower_->manpower_type->id, '?' => ['project_id' => $projectId]]); ?>
+                            <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $projectId, '?' => ['manpower_type_id' => $manpower_->manpower_type->id]]); ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>

@@ -15,24 +15,23 @@ use Cake\ORM\TableRegistry;
  */
 class EquipmentProjectInventoriesController extends AppController
 {
-    private $_projectId = null;
-
     public function beforeFilter(Event $event)
     {
-        if(!isset($this->request->query['project_id']))
+        if(empty($this->request->params['pass'])) {
             return $this->redirect(['controller' => 'dashboard']);
+        }
 
         $this->loadModel('Projects');
         $this->viewBuilder()->layout('project_management');
-        $this->_projectId = (int) $this->request->query['project_id'];
+        $projectId = (int) $this->request->params['pass'][0];
         
-        $this->set('projectId', $this->_projectId);
+        $this->set('projectId', $projectId);
         
-        $project = $this->Projects->find('byId', ['project_id' => $this->_projectId])->first();
+        $project = $this->Projects->find('byId', ['project_id' => $projectId])->first();
 
         $this->set('isFinished', $project->is_finished );
 
-        $this->set('projectId', $this->_projectId);
+        $this->set('projectId', $projectId);
         return parent::beforeFilter($event);
     }
 
@@ -41,7 +40,7 @@ class EquipmentProjectInventoriesController extends AppController
      *
      * @return \Cake\Network\Response|null
      */
-    public function index()
+    public function index($id = null)
     {
         $this->paginate = [
             'sortWhitelist' => [
@@ -55,11 +54,11 @@ class EquipmentProjectInventoriesController extends AppController
         ];
 
         $this->paginate += $this->createFinders($this->request->query, 'EquipmentInventories');
-        $this->paginate['finder']['projectInventorySummary'] = ['project_id' => $this->_projectId];
+        $this->paginate['finder']['projectInventorySummary'] = ['project_id' => $id];
         $equipmentInventories = $this->paginate(TableRegistry::get('EquipmentInventories'));
 
         $milestones = TableRegistry::get('Milestones')->find('list')
-            ->where(['project_id' => $this->_projectId])
+            ->where(['project_id' => $id])
             ->toArray();
 
         $suppliers = TableRegistry::get('Suppliers')->find('list')->toArray();
@@ -77,10 +76,13 @@ class EquipmentProjectInventoriesController extends AppController
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function view($id = null)
-    {
+    {   
+
+        $equipmentId = $this->request->query['equipment_id'];
+
         $summary = TableRegistry::get('EquipmentInventories')->find('projectInventorySummary', [
-            'id' => $id,
-            'project_id' => $this->_projectId
+            'id' => $equipmentId,
+            'project_id' => $id
         ])->first();
 
         $rentedEquipmentInventories = TableRegistry::get('Equipment')->get($id, [
@@ -108,7 +110,7 @@ class EquipmentProjectInventoriesController extends AppController
         $unavailableInHouseEquipment = $collection->filter(function($equipmentInventory)
         {
             return $equipmentInventory->has('project') &&
-            $equipmentInventory->project->id === $this->_projectId &&
+            $equipmentInventory->project->id === $id &&
             $equipmentInventory->has('task');
         });
 
@@ -116,14 +118,14 @@ class EquipmentProjectInventoriesController extends AppController
         $unavailableRentedEquipment = $collection->filter(function($equipmentInventory)
         {
             return $equipmentInventory->has('project') &&
-            $equipmentInventory->project->id === $this->_projectId &&
+            $equipmentInventory->project->id === $id &&
             $equipmentInventory->has('task');
         });
 
         $availableRentedEquipment = $collection->filter(function($equipmentInventory)
         {
             return $equipmentInventory->has('project') &&
-            $equipmentInventory->project->id === $this->_projectId &&
+            $equipmentInventory->project->id === $id &&
             !$equipmentInventory->has('task');
         });
 
@@ -188,18 +190,19 @@ class EquipmentProjectInventoriesController extends AppController
      */
     public function edit($id = null)
     {
+        $equipmentId = $this->request->query['equipment_id'];
         try
         {
             $equipmentProjectInventory = $this->EquipmentProjectInventories->get([
-                'equipment_id' => $id,
-                'project_id' => $this->_projectId
+                'equipment_id' => $equipmentId,
+                'project_id' => $id
             ]);
         }
         catch(RecordNotFoundException $e)
         {
             $equipmentProjectInventory = $this->EquipmentProjectInventories->newEntity([
-                'equipment_id' => $id,
-                'project_id' => $this->_projectId,
+                'equipment_id' => $equipmentId,
+                'project_id' => $id,
                 'quantity' => 0
             ]);
         }
@@ -207,7 +210,7 @@ class EquipmentProjectInventoriesController extends AppController
             $equipmentProjectInventory = $this->EquipmentProjectInventories->patchEntity($equipmentProjectInventory, $this->request->data);
             if ($this->EquipmentProjectInventories->save($equipmentProjectInventory)) {
                 $this->Flash->success(__('The equipment project inventory has been saved.'));
-                return $this->redirect(['action' => 'index', '?' => ['project_id' => $this->_projectId]]);
+                return $this->redirect(['action' => 'index', '?' => ['project_id' => $id]]);
             } else {
                 $this->Flash->error(__('The equipment project inventory could not be saved. Please, try again.'));
             }

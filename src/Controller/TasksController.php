@@ -92,9 +92,9 @@ class TasksController extends AppController
         $this->set('_serialize', ['taskReplenishment', 'milestones']);
     }
 
-    public function replenish($id)
+    public function replenish($taskId)
     {
-        $task = $this->Tasks->get($id, [
+        $task = $this->Tasks->get($taskId, [
             'contain' => [
                 'Milestones',
                 'Equipment', 'ManpowerTypes', 'Materials',
@@ -112,9 +112,9 @@ class TasksController extends AppController
         return $this->redirect(['action' => 'manage', '?' => ['project_id' => $this->__projectId]]);
     }
 
-    public function viewStock($id = null)
+    public function viewStock($taskId = null)
     {
-        $task = $this->Tasks->get($id, [
+        $task = $this->Tasks->get($taskId, [
             'contain' => ['Milestones',
                 'Equipment', 'ManpowerTypes', 'Materials',
                 'EquipmentReplenishmentDetails', 'ManpowerTypeReplenishmentDetails', 'MaterialReplenishmentDetails'
@@ -127,9 +127,9 @@ class TasksController extends AppController
         $this->set('_serialize', ['task']);
     }
 
-    public function viewFinished($id = null)
+    public function viewFinished($taskId = null)
     {
-        $task = $this->Tasks->get($id, [
+        $task = $this->Tasks->get($taskId, [
             'contain' => ['Milestones',
                 'Equipment', 'ManpowerTypes', 'Materials',
                 'EquipmentReplenishmentDetails', 'ManpowerTypeReplenishmentDetails', 'MaterialReplenishmentDetails'
@@ -144,8 +144,6 @@ class TasksController extends AppController
 
     public function generateReport($taskId = null, $download = null)
     {
-       
-
         $this->viewBuilder()->layout('general');
         
         $task = $this->Tasks->get($taskId, [
@@ -177,9 +175,9 @@ class TasksController extends AppController
         ]); 
     }
 
-    public function finish($id = null)
+    public function finish($taskId = null)
     {
-        $task = $this->Tasks->get($id, [
+        $task = $this->Tasks->get($taskId, [
             'contain' => [
                 'Milestones',
                 'Equipment', 'ManpowerTypes', 'Materials',
@@ -237,13 +235,13 @@ class TasksController extends AppController
     /**
      * View method
      *
-     * @param string|null $id Task id.
+     * @param string|null $taskId Task id.
      * @return \Cake\Network\Response|null
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($id = null)
+    public function view($taskId = null)
     {
-        $task = $this->Tasks->get($id, [
+        $task = $this->Tasks->get($taskId, [
             'contain' => ['Milestones', 'Equipment', 'ManpowerTypes', 'Materials']
         ]);
 
@@ -279,15 +277,15 @@ class TasksController extends AppController
     /**
      * Edit method
      *
-     * @param string|null $id Task id.
+     * @param string|null $taskId Task id.
      * @return \Cake\Network\Response|void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
-    public function edit($id = null)
+    public function edit($taskId = null)
     {
         if ($this->request->is(['patch', 'post', 'put'])) {
 
-            $task = $this->Tasks->get($id);
+            $task = $this->Tasks->get($taskId);
 
             $this->transpose($this->request->data, 'equipment');
             $this->transpose($this->request->data, 'manpower_types');
@@ -309,7 +307,7 @@ class TasksController extends AppController
             }
         }
 
-        $task = $this->Tasks->get($id, [
+        $task = $this->Tasks->get($taskId, [
             'contain' => ['Equipment', 'ManpowerTypes', 'Materials']
         ]);
 
@@ -363,14 +361,14 @@ class TasksController extends AppController
     /**
      * Delete method
      *
-     * @param string|null $id Task id.
+     * @param string|null $taskId Task id.
      * @return \Cake\Network\Response|null Redirects to index.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function delete($id = null)
+    public function delete($taskId = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $task = $this->Tasks->get($id);
+        $task = $this->Tasks->get($taskId);
         if ($this->Tasks->delete($task)) {
             $this->Flash->success(__('The task has been deleted.'));
         } else {

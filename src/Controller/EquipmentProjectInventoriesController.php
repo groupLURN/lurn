@@ -71,7 +71,7 @@ class EquipmentProjectInventoriesController extends AppController
     /**
      * View method
      *
-     * @param string|null $id Equipment Project Inventory id.
+     * @param string|null $id Project id.
      * @return \Cake\Network\Response|null
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
@@ -184,7 +184,7 @@ class EquipmentProjectInventoriesController extends AppController
     /**
      * Edit method
      *
-     * @param string|null $id Equipment Project Inventory id.
+     * @param string|null $id Project id.
      * @return \Cake\Network\Response|void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
@@ -224,7 +224,7 @@ class EquipmentProjectInventoriesController extends AppController
     /**
      * Delete method
      *
-     * @param string|null $id Equipment Project Inventory id.
+     * @param string|null $id Project id.
      * @return \Cake\Network\Response|null Redirects to index.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */

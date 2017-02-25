@@ -66,10 +66,23 @@ public function add()
 	$purchaseOrderHeader = $this->PurchaseOrderHeaders->newEntity();
 
 	if ($this->request->is('post')) {
-		$this->transpose($this->request->data, 'purchase_order_details');
-		$purchaseOrderHeader = $this->PurchaseOrderHeaders->patchEntity($purchaseOrderHeader, $this->request->data, [
+		$postData = $this->request->data;
+		$count = count($postData['purchase_order_details_quantity']);
+
+		for ($i = 0; $i < $count; $i++) {
+			if($postData['purchase_order_details_quantity'][$i] == 0){
+				unset($postData['purchase_order_details_material_id'][$i]);
+				unset($postData['purchase_order_details_quantity'][$i]);
+			}
+		}
+
+		$this->transpose($postData , 'purchase_order_details');
+
+		
+		$purchaseOrderHeader = $this->PurchaseOrderHeaders->patchEntity($purchaseOrderHeader, $postData , [
 			'associated' => ['PurchaseOrderDetails']
 			]);
+
 		if ($this->PurchaseOrderHeaders->save($purchaseOrderHeader)) {
                 $this->loadModel('Notifications');
                 $this->loadModel('Projects');

@@ -207,6 +207,7 @@ class MaterialsTable extends Table
         if((float)$options['task_id'] > -1 && (float)$options['supplier_id'] > -1){
 
             return $query
+                ->select(['id', 'name', 'unit_measure', 'mt.quantity', 'mpi.quantity'])
                 ->join([
                     'mt' => [
                         'table' => 'materials_tasks',
@@ -216,7 +217,11 @@ class MaterialsTable extends Table
                         'table' => 'materials_suppliers',
                         'type' => 'INNER',
                         'conditions' => ['ms.material_id = mt.material_id']
-                    ]
+                    ],
+                    'mpi' => [
+                        'table' => 'materials_project_inventories',
+                        'type' => 'LEFT',
+                        'conditions' => ['mpi.material_id = Materials.id']]
                 ])
                 ->where(['ms.supplier_id' => $options['supplier_id'],
                     'mt.task_id' => $options['task_id']]);

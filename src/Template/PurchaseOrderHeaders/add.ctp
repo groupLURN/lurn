@@ -40,27 +40,27 @@
             ]);
 
             ?>
-
-            <legend class="mt"><h3><i class="fa fa-angle-right"></i>Purchase Order</h3></legend>
             <?= $this->element('editable_data_table', [
-                'tableWidth' => '350px',
+                'tableWidth' => '50%',
                 'headers' => [
                     'Materials',
                     'Quantity',
+                    'Project Inventory Quantity'
                 ],
                 'columns' => [
                     $this->Form->input('purchase_order_details.material_id[]', [
-                        'class' => ' form-control chosen',
+                        'class' => 'form-control',
                         'label' => false,
-                        'options' => ['0' => '-'] ,
-                        'id' => false
+                        'id' => false,
+                        'type' => 'hidden'
                     ]),
                     $this->Form->input('purchase_order_details.quantity[]', [
                         'class' => 'number-only',
                         'label' => false,
                         'id' => false
                     ]),
-                ]
+                ],
+                'id' => 'purchase-order-add'
             ]); ?>
         </fieldset>
 

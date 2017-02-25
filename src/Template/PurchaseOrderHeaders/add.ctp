@@ -47,19 +47,7 @@
                     'Quantity',
                     'Project Inventory Quantity'
                 ],
-                'columns' => [
-                    $this->Form->input('purchase_order_details.material_id[]', [
-                        'class' => 'form-control',
-                        'label' => false,
-                        'id' => false,
-                        'type' => 'hidden'
-                    ]),
-                    $this->Form->input('purchase_order_details.quantity[]', [
-                        'class' => 'number-only',
-                        'label' => false,
-                        'id' => false
-                    ]),
-                ],
+                'hasAdd' => false,
                 'id' => 'purchase-order-add'
             ]); ?>
         </fieldset>

@@ -40,7 +40,7 @@
             ]);
 
             ?>
-            <?= $this->element('editable_data_table', [
+            <?= $this->element('order_request_add', [
                 'tableWidth' => '50%',
                 'headers' => [
                     'Materials',
@@ -55,21 +55,14 @@
         <?= $this->Form->button(__('Submit'), [
             'class' => 'btn btn-primary btn-submit',
             'onclick' => "
-            if($('.editable-data-table tr.data').length === 1)
+            if($('.editable-data-table tr.data').length <= 1)
             {
                 alert('There should be at least one purchase detail.');
                 event.preventDefault();
             }
             else if(!confirm('Once the purchase order is submitted, the purchase order cannot be edited or deleted. Are you sure with your purchase order?'))
-                event.preventDefault();
-            else
             {
-                $('.editable-data-table').find('input, select').each(function()
-                {
-                    $(this).prop('disabled', !$(this).prop('disabled'));
-                    if($(this).is('select'))
-                        $(this).trigger('chosen:updated');
-                });
+                event.preventDefault();
             }
             "
         ]) ?>

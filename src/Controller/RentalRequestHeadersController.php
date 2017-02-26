@@ -60,18 +60,41 @@ class RentalRequestHeadersController extends AppController
         $rentalRequestHeader = $this->RentalRequestHeaders->newEntity();
         if ($this->request->is('post')) {
             $postData = $this->request->data;
-            $count = count($postData['purchase_order_details_quantity']);
+            $count = count($postData['rental_request_details_quantity']);
             for ($i = 0; $i < $count; $i++) {
-                if($postData['purchase_order_details_quantity'][$i] == 0){
-                    unset($postData['purchase_order_details_material_id'][$i]);
-                    unset($postData['purchase_order_details_quantity'][$i]);
+                if($postData['rental_request_details_quantity'][$i] == 0
+                    || $postData['rental_request_details_quantity'][$i] == ''){
+                    unset($postData['rental_request_details_equipment_id'][$i]);
+                    unset($postData['rental_request_details_quantity'][$i]);
+                    unset($postData['rental_request_details_duration'][$i]);
                 }
             }
-            
 
+            $count = count($postData['rental_request_details_duration']);
 
-            debug($postData);
-            die();
+            for ($i = 0; $i < $count; $i++) {
+                if ( $postData['rental_request_details_quantity'][$i] < 1) {
+
+                    $this->Flash->error(__('Quantity must be at least 1.'));
+                    $this->redirect(['action' => 'add']);
+                    return;
+                }
+                if ( $postData['rental_request_details_duration'][$i] < 1
+                    || $postData['rental_request_details_duration'][$i] == '') {
+
+                    $this->Flash->error(__('Duration must be at least 1 day and must not be blank.'));
+                    $this->redirect(['action' => 'add']);
+                    return;
+                }
+                if ( $postData['rental_request_details_equipment_id'][$i] < 0
+                    || $postData['rental_request_details_equipment_id'][$i] == '') {
+
+                    $this->Flash->error(__('Invalid equipment id.'));
+                    $this->redirect(['action' => 'add']);
+                    return;
+                }
+            }
+
             $this->transpose($postData, 'rental_request_details');
             $rentalRequestHeader = $this->RentalRequestHeaders->patchEntity($rentalRequestHeader, $postData, [
                 'associated' => ['RentalRequestDetails']

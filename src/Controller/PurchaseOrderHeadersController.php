@@ -70,15 +70,33 @@ public function add()
 		$count = count($postData['purchase_order_details_quantity']);
 
 		for ($i = 0; $i < $count; $i++) {
-			if($postData['purchase_order_details_quantity'][$i] == 0){
+			if($postData['purchase_order_details_quantity'][$i] == 0
+                || $postData['purchase_order_details_quantity'][$i] == ''){
 				unset($postData['purchase_order_details_material_id'][$i]);
 				unset($postData['purchase_order_details_quantity'][$i]);
 			}
 		}
 
+        $count = count($postData['rental_request_details_duration']);
+
+        for ($i = 0; $i < $count; $i++) {
+            if ( $postData['purchase_order_details_quantity'][$i] < 1) {
+
+                $this->Flash->error(__('Quantity must be at least 1.'));
+                $this->redirect(['action' => 'add']);
+                return;
+            }
+            if ( $postData['purchase_order_details_material_id'][$i] < 0
+                || $postData['purchase_order_details_material_id'][$i] == '') {
+
+                $this->Flash->error(__('Invalid material id.'));
+                $this->redirect(['action' => 'add']);
+                return;
+            }
+        }
+
 		$this->transpose($postData , 'purchase_order_details');
 
-		
 		$purchaseOrderHeader = $this->PurchaseOrderHeaders->patchEntity($purchaseOrderHeader, $postData , [
 			'associated' => ['PurchaseOrderDetails']
 			]);

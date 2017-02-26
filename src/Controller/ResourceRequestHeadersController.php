@@ -21,7 +21,7 @@ class ResourceRequestHeadersController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['ProjectFrom', 'ProjectTo']
+        'contain' => ['ProjectFrom', 'ProjectTo']
         ];
 
         $this->paginate += $this->createFinders($this->request->query);
@@ -62,7 +62,7 @@ class ResourceRequestHeadersController extends AppController
             $this->transpose($this->request->data, 'materials');
             $resourceRequestHeader = $this->ResourceRequestHeaders->patchEntity($resourceRequestHeader, $this->request->data, [
                 'associated' => ['Equipment', 'ManpowerTypes', 'Materials']
-            ]);
+                ]);
 
             if ($this->ResourceRequestHeaders->save($resourceRequestHeader)) {
                 $this->loadModel('Notifications');
@@ -97,11 +97,11 @@ class ResourceRequestHeadersController extends AppController
         }
 
         $projects = $this->ResourceRequestHeaders->ProjectTo->find('list', ['limit' => 200])
-            ->matching('EmployeesJoin.Users', function($query)
-            {
-                return $query->where(['Users.id' => $this->userId]);
-            })
-            ->toArray();
+        ->matching('EmployeesJoin.Users', function($query)
+        {
+            return $query->where(['Users.id' => $this->userId]);
+        })
+        ->toArray();
 
         $materials = TableRegistry::get('Materials')->find('list', ['limit' => 200]);
         $equipment = TableRegistry::get('Equipment')->find('list', ['limit' => 200]);
@@ -121,7 +121,7 @@ class ResourceRequestHeadersController extends AppController
     {
         $resourceRequestHeader = $this->ResourceRequestHeaders->get($id, [
             'contain' => []
-        ]);
+            ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $resourceRequestHeader = $this->ResourceRequestHeaders->patchEntity($resourceRequestHeader, $this->request->data);
             if ($this->ResourceRequestHeaders->save($resourceRequestHeader)) {
@@ -157,24 +157,89 @@ class ResourceRequestHeadersController extends AppController
 
 
 
+
+
+/**
+* Method for getting milestones from the database
+*
+* @return json response
+*/
+public function getMilestones() {
+    $this->loadModel('Milestones');
+    $milestones     = array();
+    $project_id     = $this->request->query('project_id');
+
+    if ($project_id) {
+        $milestones = $this->Milestones->find('byProjectId', ['project_id' => $project_id]);
+    }
+
+    header('Content-Type: application/json');
+    echo json_encode($milestones);
+    exit();
+}   
+
+/**
+* Method for getting tasks from the database
+*
+* @return json response
+*/
+public function getTasks() {
+    $this->loadModel('Tasks');
+    $tasks  = array();
+
+    $project_id     = $this->request->query('project_id');
+    $milestone_id   = $this->request->query('milestone_id');
+
+    if ($project_id != null && $milestone_id != null) {
+        $tasks = $this->Tasks->find('byProjectAndMilestone', ['project_id' => $project_id, 'milestone_id' => $milestone_id]);
+
+    } else  if ($project_id != null) {
+        $tasks = $this->Tasks->find('byProject', ['project_id' => $project_id]);
+    } 
+
+    header('Content-Type: application/json');
+    echo json_encode($tasks);
+    exit();
+} 
+
+/**
+* Method for getting materials from the database
+*
+* @return json response
+*/
+
+
 /**
 * Method for getting materials from the database
 *
 * @return json response
 */
 public function getMaterials() {
-    $this->loadModel('MaterialsTasks');
+    $this->loadModel('Materials');
     $this->loadModel('Tasks');
 
-    $materials  = [];
+    $materials  = array();
 
-    $projectId     = $this->request->query('project_id');
-    if ($projectId != null) {
-        $materialsHolder   = array();
+    $project_id     = $this->request->query('project_id');
+    $milestone_id   = $this->request->query('milestone_id');
+    $task_id        = $this->request->query('task_id');
+
+    if ($task_id != null) {
+
+        $materials = $this->Materials->find('byTask', ['task_id' => $task_id]);
+
+    } else if ($project_id != null) {
+        $materials_holder   = array();
         $tasks              = array();
         $task_ids           = array();
 
-        $tasks = $this->Tasks->find('byProject', ['project_id' => $projectId]);
+        if($milestone_id != null) {
+
+            $tasks = $this->Tasks->find('byProjectAndMilestone', ['project_id' => $project_id, 'milestone_id' => $milestone_id]);
+        } else{
+
+            $tasks = $this->Tasks->find('byProject', ['project_id' => $project_id]);
+        }
 
         foreach ($tasks as $row) {
             array_push($task_ids, $row['id']);
@@ -186,34 +251,20 @@ public function getMaterials() {
         foreach ($task_ids as $key => $value) {
 
             $task_id = (float)$value;
-                
-            foreach ( $this->MaterialsTasks->find('byTask', ['task_id' => $task_id]) as $row) {
-                $row['name'] = $row->material->name;
 
-                array_push($materialsHolder, $row);
+            foreach ( $this->Materials->find('byTask', ['task_id' => $task_id]) as $row) {
+                array_push($materials_holder, $row);
             }
         }
 
-        for($i=0; $i < count($materialsHolder); $i++) {
-            if($i > 0) {
-                if(isset($materials[$materialsHolder[$i]->name])) {
-                    $materials[$materialsHolder[$i]->name]+=$materialsHolder[$i]->quantity;
-                } else {
-                    $materials[$materialsHolder[$i]->name] = $materialsHolder[$i]->quantity;
-                }
+        $materials = array_values(array_unique($materials_holder));
 
-            } else {
-                $materials[$materialsHolder[$i]->name] = $materialsHolder[$i]->quantity;
-            }
-        }
-
-    }     
+    } 
 
     header('Content-Type: application/json');
     echo json_encode($materials);
     exit();
 }
-
 
 /**
 * Method for getting magnpower from the database
@@ -233,20 +284,7 @@ public function getManpower() {
 
         foreach ($tasks as $task) {
             $tempManpowerTypesTasks = $this->ManpowerTypesTasks->find('byTaskId', ['task_id'=>$task->id])->toArray();
-            $manpowerHolder+= $tempManpowerTypesTasks;
-        }
-
-        for($i=0; $i < count($manpowerHolder); $i++) {
-            if($i > 0) {
-                if(isset($manpower[$manpowerHolder[$i]->manpower_type->title])) {
-                    $manpower[$manpowerHolder[$i]->manpower_type->title]+=$manpowerHolder[$i]->quantity;
-                } else {
-                    $manpower[$manpowerHolder[$i]->manpower_type->title] = $manpowerHolder[$i]->quantity;
-                }
-
-            } else {
-                $manpower[$manpowerHolder[$i]->manpower_type->title] = $manpowerHolder[$i]->quantity;
-            }
+            $manpower += $tempManpowerTypesTasks;
         }
 
     }     
@@ -297,4 +335,8 @@ public function getEquipment() {
     echo json_encode($equipment);
     exit();
 }
+
+
+
+
 }

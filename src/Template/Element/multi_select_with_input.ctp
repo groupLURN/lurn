@@ -39,7 +39,7 @@ for ($i = 0; $i < count($namespaces); $i++)
                 <input type="text" class='number-only resource-quantity' style="text-align: center;">
             <?php endif; ?>
             &nbsp;
-            <img src=<?=$this->Html->image('add.png')?> alt="Add" style="cursor: pointer;" onclick="if(<?= $checker ?> === true) add_<?= $resource ?>(this);">
+            <img src=<?=$this->Url->image('add.png')?> alt="Add" style="cursor: pointer;" onclick="if(<?= $checker ?> === true) add_<?= $resource ?>(this);">
         </div>
     </div>
     <ul class="options">

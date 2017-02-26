@@ -126,8 +126,8 @@ $(function(){
 					var materialInventoryQuantity = parseInt(materials[i].mpi.quantity);
 					
 					if(typeof materialInventoryQuantity == 'undefined' 
-						|| materialInventoryQuantity < materials[i].mt.quantity) {
-						materialQuantity = materials[i].mt.quantity;
+						|| materialInventoryQuantity < parseInt(materials[i].mt.quantity)) {
+						materialQuantity = parseInt(materials[i].mt.quantity)-materialInventoryQuantity;
 					}
 
 					var tableRow = '<tr>'+
@@ -139,11 +139,11 @@ $(function(){
 					+  materialName
 					+ '</td>'
 					+ '<td>'
-					+ '<input type="type" class="number-only" name="purchase_order_details.quantity[' + i + ']"'
-					+ ' value="' + materialQuantity + '"/>' 
+					+ materialInventoryQuantity
 					+ '</td>'
 					+ '<td>'
-					+ materialInventoryQuantity
+					+ '<input type="type" class="number-only" name="purchase_order_details.quantity[' + i + ']"'
+					+ ' value="' + materialQuantity + '"/>' 
 					+ '</td>'
 					+ '</tr>'
 					$('#purchase-order-add').append(

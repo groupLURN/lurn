@@ -59,10 +59,24 @@ class RentalRequestHeadersController extends AppController
     {
         $rentalRequestHeader = $this->RentalRequestHeaders->newEntity();
         if ($this->request->is('post')) {
-            $this->transpose($this->request->data, 'rental_request_details');
-            $rentalRequestHeader = $this->RentalRequestHeaders->patchEntity($rentalRequestHeader, $this->request->data, [
+            $postData = $this->request->data;
+            $count = count($postData['purchase_order_details_quantity']);
+            for ($i = 0; $i < $count; $i++) {
+                if($postData['purchase_order_details_quantity'][$i] == 0){
+                    unset($postData['purchase_order_details_material_id'][$i]);
+                    unset($postData['purchase_order_details_quantity'][$i]);
+                }
+            }
+            
+
+
+            debug($postData);
+            die();
+            $this->transpose($postData, 'rental_request_details');
+            $rentalRequestHeader = $this->RentalRequestHeaders->patchEntity($rentalRequestHeader, $postData, [
                 'associated' => ['RentalRequestDetails']
             ]);
+
             if ($this->RentalRequestHeaders->save($rentalRequestHeader)) {
 
                 $this->loadModel('Notifications');

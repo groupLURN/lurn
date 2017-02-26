@@ -44,8 +44,8 @@
                 'tableWidth' => '50%',
                 'headers' => [
                     'Materials',
-                    'Quantity',
-                    'Project Inventory Quantity'
+                    'Project Inventory Quantity',
+                    'Quantity'
                 ],
                 'hasAdd' => false,
                 'id' => 'purchase-order-add'

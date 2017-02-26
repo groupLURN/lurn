@@ -305,6 +305,7 @@ class EquipmentTable extends Table
         if((float)$options['task_id'] > -1 && (float)$options['supplier_id'] > -1){
 
             return $query
+                ->select(['id', 'name', 'et.quantity', 'inventory-count' => 'COUNT(ei.equipment_id)'])
                 ->join([
                     'et' => [
                         'table' => 'equipment_tasks',
@@ -313,11 +314,15 @@ class EquipmentTable extends Table
                     'es' => [
                         'table' => 'equipment_suppliers',
                         'type' => 'INNER',
-                        'conditions' => ['es.equipment_id = et.equipment_id']
-                    ]
+                        'conditions' => ['es.equipment_id = et.equipment_id']],
+                    'ei' => [
+                        'table' => 'equipment_inventories',
+                        'type' => 'LEFT',
+                        'conditions' => ['ei.equipment_id = Equipment.id']]
                 ])
                 ->where(['es.supplier_id' => $options['supplier_id'],
-                    'et.task_id' => $options['task_id']]);
+                    'et.task_id' => $options['task_id']])
+                ->group('ei.equipment_id');
         } else {
 
             return $query;

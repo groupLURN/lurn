@@ -40,31 +40,15 @@
 
             ?>
 
-            <legend class="mt"><h3><i class="fa fa-angle-right"></i> <?= __('Rental Details') ?></h3></legend>
             <?= $this->element('editable_data_table', [
                 'headers' => [
                     'Equipment',
+                    'Project Inventory Quantity',
                     'Quantity',
                     'Duration (days)'
                 ],
-                'columns' => [
-                    $this->Form->input('rental_request_details.equipment_id[]', [
-                        'class' => 'chosen form-control',
-                        'label' => false,
-                        'options' => ['0' => '-'],
-                        'id' => false
-                    ]),
-                    $this->Form->input('rental_request_details.quantity[]', [
-                        'class' => 'number-only',
-                        'label' => false,
-                        'id' => false
-                    ]),
-                    $this->Form->input('rental_request_details.duration[]', [
-                        'class' => 'number-only',
-                        'label' => false,
-                        'id' => false
-                    ])
-                ]
+                'hasAdd' => false,
+                'id' => 'rental-request-add'
             ]); ?>
         </fieldset>
 

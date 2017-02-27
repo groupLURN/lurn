@@ -71,7 +71,7 @@
                 <h4><?= __('Assign Manpower Needed') ?></h4>
                 <?= $this->element('multi_select_with_input', [
                     'options' => [null => '-Add Manpower-'],
-                    'resource' => 'manpower'
+                    'resource' => 'manpower_types'
                 ]) ?>
             </div>
         </div>

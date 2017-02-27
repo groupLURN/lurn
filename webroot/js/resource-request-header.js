@@ -123,7 +123,7 @@ $(function(){
 		var milestoneId =  $('#milestone-id').val();
 		var taskId 		=  $('#task-id').val();
 
-		$('#manpower-list option').not(':first').remove();
+		$('#manpower-types-list option').not(':first').remove();
 
 		$.ajax({ 
 			type: 'GET', 
@@ -139,12 +139,12 @@ $(function(){
 					+ manpower[i].manpower_type_id + '">' 
 					+ manpower[i].manpower_type.title 
 					+ '</option>';
-					$('#manpower-list').append(
+					$('#manpower-types-list').append(
 						option	            	
 					);
 				}
 
-				$('#manpower-list').trigger('chosen:updated');
+				$('#manpower-types-list').trigger('chosen:updated');
 			}
 		});
 

@@ -268,6 +268,7 @@ class ResourceRequestHeadersController extends AppController
     * @return json response
     */
     public function getManpower() {
+        $this->loadModel('Manpower');
         $this->loadModel('ManpowerTypesTasks');
         $this->loadModel('Tasks');
 
@@ -313,6 +314,16 @@ class ResourceRequestHeadersController extends AppController
            
         } 
 
+        $manpowerSummary = $this->Manpower->find('generalInventorySummary', [])->toArray();                     
+        foreach ($manpowerNeeded as $manpower) {                
+            foreach ($manpowerSummary as $manpowerInventory) {
+                if ($manpower->manpower_type_id == $manpowerInventory->manpower_type->id) {
+                } 
+            }
+        }
+
+        debug($manpowerNeeded);
+        die();
         header('Content-Type: application/json');
         echo json_encode($manpowerNeeded);
         exit();

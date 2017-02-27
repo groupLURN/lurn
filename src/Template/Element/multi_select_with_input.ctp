@@ -25,7 +25,7 @@ for ($i = 0; $i < count($namespaces); $i++)
 <div class="content-panel multi-select-with-input" id="<?= $id ?>" <?= $hidden ? 'hidden' : '' ?>>
     <div class="mt parent-center">
         <div class="child-center" style="width: 32%;">
-            <?= $this->Form->input('list', [
+            <?= $this->Form->input($resource.'-list', [
                 'label' => false,
                 'type' => 'select',
                 'data-placeholder' => 'No ' . $resource,
@@ -74,7 +74,7 @@ for ($i = 0; $i < count($namespaces); $i++)
         var selectedObject = {
             id: $select.val(),
             name: $select.find('[value= ' + $select.val() + ']').text()
-        };
+        };;
 
         <?php if($quantity) : ?>
         selectedObject.quantity = $(".resource-quantity", $context).val();
@@ -94,7 +94,11 @@ for ($i = 0; $i < count($namespaces); $i++)
 
         if ($ul.find('input.id[value=' + selectedObject.id + ']').length === 0
             <?php if($quantity) : ?> && selectedObject.quantity.trim() !== "" <?php endif; ?>
-        )
+        ) {
             $ul.append($li);
+
+            $select.find('[value= ' + $select.val() + ']').attr('disabled', true);
+            $select.trigger('chosen:updated');
+        }
     }
 </script>

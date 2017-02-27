@@ -14,7 +14,23 @@
                     'text' => 'Request From',
                     'class' => 'mt'
                 ],
-                'options' => $projects
+                'options' => [null => '-Choose a Project-']+$projects
+            ]);
+
+            echo $this->Form->input('milestone_id', [
+                'class' => 'form-control chosen',
+                'label' => [
+                    'class' => 'mt'
+                ],
+                'options' => [null => '-Choose a Milestone-']
+            ]);
+
+            echo $this->Form->input('task_id', [
+                'class' => 'form-control chosen',
+                'label' => [
+                    'class' => 'mt'
+                ],
+                'options' => [null => '-Choose a Task-']
             ]);
 
             echo $this->Form->input('to_project_id', [
@@ -35,12 +51,11 @@
             ]);
 
             ?>
-        </fieldset>
         <div class="row mt">
             <div class="col-xs-12">
                 <h4><?= __('Assign Equipment Needed') ?></h4>
                 <?= $this->element('multi_select_with_input', [
-                    'options' => $equipment,
+                    'options' => [null => '-Add Equipment-'],
                     'resource' => 'equipment'
                 ]) ?>
             </div>
@@ -49,8 +64,8 @@
             <div class="col-xs-12">
                 <h4><?= __('Assign Manpower Needed') ?></h4>
                 <?= $this->element('multi_select_with_input', [
-                    'options' => $manpowerTypes,
-                    'resource' => 'manpower_types'
+                    'options' => [null => '-Add Manpower-'],
+                    'resource' => 'manpower'
                 ]) ?>
             </div>
         </div>
@@ -58,11 +73,12 @@
             <div class="col-xs-12">
                 <h4><?= __('Assign Materials Needed') ?></h4>
                 <?= $this->element('multi_select_with_input', [
-                    'options' => $materials,
+                    'options' => [null => '-Add Material-'],
                     'resource' => 'materials'
                 ]) ?>
             </div>
         </div>
+        </fieldset>
         <?= $this->Form->button(__('Submit'), [
             'class' => 'btn btn-primary btn-submit',
             'onclick' => "

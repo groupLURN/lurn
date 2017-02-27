@@ -1,7 +1,7 @@
 $(function(){
 	var link = $('#base-link').text();
 
-	$("#from-project-id").chosen().change(function() {
+	$('#from-project-id').chosen().change(function() {
 		var projectId 	=  $(this).val();
 
 		updateEquipment();
@@ -33,7 +33,7 @@ $(function(){
 	});
 
 	$('#milestone-id').chosen().change(function() {
-		var projectId 	=  $("#from-project-id").val();
+		var projectId 	=  $('#from-project-id').val();
 		var milestoneId =  $(this).val();
 
 		updateEquipment();
@@ -71,95 +71,131 @@ $(function(){
 	});
 
 	function updateEquipment(){
-		var projectId 	=  $("#from-project-id").val();
+		var projectId 	=  $('#from-project-id').val();
 		var milestoneId =  $('#milestone-id').val();
 		var taskId 		=  $('#task-id').val();
 
-		$('#equipment-list option').not(':first').remove();
+		$('#equipment tr').not(':first').remove();
 
 		$.ajax({ 
-			type: "GET", 
-			url: link+"/resource-request-headers/get-equipment?project_id="+projectId
-				+"&milestone_id="+milestoneId
-				+"&task_id="+taskId, 
+			type: 'GET', 
+			url: link+'/resource-request-headers/get-equipment?project_id='+projectId
+				+'&milestone_id='+milestoneId
+				+'&task_id='+taskId, 
 			data: { get_param: 'value' }, 
 			success: function (data) { 
 				var equipment = data;
 
 				for(var i=0; i < equipment.length; i++) {
-					var option = "<option value=\"" 
-					+ equipment[i].id + "\">" 
+					var equipmentProjectInventory = parseInt(equipment[i]['inventory-count']);
+					var equipmentQuantity = parseInt(equipment[i].et.quantity) - equipmentProjectInventory;
+
+					if(equipmentQuantity < 1) {
+						equipmentQuantity = 0;
+					}
+
+					var tableRow = 
+					'<tr>'
+					+ '<td>'
+					+ '<input type="hidden" name="equipment[id][]" value="' 
+					+ equipment[i].id + '"/>' 
 					+ equipment[i].name 
-					+ "</option>";
-					$("#equipment-list").append(
-						option	            	
+					+ '</td>'
+					+ '<td>'
+					+ equipmentProjectInventory
+					+ '</td>'
+					+ '<td>'
+					+ '<input type="text" class="number-only" name="equipment[_joinData][][quantity]" value="' 
+					+ equipmentQuantity + '"/>'
+					+ '</td>'
+					+ '</tr>';
+
+					$('#equipment').append(
+						tableRow	            	
 					);
 				}
-
-				$("#equipment-list").trigger("chosen:updated");
 			}
 		});
 	}
 
 	function updateManpower(){
-		var projectId 	=  $("#from-project-id").val();
+		var projectId 	=  $('#from-project-id').val();
 		var milestoneId =  $('#milestone-id').val();
 		var taskId 		=  $('#task-id').val();
 
 		$('#manpower-list option').not(':first').remove();
 
 		$.ajax({ 
-			type: "GET", 
-			url: link+"/resource-request-headers/get-manpower?project_id="+projectId
-				+"&milestone_id="+milestoneId
-				+"&task_id="+taskId, 
+			type: 'GET', 
+			url: link+'/resource-request-headers/get-manpower?project_id='+projectId
+				+'&milestone_id='+milestoneId
+				+'&task_id='+taskId, 
 			data: { get_param: 'value' }, 
 			success: function (data) { 
 				var manpower = data;
 
 				for(var i=0; i < manpower.length; i++) {
-					var option = "<option value=\"" 
-					+ manpower[i].manpower_type_id + "\">" 
+					var option = '<option value="' 
+					+ manpower[i].manpower_type_id + '">' 
 					+ manpower[i].manpower_type.title 
-					+ "</option>";
-					$("#manpower-list").append(
+					+ '</option>';
+					$('#manpower-list').append(
 						option	            	
 					);
 				}
 
-				$("#manpower-list").trigger("chosen:updated");
+				$('#manpower-list').trigger('chosen:updated');
 			}
 		});
 
 	}
 
 	function updateMaterials(){
-		var projectId 	=  $("#from-project-id").val();
+		var projectId 	=  $('#from-project-id').val();
 		var milestoneId =  $('#milestone-id').val();
 		var taskId 		=  $('#task-id').val();
 
-		$('#materials-list option ').not(':first').remove();
+		$('#materials tr').not(':first').remove();
 
 		$.ajax({ 
-			type: "GET", 
-			url: link+"/resource-request-headers/get-materials?project_id="+projectId
-				+"&milestone_id="+milestoneId
-				+"&task_id="+taskId, 
+			type: 'GET', 
+			url: link+'/resource-request-headers/get-materials?project_id='+projectId
+				+'&milestone_id='+milestoneId
+				+'&task_id='+taskId,  
 			data: { get_param: 'value' }, 
 			success: function (data) { 
 				var materials = data;
 
 				for(var i=0; i < materials.length; i++) {
-					var option = "<option value=\"" 
-					+ materials[i].id + "\">" 
-					+ materials[i].name 
-					+ "</option>";
-					$("#materials-list").append(
-						option	            	
+					var materialId = materials[i].id;
+					var materialName = materials[i].name;
+					var materialInventoryQuantity = parseInt(materials[i].mpi.quantity);
+					var materialQuantity = parseInt(materials[i].mt.quantity)-materialInventoryQuantity;
+					
+					if(materialQuantity < 1) {
+						materialQuantity = 0;
+					}
+
+					var tableRow = '<tr>'+
+					+ '<td>'
+					+ '</td>'
+					+ '<td>'
+					+ '<input type="hidden" name="materials[_joinData][][quantity]"' 
+					+ ' value="' + materialId + '"/>' 
+					+  materialName
+					+ '</td>'
+					+ '<td>'
+					+ materialInventoryQuantity
+					+ '</td>'
+					+ '<td>'
+					+ '<input type="type" class="number-only" name="materials[id][]"'
+					+ ' value="' + materialQuantity + '"/>' 
+					+ '</td>'
+					+ '</tr>'
+					$('#materials').append(
+						tableRow	            	
 					);
 				}
-
-				$("#materials-list").trigger("chosen:updated");
 			}
 		});
 	}

@@ -64,6 +64,8 @@ class ResourceRequestHeadersController extends AppController
                 'associated' => ['Equipment', 'ManpowerTypes', 'Materials']
                 ]);
 
+            debug($resourceRequestHeader);
+            die();
             if ($this->ResourceRequestHeaders->save($resourceRequestHeader)) {
                 $this->loadModel('Notifications');
                 $this->loadModel('Projects');

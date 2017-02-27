@@ -49,7 +49,8 @@
                 ],
                 'hasAdd' => false,
                 'id' => 'rental-request-add'
-            ]); ?>
+            ]); 
+            ?>
         </fieldset>
 
         <?= $this->Form->button(__('Submit'), [

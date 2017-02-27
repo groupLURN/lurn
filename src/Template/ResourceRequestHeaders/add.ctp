@@ -54,10 +54,16 @@
         <div class="row mt">
             <div class="col-xs-12">
                 <h4><?= __('Assign Equipment Needed') ?></h4>
-                <?= $this->element('multi_select_with_input', [
-                    'options' => [null => '-Add Equipment-'],
-                    'resource' => 'equipment'
-                ]) ?>
+                <?= $this->element('order_request_add', [
+                        'headers' => [
+                            'Equipment',
+                            'Project Inventory Quantity',
+                            'Quantity'
+                        ],
+                        'hasAdd' => false,
+                        'id' => 'equipment'
+                    ]); 
+                ?>
             </div>
         </div>
         <div class="row mt">
@@ -72,10 +78,16 @@
         <div class="row mt">
             <div class="col-xs-12">
                 <h4><?= __('Assign Materials Needed') ?></h4>
-                <?= $this->element('multi_select_with_input', [
-                    'options' => [null => '-Add Material-'],
-                    'resource' => 'materials'
-                ]) ?>
+                <?= $this->element('order_request_add', [
+                    'tableWidth' => '50%',
+                    'headers' => [
+                        'Materials',
+                        'Project Inventory Quantity',
+                        'Quantity'
+                    ],
+                    'hasAdd' => false,
+                    'id' => 'materials'
+                ]); ?>
             </div>
         </div>
         </fieldset>

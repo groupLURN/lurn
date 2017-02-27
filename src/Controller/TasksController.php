@@ -299,8 +299,6 @@ class TasksController extends AppController
             $task->dirty('equipment', true);
             $task->dirty('materials', true);
 
-            debug($task);
-            die();
             if ($this->Tasks->save($task)) {
                 $this->Flash->success(__('The task has been saved.'));
                 return $this->redirect(['action' => 'index', '?' => ['project_id' => $this->__projectId]]);

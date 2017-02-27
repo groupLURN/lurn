@@ -2,21 +2,18 @@
 <?php
 
     $defaults = [
-        'tableName' => 'Data Table',
-        'tableWidth' => '500px',
+        'tableWidth' => '60%',
         'headers' => [
         ],
         'columns' => [
         ],
-        'hasAdd' => true,
-        'hasDelete' => true,
         'id' => ''
     ];
 
     extract($defaults, EXTR_SKIP);
 ?>
 <div class="mt">
-    <table id="<?= $id?>" class="table table-striped table-advance table-hover editable-data-table" style="width: <?=$tableWidth?>;">
+    <table id="<?= $id?>" class="table table-striped table-advance table-hover" style="width: <?=$tableWidth?>;">
     <tr class="headers">
         <?php foreach($headers as $header) : ?>
         <th><?= h($header) ?></th>

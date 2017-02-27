@@ -137,133 +137,74 @@ class RentalRequestHeadersController extends AppController
         $equipment = TableRegistry::get('Equipment')->find('list', ['limit' => 200])->toArray();
         $this->set(compact('rentalRequestHeader', 'projects', 'suppliers', 'equipment'));
         $this->set('_serialize', ['rentalRequestHeader', 'projects', 'suppliers', 'equipment']);
-}
-
-/**
-* Method for getting milestones from the database
-*
-* @return json response
-*/
-public function getMilestones() {
-    $this->loadModel('Milestones');
-    $milestones     = array();
-    $project_id     = $this->request->query('project_id');
-
-    if ($project_id) {
-        $milestones = $this->Milestones->find('byProjectId', ['project_id' => $project_id]);
     }
 
-    header('Content-Type: application/json');
-    echo json_encode($milestones);
-    exit();
-}   
+    /**
+    * Method for getting milestones from the database
+    *
+    * @return json response
+    */
+    public function getMilestones() {
+        $this->loadModel('Milestones');
+        $milestones     = array();
+        $project_id     = $this->request->query('project_id');
 
-/**
-* Method for getting tasks from the database
-*
-* @return json response
-*/
-public function getTasks() {
-    $this->loadModel('Tasks');
-    $tasks  = array();
+        if ($project_id) {
+            $milestones = $this->Milestones->find('byProjectId', ['project_id' => $project_id]);
+        }
 
-    $project_id     = $this->request->query('project_id');
-    $milestone_id   = $this->request->query('milestone_id');
+        header('Content-Type: application/json');
+        echo json_encode($milestones);
+        exit();
+    }   
 
-    if ($project_id != null && $milestone_id != null) {
-        $tasks = $this->Tasks->find('byProjectAndMilestone', ['project_id' => $project_id, 'milestone_id' => $milestone_id]);
+    /**
+    * Method for getting tasks from the database
+    *
+    * @return json response
+    */
+    public function getTasks() {
+        $this->loadModel('Tasks');
+        $tasks  = array();
 
-    } else  if ($project_id != null) {
-        $tasks = $this->Tasks->find('byProject', ['project_id' => $project_id]);
-    } 
+        $project_id     = $this->request->query('project_id');
+        $milestone_id   = $this->request->query('milestone_id');
 
-    header('Content-Type: application/json');
-    echo json_encode($tasks);
-    exit();
-}   
-
-/**
-* Method for getting suppliers from the database
-*
-* @return json response
-*/
-public function getSuppliers() {
-    $this->loadModel('MaterialsTasks');
-    $this->loadModel('Suppliers');
-    $this->loadModel('Tasks');
-
-    $suppliers  = array();
-    $materials  = array();
-
-    $project_id     = $this->request->query('project_id');
-    $milestone_id   = $this->request->query('milestone_id');
-    $task_id        = $this->request->query('task_id');
-
-    if ($task_id != null) {
-
-        $suppliers = $this->Suppliers->find('byTaskAndEquipment', ['task_id' => $task_id]);
-
-    } else if ($project_id != null) {
-        $suppliers_holder   = array();
-        $tasks              = array();
-        $task_ids           = array();
-
-        if($milestone_id != null) {
-
+        if ($project_id != null && $milestone_id != null) {
             $tasks = $this->Tasks->find('byProjectAndMilestone', ['project_id' => $project_id, 'milestone_id' => $milestone_id]);
-        } else{
 
+        } else  if ($project_id != null) {
             $tasks = $this->Tasks->find('byProject', ['project_id' => $project_id]);
-        }
+        } 
 
-        foreach ($tasks as $row) {
-            array_push($task_ids, $row['id']);
-        }
+        header('Content-Type: application/json');
+        echo json_encode($tasks);
+        exit();
+    }   
 
-        $task_ids = array_unique($task_ids);
+    /**
+    * Method for getting suppliers from the database
+    *
+    * @return json response
+    */
+    public function getSuppliers() {
+        $this->loadModel('MaterialsTasks');
+        $this->loadModel('Suppliers');
+        $this->loadModel('Tasks');
 
+        $suppliers  = array();
+        $materials  = array();
 
-        foreach ($task_ids as $key => $value) {
+        $project_id     = $this->request->query('project_id');
+        $milestone_id   = $this->request->query('milestone_id');
+        $task_id        = $this->request->query('task_id');
 
-            $task_id = (float)$value;
-                
-            foreach ( $this->Suppliers->find('byTaskAndEquipment', ['task_id' => $task_id]) as $row) {
-                array_push($suppliers_holder, $row);
-            }
-        }
-
-
-        $suppliers = array_values(array_unique($suppliers_holder));
-    } 
-
-    header('Content-Type: application/json');
-    echo json_encode($suppliers);
-    exit();
-}   
-
-/**
-* Method for getting materials from the database
-*
-* @return json response
-*/
-public function getEquipment() {
-    $this->loadModel('Equipment');
-    $this->loadModel('Tasks');
-
-    $equipment  = array();
-
-    $project_id     = $this->request->query('project_id');
-    $milestone_id   = $this->request->query('milestone_id');
-    $task_id        = $this->request->query('task_id');
-    $supplier_id    = $this->request->query('supplier_id');
-
-    if($supplier_id != null) {
         if ($task_id != null) {
 
-            $equipment = $this->Equipment->find('byTaskAndSupplier', ['task_id' => $task_id, 'supplier_id' => $supplier_id]);
+            $suppliers = $this->Suppliers->find('byTaskAndEquipment', ['task_id' => $task_id]);
 
         } else if ($project_id != null) {
-            $equipment_holder   = array();
+            $suppliers_holder   = array();
             $tasks              = array();
             $task_ids           = array();
 
@@ -286,19 +227,80 @@ public function getEquipment() {
 
                 $task_id = (float)$value;
                     
-                foreach ( $this->Equipment->find('byTaskAndSupplier', ['task_id' => $task_id, 'supplier_id' => $supplier_id]) as $row) {
-                    array_push($equipment_holder, $row);
+                foreach ( $this->Suppliers->find('byTaskAndEquipment', ['task_id' => $task_id]) as $row) {
+                    array_push($suppliers_holder, $row);
                 }
             }
 
-            $equipment = array_values(array_unique($equipment_holder));
 
+            $suppliers = array_values(array_unique($suppliers_holder));
         } 
-    }
 
-    header('Content-Type: application/json');
-    echo json_encode($equipment);
-    exit();
-}
+        header('Content-Type: application/json');
+        echo json_encode($suppliers);
+        exit();
+    } 
+
+    /**
+    * Method for getting materials from the database
+    *
+    * @return json response
+    */
+    public function getEquipment() {
+        $this->loadModel('Equipment');
+        $this->loadModel('Tasks');
+
+        $equipmentNeeded            = [];
+        $taskIds                    = [];
+
+        $project_id     = $this->request->query('project_id');
+        $milestone_id   = $this->request->query('milestone_id');
+        $task_id        = $this->request->query('task_id');
+        $supplier_id    = $this->request->query('supplier_id');
+
+        if($supplier_id != null) {
+            if ($task_id != null) {
+                $taskIds = [$task_id];
+            } else if ($project_id != null) {
+                $tasks = [];
+
+                if($milestone_id != null) {
+                    $tasks = $this->Tasks->find('byProjectAndMilestone', ['project_id' => $project_id, 'milestone_id' => $milestone_id]);
+                } else{
+                    $tasks = $this->Tasks->find('byProject', ['project_id' => $project_id]);
+                }
+
+                foreach ($tasks as $row) {
+                    array_push($taskIds, $row['id']);
+                }
+
+                $taskIds = array_unique($taskIds);
+            } 
+            
+            foreach ($taskIds as $key => $value) {
+                $task_id = (float)$value;
+                $equipmentNeededPerTask = $this->Equipment->find('byTaskAndSupplier', ['task_id' => $task_id, 'supplier_id' => $supplier_id]);
+                             
+                $push = true;
+
+                foreach ($equipmentNeededPerTask as $equipmentPerTask) {                            
+                    foreach ($equipmentNeeded as $equipment) {
+                        if ($equipment->id == $equipmentPerTask->id) {
+                            $equipment['et']['quantity'] += $equipmentPerTask['et']['quantity'];
+                            $push = false;
+                        } 
+                    }
+                    
+                    if (count($equipmentNeeded) == 0 || $push) {
+                        array_push($equipmentNeeded, $equipmentPerTask);
+                    }
+                }
+            }
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode($equipmentNeeded);
+        exit();
+    }
 
 }

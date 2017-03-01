@@ -52,7 +52,7 @@
 				]);
 
 				?>
-				<h3>Core Team Assignment</h3>
+				<h4 class="mt">Core Team Assignment</h4>
 
 				<?php
 					echo $this->Form->input('project-engineer', [
@@ -72,11 +72,18 @@
 						'options' => [''=>'-Add a Warehouse Keeper-']+$warehouseKeepers
 					]);
 				?>
-
+				<h4 class="mt">Upload Files</h4>						
+				<?php
+					echo $this->Form->file('file-name', [
+							'class' => '',
+							'label' => false,
+							'style' => 'height:40px;'
+						]);
+				?>
 			</fieldset>
 
 			<?= $this->Form->button(__('Submit'), [
-				'class' => 'btn btn-primary btn-submit'
+				'class' => 'btn btn-primary btn-submit',
 				]) ?>
 			<?= $this->Form->end() ?>
 

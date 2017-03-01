@@ -97,6 +97,8 @@ public function add()
 		$projectManager = $this->Employees->find('byUserId', ['user_id' => $loggedInUser['id']])->toArray();
 		$companyOwner	= $this->Employees->find('byEmployeeTypeId', ['employee_type_id' => 1])->toArray();
 		$postData = $this->request->data;
+		debug($postData );
+		die();
 		$postData['employees_join']['_ids'] = [];
 		array_push($postData['employees_join']['_ids'], $postData['project-engineer']);
 		array_push($postData['employees_join']['_ids'], $postData['warehouse-keeper']);

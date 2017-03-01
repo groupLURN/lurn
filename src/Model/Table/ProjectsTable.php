@@ -80,13 +80,16 @@ class ProjectsTable extends Table
             'className' => 'Milestones',
             'foreignKey' => 'project_id'
         ]);
+        $this->hasMany('ProjectsFiles', [
+            'className' => 'ProjectsFiles',
+            'foreignKey' => 'project_id'
+        ]);
         $this->belongsToMany('EmployeesJoin', [
             'className' => 'Employees',
             'foreignKey' => 'project_id',
             'targetForeignKey' => 'employee_id',
             'joinTable' => 'employees_projects'
-        ]);
-        
+        ]);        
         $this->belongsTo('ProjectPhases', [
             'foreignKey' => 'phase',
             'joinType' => 'INNER'

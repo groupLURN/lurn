@@ -123,28 +123,47 @@ $(function(){
 		var milestoneId =  $('#milestone-id').val();
 		var taskId 		=  $('#task-id').val();
 
-		$('#manpower-types-list option').not(':first').remove();
+		$('#manpower_types tr').not(':first').remove();
 
 		$.ajax({ 
 			type: 'GET', 
 			url: link+'/resource-request-headers/get-manpower?project_id='+projectId
 				+'&milestone_id='+milestoneId
-				+'&task_id='+taskId, 
+				+'&task_id='+taskId,  
 			data: { get_param: 'value' }, 
 			success: function (data) { 
-				var manpower = data;
+				var manpowerTypes = data;
 
-				for(var i=0; i < manpower.length; i++) {
-					var option = '<option value="' 
-					+ manpower[i].manpower_type_id + '">' 
-					+ manpower[i].manpower_type.title 
-					+ '</option>';
-					$('#manpower-types-list').append(
-						option	            	
+				for(var i=0; i < manpowerTypes.length; i++) {
+					var manpowerTypeId = manpowerTypes[i].id;
+					var manpowerTypeName = manpowerTypes[i].name;
+					var manpowerTypeInventoryQuantity = parseInt(manpowerTypes[i].inventory-count);
+					var manpowerTypeQuantity = parseInt(manpowerTypes[i].mt.quantity)-manpowerTypeInventoryQuantity;
+					
+					if(manpowerTypeQuantity < 1) {
+						manpowerTypeQuantity = 0;
+					}
+
+					var tableRow = '<tr>'+
+					+ '<td>'
+					+ '</td>'
+					+ '<td>'
+					+ '<input type="hidden" name="manpower_types[id][]"' 
+					+ ' value="' + manpowerTypeId + '"/>' 
+					+  manpowerTypeName
+					+ '</td>'
+					+ '<td>'
+					+ manpowerTypeInventoryQuantity
+					+ '</td>'
+					+ '<td>'
+					+ '<input type="type" class="number-only" name="manpower_types[_joinData][][quantity]"'
+					+ ' value="' + manpowerTypeQuantity + '"/>' 
+					+ '</td>'
+					+ '</tr>'
+					$('#manpower_types').append(
+						tableRow	            	
 					);
 				}
-
-				$('#manpower-types-list').trigger('chosen:updated');
 			}
 		});
 
@@ -180,7 +199,7 @@ $(function(){
 					+ '<td>'
 					+ '</td>'
 					+ '<td>'
-					+ '<input type="hidden" name="materials[_joinData][][quantity]"' 
+					+ '<input type="hidden" name="materials[id][]"' 
 					+ ' value="' + materialId + '"/>' 
 					+  materialName
 					+ '</td>'
@@ -188,7 +207,7 @@ $(function(){
 					+ materialInventoryQuantity
 					+ '</td>'
 					+ '<td>'
-					+ '<input type="type" class="number-only" name="materials[id][]"'
+					+ '<input type="type" class="number-only" name="materials[_joinData][][quantity]"'
 					+ ' value="' + materialQuantity + '"/>' 
 					+ '</td>'
 					+ '</tr>'

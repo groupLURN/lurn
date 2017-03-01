@@ -68,7 +68,7 @@ for ($i = 0; $i < count($namespaces); $i++)
         var $ul = $("ul.options", $context);
 
         var $li = $("<li>", {
-            onclick: '$(this).remove();'
+            onclick: '<?= $resource ?>ResetInput(this);'
         });
 
         var selectedObject = {
@@ -100,5 +100,15 @@ for ($i = 0; $i < count($namespaces); $i++)
             $select.find('[value= ' + $select.val() + ']').attr('disabled', true);
             $select.trigger('chosen:updated');
         }
+    }
+
+    function <?= $resource ?>ResetInput(object) {
+        var $context = $(object).closest("div.multi-select-with-input");
+        var $select = $("select.chosen", $context);
+        var id = $(object).find('.id').val();
+
+        $select.find('[value='+id+']').attr('disabled', false);
+        $select.trigger('chosen:updated');
+        $(object).remove();
     }
 </script>

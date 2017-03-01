@@ -95,8 +95,8 @@
                             <?php foreach ($milestone->tasks as $task): ?>
                                 <tr>
                                     <td><?= h($task->title) ?></td>
-                                    <td><?= h($task->start_date) ?></td>
-                                    <td><?= h($task->end_date) ?></td>
+                                    <td><?= h(date_format($task->start_date,"F d, Y")) ?></td>
+                                    <td><?= h(date_format($task->end_date,"F d, Y")) ?> </td>
                                     <td>
                                         <div class="progress">
                                             <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar"

@@ -69,10 +69,16 @@
         <div class="row mt">
             <div class="col-xs-12">
                 <h4><?= __('Assign Manpower Needed') ?></h4>
-                <?= $this->element('multi_select_with_input', [
-                    'options' => [null => '-Add Manpower-'],
-                    'resource' => 'manpower_types'
-                ]) ?>
+                <?= $this->element('order_request_add', [
+                        'headers' => [
+                            'Manpower Type',
+                            'Project Inventory Quantity',
+                            'Quantity'
+                        ],
+                        'hasAdd' => false,
+                        'id' => 'manpower_types'
+                    ]); 
+                ?>
             </div>
         </div>
         <div class="row mt">

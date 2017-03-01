@@ -84,9 +84,9 @@ class ManpowerProjectInventoriesController extends AppController
 
         $manpower = TableRegistry::get('Manpower')->find()
             ->contain(['Tasks' => ['Milestones']])
-            ->matching('ManpowerTypes', function($query) use ($id)
+            ->matching('ManpowerTypes', function($query) use ($manpowerTypeId)
             {
-                return $query->where(['ManpowerTypes.id' => $id]);
+                return $query->where(['ManpowerTypes.id' => $manpowerTypeId]);
             })
             ->where(['Manpower.project_id' => $id])
             ->orderAsc('Milestones.title')

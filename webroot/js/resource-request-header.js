@@ -136,9 +136,9 @@ $(function(){
 
 				for(var i=0; i < manpowerTypes.length; i++) {
 					var manpowerTypeId = manpowerTypes[i].id;
-					var manpowerTypeName = manpowerTypes[i].name;
-					var manpowerTypeInventoryQuantity = parseInt(manpowerTypes[i].inventory-count);
-					var manpowerTypeQuantity = parseInt(manpowerTypes[i].mt.quantity)-manpowerTypeInventoryQuantity;
+					var manpowerTypeName = manpowerTypes[i].manpower_type.title;
+					var manpowerTypeInventoryQuantity = parseInt(manpowerTypes[i].project_inventory_quantity);
+					var manpowerTypeQuantity = parseInt(manpowerTypes[i].quantity)-manpowerTypeInventoryQuantity;
 					
 					if(manpowerTypeQuantity < 1) {
 						manpowerTypeQuantity = 0;

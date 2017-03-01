@@ -15,7 +15,6 @@ use Cake\I18n\Time;
  */
 class TasksController extends AppController
 {
-    private $__projectId = null;
     private $_milestones = null;
 
     public function beforeFilter(Event $event)
@@ -25,15 +24,13 @@ class TasksController extends AppController
 
         $this->loadModel('Projects');
         $this->viewBuilder()->layout('project_management');
-        $this->_projectId = (int) $this->request->query['project_id'];
+        $projectId = (int) $this->request->query['project_id'];
         
-        $this->set('projectId', $this->_projectId);
+        $this->set('projectId', $projectId);
         
-        $project = $this->Projects->find('byId', ['project_id' => $this->_projectId])->first();
+        $project = $this->Projects->find('byId', ['project_id' => $projectId])->first();
 
         $this->set('isFinished', $project->is_finished );
-
-        $this->set('projectId', $this->_projectId);
         $this->set('statusList', array_flip($this->Tasks->status));
         return parent::beforeFilter($event);
     }
@@ -109,7 +106,8 @@ class TasksController extends AppController
         else
             $this->Flash->error(__('The Task ' . $task->title . '  cannot be replenished. Please, try again.'));
 
-        return $this->redirect(['action' => 'manage', '?' => ['project_id' => $this->__projectId]]);
+        $projectId = (int) $this->request->query['project_id'];
+        return $this->redirect(['action' => 'manage', '?' => ['project_id' => $projectId]]);
     }
 
     public function viewStock($taskId = null)
@@ -222,7 +220,8 @@ class TasksController extends AppController
                 }
                 
                 $this->Flash->success(__('The task has been marked finished!'));
-                return $this->redirect(['action' => 'manage', '?' => ['project_id' => $this->__projectId]]);
+                $projectId = (int) $this->request->query['project_id'];
+                return $this->redirect(['action' => 'manage', '?' => ['project_id' => $projectId]]);
             }
             else
                 $this->Flash->error(__('The task could not be saved. Please, try again.'));
@@ -301,7 +300,8 @@ class TasksController extends AppController
 
             if ($this->Tasks->save($task)) {
                 $this->Flash->success(__('The task has been saved.'));
-                return $this->redirect(['action' => 'index', '?' => ['project_id' => $this->__projectId]]);
+                $projectId = (int) $this->request->query['project_id'];
+                return $this->redirect(['action' => 'index', '?' => ['project_id' => $projectId]]);
             } else {
                 $this->Flash->error(__('The task could not be saved. Please, try again.'));
             }

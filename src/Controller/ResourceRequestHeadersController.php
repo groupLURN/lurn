@@ -57,15 +57,84 @@ class ResourceRequestHeadersController extends AppController
     {
         $resourceRequestHeader = $this->ResourceRequestHeaders->newEntity();
         if ($this->request->is('post')) {
-            $this->transpose($this->request->data, 'equipment');
-            $this->transpose($this->request->data, 'manpower_types');
-            $this->transpose($this->request->data, 'materials');
-            $resourceRequestHeader = $this->ResourceRequestHeaders->patchEntity($resourceRequestHeader, $this->request->data, [
+            $postData = $this->request->data;
+
+            $equipmentData      = $postData['equipment'];
+            $manpowerTypeData   = $postData['manpower_types'];
+            $materialsData      = $postData['materials'];
+
+            $count = count($equipmentData['id']);
+            for ($i=0; $i < $count; $i++) { 
+                $id         = $equipmentData['id'][$i];
+                $quantity   = $equipmentData['_joinData'][$i]['quantity'];
+                if ( $id < 0 || $id == '') {
+                    $this->Flash->error(__('Invalid equipment id.'));
+                    return $this->redirect(['action' => 'add']);
+                }
+                
+                if($quantity == 0 || $quantity == '') {
+                    unset($equipmentData['id'][$i]);
+                    unset($equipmentData['_joinData'][$i]);
+                }else if ($quantity < 0) {
+                    $this->Flash->error(__('Quantity must be at least 1.'));
+                    return $this->redirect(['action' => 'add']);
+                }
+            }
+
+            $count = count($manpowerTypeData['id']);
+            for ($i=0; $i < $count; $i++) { 
+                $id         = $manpowerTypeData['id'][$i];
+                $quantity   = $manpowerTypeData['_joinData'][$i]['quantity'];
+
+                if ( $id < 0 || $id == '') {
+                    $this->Flash->error(__('Invalid manpower type id.'));
+                    return $this->redirect(['action' => 'add']);
+                }
+
+                if ($quantity < 0) {
+                    $this->Flash->error(__('Quantity must be at least 1.'));
+                    return $this->redirect(['action' => 'add']);
+                }
+
+                if($quantity == 0) {
+                    unset($manpowerTypeData['id'][$i]);
+                    unset($manpowerTypeData['_joinData'][$i]);
+                }
+            }
+
+
+            $count = count($materialsData['id']);
+            for ($i=0; $i < $count; $i++) { 
+                $id         = $materialsData['id'][$i];
+                $quantity   = $materialsData['_joinData'][$i]['quantity'];
+
+                if ( $id < 0 || $id == '') {
+                    $this->Flash->error(__('Invalid material id.'));
+                    return $this->redirect(['action' => 'add']);
+                }
+
+                if ($quantity < 0) {
+                    $this->Flash->error(__('Quantity must be at least 1.'));
+                    return $this->redirect(['action' => 'add']);
+                }
+
+                if($quantity == 0) {
+                    unset($materialsData['id'][$i]);
+                    unset($materialsData['_joinData'][$i]);
+                } 
+            }
+
+            $postData['equipment']      = $equipmentData ;
+            $postData['manpower_types'] = $manpowerTypeData;
+            $postData['materials']      = $materialsData;
+
+            $this->transpose($postData, 'equipment');
+            $this->transpose($postData, 'manpower_types');
+            $this->transpose($postData, 'materials');
+            $resourceRequestHeader = $this->ResourceRequestHeaders->patchEntity($resourceRequestHeader, $postData, [
                 'associated' => ['Equipment', 'ManpowerTypes', 'Materials']
                 ]);
 
-            debug($resourceRequestHeader);
-            die();
             if ($this->ResourceRequestHeaders->save($resourceRequestHeader)) {
                 $this->loadModel('Notifications');
                 $this->loadModel('Projects');

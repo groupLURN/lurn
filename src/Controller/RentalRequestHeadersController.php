@@ -72,26 +72,25 @@ class RentalRequestHeadersController extends AppController
 
             $count = count($postData['rental_request_details_duration']);
 
-            for ($i = 0; $i < $count; $i++) {
-                if ( $postData['rental_request_details_quantity'][$i] < 1) {
-
-                    $this->Flash->error(__('Quantity must be at least 1.'));
-                    $this->redirect(['action' => 'add']);
-                    return;
-                }
-                if ( $postData['rental_request_details_duration'][$i] < 1
-                    || $postData['rental_request_details_duration'][$i] == '') {
-
-                    $this->Flash->error(__('Duration must be at least 1 day and must not be blank.'));
-                    $this->redirect(['action' => 'add']);
-                    return;
-                }
+            for ($i = 0; $i < $count; $i++) {                
                 if ( $postData['rental_request_details_equipment_id'][$i] < 0
                     || $postData['rental_request_details_equipment_id'][$i] == '') {
 
                     $this->Flash->error(__('Invalid equipment id.'));
-                    $this->redirect(['action' => 'add']);
-                    return;
+                    return $this->redirect(['action' => 'add']);
+                }
+
+                if ( $postData['rental_request_details_quantity'][$i] < 1) {
+
+                    $this->Flash->error(__('Quantity must be at least 1.'));
+                    return $this->redirect(['action' => 'add']);
+                }
+
+                if ( $postData['rental_request_details_duration'][$i] < 1
+                    || $postData['rental_request_details_duration'][$i] == '') {
+
+                    $this->Flash->error(__('Duration must be at least 1 day and must not be blank.'));
+                    return $this->redirect(['action' => 'add']);
                 }
             }
 

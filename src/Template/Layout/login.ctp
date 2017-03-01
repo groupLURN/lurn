@@ -30,6 +30,8 @@ $this->Html->script('/non_bower_components/jquery.backstretch/jquery.backstretch
     <?= $this->fetch('css') ?>
 </head>
 <body>
+<?= $this->Flash->render('auth') ?>
+<?= $this->Flash->render('success') ?>
 <?= $this->Flash->render() ?>
 <?= $this->fetch('content') ?>
 <?= $this->fetch('script') ?>

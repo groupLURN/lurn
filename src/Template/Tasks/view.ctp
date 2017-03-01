@@ -11,11 +11,11 @@
         </tr>
         <tr>
             <th><?= __('Start Date') ?></th>
-            <td><?= h($task->start_date) ?></td>
+            <td><?= h(date_format($task->start_date, 'F d, Y')) ?></td>
         </tr>
         <tr>
             <th><?= __('End Date') ?></th>
-            <td><?= h($task->end_date) ?></td>
+            <td><?= h(date_format($task->end_date, 'F d, Y')) ?></td>
         </tr>
         <tr>
             <th><?= __('Status') ?></th>

@@ -61,7 +61,7 @@
     </table>
 
     <div class="related">
-        <h3><?= __('Core Team') ?></h3>
+        <h4><?= __('Core Team') ?></h4>
         <?php if (!empty($project->employees_join)): ?>
             <table cellpadding="0" cellspacing="0" class="table table-striped">
                 <tr>

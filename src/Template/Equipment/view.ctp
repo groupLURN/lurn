@@ -5,5 +5,13 @@
             <th><?= __('Name') ?></th>
             <td><?= h($equipment->name) ?></td>
         </tr>
+        <tr>
+            <th><?= __('Suppliers') ?></th>
+            <td>
+                <?php foreach($equipment->suppliers as $supplier):?>
+                <?= $supplier->name?><br>
+                <?php endforeach;?>
+            </td>
+        </tr>
     </table>
 </div>

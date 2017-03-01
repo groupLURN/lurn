@@ -58,21 +58,30 @@ class TasksController extends AppController
 
         $isFinishedCase = $query->newExpr()->addCase($query->newExpr()->add(['Tasks.is_finished' => 1]), 1, 'integer');
 
-        $resultSet =
-            $query
-                ->select(['Milestones.id', 'finished_tasks' => $query->func()->coalesce([$query->func()->sum($isFinishedCase), 0]),
-                    'total_tasks' => $query->func()->count('Tasks.id')])
+        $resultSet = [];
+
+        if(count($milestones) > 0) {
+            $resultSet = $query
+                ->select(['Milestones.id', 
+                    'finished_tasks' => $query->func()->coalesce([
+                            $query->func()->sum($isFinishedCase), 0
+                        ]), 
+                    'total_tasks' => $query->func()->count('Tasks.id')
+                    ])
                 ->matching('Tasks')
                 ->where(['Milestones.id IN' => $milestones->extract('id')->toArray()])
                 ->group('Milestones.id')
                 ->toArray();
+        }
 
         $milestonesProgress = [];
-        foreach($resultSet as $milestoneProgress)
-            $milestonesProgress[$milestoneProgress->id] = $milestoneProgress['finished_tasks']/ $milestoneProgress['total_tasks'] * 100;
+
+        foreach($resultSet as $milestoneProgress) {
+            $milestonesProgress[$milestoneProgress->id] = $milestoneProgress['finished_tasks'] 
+            / $milestoneProgress['total_tasks'] * 100;
+        }
 
         $this->set(compact('milestones', 'milestonesProgress'));
-        $this->set($this->request->query);
         $this->set('_serialize', ['milestones', 'milestonesProgress']);
 
         $this->_milestones = $milestones;
@@ -80,13 +89,50 @@ class TasksController extends AppController
 
     public function manage()
     {
-        $this->index();
-        $milestones = $this->_milestones;
+        $this->paginate = [
+            'contain' => [
+                'Tasks' => [
+                    'Equipment', 'ManpowerTypes', 'Materials',
+                    'EquipmentReplenishmentDetails', 'ManpowerTypeReplenishmentDetails', 'MaterialReplenishmentDetails'
+                ]
+            ]
+        ];
+        
+        $this->paginate += $this->createFinders($this->request->query, 'Milestones');
+        $milestones = $this->paginate($this->Tasks->Milestones);
+
+        $query = $this->Tasks->Milestones->find();
+
+        $isFinishedCase = $query->newExpr()->addCase($query->newExpr()->add(['Tasks.is_finished' => 1]), 1, 'integer');
+
+        $resultSet = [];
+
+        if(count($milestones) > 0) {
+            $resultSet = $query
+                ->select(['Milestones.id', 
+                    'finished_tasks' => $query->func()->coalesce([
+                            $query->func()->sum($isFinishedCase), 0
+                        ]), 
+                    'total_tasks' => $query->func()->count('Tasks.id')
+                    ])
+                ->matching('Tasks')
+                ->where(['Milestones.id IN' => $milestones->extract('id')->toArray()])
+                ->group('Milestones.id')
+                ->toArray();
+        }
+
+        $milestonesProgress = [];
+
+        foreach($resultSet as $milestoneProgress) {
+            $milestonesProgress[$milestoneProgress->id] = $milestoneProgress['finished_tasks'] 
+            / $milestoneProgress['total_tasks'] * 100;
+        }
+
         $this->Tasks->computeForTaskReplenishmentUsingMilestones($milestones);
 
-        $this->set(compact('taskReplenishment', 'milestones'));
-        $this->set($this->request->query);
-        $this->set('_serialize', ['taskReplenishment', 'milestones']);
+        $this->set(compact('milestones', 'milestonesProgress', 'taskReplenishment'));
+        $this->set('_serialize', ['milestones', 'milestonesProgress', 'taskReplenishment']);
+
     }
 
     public function replenish($taskId)

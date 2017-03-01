@@ -49,6 +49,11 @@ class MaterialsTable extends Table
             'targetForeignKey' => 'task_id',
             'joinTable' => 'materials_tasks'
         ]);
+        $this->belongsToMany('Suppliers', [
+            'foreignKey' => 'material_id',
+            'targetForeignKey' => 'supplier_id',
+            'joinTable' => 'materials_suppliers'
+        ]);
     }
 
     /**

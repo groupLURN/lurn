@@ -66,6 +66,11 @@ class EquipmentTable extends Table
             'targetForeignKey' => 'task_id',
             'joinTable' => 'equipment_tasks'
         ]);
+        $this->belongsToMany('Suppliers', [
+            'foreignKey' => 'equipment_id',
+            'targetForeignKey' => 'supplier_id',
+            'joinTable' => 'equipment_suppliers'
+        ]);
 
     }
 

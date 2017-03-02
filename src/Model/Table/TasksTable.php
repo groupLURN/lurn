@@ -67,13 +67,17 @@ class TasksTable extends Table
 
         // Task Inventories
         $this->hasMany('EquipmentInventories', [
-            'foreignKey' => 'task_id'
+            'foreignKey' => 'task_id',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
         ]);
         $this->hasMany('Manpower', [
-            'foreignKey' => 'task_id'
+            'foreignKey' => 'task_id',
         ]);
         $this->hasMany('MaterialsTaskInventories', [
-            'foreignKey' => 'task_id'
+            'foreignKey' => 'task_id',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
         ]);
 
         // Resources Needed
@@ -95,14 +99,20 @@ class TasksTable extends Table
 
         // Record of Replenishment
         $this->hasMany('EquipmentReplenishmentDetails', [
-            'foreignKey' => 'task_id'
+            'foreignKey' => 'task_id',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
         ]);
 
         $this->hasMany('ManpowerTypeReplenishmentDetails', [
-            'foreignKey' => 'task_id'
+            'foreignKey' => 'task_id',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
         ]);
         $this->hasMany('MaterialReplenishmentDetails', [
-            'foreignKey' => 'task_id'
+            'foreignKey' => 'task_id',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
         ]);
     }
 

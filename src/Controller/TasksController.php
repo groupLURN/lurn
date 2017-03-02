@@ -3,9 +3,9 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\Collection\Collection;
-use Cake\Routing\Router;
 use Cake\Event\Event;
 use Cake\I18n\Time;
+use Cake\Routing\Router;
 
 
 /**
@@ -15,8 +15,6 @@ use Cake\I18n\Time;
  */
 class TasksController extends AppController
 {
-    private $_milestones = null;
-
     public function beforeFilter(Event $event)
     {
         if(!isset($this->request->query['project_id']))
@@ -83,8 +81,6 @@ class TasksController extends AppController
 
         $this->set(compact('milestones', 'milestonesProgress'));
         $this->set('_serialize', ['milestones', 'milestonesProgress']);
-
-        $this->_milestones = $milestones;
     }
 
     public function manage()

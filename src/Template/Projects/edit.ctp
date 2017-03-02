@@ -1,7 +1,7 @@
 <?= $this->Flash->render() ?>
 <div class="row mt">
     <div class="col-md-12">
-        <?= $this->Form->create($project) ?>
+        <?= $this->Form->create($project, ['type' => 'file']) ?>
         <fieldset>
             <legend><h3><i class="fa fa-angle-right"></i>Edit Project</h3></legend>
             <?php
@@ -12,6 +12,7 @@
                     'class' => 'mt'
                 ]
             ]);
+
             echo $this->Form->input('description', [
                 'class' => 'form-control',
                 'label' => [
@@ -59,7 +60,7 @@
             ]);
 
             ?>
-            <h3>Core Team Assignment</h3>
+            <h4>Core Team Assignment</h4>
 
             <?php
                 echo $this->Form->input('project-engineer', [
@@ -79,6 +80,15 @@
                         'text' => 'Warehouse Keepers'
                     ],
                     'options' => [''=>'-Add a Warehouse Keeper-']+$warehouseKeepers
+                ]);
+            ?>
+            <h4 class="mt">Upload Files</h4>                        
+            <?php
+                echo $this->Form->input('file[]', [
+                    'class' => '',
+                    'label' => false,
+                    'multiple' => true,
+                    'type' => 'file'
                 ]);
             ?>
         </fieldset>

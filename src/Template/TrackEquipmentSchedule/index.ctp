@@ -94,8 +94,8 @@
                         <td><?= $this->Html->link($equipment_['Projects']['title'], ['controller' => 'Projects', 'action' => 'view', $equipment_['Projects']['id']]) ?></td>
                         <td><?= h($equipment_['Milestones']['title']) ?></td>
                         <td><?= h($equipment_['Tasks']['title']) ?></td>
-                        <td><?= h($equipment_['Tasks']['start_date']) ?></td>
-                        <td><?= h($equipment_['Tasks']['end_date']) ?></td>
+                        <td><?= h(date_format(new DateTime($equipment_['Tasks']['start_date']), 'F d, Y')) ?></td>
+                        <td><?= h(date_format(new DateTime($equipment_['Tasks']['end_date']), 'F d, Y')) ?></td>
                         <td><?= $this->Number->format($equipment_['EquipmentTasks']['quantity']) ?></td>
                         <td><?= $this->Number->format($equipment_['quantity_available']) ?></td>
                     </tr>

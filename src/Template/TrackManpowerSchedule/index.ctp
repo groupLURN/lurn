@@ -62,10 +62,10 @@
                 <tr>
                     <td colspan="4">
                         <div class="row mt">
-                            <div class="col-md-1 col-md-offset-11">
+                            <div class="col-md-12">
                                 <?= $this->Form->button(__('Search'), [
                                     'id' => 'btn-search',
-                                    'class' => 'btn btn-primary'
+                                    'class' => 'btn btn-primary pull-right'
                                 ]) ?>
                             </div>
                         </div>
@@ -103,8 +103,8 @@
                         <td><?= $this->Html->link($manpower_['Projects']['title'], ['controller' => 'Projects', 'action' => 'view', $manpower_['Projects']['id']]) ?></td>
                         <td><?= h($manpower_['Milestones']['title']) ?></td>
                         <td><?= h($manpower_['Tasks']['title']) ?></td>
-                        <td><?= h($manpower_['Tasks']['start_date']) ?></td>
-                        <td><?= h($manpower_['Tasks']['end_date']) ?></td>
+                        <td><?= h(date_format(new DateTime($manpower_['Tasks']['start_date']), 'F d, Y')) ?></td>
+                        <td><?= h(date_format(new DateTime($manpower_['Tasks']['end_date']), 'F d, Y')) ?></td>
                         <td><?= $this->Number->format($manpower_['ManpowerTypesTasks']['quantity']) ?></td>
                         <td><?= $this->Number->format($manpower_['quantity_available']) ?></td>
                     </tr>

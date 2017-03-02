@@ -57,32 +57,43 @@ class ProjectsTable extends Table
             'foreignKey' => 'project_manager_id',
             'joinType' => 'LEFT'
         ]);
-        $this->hasMany('EquipmentProjectInventories', [
-            'foreignKey' => 'project_id'
-        ]);
-        $this->hasMany('EquipmentTaskInventories', [
-            'foreignKey' => 'project_id'
-        ]);
         $this->hasMany('Manpower', [
-            'foreignKey' => 'project_id'
+            'foreignKey' => 'project_id',
         ]);
         $this->hasMany('MaterialsProjectInventories', [
-            'foreignKey' => 'project_id'
+            'foreignKey' => 'project_id',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
         ]);
         $this->hasMany('MaterialsTaskInventories', [
-            'foreignKey' => 'project_id'
-        ]);
-        $this->hasMany('Tasks', [
-            'className' => 'Tasks',
-            'foreignKey' => 'milestone_id'
+            'foreignKey' => 'project_id',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
         ]);
         $this->hasMany('Milestones', [
-            'className' => 'Milestones',
-            'foreignKey' => 'project_id'
+            'foreignKey' => 'project_id',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
+        ]);
+        $this->hasMany('EmployeesProjects', [
+            'foreignKey' => 'project_id',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
         ]);
         $this->hasMany('ProjectsFiles', [
-            'className' => 'ProjectsFiles',
-            'foreignKey' => 'project_id'
+            'foreignKey' => 'project_id',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
+        ]);
+        $this->hasMany('Tasks', [
+            'foreignKey' => 'project_id',
+            'targetForeignKey' => 'milestone_id',
+            'joinTable' => 'milestones'
+        ]);
+        $this->hasMany('Notifications', [
+            'foreignKey' => 'project_id',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
         ]);
         $this->belongsToMany('EmployeesJoin', [
             'className' => 'Employees',
@@ -150,6 +161,26 @@ class ProjectsTable extends Table
                 $data[$key] = Time::parseDateTime($data[$key], 'yyyy/MM/dd');
             }
         }
+    }
+
+    public function beforeDelete(Event $event, Project $data,ArrayObject $options)
+    {   
+        $project = $data;
+        $projectManpower = TableRegistry::get('Manpower')
+            ->find('byProjectId', ['project_id' => $project->id])->toArray();
+
+        $deleteFlag = true;
+        foreach ($projectManpower as $manpower) {
+            $manpower->project_id = '';
+            $manpower->task_id = '';
+
+            if (!TableRegistry::get('Manpower')->save($manpower))
+            {
+                $deleteFlag = false;
+            }
+        }
+
+        return $deleteFlag;
     }
 
     public function getProjectStatusList()

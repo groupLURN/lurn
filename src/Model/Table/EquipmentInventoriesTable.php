@@ -49,6 +49,12 @@ class EquipmentInventoriesTable extends Table
             'foreignKey' => 'rental_receive_detail_id',
             'conditions' => ['RentalReceiveDetails.end_date >= CURDATE()']
         ]);
+
+        $this->hasMany('EquipmentTransferDetails', [
+            'foreignKey' => 'equipment_inventory_id',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
+        ]);
     }
 
     /**

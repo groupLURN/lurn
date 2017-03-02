@@ -199,7 +199,7 @@ class ProjectsTable extends Table
     {
         if($options['project_id'] > 0)
             return $query->contain(['Clients', 'Milestones' => ['Tasks'], 'Employees',  
-                'EmployeesJoin' => ['EmployeeTypes'], 'ProjectPhases'])
+                'EmployeesJoin' => ['EmployeeTypes'], 'ProjectPhases', 'ProjectsFiles'])
                 ->where(['Projects.id' => $options['project_id']]);
         return $query;
     }

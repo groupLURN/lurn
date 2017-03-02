@@ -15,38 +15,48 @@ class ProjectComponent extends Component
 		$this->ProjectsFiles = TableRegistry::get('ProjectsFiles');
 	}
 
-	private function delete($dir) {
+	private function delete($dir) 
+	{
 		$dir = WWW_ROOT.$dir;
 
-	   	$files = array_diff(scandir($dir), array('.','..'));
+	   	// $files = array_diff(scandir($dir), array('.','..'));
 
-	    foreach ($files as $file) {
-	      (is_dir($dir.DS.$file)) ? $this->delete($dir.DS.$file) : unlink($dir.DS.$file);
-	    }
+	    // foreach ($files as $file) {
+	    //   (is_dir($dir.DS.$file)) ? $this->delete($dir.DS.$file) : unlink($dir.DS.$file);
+	    // }
 
-	    return rmdir($dir);
+	    // return rmdir($dir);
+		chmod($dir, 0644);
+
+	    return unlink($dir);
 	} 
 
 	public function uploadFiles($files = [], $project = null, $options = [])
 	{
 		if(isset($options['update']) && $options['update'])
 		{			
-			$originalFiles = $this->ProjectsFiles->find('byProjectId', ['project_id' => $project->id])->toArray();
-			$fileLocation	= FileConstants::FILEIMAGESTORAGE.'projects'.DS.$project->id;
-			if (file_exists($fileLocation)) {
-				$this->delete($fileLocation);
-			}
+			$originalFiles = $project->projects_files;
+			foreach ($files as $uploadedFile)
+			{
+				$fileInfo 		= pathinfo($uploadedFile['name']);
+				$fileName 		= $fileInfo['filename'];
+				$fileNameFull 	= $fileInfo['basename'];
+				$fileTemp 		= $uploadedFile['tmp_name'];
+				$fileType 		= $fileInfo['extension'];
 
-			$fileLocation	= FileConstants::FILEDOCSTORAGE.'projects'.DS.$project->id;
-			if (file_exists($fileLocation)) {
-				$this->delete($fileLocation);
-			}
-			
-			$fileLocation	= FileConstants::FILEMISCSTORAGE.'projects'.DS.$project->id;
-			if (file_exists($fileLocation)) {
-				$this->delete($fileLocation);
-			}
-			
+				foreach ($originalFiles as $file)
+				{					
+					if ($file->file_name == $fileName)
+					{	
+						$directory = $file->file_location
+							.$file->file_name.'.'
+							.$file->file_type;
+						unset($file);
+						$this->delete($directory);
+					}
+					debug($originalFiles);
+				}
+			}		
 		}
 
 		foreach ($files as $file) {
@@ -55,7 +65,7 @@ class ProjectComponent extends Component
 			$fileNameFull 	= $fileInfo['basename'];
 			$fileTemp 		= $file['tmp_name'];
 			$fileType 		= $fileInfo['extension'];
-			$fileLocation		= '';
+			$fileLocation	= '';
 
 			switch ($fileType) {
 				case 'bmp':

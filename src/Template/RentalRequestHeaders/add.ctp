@@ -43,7 +43,8 @@
             <?= $this->element('order_request_add', [
                 'headers' => [
                     'Equipment',
-                    'Project Inventory Quantity',
+                    'General Inventory Quantity',
+                    'Quantity Needed',
                     'Quantity',
                     'Duration (days)'
                 ],

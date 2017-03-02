@@ -123,7 +123,7 @@ $(function(){
 					var materialId = materials[i].id;
 					var materialName = materials[i].name;
 					var materialQuantity = 0;
-					var materialInventoryQuantity = parseInt(materials[i].mpi.quantity);
+					var materialInventoryQuantity = parseInt(materials[i].mgi.quantity);
 					
 					if(typeof materialInventoryQuantity == 'undefined' 
 						|| materialInventoryQuantity < parseInt(materials[i].mt.quantity)) {

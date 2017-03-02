@@ -57,7 +57,9 @@
                 <?= $this->element('order_request_add', [
                         'headers' => [
                             'Equipment',
+                            'General Inventory Quantity',
                             'Project Inventory Quantity',
+                            'Quantity Needed',
                             'Quantity'
                         ],
                         'hasAdd' => false,
@@ -72,6 +74,7 @@
                 <?= $this->element('order_request_add', [
                         'headers' => [
                             'Manpower Type',
+                            'General Inventory Quantity',
                             'Project Inventory Quantity',
                             'Quantity'
                         ],
@@ -88,6 +91,7 @@
                     'tableWidth' => '50%',
                     'headers' => [
                         'Materials',
+                        'General Inventory Quantity',
                         'Project Inventory Quantity',
                         'Quantity'
                     ],

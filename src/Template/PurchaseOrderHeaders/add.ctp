@@ -44,7 +44,8 @@
                 'tableWidth' => '50%',
                 'headers' => [
                     'Materials',
-                    'Project Inventory Quantity',
+                    'General Inventory Quantity',
+                    'Quantity Needed',
                     'Quantity'
                 ],
                 'hasAdd' => false,

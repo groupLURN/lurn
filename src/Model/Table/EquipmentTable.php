@@ -320,7 +320,11 @@ class EquipmentTable extends Table
                     'ei' => [
                         'table' => 'equipment_inventories',
                         'type' => 'LEFT',
-                        'conditions' => ['ei.equipment_id = Equipment.id']
+                        'conditions' => [
+                                'ei.equipment_id = Equipment.id',
+                                'ei.project_id' => null, 
+                                'ei.task_id' => null
+                            ]
                         ]
                 ])
                 ->where(['et.task_id' => $options['task_id']])

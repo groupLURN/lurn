@@ -213,7 +213,7 @@ class ProjectsController extends AppController
 				}
 				
 				$files = $postData['file'];
-				$this->Project->uploadFiles($files, $project);
+				$this->Project->uploadFiles($files, $project, ['update' => true]);
 
 				$this->Flash->success(__('The project has been updated.'));
 				return $this->redirect(['action' => 'index']);

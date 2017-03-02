@@ -82,4 +82,13 @@ class ProjectsFilesTable extends Table
 
         return $rules;
     }
+
+    public function findByProjectId(Query $query, array $options)
+    {
+        if(-1 < (int)$options['project_id']) {
+            return $query->where(['ProjectsFiles.project_id' => $options['project_id']]);
+        } else {
+            return $query;
+        }
+    }
 }

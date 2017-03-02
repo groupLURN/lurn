@@ -15,12 +15,40 @@ class ProjectComponent extends Component
 		$this->ProjectsFiles = TableRegistry::get('ProjectsFiles');
 	}
 
+	private function delete($dir) {
+		$dir = WWW_ROOT.$dir;
+
+	   	$files = array_diff(scandir($dir), array('.','..'));
+
+	    foreach ($files as $file) {
+	      (is_dir($dir.DS.$file)) ? $this->delete($dir.DS.$file) : unlink($dir.DS.$file);
+	    }
+
+	    return rmdir($dir);
+	} 
+
 	public function uploadFiles($files = [], $project = null, $options = [])
 	{
 		if(isset($options['update']) && $options['update'])
-		{
+		{			
+			$originalFiles = $this->ProjectsFiles->find('byProjectId', ['project_id' => $project->id])->toArray();
+			$fileLocation	= FileConstants::FILEIMAGESTORAGE.'projects'.DS.$project->id;
+			if (file_exists($fileLocation)) {
+				$this->delete($fileLocation);
+			}
 
+			$fileLocation	= FileConstants::FILEDOCSTORAGE.'projects'.DS.$project->id;
+			if (file_exists($fileLocation)) {
+				$this->delete($fileLocation);
+			}
+			
+			$fileLocation	= FileConstants::FILEMISCSTORAGE.'projects'.DS.$project->id;
+			if (file_exists($fileLocation)) {
+				$this->delete($fileLocation);
+			}
+			
 		}
+
 		foreach ($files as $file) {
 			$fileInfo 		= pathinfo($file['name']);
 			$fileName 		= $fileInfo['filename'];

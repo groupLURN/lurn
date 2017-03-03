@@ -50,9 +50,12 @@ if(strpos($request_uri, 'incident-report-headers') !== false) {
     $this->Html->script('incident-report-headers', ['block' => true]);
 }
 
-
 if(strpos($request_uri, 'events') !== false) {    
     $this->Html->script('events', ['block' => true]);
+}
+
+if(strpos($request_uri, 'projects') !== false) {    
+    $this->Html->script('project', ['block' => true]);
 }
 ?>
 

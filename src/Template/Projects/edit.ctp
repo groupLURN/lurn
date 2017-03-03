@@ -82,15 +82,32 @@
                     'options' => [''=>'-Add a Warehouse Keeper-']+$warehouseKeepers
                 ]);
             ?>
-            <h4 class="mt">Upload Files</h4>                        
-            <?php
-                echo $this->Form->input('file[]', [
-                    'class' => '',
-                    'label' => false,
-                    'multiple' => true,
-                    'type' => 'file'
-                ]);
-            ?>
+            <h4 class="mt">Uploaded Files</h4>
+            <div id="files-existing" >
+                <?php foreach ($project->projects_files as $file):?>                     
+                
+                    <div class="file-block">
+                        <div class="row">
+                            <div class="col-sm-10">
+                                <input type="hidden" name="uploaded-file[]"
+                                    value="<?= h($file->id)?>"/>
+                   
+                                <?= h($file->file_name.$file->file_type)?>                      
+                            </div>
+                            <div class="col-sm-2">
+                                <button type="button" class="remove-file btn btn-default">
+                                Remove File
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach;?>  
+            </div>
+            <h4 class="mt">Upload Files</h4>
+            <div id="files-added" >
+                None.                
+            </div>
+            <button id="add-file" class="mt btn btn-default" type="button">Add File</button>
         </fieldset>
 
         <?= $this->Form->button(__('Update'), [

@@ -197,6 +197,9 @@ class ProjectsController extends AppController
 			array_push($project['employees_join'], $projectManager[0]);		
 			array_push($project['employees_join'], $companyOwner[0]);
 
+			debug($project);
+			die();
+
 			if ($this->Projects->save($project)) {
 
 				$this->loadModel('Notifications');

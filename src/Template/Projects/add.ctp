@@ -72,15 +72,11 @@
 					'options' => [''=>'-Add a Warehouse Keeper-']+$warehouseKeepers
 				]);
 			?>
-			<h4 class="mt">Upload Files</h4>						
-			<?php
-				echo $this->Form->input('file[]', [
-					'class' => '',
-					'label' => false,
-					'multiple' => true,
-					'type' => 'file'
-				]);
-			?>
+			<h4 class="mt">Upload Files</h4>	
+            <div id="files-added" >
+                None.                
+            </div>
+            <button id="add-file" class="mt btn btn-default" type="button">Add File</button>
 		</fieldset>
 
 		<?= $this->Form->button(__('Submit'), [

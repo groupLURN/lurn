@@ -89,7 +89,7 @@ extract($defaults, EXTR_SKIP);
     </div>
 
     <div>
-        <button id="add-involved" type="button" class="mt">Add Person</button>
+        <button id="add-involved" type="button" class="mt btn btn-default">Add Person</button>
     </div>
 
     <label class="mt">Persons Involved</label>
@@ -122,7 +122,7 @@ extract($defaults, EXTR_SKIP);
         ?>
 
         <div>
-            <button id="add-item" type="button" class="mt">Add Item</button>
+            <button id="add-item" type="button" class="mt btn btn-default">Add Item</button>
         </div>
 
         <label class="mt">Lost Items</label>

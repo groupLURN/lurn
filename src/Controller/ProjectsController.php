@@ -197,9 +197,6 @@ class ProjectsController extends AppController
 			array_push($project['employees_join'], $projectManager[0]);		
 			array_push($project['employees_join'], $companyOwner[0]);
 
-			debug($project);
-			die();
-
 			if ($this->Projects->save($project)) {
 
 				$this->loadModel('Notifications');
@@ -215,8 +212,13 @@ class ProjectsController extends AppController
 					$this->Notifications->save($notification);
 				}
 				
-				$files = $postData['file'];
-				$this->Project->uploadFiles($files, $project, ['update' => true]);
+				$files 			= isset($postData['file']) ? $postData['file'] : [];
+				$uploadedFiles 	= isset($postData['uploaded-file']) ? $postData['uploaded-file'] : [];
+				$this->Project->uploadFiles($files, $project, 
+					[
+						'update' => true, 
+						'uploaded_files' => $uploadedFiles
+					]);
 
 				$this->Flash->success(__('The project has been updated.'));
 				return $this->redirect(['action' => 'index']);
@@ -294,7 +296,6 @@ class ProjectsController extends AppController
 		return $this->Project->findAll();
 	}
 
-
 	public function isAuthorized($user)
 	{
 		$action = $this->request->params['action'];
@@ -323,5 +324,16 @@ class ProjectsController extends AppController
 		}
 
 		return parent::isAuthorized($user);
+	}	
+
+	public function download(){
+		$fileName = $this->request->query('file');
+	    $filePath = WWW_ROOT.$fileName;
+
+	    $this->response->file($filePath, array(
+	        'download' => true,
+	    ));
+
+	    return $this->response;
 	}
 }

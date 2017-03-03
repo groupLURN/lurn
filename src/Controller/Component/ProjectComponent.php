@@ -7,7 +7,7 @@ use Cake\ORM\TableRegistry;
 
 class ProjectComponent extends Component
 {
-	public $components = [];
+	public $components = ['Flash'];
 
 	public function initialize(array $config)
 	{
@@ -26,87 +26,152 @@ class ProjectComponent extends Component
 	    // }
 
 	    // return rmdir($dir);
-		chmod($dir, 0644);
+	    if (file_exists($dir))
+	    {
+			chmod($dir, 0644);
+		    return unlink($dir);
+	    }
 
-	    return unlink($dir);
+	    return true;
 	} 
 
 	public function uploadFiles($files = [], $project = null, $options = [])
 	{
+		$originalFilesDb 	= $project->projects_files;
 		if(isset($options['update']) && $options['update'])
-		{			
-			$originalFiles = $project->projects_files;
-			foreach ($files as $uploadedFile)
-			{
-				$fileInfo 		= pathinfo($uploadedFile['name']);
-				$fileName 		= $fileInfo['filename'];
-				$fileNameFull 	= $fileInfo['basename'];
-				$fileTemp 		= $uploadedFile['tmp_name'];
-				$fileType 		= $fileInfo['extension'];
+		{
+			$originalFiles 	= isset($options['uploaded_files']) ? $options['uploaded_files'] : [];
 
-				foreach ($originalFiles as $file)
+			$deleteFromDb 			= $originalFiles;
+
+			foreach ($deleteFromDb as $key => $value)
+			{	
+				$file = $value;	
+				foreach ($originalFilesDb as $fileDb)
 				{					
-					if ($file->file_name == $fileName)
+					if ($file == $fileDb->id)
 					{	
-						$directory = $file->file_location
-							.$file->file_name.'.'
-							.$file->file_type;
-						unset($file);
-						$this->delete($directory);
+						unset($deleteFromDb[$key]);
 					}
-					debug($originalFiles);
+				}	
+			}
+
+			foreach ($originalFilesDb as $fileDb)
+			{	
+				if (count($originalFiles) === 0) 
+				{
+					$directory = $fileDb->file_location
+						.$fileDb->file_name.'.'
+						.$fileDb->file_type;
+					$this->ProjectsFiles->delete($fileDb);
+					unset($fileDb);
+					$this->delete($directory);
+				} else 
+				{
+					foreach ($deleteFromDb as $key => $value)
+					{	
+						$file = $value;			
+						if ($file == $fileDb->id)
+						{	
+							$directory = $fileDb->file_location
+								.$fileDb->file_name.'.'
+								.$fileDb->file_type;
+							$this->ProjectsFiles->delete($fileDb);
+							unset($fileDb);
+							$this->delete($directory);
+						}
+					}
 				}
-			}		
+			}
+
+			foreach ($files as $file)
+			{	
+				if ($file['name'] != '') 
+				{
+					$fileInfo 		= pathinfo($file['name']);
+					$fileName 		= $fileInfo['filename'];
+					$fileNameFull 	= $fileInfo['basename'];
+					$fileTemp 		= $file['tmp_name'];
+					$fileType 		= $fileInfo['extension'];
+
+					foreach ($originalFilesDb as $fileDb)
+					{
+						if ($fileDb->file_name == $fileName)
+						{	
+							$directory = $fileDb->file_location
+								.$fileDb->file_name.'.'
+								.$fileDb->file_type;
+							unset($fileDb);
+							$this->delete($directory);
+						}
+					}
+				}
+			}
 		}
 
 		foreach ($files as $file) {
-			$fileInfo 		= pathinfo($file['name']);
-			$fileName 		= $fileInfo['filename'];
-			$fileNameFull 	= $fileInfo['basename'];
-			$fileTemp 		= $file['tmp_name'];
-			$fileType 		= $fileInfo['extension'];
-			$fileLocation	= '';
+			if ($file['name'] != '') 
+			{
+				$fileInfo 		= pathinfo($file['name']);
+				$fileName 		= $fileInfo['filename'];
+				$fileNameFull 	= $fileInfo['basename'];
+				$fileTemp 		= $file['tmp_name'];
+				$fileType 		= $fileInfo['extension'];
+				$fileLocation	= '';
 
-			switch ($fileType) {
-				case 'bmp':
-				case 'gif':
-				case 'ico':
-				case 'jpeg':
-				case 'jpg':
-				case 'png':
-					$fileLocation	= FileConstants::FILEIMAGESTORAGE;
-					break;
-				case 'calc':
-				case 'doc':
-				case 'docx':
-				case 'pdf':
-				case 'ppt':
-				case 'xls':
-				case 'xlsx':
-					$fileLocation	= FileConstants::FILEDOCSTORAGE;
-					break;
-				
-				default:
-					$fileLocation	= FileConstants::FILEMISCSTORAGE;
-					break;
-			}
+				switch ($fileType) {
+					case 'bmp':
+					case 'gif':
+					case 'ico':
+					case 'jpeg':
+					case 'jpg':
+					case 'png':
+						$fileLocation	= FileConstants::FILEIMAGESTORAGE;
+						break;
+					case 'calc':
+					case 'doc':
+					case 'docx':
+					case 'pdf':
+					case 'ppt':
+					case 'xls':
+					case 'xlsx':
+						$fileLocation	= FileConstants::FILEDOCSTORAGE;
+						break;
+					
+					default:
+						$fileLocation	= FileConstants::FILEMISCSTORAGE;
+						break;
+				}
 
-			$fileLocation .= 'projects'.DS.$project->id.DS;
+				$fileLocation .= 'projects/'.$project->id.'/';
 
-			if (!file_exists($fileLocation)) {
-				mkdir($fileLocation, 0777, true);
-			}
+				if (!file_exists($fileLocation)) {
+					mkdir($fileLocation, 0777, true);
+				}
 
-			if (move_uploaded_file($fileTemp,$fileLocation.$fileNameFull)) {
-				$projectFile = $this->ProjectsFiles->newEntity();
-				$projectFile->project_id = $project->id;
-				$projectFile->file_name = $fileName;
-				$projectFile->file_location = $fileLocation;
-				$projectFile->file_type = $fileType;
+				if (move_uploaded_file($fileTemp,$fileLocation.$fileNameFull)) {
+					$projectFile = $this->ProjectsFiles->newEntity();
+					$projectFile->project_id = $project->id;
+					$projectFile->file_name = $fileName;
+					$projectFile->file_location = $fileLocation;
+					$projectFile->file_type = $fileType;
+					$save = true;
 
-				$this->ProjectsFiles->save($projectFile);
-			} else {
-				$this->Flash->error(__($filenameFull.' cannot be uploaded.'));
+					foreach ($originalFilesDb as $fileDb)
+					{	
+						if (count($fileDb->file_name === $fileName) === 0) 
+						{
+							$save = false;
+						} 
+					}	
+
+					if ($save) 
+					{
+						$this->ProjectsFiles->save($projectFile);
+					}
+				} else {
+					$this->Flash->error(__($filenameFull.' cannot be uploaded.'));
+				}
 			}
 		}
 	}

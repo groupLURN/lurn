@@ -84,26 +84,36 @@
             ?>
             <h4 class="mt">Uploaded Files</h4>
             <div id="files-existing" >
-                <?php foreach ($project->projects_files as $file):?>                     
-                
-                    <div class="file-block">
-                        <div class="row">
-                            <div class="col-sm-10">
-                                <input type="hidden" name="uploaded-file[]"
-                                    value="<?= h($file->id)?>"/>
-                   
-                                <?= h($file->file_name.$file->file_type)?>                      
-                            </div>
-                            <div class="col-sm-2">
-                                <button type="button" class="remove-file btn btn-default">
-                                Remove File
-                                </button>
+                <?php 
+                    if (count($project->projects_files) > 0) {
+                        foreach ($project->projects_files as $file){
+                ?>                     
+                    
+                        <div class="file-block">
+                            <div class="row">
+                                <div class="col-sm-10">
+                                    <input type="hidden" name="uploaded-file[]"
+                                        value="<?= h($file->id)?>"/>
+                       
+                                    <?= h($file->file_name.'.'.$file->file_type)?>                      
+                                </div>
+                                <div class="col-sm-2">
+                                    <button type="button" class="remove-file btn btn-default pull-right">
+                                    Remove File
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                <?php endforeach;?>  
+                <?php 
+                        }
+                    } else { 
+                ?>
+                    None.
+                <?php 
+                    } 
+                ?>
             </div>
-            <h4 class="mt">Upload Files</h4>
+            <h4 class="mt">Upload New Files</h4>
             <div id="files-added" >
                 None.                
             </div>

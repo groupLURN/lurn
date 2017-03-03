@@ -120,14 +120,15 @@ $(function(){
 				var materials = data;
 
 				for(var i=0; i < materials.length; i++) {
-					var materialId = materials[i].id;
-					var materialName = materials[i].name;
-					var materialQuantity = 0;
-					var materialInventoryQuantity = parseInt(materials[i].mgi.quantity);
+					var materialId 					= materials[i].id;
+					var materialName 				= materials[i].name;
+					var materialQuantity 			= 0;
+					var materialQuantityNeeded 		= parseInt(materials[i].mt.quantity);
+					var materialInventoryQuantity 	= parseInt(materials[i].mgi.quantity);
 					
 					if(typeof materialInventoryQuantity == 'undefined' 
-						|| materialInventoryQuantity < parseInt(materials[i].mt.quantity)) {
-						materialQuantity = parseInt(materials[i].mt.quantity)-materialInventoryQuantity;
+						|| materialInventoryQuantity < materialQuantityNeeded) {
+						materialQuantity = materialQuantityNeeded-materialInventoryQuantity;
 					}
 
 					var tableRow = '<tr>'+
@@ -140,6 +141,9 @@ $(function(){
 					+ '</td>'
 					+ '<td>'
 					+ materialInventoryQuantity
+					+ '</td>'
+					+ '<td>'
+					+ materialQuantityNeeded
 					+ '</td>'
 					+ '<td>'
 					+ '<input type="type" class="number-only" name="purchase_order_details.quantity[' + i + ']"'

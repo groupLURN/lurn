@@ -383,24 +383,28 @@ class ResourceRequestHeadersController extends AppController
            
         } 
                     
-        foreach ($manpowerNeeded as $manpower) {    
-            $manpowerPerTypeList = TableRegistry::get('Manpower')->find()
+        foreach ($manpowerNeeded as $manpower) {
+            $manpowerPerTypeList = $this->Manpower->find()
                 ->contain(['Tasks' => ['Milestones']])
                 ->matching('ManpowerTypes', function($query) use ($manpower)
                 {
                     return $query->where(['ManpowerTypes.id' => $manpower->manpower_type_id ]);
                 })
-                ->where(['Manpower.project_id' => $project_id])
-                ->orderAsc('Milestones.title')
                 ->all();            
 
-            $quantity = 0;
+            $generalInventory = 0;
+            $projectInventory = 0;
             foreach ($manpowerPerTypeList as $manpowerPerType) {
-                if(!$manpowerPerType->has('task')) {
-                    ++$quantity;
+                if($manpowerPerType->project_id == $project_id
+                    && !$manpowerPerType->has('task')) {
+                    ++$projectInventory;
+                }
+                if(!$manpowerPerType->has('project_id')) {
+                    ++$generalInventory;
                 }
             }
-            $manpower->project_inventory_quantity = $quantity;
+            $manpower->general_inventory_quantity = $generalInventory;
+            $manpower->project_inventory_quantity = $projectInventory;
         }
         header('Content-Type: application/json');
         echo json_encode($manpowerNeeded);

@@ -179,6 +179,18 @@ class ProjectsTable extends Table
                 $deleteFlag = false;
             }
         }
+        
+        $equipmentInventories = TableRegistry::get('EquipmentInventories')
+            ->find('byTaskId', ['task_id' => $task->id])->toArray();
+
+        foreach ($equipmentInventories as $equipmentInventory) {
+            $equipmentInventory->project_id = '';
+
+            if (!TableRegistry::get('EquipmentInventories')->save($equipmentInventory))
+            {
+                $deleteFlag = false;
+            }
+        }
 
         return $deleteFlag;
     }

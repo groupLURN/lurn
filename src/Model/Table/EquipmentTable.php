@@ -310,7 +310,13 @@ class EquipmentTable extends Table
         if((float)$options['task_id'] > -1){
 
             return $query
-                ->select(['id', 'name', 'et.quantity', 'inventory-count' => 'COUNT(ei.equipment_id)'])
+                ->select([
+                        'id',
+                        'name',
+                        'et.quantity',
+                        'general-inventory-count' => 'COUNT(ei.equipment_id)',
+                        'project-inventory-count' => 'COUNT(epi.equipment_id)'
+                    ])
                 ->join([
                     'et' => [
                         'table' => 'equipment_tasks',
@@ -325,10 +331,18 @@ class EquipmentTable extends Table
                                 'ei.project_id' => null, 
                                 'ei.task_id' => null
                             ]
+                        ],
+                    'epi' => [
+                        'table' => 'equipment_inventories',
+                        'type' => 'LEFT',
+                        'conditions' => [
+                                'epi.equipment_id = Equipment.id',
+                                'epi.task_id = et.task_id'
+                            ]
                         ]
                 ])
                 ->where(['et.task_id' => $options['task_id']])
-                ->group('ei.equipment_id');
+                ->group('Equipment.id');
         } else {
 
             return $query;
@@ -340,7 +354,13 @@ class EquipmentTable extends Table
         if((float)$options['task_id'] > -1 && (float)$options['supplier_id'] > -1){
 
             return $query
-                ->select(['id', 'name', 'et.quantity', 'inventory-count' => 'COUNT(ei.equipment_id)'])
+                ->select([
+                        'id',
+                        'name',
+                        'et.quantity',
+                        'general-inventory-count' => 'COUNT(ei.equipment_id)',
+                        'project-inventory-count' => 'COUNT(epi.equipment_id)'
+                    ])
                 ->join([
                     'et' => [
                         'table' => 'equipment_tasks',
@@ -355,11 +375,24 @@ class EquipmentTable extends Table
                     'ei' => [
                         'table' => 'equipment_inventories',
                         'type' => 'LEFT',
-                        'conditions' => ['ei.equipment_id = Equipment.id']]
+                        'conditions' => [
+                                'ei.equipment_id = Equipment.id',
+                                'ei.project_id' => null, 
+                                'ei.task_id' => null
+                            ]
+                        ],
+                    'epi' => [
+                        'table' => 'equipment_inventories',
+                        'type' => 'LEFT',
+                        'conditions' => [
+                                'epi.equipment_id = Equipment.id',
+                                'epi.task_id = et.task_id'
+                            ]
+                        ]
                 ])
                 ->where(['es.supplier_id' => $options['supplier_id'],
                     'et.task_id' => $options['task_id']])
-                ->group('ei.equipment_id');
+                ->group('Equipment.id');
         } else {
 
             return $query;

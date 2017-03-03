@@ -123,11 +123,12 @@ $(function(){
 					var equipmentId 				= equipment[i].id;
 					var equipmentName 				= equipment[i].name;
 					var equipmentQuantity			= 0;
-					var equipmentInventoryQuantity 	= parseInt(equipment[i]['inventory-count']);
+					var equipmentQuantityNeeded		= parseInt(equipment[i].et.quantity);
+					var equipmentInventoryQuantity 	= parseInt(equipment[i]['general-inventory-count']);
 					
 					if(typeof equipmentInventoryQuantity == 'undefined' 
-						|| equipmentInventoryQuantity < parseInt(equipment[i].et.quantity)) {
-						equipmentQuantity = parseInt(equipment[i].et.quantity)-equipmentInventoryQuantity;
+						|| equipmentInventoryQuantity < equipmentQuantityNeeded) {
+						equipmentQuantity = equipmentQuantityNeeded-equipmentInventoryQuantity;
 					}
 
 					var tableRow = '<tr>'
@@ -138,6 +139,9 @@ $(function(){
 					+ '</td>'
 					+ '<td>'
 					+ equipmentInventoryQuantity
+					+ '</td>'
+					+ '<td>'
+					+ equipmentQuantityNeeded
 					+ '</td>'
 					+ '<td>'
 					+ '<input type="text" class="number-only" name="rental_request_details.quantity[' + i + ']"'

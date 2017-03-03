@@ -87,11 +87,15 @@ $(function(){
 				var equipment = data;
 
 				for(var i=0; i < equipment.length; i++) {
-					var equipmentProjectInventory = parseInt(equipment[i]['inventory-count']);
-					var equipmentQuantity = parseInt(equipment[i].et.quantity) - equipmentProjectInventory;
+					var equipmentGeneralInventory = parseInt(equipment[i]['general-inventory-count']);
+					var equipmentProjectInventory = parseInt(equipment[i]['project-inventory-count']);
+					var equipmentQuantityNeeded = parseInt(equipment[i].et.quantity);
+					var equipmentQuantity 		= equipmentQuantityNeeded - equipmentProjectInventory;
 
 					if(equipmentQuantity < 1) {
 						equipmentQuantity = 0;
+					} else if(equipmentGeneralInventory < equipmentQuantity) {
+						equipmentQuantity = equipmentGeneralInventory;
 					}
 
 					var tableRow = 
@@ -102,7 +106,13 @@ $(function(){
 					+ equipment[i].name 
 					+ '</td>'
 					+ '<td>'
+					+ equipmentGeneralInventory
+					+ '</td>'
+					+ '<td>'
 					+ equipmentProjectInventory
+					+ '</td>'
+					+ '<td>'
+					+ equipmentQuantityNeeded
 					+ '</td>'
 					+ '<td>'
 					+ '<input type="text" class="number-only" name="equipment[_joinData][][quantity]" value="' 
@@ -137,11 +147,15 @@ $(function(){
 				for(var i=0; i < manpowerTypes.length; i++) {
 					var manpowerTypeId = manpowerTypes[i].id;
 					var manpowerTypeName = manpowerTypes[i].manpower_type.title;
-					var manpowerTypeInventoryQuantity = parseInt(manpowerTypes[i].project_inventory_quantity);
-					var manpowerTypeQuantity = parseInt(manpowerTypes[i].quantity)-manpowerTypeInventoryQuantity;
+					var manpowerTypeGeneralInventory 	= parseInt(manpowerTypes[i].general_inventory_quantity);
+					var manpowerTypeProjectInventory 	= parseInt(manpowerTypes[i].project_inventory_quantity);
+					var manpowerTypeQuantityNeeded 		= parseInt(manpowerTypes[i].quantity);
+					var manpowerTypeQuantity 			= manpowerTypeQuantityNeeded-manpowerTypeProjectInventory;
 					
 					if(manpowerTypeQuantity < 1) {
 						manpowerTypeQuantity = 0;
+					} else if(manpowerTypeGeneralInventory < manpowerTypeQuantity) {
+						manpowerTypeQuantity = manpowerTypeGeneralInventory;
 					}
 
 					var tableRow = '<tr>'+
@@ -153,7 +167,13 @@ $(function(){
 					+  manpowerTypeName
 					+ '</td>'
 					+ '<td>'
-					+ manpowerTypeInventoryQuantity
+					+ manpowerTypeGeneralInventory
+					+ '</td>'
+					+ '<td>'
+					+ manpowerTypeProjectInventory
+					+ '</td>'
+					+ '<td>'
+					+ manpowerTypeQuantityNeeded
 					+ '</td>'
 					+ '<td>'
 					+ '<input type="type" class="number-only" name="manpower_types[_joinData][][quantity]"'
@@ -188,11 +208,15 @@ $(function(){
 				for(var i=0; i < materials.length; i++) {
 					var materialId = materials[i].id;
 					var materialName = materials[i].name;
-					var materialInventoryQuantity = parseInt(materials[i].mpi.quantity);
-					var materialQuantity = parseInt(materials[i].mt.quantity)-materialInventoryQuantity;
+					var materialGeneralInventory 	= parseInt(materials[i].mgi.quantity);
+					var materialProjectInventory 	= parseInt(materials[i].mpi.quantity);
+					var materialQuantityNeeded 		= parseInt(materials[i].mt.quantity);
+					var materialQuantity 			= materialQuantityNeeded-materialProjectInventory;
 					
 					if(materialQuantity < 1) {
 						materialQuantity = 0;
+					} else if(materialGeneralInventory < materialQuantity) {
+						materialQuantity = materialGeneralInventory;
 					}
 
 					var tableRow = '<tr>'+
@@ -204,7 +228,13 @@ $(function(){
 					+  materialName
 					+ '</td>'
 					+ '<td>'
-					+ materialInventoryQuantity
+					+ materialGeneralInventory
+					+ '</td>'
+					+ '<td>'
+					+ materialProjectInventory
+					+ '</td>'
+					+ '<td>'
+					+ materialQuantityNeeded
 					+ '</td>'
 					+ '<td>'
 					+ '<input type="type" class="number-only" name="materials[_joinData][][quantity]"'

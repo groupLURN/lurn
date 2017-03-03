@@ -76,6 +76,7 @@
                             'Manpower Type',
                             'General Inventory Quantity',
                             'Project Inventory Quantity',
+                            'Quantity Needed',
                             'Quantity'
                         ],
                         'hasAdd' => false,
@@ -93,6 +94,7 @@
                         'Materials',
                         'General Inventory Quantity',
                         'Project Inventory Quantity',
+                        'Quantity Needed',
                         'Quantity'
                     ],
                     'hasAdd' => false,

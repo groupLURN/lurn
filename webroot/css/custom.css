@@ -45,6 +45,10 @@ a {
     text-align: center;
 }
 
+.red-text {
+    color: red;
+}
+
 form .error-message {
     float: right;
     padding-right: 15px;

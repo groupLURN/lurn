@@ -4,26 +4,34 @@
 		<?= $this->Form->create($project, ['type' => 'file']) ?>
 		<fieldset>
 			<legend><h3><i class="fa fa-angle-right"></i>Add Project</h3></legend>
+			<i class="red-text">* = Required</i>
 			<?php
 
 			echo $this->Form->input('title', [
 				'class' => 'form-control',
 				'label' => [
-					'class' => 'mt'
+					'class' => 'mt',
+       				'escape' => false,
+					'text' => '<i class="red-text">*</i> Title'
+
 				]
 			]);
 
 			echo $this->Form->input('description', [
 				'class' => 'form-control',
 				'label' => [
-					'class' => 'mt'
+					'class' => 'mt',
+       				'escape' => false,
+					'text' => '<i class="red-text">*</i> Description'
 				]           
 			]);
 
 			echo $this->Form->input('location', [
 				'class' => 'form-control',
 				'label' => [
-					'class' => 'mt'
+					'class' => 'mt',
+       				'escape' => false,
+					'text' => '<i class="red-text">*</i> Location'
 				]
 			]);
 
@@ -31,7 +39,9 @@
 				'options' => $clients,
 				'class' => 'form-control',
 				'label' => [
-					'class' => 'mt'
+					'class' => 'mt',
+       				'escape' => false,
+					'text' => '<i class="red-text">*</i> Client'
 				]   
 			]);
 
@@ -39,7 +49,9 @@
 				'type' => 'text',
 				'class' => 'form-control datetime-picker',
 				'label' => [
-					'class' => 'mt'
+					'class' => 'mt',
+       				'escape' => false,
+					'text' => '<i class="red-text">*</i> Start Date'
 				]
 			]);
 
@@ -47,7 +59,9 @@
 				'type' => 'text',
 				'class' => 'form-control datetime-picker',
 				'label' => [
-					'class' => 'mt'
+					'class' => 'mt',
+       				'escape' => false,
+					'text' => '<i class="red-text">*</i> End Date'
 				]
 			]);
 
@@ -58,7 +72,8 @@
 				echo $this->Form->input('project-engineer', [
 					'class' => 'form-control',
 					'label' => [
-						'text' => 'Project Engineers'
+	       				'escape' => false,
+						'text' => '<i class="red-text">*</i> Project Engineer'
 					],
 					'options' => [''=>'-Add a Project Engineer-']+$projectEngineers
 				]);
@@ -67,7 +82,8 @@
 					'class' => 'form-control',
 					'label' => [
 						'class' => 'mt',
-						'text' => 'Warehouse Keepers'
+	       				'escape' => false,
+						'text' => '<i class="red-text">*</i> Warehouse Keeper'
 					],
 					'options' => [''=>'-Add a Warehouse Keeper-']+$warehouseKeepers
 				]);

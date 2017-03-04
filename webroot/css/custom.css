@@ -20,6 +20,10 @@ a {
     color: inherit;
 }
 
+.inline {
+    display: inline;
+}
+
 .padding-bottom {
     padding-bottom: 50px;
 }
@@ -362,4 +366,10 @@ th.rotate > div {
     display: inline-block;
     margin-left: 5px;
     width: auto;
+}
+
+.file-block {
+    background-color: #E2E2E2;
+    margin-bottom: 5px;
+    padding: 10px;
 }

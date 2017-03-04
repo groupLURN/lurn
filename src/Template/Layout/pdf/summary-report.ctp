@@ -37,10 +37,29 @@ $this->Html->css('pdf', ['block' => true, 'fullBase' => true]);
     <br>
 </div>
 
-<div class="body">
+<div class="page-break body">
     <?= $this->fetch('content'); ?>
 </div>
 
+
+<div class="header">
+    <?= $this->Html->image('logo.jpg', array('fullBase' => true, 'class' => 'float-right')) ?>
+    <h3 class="text-left">
+        <?= h($project->title) ?><br>
+        <?= h($project->client->company_name) ?><br>
+        J.I. Espino Construction<br>
+        <?= h($project->employee->name) ?><br>
+        <?= h($project->location) ?><br>
+    </h3>
+    <br>
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 <div class="footer">
     <div>
         <h2><i>Authorized By:</i></h2>

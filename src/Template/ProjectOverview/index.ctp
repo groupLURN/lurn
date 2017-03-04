@@ -61,7 +61,7 @@
     </table>
 
     <div class="related">
-        <h3><?= __('Core Team') ?></h3>
+        <h4><?= __('Core Team') ?></h4>
         <?php if (!empty($project->employees_join)): ?>
             <table cellpadding="0" cellspacing="0" class="table table-striped">
                 <tr>
@@ -80,6 +80,41 @@
                 <?php endforeach; ?>
             </table>
         <?php endif; ?>
+        <h4 class="mt">Uploaded Files</h4>
+        <div id="files-existing" >
+            <?php 
+                if (count($project->projects_files) > 0) {
+                    foreach ($project->projects_files as $file){
+            ?>                     
+                
+                    <div class="file-block">
+                        <div class="row">
+                            <div class="col-sm-12">   
+                            <a href=
+                                <?= 
+                                    rawurldecode(
+                                        $this->Url->build([
+                                            'controller' => 'Projects',
+                                            'action' => 'download',
+                                            'file' => $file->file_location.$file->file_name.'.'.$file->file_type
+                                        ])
+                                    )
+                                ?> 
+                            >
+                                <?= h($file->file_name.'.'.$file->file_type) ?>
+                            </a>                 
+                            </div>
+                        </div>
+                    </div>
+            <?php 
+                    }
+                } else { 
+            ?>
+                None.
+            <?php 
+                } 
+            ?>
+        </div>
     </div>
 </div>
 

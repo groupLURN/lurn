@@ -17,20 +17,21 @@ class MaterialsProjectInventoriesController extends AppController
 
     public function beforeFilter(Event $event)
     {
-        if(!isset($this->request->query['project_id']))
+        if(empty($this->request->params['pass'])) {
             return $this->redirect(['controller' => 'dashboard']);
+        }
 
         $this->loadModel('Projects');
         $this->viewBuilder()->layout('project_management');
-        $this->_projectId = (int) $this->request->query['project_id'];
+        $projectId = (int) $this->request->params['pass'][0];
         
-        $this->set('projectId', $this->_projectId);
+        $this->set('projectId', $projectId);
         
-        $project = $this->Projects->find('byId', ['project_id' => $this->_projectId])->first();
-        
+        $project = $this->Projects->find('byId', ['project_id' => $projectId])->first();
+
         $this->set('isFinished', $project->is_finished );
 
-        $this->set('projectId', $this->_projectId);
+        $this->set('projectId', $projectId);
         return parent::beforeFilter($event);
     }
 
@@ -39,7 +40,7 @@ class MaterialsProjectInventoriesController extends AppController
      *
      * @return \Cake\Network\Response|null
      */
-    public function index()
+    public function index($id = null)
     {
         $this->paginate = [
             'sortWhitelist' => [
@@ -57,14 +58,14 @@ class MaterialsProjectInventoriesController extends AppController
             $this->request->query['milestone_id'] = 0;
 
         $this->paginate['finder']['projectInventorySummary'] = [
-            'project_id' => $this->_projectId,
+            'project_id' => $id,
             'milestone_id' => $this->request->query['milestone_id']
         ];
 
         $materials = $this->paginate(TableRegistry::get('Materials'));
 
         $milestones = TableRegistry::get('Milestones')->find('list')
-            ->where(['project_id' => $this->_projectId])
+            ->where(['project_id' => $id])
             ->toArray();
 
         $this->set(compact('materials', 'milestones'));
@@ -75,15 +76,16 @@ class MaterialsProjectInventoriesController extends AppController
     /**
      * View method
      *
-     * @param string|null $id Materials Project Inventory id.
+     * @param string|null $id Project id.
      * @return \Cake\Network\Response|null
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function view($id = null)
     {
+        $materialId = $this->request->query['material_id'];
         $summary = TableRegistry::get('Materials')->find('projectInventorySummary', [
-            'id' => $id,
-            'project_id' => $this->_projectId
+            'id' => $materialId,
+            'project_id' => $id
         ])->first();
 
         $material = TableRegistry::get('Materials')->get($id, [
@@ -124,24 +126,25 @@ class MaterialsProjectInventoriesController extends AppController
     /**
      * Edit method
      *
-     * @param string|null $id Materials Project Inventory id.
+     * @param string|null $id Project id.
      * @return \Cake\Network\Response|void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
     public function edit($id = null)
     {
+        $materialId = $this->request->query['material_id'];
         try
         {
             $materialsProjectInventory = $this->MaterialsProjectInventories->get([
-                'material_id' => $id,
-                'project_id' => $this->_projectId
+                'material_id' => $materialId,
+                'project_id' => $id
             ]);
         }
         catch(RecordNotFoundException $e)
         {
             $materialsProjectInventory = $this->MaterialsProjectInventories->newEntity([
-                'material_id' => $id,
-                'project_id' => $this->_projectId,
+                'material_id' => $materialId,
+                'project_id' => $id,
                 'quantity' => 0
             ]);
         }
@@ -149,7 +152,7 @@ class MaterialsProjectInventoriesController extends AppController
             $materialsProjectInventory = $this->MaterialsProjectInventories->patchEntity($materialsProjectInventory, $this->request->data);
             if ($this->MaterialsProjectInventories->save($materialsProjectInventory)) {
                 $this->Flash->success(__('The materials project inventory has been saved.'));
-                return $this->redirect(['action' => 'index', '?' => ['project_id' => $this->_projectId]]);
+                return $this->redirect(['action' => 'index', '?' => ['project_id' => $id]]);
             } else {
                 $this->Flash->error(__('The materials project inventory could not be saved. Please, try again.'));
             }
@@ -163,7 +166,7 @@ class MaterialsProjectInventoriesController extends AppController
     /**
      * Delete method
      *
-     * @param string|null $id Materials Project Inventory id.
+     * @param string|null $id Project id.
      * @return \Cake\Network\Response|null Redirects to index.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */

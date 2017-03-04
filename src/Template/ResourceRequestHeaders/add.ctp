@@ -14,7 +14,23 @@
                     'text' => 'Request From',
                     'class' => 'mt'
                 ],
-                'options' => $projects
+                'options' => [null => '-Choose a Project-']+$projects
+            ]);
+
+            echo $this->Form->input('milestone_id', [
+                'class' => 'form-control chosen',
+                'label' => [
+                    'class' => 'mt'
+                ],
+                'options' => [null => '-Choose a Milestone-']
+            ]);
+
+            echo $this->Form->input('task_id', [
+                'class' => 'form-control chosen',
+                'label' => [
+                    'class' => 'mt'
+                ],
+                'options' => [null => '-Choose a Task-']
             ]);
 
             echo $this->Form->input('to_project_id', [
@@ -35,34 +51,58 @@
             ]);
 
             ?>
-        </fieldset>
         <div class="row mt">
             <div class="col-xs-12">
-                <div class="row">
-                    <div class="col-xs-4">
-                        <legend><h4><i class="fa fa-angle-right"></i> <?= __('Assign Equipment Needed') ?></h4></legend>
-                        <?= $this->element('multi_select_with_input', [
-                            'options' => $equipment,
-                            'resource' => 'equipment'
-                        ]) ?>
-                    </div>
-                    <div class="col-xs-4">
-                        <legend><h4><i class="fa fa-angle-right"></i> <?= __('Assign Manpower Needed') ?></h4></legend>
-                        <?= $this->element('multi_select_with_input', [
-                            'options' => $manpowerTypes,
-                            'resource' => 'manpower_types'
-                        ]) ?>
-                    </div>
-                    <div class="col-xs-4">
-                        <legend><h4><i class="fa fa-angle-right"></i> <?= __('Assign Materials Needed') ?></h4></legend>
-                        <?= $this->element('multi_select_with_input', [
-                            'options' => $materials,
-                            'resource' => 'materials'
-                        ]) ?>
-                    </div>
-                </div>
+                <h4><?= __('Assign Equipment Needed') ?></h4>
+                <?= $this->element('order_request_add', [
+                        'headers' => [
+                            'Equipment',
+                            'General Inventory Quantity',
+                            'Project Inventory Quantity',
+                            'Quantity Needed',
+                            'Quantity'
+                        ],
+                        'hasAdd' => false,
+                        'id' => 'equipment'
+                    ]); 
+                ?>
             </div>
         </div>
+        <div class="row mt">
+            <div class="col-xs-12">
+                <h4><?= __('Assign Manpower Needed') ?></h4>
+                <?= $this->element('order_request_add', [
+                        'headers' => [
+                            'Manpower Type',
+                            'General Inventory Quantity',
+                            'Project Inventory Quantity',
+                            'Quantity Needed',
+                            'Quantity'
+                        ],
+                        'hasAdd' => false,
+                        'id' => 'manpower_types'
+                    ]); 
+                ?>
+            </div>
+        </div>
+        <div class="row mt">
+            <div class="col-xs-12">
+                <h4><?= __('Assign Materials Needed') ?></h4>
+                <?= $this->element('order_request_add', [
+                    'tableWidth' => '50%',
+                    'headers' => [
+                        'Materials',
+                        'General Inventory Quantity',
+                        'Project Inventory Quantity',
+                        'Quantity Needed',
+                        'Quantity'
+                    ],
+                    'hasAdd' => false,
+                    'id' => 'materials'
+                ]); ?>
+            </div>
+        </div>
+        </fieldset>
         <?= $this->Form->button(__('Submit'), [
             'class' => 'btn btn-primary btn-submit',
             'onclick' => "

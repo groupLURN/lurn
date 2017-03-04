@@ -42,10 +42,30 @@ $this->Html->css('pdf', ['block' => true, 'fullBase' => true]);
     <br>
 </div>
 
-<div class="body">
+<div class="page-break body">
     <?= $this->fetch('content'); ?>
 </div>
 
+<div class="header">
+    <?= $this->Html->image('logo.jpg', array('fullBase' => true, 'class' => 'float-right')) ?>
+    <h3 class="text-left">
+        <?php foreach ($projects as $project): ?>
+        <?= $project->title ?><br>
+        <?= $project->client_name ?><br>
+        <?= $this->fetch('title') ?><br>
+        J.I. Espino Construction<br>
+        <?= $project->manager_name ?><br>
+        <?= $project->location ?>
+        <?php endforeach; ?>
+    </h3>
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 <div class="footer">
     <div>
         <h2><i>Authorized By:</i></h2>

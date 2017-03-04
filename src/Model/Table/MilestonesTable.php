@@ -42,7 +42,9 @@ class MilestonesTable extends Table
             'joinType' => 'INNER'
         ]);
         $this->hasMany('Tasks', [
-            'foreignKey' => 'milestone_id'
+            'foreignKey' => 'milestone_id',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
         ]);
     }
 

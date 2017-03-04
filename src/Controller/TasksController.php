@@ -3,9 +3,9 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\Collection\Collection;
-use Cake\Routing\Router;
 use Cake\Event\Event;
 use Cake\I18n\Time;
+use Cake\Routing\Router;
 
 
 /**
@@ -15,9 +15,6 @@ use Cake\I18n\Time;
  */
 class TasksController extends AppController
 {
-    private $__projectId = null;
-    private $_milestones = null;
-
     public function beforeFilter(Event $event)
     {
         if(!isset($this->request->query['project_id']))
@@ -25,15 +22,13 @@ class TasksController extends AppController
 
         $this->loadModel('Projects');
         $this->viewBuilder()->layout('project_management');
-        $this->_projectId = (int) $this->request->query['project_id'];
+        $projectId = (int) $this->request->query['project_id'];
         
-        $this->set('projectId', $this->_projectId);
+        $this->set('projectId', $projectId);
         
-        $project = $this->Projects->find('byId', ['project_id' => $this->_projectId])->first();
+        $project = $this->Projects->find('byId', ['project_id' => $projectId])->first();
 
         $this->set('isFinished', $project->is_finished );
-
-        $this->set('projectId', $this->_projectId);
         $this->set('statusList', array_flip($this->Tasks->status));
         return parent::beforeFilter($event);
     }
@@ -61,40 +56,84 @@ class TasksController extends AppController
 
         $isFinishedCase = $query->newExpr()->addCase($query->newExpr()->add(['Tasks.is_finished' => 1]), 1, 'integer');
 
-        $resultSet =
-            $query
-                ->select(['Milestones.id', 'finished_tasks' => $query->func()->coalesce([$query->func()->sum($isFinishedCase), 0]),
-                    'total_tasks' => $query->func()->count('Tasks.id')])
+        $resultSet = [];
+
+        if(count($milestones) > 0) {
+            $resultSet = $query
+                ->select(['Milestones.id', 
+                    'finished_tasks' => $query->func()->coalesce([
+                            $query->func()->sum($isFinishedCase), 0
+                        ]), 
+                    'total_tasks' => $query->func()->count('Tasks.id')
+                    ])
                 ->matching('Tasks')
                 ->where(['Milestones.id IN' => $milestones->extract('id')->toArray()])
                 ->group('Milestones.id')
                 ->toArray();
+        }
 
         $milestonesProgress = [];
-        foreach($resultSet as $milestoneProgress)
-            $milestonesProgress[$milestoneProgress->id] = $milestoneProgress['finished_tasks']/ $milestoneProgress['total_tasks'] * 100;
+
+        foreach($resultSet as $milestoneProgress) {
+            $milestonesProgress[$milestoneProgress->id] = $milestoneProgress['finished_tasks'] 
+            / $milestoneProgress['total_tasks'] * 100;
+        }
 
         $this->set(compact('milestones', 'milestonesProgress'));
-        $this->set($this->request->query);
         $this->set('_serialize', ['milestones', 'milestonesProgress']);
-
-        $this->_milestones = $milestones;
     }
 
     public function manage()
     {
-        $this->index();
-        $milestones = $this->_milestones;
+        $this->paginate = [
+            'contain' => [
+                'Tasks' => [
+                    'Equipment', 'ManpowerTypes', 'Materials',
+                    'EquipmentReplenishmentDetails', 'ManpowerTypeReplenishmentDetails', 'MaterialReplenishmentDetails'
+                ]
+            ]
+        ];
+        
+        $this->paginate += $this->createFinders($this->request->query, 'Milestones');
+        $milestones = $this->paginate($this->Tasks->Milestones);
+
+        $query = $this->Tasks->Milestones->find();
+
+        $isFinishedCase = $query->newExpr()->addCase($query->newExpr()->add(['Tasks.is_finished' => 1]), 1, 'integer');
+
+        $resultSet = [];
+
+        if(count($milestones) > 0) {
+            $resultSet = $query
+                ->select(['Milestones.id', 
+                    'finished_tasks' => $query->func()->coalesce([
+                            $query->func()->sum($isFinishedCase), 0
+                        ]), 
+                    'total_tasks' => $query->func()->count('Tasks.id')
+                    ])
+                ->matching('Tasks')
+                ->where(['Milestones.id IN' => $milestones->extract('id')->toArray()])
+                ->group('Milestones.id')
+                ->toArray();
+        }
+
+        $milestonesProgress = [];
+
+        foreach($resultSet as $milestoneProgress) {
+            $milestonesProgress[$milestoneProgress->id] = $milestoneProgress['finished_tasks'] 
+            / $milestoneProgress['total_tasks'] * 100;
+        }
+
         $this->Tasks->computeForTaskReplenishmentUsingMilestones($milestones);
 
-        $this->set(compact('taskReplenishment', 'milestones'));
-        $this->set($this->request->query);
-        $this->set('_serialize', ['taskReplenishment', 'milestones']);
+        $this->set(compact('milestones', 'milestonesProgress', 'taskReplenishment'));
+        $this->set('_serialize', ['milestones', 'milestonesProgress', 'taskReplenishment']);
+
     }
 
-    public function replenish($id)
+    public function replenish($taskId)
     {
-        $task = $this->Tasks->get($id, [
+        $task = $this->Tasks->get($taskId, [
             'contain' => [
                 'Milestones',
                 'Equipment', 'ManpowerTypes', 'Materials',
@@ -109,12 +148,13 @@ class TasksController extends AppController
         else
             $this->Flash->error(__('The Task ' . $task->title . '  cannot be replenished. Please, try again.'));
 
-        return $this->redirect(['action' => 'manage', '?' => ['project_id' => $this->__projectId]]);
+        $projectId = (int) $this->request->query['project_id'];
+        return $this->redirect(['action' => 'manage', '?' => ['project_id' => $projectId]]);
     }
 
-    public function viewStock($id = null)
+    public function viewStock($taskId = null)
     {
-        $task = $this->Tasks->get($id, [
+        $task = $this->Tasks->get($taskId, [
             'contain' => ['Milestones',
                 'Equipment', 'ManpowerTypes', 'Materials',
                 'EquipmentReplenishmentDetails', 'ManpowerTypeReplenishmentDetails', 'MaterialReplenishmentDetails'
@@ -127,9 +167,9 @@ class TasksController extends AppController
         $this->set('_serialize', ['task']);
     }
 
-    public function viewFinished($id = null)
+    public function viewFinished($taskId = null)
     {
-        $task = $this->Tasks->get($id, [
+        $task = $this->Tasks->get($taskId, [
             'contain' => ['Milestones',
                 'Equipment', 'ManpowerTypes', 'Materials',
                 'EquipmentReplenishmentDetails', 'ManpowerTypeReplenishmentDetails', 'MaterialReplenishmentDetails'
@@ -144,8 +184,6 @@ class TasksController extends AppController
 
     public function generateReport($taskId = null, $download = null)
     {
-       
-
         $this->viewBuilder()->layout('general');
         
         $task = $this->Tasks->get($taskId, [
@@ -177,9 +215,9 @@ class TasksController extends AppController
         ]); 
     }
 
-    public function finish($id = null)
+    public function finish($taskId = null)
     {
-        $task = $this->Tasks->get($id, [
+        $task = $this->Tasks->get($taskId, [
             'contain' => [
                 'Milestones',
                 'Equipment', 'ManpowerTypes', 'Materials',
@@ -224,7 +262,8 @@ class TasksController extends AppController
                 }
                 
                 $this->Flash->success(__('The task has been marked finished!'));
-                return $this->redirect(['action' => 'manage', '?' => ['project_id' => $this->__projectId]]);
+                $projectId = (int) $this->request->query['project_id'];
+                return $this->redirect(['action' => 'manage', '?' => ['project_id' => $projectId]]);
             }
             else
                 $this->Flash->error(__('The task could not be saved. Please, try again.'));
@@ -237,13 +276,13 @@ class TasksController extends AppController
     /**
      * View method
      *
-     * @param string|null $id Task id.
+     * @param string|null $taskId Task id.
      * @return \Cake\Network\Response|null
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($id = null)
+    public function view($taskId = null)
     {
-        $task = $this->Tasks->get($id, [
+        $task = $this->Tasks->get($taskId, [
             'contain' => ['Milestones', 'Equipment', 'ManpowerTypes', 'Materials']
         ]);
 
@@ -279,15 +318,15 @@ class TasksController extends AppController
     /**
      * Edit method
      *
-     * @param string|null $id Task id.
+     * @param string|null $taskId Task id.
      * @return \Cake\Network\Response|void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
-    public function edit($id = null)
+    public function edit($taskId = null)
     {
         if ($this->request->is(['patch', 'post', 'put'])) {
 
-            $task = $this->Tasks->get($id);
+            $task = $this->Tasks->get($taskId);
 
             $this->transpose($this->request->data, 'equipment');
             $this->transpose($this->request->data, 'manpower_types');
@@ -303,52 +342,20 @@ class TasksController extends AppController
 
             if ($this->Tasks->save($task)) {
                 $this->Flash->success(__('The task has been saved.'));
-                return $this->redirect(['action' => 'index', '?' => ['project_id' => $this->__projectId]]);
+                $projectId = (int) $this->request->query['project_id'];
+                return $this->redirect(['action' => 'index', '?' => ['project_id' => $projectId]]);
             } else {
                 $this->Flash->error(__('The task could not be saved. Please, try again.'));
             }
         }
 
-        $task = $this->Tasks->get($id, [
+        $task = $this->Tasks->get($taskId, [
             'contain' => ['Equipment', 'ManpowerTypes', 'Materials']
         ]);
 
         $milestones = $this->Tasks->Milestones->find('list', ['limit' => 200]);
         $equipment = $this->Tasks->Equipment->find('list', ['limit' => 200]);
         $manpowerTypes = $this->Tasks->ManpowerTypes->find('list', ['limit' => 200]);
-//        $manpowerTypes
-//            ->select(['__violation' =>
-//                $manpowerTypes->func()->coalesce([
-//                    $manpowerTypes->func()->sum(
-//                        $manpowerTypes->newExpr()->addCase([
-//                            $manpowerTypes->newExpr()->add(["Tasks.id IS NOT" => null])
-//                        ], 1
-//                        )
-//                    ), 0
-//                ])
-//            ])
-//            ->select($this->Tasks->Manpower)
-//            ->leftJoinWith('ManpowerTasks.Tasks', function($query) use ($task)
-//            {
-//                return $query
-//                    ->where(
-//                        [
-//                            'Tasks.start_date <=' => $task->start_date,
-//                            'Tasks.end_date >=' => $task->start_date,
-//                            'Tasks.id !=' => $task->id
-//                        ]
-//                    )
-//                    ->orWhere(
-//                        [
-//                            'Tasks.start_date <=' => $task->end_date,
-//                            'Tasks.end_date >=' => $task->end_date,
-//                            'Tasks.id !=' => $task->id
-//                        ]
-//                    );
-//            })
-//            ->group(['Manpower.id'])
-//            ->having(['__violation' => 0]);
-
         $materials = $this->Tasks->Materials->find('list', ['limit' => 200]);
 
         $selectedEquipment = $task->equipment;
@@ -363,14 +370,14 @@ class TasksController extends AppController
     /**
      * Delete method
      *
-     * @param string|null $id Task id.
+     * @param string|null $taskId Task id.
      * @return \Cake\Network\Response|null Redirects to index.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function delete($id = null)
+    public function delete($taskId = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $task = $this->Tasks->get($id);
+        $task = $this->Tasks->get($taskId);
         if ($this->Tasks->delete($task)) {
             $this->Flash->success(__('The task has been deleted.'));
         } else {

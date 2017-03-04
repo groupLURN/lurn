@@ -118,8 +118,11 @@
                     <tr>
                         <td><?= $employee->has('employee_type') ? h($employee->employee_type->title) : '' ?></td>
                         <td><?= h($employee->name) ?></td>
-                        <td><?= h($employee->employment_date) ?></td>
-                        <td><?= h($employee->termination_date) ?></td>
+                        <td><?= h(date_format(new DateTime($employee->employment_date), 'F d, Y')) ?></td>
+                        <td>
+                            <?= h(isset($employee->termination_date) ? 
+                                date_format(new DateTime($employee->termination_date), 'F d, Y') : '')?>                            
+                        </td>
                         <td class="actions">
                             <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $employee->id]); ?>
                             <?= $this->dataTableEditButton(__('Edit'), ['action' => 'edit', $employee->id]); ?>

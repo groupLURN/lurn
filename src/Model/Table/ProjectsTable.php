@@ -57,36 +57,50 @@ class ProjectsTable extends Table
             'foreignKey' => 'project_manager_id',
             'joinType' => 'LEFT'
         ]);
-        $this->hasMany('EquipmentProjectInventories', [
-            'foreignKey' => 'project_id'
-        ]);
-        $this->hasMany('EquipmentTaskInventories', [
-            'foreignKey' => 'project_id'
-        ]);
         $this->hasMany('Manpower', [
-            'foreignKey' => 'project_id'
+            'foreignKey' => 'project_id',
         ]);
         $this->hasMany('MaterialsProjectInventories', [
-            'foreignKey' => 'project_id'
+            'foreignKey' => 'project_id',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
         ]);
         $this->hasMany('MaterialsTaskInventories', [
-            'foreignKey' => 'project_id'
-        ]);
-        $this->hasMany('Tasks', [
-            'className' => 'Tasks',
-            'foreignKey' => 'milestone_id'
+            'foreignKey' => 'project_id',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
         ]);
         $this->hasMany('Milestones', [
-            'className' => 'Milestones',
-            'foreignKey' => 'project_id'
+            'foreignKey' => 'project_id',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
+        ]);
+        $this->hasMany('EmployeesProjects', [
+            'foreignKey' => 'project_id',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
+        ]);
+        $this->hasMany('ProjectsFiles', [
+            'foreignKey' => 'project_id',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
+        ]);
+        $this->hasMany('Tasks', [
+            'foreignKey' => 'project_id',
+            'targetForeignKey' => 'milestone_id',
+            'joinTable' => 'milestones'
+        ]);
+        $this->hasMany('Notifications', [
+            'foreignKey' => 'project_id',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
         ]);
         $this->belongsToMany('EmployeesJoin', [
             'className' => 'Employees',
             'foreignKey' => 'project_id',
             'targetForeignKey' => 'employee_id',
             'joinTable' => 'employees_projects'
-        ]);
-        
+        ]);        
         $this->belongsTo('ProjectPhases', [
             'foreignKey' => 'phase',
             'joinType' => 'INNER'
@@ -149,6 +163,38 @@ class ProjectsTable extends Table
         }
     }
 
+    public function beforeDelete(Event $event, Project $data,ArrayObject $options)
+    {   
+        $project = $data;
+        $projectManpower = TableRegistry::get('Manpower')
+            ->find('byProjectId', ['project_id' => $project->id])->toArray();
+
+        $deleteFlag = true;
+        foreach ($projectManpower as $manpower) {
+            $manpower->project_id = '';
+            $manpower->task_id = '';
+
+            if (!TableRegistry::get('Manpower')->save($manpower))
+            {
+                $deleteFlag = false;
+            }
+        }
+        
+        $equipmentInventories = TableRegistry::get('EquipmentInventories')
+            ->find('byTaskId', ['task_id' => $task->id])->toArray();
+
+        foreach ($equipmentInventories as $equipmentInventory) {
+            $equipmentInventory->project_id = '';
+
+            if (!TableRegistry::get('EquipmentInventories')->save($equipmentInventory))
+            {
+                $deleteFlag = false;
+            }
+        }
+
+        return $deleteFlag;
+    }
+
     public function getProjectStatusList()
     {
         return
@@ -165,7 +211,7 @@ class ProjectsTable extends Table
     {
         if($options['project_id'] > 0)
             return $query->contain(['Clients', 'Milestones' => ['Tasks'], 'Employees',  
-                'EmployeesJoin' => ['EmployeeTypes'], 'ProjectPhases'])
+                'EmployeesJoin' => ['EmployeeTypes'], 'ProjectPhases', 'ProjectsFiles'])
                 ->where(['Projects.id' => $options['project_id']]);
         return $query;
     }

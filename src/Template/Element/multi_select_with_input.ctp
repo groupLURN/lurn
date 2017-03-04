@@ -25,7 +25,7 @@ for ($i = 0; $i < count($namespaces); $i++)
 <div class="content-panel multi-select-with-input" id="<?= $id ?>" <?= $hidden ? 'hidden' : '' ?>>
     <div class="mt parent-center">
         <div class="child-center" style="width: 32%;">
-            <?= $this->Form->input('list', [
+            <?= $this->Form->input($resource.'-list', [
                 'label' => false,
                 'type' => 'select',
                 'data-placeholder' => 'No ' . $resource,
@@ -39,7 +39,7 @@ for ($i = 0; $i < count($namespaces); $i++)
                 <input type="text" class='number-only resource-quantity' style="text-align: center;">
             <?php endif; ?>
             &nbsp;
-            <img src=<?=$this->Html->image('add.png')?> alt="Add" style="cursor: pointer;" onclick="if(<?= $checker ?> === true) add_<?= $resource ?>(this);">
+            <img src=<?=$this->Url->image('add.png')?> alt="Add" style="cursor: pointer;" onclick="if(<?= $checker ?> === true) add_<?= $resource ?>(this);">
         </div>
     </div>
     <ul class="options">
@@ -68,13 +68,13 @@ for ($i = 0; $i < count($namespaces); $i++)
         var $ul = $("ul.options", $context);
 
         var $li = $("<li>", {
-            onclick: '$(this).remove();'
+            onclick: '<?= $resource ?>ResetInput(this);'
         });
 
         var selectedObject = {
             id: $select.val(),
             name: $select.find('[value= ' + $select.val() + ']').text()
-        };
+        };;
 
         <?php if($quantity) : ?>
         selectedObject.quantity = $(".resource-quantity", $context).val();
@@ -94,7 +94,21 @@ for ($i = 0; $i < count($namespaces); $i++)
 
         if ($ul.find('input.id[value=' + selectedObject.id + ']').length === 0
             <?php if($quantity) : ?> && selectedObject.quantity.trim() !== "" <?php endif; ?>
-        )
+        ) {
             $ul.append($li);
+
+            $select.find('[value= ' + $select.val() + ']').attr('disabled', true);
+            $select.trigger('chosen:updated');
+        }
+    }
+
+    function <?= $resource ?>ResetInput(object) {
+        var $context = $(object).closest("div.multi-select-with-input");
+        var $select = $("select.chosen", $context);
+        var id = $(object).find('.id').val();
+
+        $select.find('[value='+id+']').attr('disabled', false);
+        $select.trigger('chosen:updated');
+        $(object).remove();
     }
 </script>

@@ -5,7 +5,6 @@
         <div class="content-panel">
             <?= $this->Form->create('Search', ['type' => 'GET']) ?>
             <h4><i class="fa fa-angle-right"></i> Filters </h4>
-            <?= $this->Form->input('project_id', ['type' => 'hidden', 'value' => $project_id]); ?>
             <hr>
             <table class="table">
                 <tbody>
@@ -66,9 +65,9 @@
         ?>
 
         <?= $this->Form->button('<i class="fa fa-save"></i> Save as PDF', 
-            array('onclick' => "location.href='" . $this->Url->build('/manpower-project-inventory-report/view/1.pdf?project_id=' . $project_id . $startParam . $endParam) . "'", 'class' => 'btn btn-primary')); ?>
+            array('onclick' => "location.href='" . $this->Url->build('/manpower-project-inventory-report/view/'.$projectId.'/1.pdf?' . $startParam . $endParam). "'", 'class' => 'btn btn-primary')); ?>
         <?= $this->Form->button('<i class="fa fa-print"></i> Print', 
-            array('onclick' => "location.href='" . $this->Url->build('/manpower-project-inventory-report/view/0.pdf?project_id=' . $project_id . $startParam . $endParam) . "'", 'class' => 'btn btn-warning')); ?>
+            array('onclick' => "location.href='" . $this->Url->build('/manpower-project-inventory-report/view/'.$projectId.'/0.pdf?'. $startParam . $endParam) . "'", 'class' => 'btn btn-warning')); ?>
     </div>
 </div>
 <div class="row mt">

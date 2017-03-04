@@ -6,7 +6,7 @@
             <?= $this->Form->create('Search', ['type' => 'GET']) ?>
             <h4><i class="fa fa-angle-right"></i> Filters </h4>
             <hr>
-            <?= $this->Form->input('project_id', ['type' => 'hidden', 'value' => $project_id]); ?>
+            <?= $this->Form->input('project_id', ['type' => 'hidden', 'value' => $projectId]); ?>
             <table class="table">
                 <tbody>
                 <tr>
@@ -93,8 +93,8 @@
                             <?php foreach ($milestone->tasks as $task): ?>
                                 <tr>
                                     <td><?= h($task->title) ?></td>
-                                    <td><?= h($task->start_date) ?></td>
-                                    <td><?= h($task->end_date) ?> </td>
+                                    <td><?= h(date_format($task->start_date,"F d, Y")) ?></td>
+                                    <td><?= h(date_format($task->end_date,"F d, Y")) ?> </td>
                                     <td>
                                         <span class='task-status <?=str_replace(' ', '-', strtolower($task->status))?>'>
                                             <?= h($task->status) ?>
@@ -104,7 +104,7 @@
                                         <?php 
                                             if(!$task->is_finished){ ?>
                                                 <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $task->id, '?' => ['project_id' => $projectId]])?> 
-                                                <?= $this->dataTableEditButton(__('Edit'), ['action' => 'edit', $task->id, '?' => ['project_id' => $projectId]])?> 
+                                                <?= $this->dataTableEditButton(__('Assign Resources'), ['action' => 'edit', $task->id, '?' => ['project_id' => $projectId]])?> 
                                            <?php } else { ?>
                                                 <?= $this->dataTableViewButton(__('View'), ['action' => 'ViewFinished', $task->id, '?' => ['project_id' => $projectId]])?> 
                                         <?php    }

@@ -87,6 +87,16 @@ class NotificationsTable extends Table
         return $rules;
     }
 
+    public function findByProjectId(Query $query, array $options)
+    {   
+        if($options['project_id'] >= 0){
+            return $query->where(['project_id' => $options['project_id']])
+                ->order(['created' =>'DESC']);
+        } else {
+            return $query;
+        }
+    }
+
     public function findByUserId(Query $query, array $options)
     {   
         if($options['user_id'] >= 0){

@@ -40,48 +40,30 @@
             ]);
 
             ?>
-
-            <legend class="mt"><h3><i class="fa fa-angle-right"></i>Purchase Order</h3></legend>
-            <?= $this->element('editable_data_table', [
-                'tableWidth' => '350px',
+            <?= $this->element('order_request_add', [
+                'tableWidth' => '50%',
                 'headers' => [
                     'Materials',
-                    'Quantity',
+                    'General Inventory Quantity',
+                    'Quantity Needed',
+                    'Quantity'
                 ],
-                'columns' => [
-                    $this->Form->input('purchase_order_details.material_id[]', [
-                        'class' => ' form-control chosen',
-                        'label' => false,
-                        'options' => ['0' => '-'] ,
-                        'id' => false
-                    ]),
-                    $this->Form->input('purchase_order_details.quantity[]', [
-                        'class' => 'number-only',
-                        'label' => false,
-                        'id' => false
-                    ]),
-                ]
+                'hasAdd' => false,
+                'id' => 'purchase-order-add'
             ]); ?>
         </fieldset>
 
         <?= $this->Form->button(__('Submit'), [
             'class' => 'btn btn-primary btn-submit',
             'onclick' => "
-            if($('.editable-data-table tr.data').length === 1)
+            if($('.editable-data-table tr.data').length <= 1)
             {
                 alert('There should be at least one purchase detail.');
                 event.preventDefault();
             }
             else if(!confirm('Once the purchase order is submitted, the purchase order cannot be edited or deleted. Are you sure with your purchase order?'))
-                event.preventDefault();
-            else
             {
-                $('.editable-data-table').find('input, select').each(function()
-                {
-                    $(this).prop('disabled', !$(this).prop('disabled'));
-                    if($(this).is('select'))
-                        $(this).trigger('chosen:updated');
-                });
+                event.preventDefault();
             }
             "
         ]) ?>

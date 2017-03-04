@@ -12,6 +12,7 @@ $this->start('additional-sidebar');
     <a href="javascript:;" >
         <i class="fa fa-building"></i>
         <span>Project Planning</span>
+        <span class="caret"> </span>
     </a>
     <ul class="sub">
         <li><a href=<?= $this->Url->build(['controller' => 'ProjectPlanning', 'action' => 'CreateGanttChart', $projectId]) ?>>Gantt Chart</a></li>
@@ -24,6 +25,7 @@ $this->start('additional-sidebar');
     <a href="javascript:;">
         <i class="fa fa-recycle"></i>
         <span>Project Implementation</span>
+        <span class="caret"> </span>
     </a>
     <ul class="sub">
         <li><a href=<?= $this->Url->build(['controller' => 'Tasks', 'action' => 'manage', '?' => ['project_id' => $projectId]]) ?>>Task Management</a></li>
@@ -33,22 +35,24 @@ $this->start('additional-sidebar');
     <a href="javascript:;" >
         <i class="fa fa-database"></i>
         <span>Project Inventories</span>
+        <span class="caret"> </span>
     </a>
     <ul class="sub">
-        <li><a href=<?= $this->Url->build(['controller' => 'EquipmentProjectInventories', '?' => ['project_id' => $projectId]]) ?>>Equipment Inventory</a></li>
-        <li><a href=<?= $this->Url->build(['controller' => 'MaterialsProjectInventories', '?' => ['project_id' => $projectId]]) ?>>Materials Inventory</a></li>
-        <li><a href=<?= $this->Url->build(['controller' => 'ManpowerProjectInventories', '?' => ['project_id' => $projectId]]) ?>>Manpower Inventory</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'EquipmentProjectInventories', $projectId]) ?>>Equipment Inventory</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'MaterialsProjectInventories', $projectId]) ?>>Materials Inventory</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'ManpowerProjectInventories', $projectId]) ?>>Manpower Inventory</a></li>
     </ul>
 </li>
 <li class="sub-menu">
     <a href="javascript:;" >
         <i class="fa fa-file"></i>
         <span>Inventory Reports</span>
+        <span class="caret"> </span>
     </a>
     <ul class="sub">
-        <li><a href=<?= $this->Url->build(['controller' => 'EquipmentProjectInventoryReport', '?' => ['project_id' => $projectId]]) ?>>Equipment Inventory Report</a></li>
-        <li><a href=<?= $this->Url->build(['controller' => 'MaterialsProjectInventoryReport', '?' => ['project_id' => $projectId]]) ?>>Materials Inventory Report</a></li>
-        <li><a href=<?= $this->Url->build(['controller' => 'ManpowerProjectInventoryReport', '?' => ['project_id' => $projectId]]) ?>>Manpower Inventory Report</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'EquipmentProjectInventoryReport', $projectId]) ?>>Equipment Inventory Report</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'MaterialsProjectInventoryReport', $projectId]) ?>>Materials Inventory Report</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'ManpowerProjectInventoryReport', $projectId]) ?>>Manpower Inventory Report</a></li>
     </ul>
 </li>
 <?php if ($isFinished == 1):?>
@@ -56,12 +60,14 @@ $this->start('additional-sidebar');
     <a href="javascript:;" >
         <i class="fa fa-file"></i>
         <span>Summary Reports</span>
+        <span class="caret"> </span>
     </a>
-        <ul class="sub">
-            <li><a href=<?= $this->Url->build(['controller' => 'EquipmentSummaryReport', $projectId]) ?>>Equipment Summary Report</a></li>
-            <li><a href=<?= $this->Url->build(['controller' => 'MaterialsSummaryReport', $projectId]) ?>>Materials Summary Report</a></li>
-            <li><a href=<?= $this->Url->build(['controller' => 'ManpowerSummaryReport', $projectId]) ?>>Manpower Summary Report</a></li>
-        </ul>
+    <ul class="sub">
+        <li><a href=<?= $this->Url->build(['controller' => 'SummaryReport', $projectId]) ?>>Summary Report</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'EquipmentSummaryReport', $projectId]) ?>>Equipment Summary Report</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'MaterialsSummaryReport', $projectId]) ?>>Materials Summary Report</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'ManpowerSummaryReport', $projectId]) ?>>Manpower Summary Report</a></li>
+    </ul>
 </li>
 <?php endif;?>
 

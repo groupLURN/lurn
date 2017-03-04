@@ -66,6 +66,11 @@ class EquipmentTable extends Table
             'targetForeignKey' => 'task_id',
             'joinTable' => 'equipment_tasks'
         ]);
+        $this->belongsToMany('Suppliers', [
+            'foreignKey' => 'equipment_id',
+            'targetForeignKey' => 'supplier_id',
+            'joinTable' => 'equipment_suppliers'
+        ]);
 
     }
 
@@ -300,24 +305,94 @@ class EquipmentTable extends Table
             ->group('Equipment.id');
     }
 
+    public function findByTask(Query $query, array $options)
+    {
+        if((float)$options['task_id'] > -1){
+
+            return $query
+                ->select([
+                        'id',
+                        'name',
+                        'et.quantity',
+                        'general-inventory-count' => 'COUNT(ei.equipment_id)',
+                        'project-inventory-count' => 'COUNT(epi.equipment_id)'
+                    ])
+                ->join([
+                    'et' => [
+                        'table' => 'equipment_tasks',
+                        'type' => 'INNER',
+                        'conditions' => ['et.equipment_id = Equipment.id']
+                        ],
+                    'ei' => [
+                        'table' => 'equipment_inventories',
+                        'type' => 'LEFT',
+                        'conditions' => [
+                                'ei.equipment_id = Equipment.id',
+                                'ei.project_id' => null, 
+                                'ei.task_id' => null
+                            ]
+                        ],
+                    'epi' => [
+                        'table' => 'equipment_inventories',
+                        'type' => 'LEFT',
+                        'conditions' => [
+                                'epi.equipment_id = Equipment.id',
+                                'epi.task_id = et.task_id'
+                            ]
+                        ]
+                ])
+                ->where(['et.task_id' => $options['task_id']])
+                ->group('Equipment.id');
+        } else {
+
+            return $query;
+        }
+    }
+
     public function findByTaskAndSupplier(Query $query, array $options)
     {
         if((float)$options['task_id'] > -1 && (float)$options['supplier_id'] > -1){
 
             return $query
+                ->select([
+                        'id',
+                        'name',
+                        'et.quantity',
+                        'general-inventory-count' => 'COUNT(ei.equipment_id)',
+                        'project-inventory-count' => 'COUNT(epi.equipment_id)'
+                    ])
                 ->join([
                     'et' => [
                         'table' => 'equipment_tasks',
                         'type' => 'INNER',
-                        'conditions' => ['et.equipment_id = Equipment.id']],
+                        'conditions' => ['et.equipment_id = Equipment.id']
+                        ],
                     'es' => [
                         'table' => 'equipment_suppliers',
                         'type' => 'INNER',
                         'conditions' => ['es.equipment_id = et.equipment_id']
-                    ]
+                        ],
+                    'ei' => [
+                        'table' => 'equipment_inventories',
+                        'type' => 'LEFT',
+                        'conditions' => [
+                                'ei.equipment_id = Equipment.id',
+                                'ei.project_id' => null, 
+                                'ei.task_id' => null
+                            ]
+                        ],
+                    'epi' => [
+                        'table' => 'equipment_inventories',
+                        'type' => 'LEFT',
+                        'conditions' => [
+                                'epi.equipment_id = Equipment.id',
+                                'epi.task_id = et.task_id'
+                            ]
+                        ]
                 ])
                 ->where(['es.supplier_id' => $options['supplier_id'],
-                    'et.task_id' => $options['task_id']]);
+                    'et.task_id' => $options['task_id']])
+                ->group('Equipment.id');
         } else {
 
             return $query;

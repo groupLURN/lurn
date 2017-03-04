@@ -16,22 +16,24 @@ use Cake\I18n\Time;
  */
 class ManpowerProjectInventoryReportController extends AppController
 {
-    private $_projectId = null;
 
     public function beforeFilter(Event $event)
     {
-        if(!isset($this->request->query['project_id']))
+        if(empty($this->request->params['pass'])) {
             return $this->redirect(['controller' => 'dashboard']);
+        }
 
         $this->loadModel('Projects');
         $this->viewBuilder()->layout('project_management');
-        $this->_projectId = (int) $this->request->query['project_id'];
+        $projectId = (int) $this->request->params['pass'][0];
         
-        $this->set('projectId', $this->_projectId);
+        $this->set('projectId', $projectId);
         
-        $project = $this->Projects->find('byId', ['project_id' => $this->_projectId])->first();
+        $project = $this->Projects->find('byId', ['project_id' => $projectId])->first();
 
         $this->set('isFinished', $project->is_finished );
+
+        $this->set('projectId', $projectId);
         return parent::beforeFilter($event);
     }
 
@@ -40,20 +42,20 @@ class ManpowerProjectInventoryReportController extends AppController
      *
      * @return \Cake\Network\Response|null
      */
-    public function index()
+    public function index($id = null)
     {
         $this->paginate += $this->createFinders($this->request->query, 'Manpower');
         if (isset($this->request->query['start_date']) && isset($this->request->query['end_date']))
             $this->paginate['finder']['projectInventorySummary'] = [
-                'project_id' => $this->_projectId,
+                'project_id' => $id,
                 'start_date' => $this->request->query['start_date'], 
                 'end_date' => $this->request->query['end_date']];
         else
-            $this->paginate['finder']['projectInventorySummary'] = ['project_id' => $this->_projectId];
+            $this->paginate['finder']['projectInventorySummary'] = ['project_id' => $id];
         $manpower = $this->paginate(TableRegistry::get('Manpower'));
 
         $this->paginate += $this->createFinders($this->request->query, 'Projects');
-        $this->paginate['finder']['ById'] = ['project_id' => $this->_projectId];
+        $this->paginate['finder']['ById'] = ['project_id' => $id];
         $projects = $this->paginate(TableRegistry::get('Projects'));
 
         if (isset($this->request->query['start_date']) && isset($this->request->query['end_date'])):
@@ -71,22 +73,22 @@ class ManpowerProjectInventoryReportController extends AppController
         $this->set('_serialize', ['manpower', 'projects']);
     }
 
-    public function view($download = null)
+    public function view($id = null, $download = null)
     {
         $this->viewBuilder()->layout('project');
 
         $this->paginate += $this->createFinders($this->request->query, 'Manpower');
         if (isset($this->request->query['start_date']) && isset($this->request->query['end_date']))
             $this->paginate['finder']['projectInventorySummary'] = [
-                'project_id' => $this->_projectId,
+                'project_id' => $id,
                 'start_date' => $this->request->query['start_date'], 
                 'end_date' => $this->request->query['end_date']];
         else
-            $this->paginate['finder']['projectInventorySummary'] = ['project_id' => $this->_projectId];
+            $this->paginate['finder']['projectInventorySummary'] = ['project_id' => $id];
         $manpower = $this->paginate(TableRegistry::get('Manpower'));
 
         $this->paginate += $this->createFinders($this->request->query, 'Projects');
-        $this->paginate['finder']['ById'] = ['project_id' => $this->_projectId];
+        $this->paginate['finder']['ById'] = ['project_id' => $id];
         $projects = $this->paginate(TableRegistry::get('Projects'));
 
         if (isset($this->request->query['start_date']) && isset($this->request->query['end_date'])):

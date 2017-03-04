@@ -5,7 +5,6 @@
         <div class="content-panel">
             <?= $this->Form->create('Search', ['type' => 'GET']) ?>
             <h4><i class="fa fa-angle-right"></i> Filters </h4>
-            <?= $this->Form->input('project_id', ['type' => 'hidden', 'value' => $project_id]); ?>
             <hr>
             <table class="table">
                 <tbody>
@@ -102,7 +101,7 @@
                         <td><?= $this->Number->format($equipmentInventory->unavailable_rented_quantity) ?></td>
                         <td><?= $this->Number->format($equipmentInventory->total_quantity) ?></td>
                         <td class="actions">
-                            <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $equipmentInventory->equipment->id, '?' => ['project_id' => $projectId]]); ?>
+                            <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $projectId, '?' => ['equipment_id' => $equipmentInventory->equipment->id]]); ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>

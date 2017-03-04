@@ -42,12 +42,21 @@ if(strpos($request_uri, 'rental-request-header') !== false) {
     $this->Html->script('rental-request-header', ['block' => true]);
 }
 
+if(strpos($request_uri, 'resource-request-header') !== false) {    
+    $this->Html->script('resource-request-header', ['block' => true]);
+}
+
 if(strpos($request_uri, 'incident-report-headers') !== false) {    
     $this->Html->script('incident-report-headers', ['block' => true]);
 }
 
+if(strpos($request_uri, 'events') !== false) {    
+    $this->Html->script('events', ['block' => true]);
+}
 
-
+if(strpos($request_uri, 'projects') !== false) {    
+    $this->Html->script('project', ['block' => true]);
+}
 ?>
 
 <!DOCTYPE html>
@@ -96,23 +105,20 @@ TOP BAR CONTENT & NOTIFICATIONS
         <div id="sidebar"  class="nav-collapse ">
             <!-- sidebar menu start-->
             <ul class="sidebar-menu" id="nav-accordion">
-                        <p class="centered">
-                            <a href=<?= $this->Url->build(['controller' => 'profile', 'action' => 'index']) ?>>
-                                <img src=<?= $this->Url->build(['controller' => 'img/ui-sam.jpg', 'action' => 'index']) ?> class="img-circle" width="60">
-                                </a>
-                        </p>
-                        <h5 class="centered"><?=  $this->request->session()->read('Auth.User.username'); ?></h5>
-                    <li>
-                        <a href=<?= $this->Url->build(['controller' => 'dashboard/', 'action' => 'index']) ?>>
-                            <i class="fa fa-dashboard"></i><span>Dashboard</span><span id="notification-badge" class="badge pull-right"></span>
-                        </a>
-                    </li>
-                    <li >
-                        <a href=<?= $this->Url->build(['controller' => 'events', 'action' => 'index']) ?>>
-                            <i class="fa fa-calendar"></i><span>Events Calendar</span>
-                        </a>
-                    </li>
-                    <?= $this->fetch('additional-sidebar') ?>
+                <h4 class="centered">
+                    <?=  $this->request->session()->read('Auth.User.username'); ?>
+                </h4>
+                <li>
+                    <a href=<?= $this->Url->build(['controller' => 'dashboard/', 'action' => 'index']) ?>>
+                        <i class="fa fa-dashboard"></i><span>Dashboard</span><span id="notification-badge" class="badge pull-right"></span>
+                    </a>
+                </li>
+                <li >
+                    <a href=<?= $this->Url->build(['controller' => 'events', 'action' => 'index']) ?>>
+                        <i class="fa fa-calendar"></i><span>Events Calendar</span>
+                    </a>
+                </li>
+                <?= $this->fetch('additional-sidebar') ?>
             </ul>
                 <!-- sidebar menu end-->
         </div>

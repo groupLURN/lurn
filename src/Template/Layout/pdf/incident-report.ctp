@@ -34,10 +34,19 @@ $this->Html->css('pdf', ['block' => true, 'fullBase' => true]);
 
 <hr>
 <h2>Incident Report</h2>
-<div class="body">
+<div class="page-break body">
     <?= $this->fetch('content'); ?>
 </div>
 
+<div class="header">
+    <?= $this->Html->image('logo.jpg', array('fullBase' => true, 'class' => 'float-right')) ?>
+    <h1>J.I. Espino Construction</h1>
+    <h2>Unit K-3 Emerald Green Building Cv Star Avenue Las Pinas Metro Manila</h2>
+</div>
+<br>
+<br>
+<br>
+<br>
 <br>
 <br>
 <br>

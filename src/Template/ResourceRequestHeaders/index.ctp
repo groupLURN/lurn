@@ -91,8 +91,8 @@
                         <td><?= h($resourceRequestHeader->number) ?></td>
                         <td><?= $resourceRequestHeader->has('project_from') ? $this->Html->link($resourceRequestHeader->project_from->title, ['controller' => 'Projects', 'action' => 'view', $resourceRequestHeader->project_from->id]) : 'General' ?></td>
                         <td><?= $resourceRequestHeader->has('project_to') ? $this->Html->link($resourceRequestHeader->project_to->title, ['controller' => 'Projects', 'action' => 'view', $resourceRequestHeader->project_to->id]) : 'General' ?></td>
-                        <td><?= h($resourceRequestHeader->required_date) ?></td>
-                        <td><?= h($resourceRequestHeader->created) ?></td>
+                        <td><?= h(date_format($resourceRequestHeader->required_date, 'F d, Y')) ?></td>
+                        <td><?= h(date_format($resourceRequestHeader->created, 'F d, Y')) ?></td>
                         <td class="actions">
                             <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $resourceRequestHeader->id]); ?>
                         </td>

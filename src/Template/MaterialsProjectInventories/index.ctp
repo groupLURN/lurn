@@ -5,7 +5,6 @@
         <div class="content-panel">
             <?= $this->Form->create('Search', ['type' => 'GET']) ?>
             <h4><i class="fa fa-angle-right"></i> Filters </h4>
-            <?= $this->Form->input('project_id', ['type' => 'hidden', 'value' => $projectId]); ?>
             <hr>
             <table class="table">
                 <tbody>
@@ -71,8 +70,8 @@
                         <td><?= $this->Number->format($material->total_quantity) ?></td>
                         <td><?= h($material->last_modified) ?></td>
                         <td class="actions">
-                            <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $material->id, '?' => ['project_id' => $projectId]]); ?>
-                            <?= $this->dataTableEditButton(__('Adjust'), ['action' => 'edit', $material->id, '?' => ['project_id' => $projectId]]); ?>
+                            <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $projectId, '?' => ['material_id' => $material->id]]); ?>
+                            <?= $this->dataTableEditButton(__('Adjust'), ['action' => 'edit', $projectId, '?' => ['material_id' => $material->id]]); ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>

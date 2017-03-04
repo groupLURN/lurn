@@ -16,11 +16,11 @@
         </tr>
         <tr>
             <th><?= __('Date Needed') ?></th>
-            <td><?= h($resourceRequestHeader->required_date) ?></td>
+            <td><?= h(date_format($resourceRequestHeader->required_date, 'F d, Y')) ?></td>
         </tr>
         <tr>
             <th><?= __('Date Requested') ?></th>
-            <td><?= h($resourceRequestHeader->created) ?></td>
+            <td><?= h(date_format($resourceRequestHeader->created, 'F d, Y')) ?></td>
         </tr>
     </table>
     <div class="related">

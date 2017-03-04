@@ -70,10 +70,12 @@ class TasksTable extends Table
             'foreignKey' => 'task_id'
         ]);
         $this->hasMany('Manpower', [
-            'foreignKey' => 'task_id'
+            'foreignKey' => 'task_id',
         ]);
         $this->hasMany('MaterialsTaskInventories', [
-            'foreignKey' => 'task_id'
+            'foreignKey' => 'task_id',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
         ]);
 
         // Resources Needed
@@ -95,14 +97,20 @@ class TasksTable extends Table
 
         // Record of Replenishment
         $this->hasMany('EquipmentReplenishmentDetails', [
-            'foreignKey' => 'task_id'
+            'foreignKey' => 'task_id',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
         ]);
 
         $this->hasMany('ManpowerTypeReplenishmentDetails', [
-            'foreignKey' => 'task_id'
+            'foreignKey' => 'task_id',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
         ]);
         $this->hasMany('MaterialReplenishmentDetails', [
-            'foreignKey' => 'task_id'
+            'foreignKey' => 'task_id',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
         ]);
     }
 
@@ -162,6 +170,25 @@ class TasksTable extends Table
                 $data[$key] = Time::parseDateTime($data[$key], 'yyyy/MM/dd');
             }
         }
+    }
+
+    public function beforeDelete(Event $event, Task $data,ArrayObject $options)
+    {   
+        $task = $data;
+        $equipmentInventories = TableRegistry::get('EquipmentInventories')
+            ->find('byTaskId', ['task_id' => $task->id])->toArray();
+
+        $deleteFlag = true;
+        foreach ($equipmentInventories as $equipmentInventory) {
+            $equipmentInventory->task_id = '';
+
+            if (!TableRegistry::get('EquipmentInventories')->save($equipmentInventory))
+            {
+                $deleteFlag = false;
+            }
+        }
+
+        return $deleteFlag;
     }
 
     public function findByProject(Query $query, array $options)

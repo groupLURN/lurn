@@ -1,7 +1,7 @@
 <?= $this->Flash->render() ?>
 <div class="row mt">
     <div class="col-md-12">
-        <?= $this->Form->create($project) ?>
+        <?= $this->Form->create($project, ['type' => 'file']) ?>
         <fieldset>
             <legend><h3><i class="fa fa-angle-right"></i>Edit Project</h3></legend>
             <?php
@@ -12,6 +12,7 @@
                     'class' => 'mt'
                 ]
             ]);
+
             echo $this->Form->input('description', [
                 'class' => 'form-control',
                 'label' => [
@@ -59,7 +60,7 @@
             ]);
 
             ?>
-            <h3>Core Team Assignment</h3>
+            <h4>Core Team Assignment</h4>
 
             <?php
                 echo $this->Form->input('project-engineer', [
@@ -81,6 +82,42 @@
                     'options' => [''=>'-Add a Warehouse Keeper-']+$warehouseKeepers
                 ]);
             ?>
+            <h4 class="mt">Uploaded Files</h4>
+            <div id="files-existing" >
+                <?php 
+                    if (count($project->projects_files) > 0) {
+                        foreach ($project->projects_files as $file){
+                ?>                     
+                    
+                        <div class="file-block">
+                            <div class="row">
+                                <div class="col-sm-10">
+                                    <input type="hidden" name="uploaded-file[]"
+                                        value="<?= h($file->id)?>"/>
+                       
+                                    <?= h($file->file_name.'.'.$file->file_type)?>                      
+                                </div>
+                                <div class="col-sm-2">
+                                    <button type="button" class="remove-file btn btn-default pull-right">
+                                    Remove File
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                <?php 
+                        }
+                    } else { 
+                ?>
+                    None.
+                <?php 
+                    } 
+                ?>
+            </div>
+            <h4 class="mt">Upload New Files</h4>
+            <div id="files-added" >
+                None.                
+            </div>
+            <button id="add-file" class="mt btn btn-default" type="button">Add File</button>
         </fieldset>
 
         <?= $this->Form->button(__('Update'), [

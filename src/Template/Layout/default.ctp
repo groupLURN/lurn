@@ -12,7 +12,7 @@ $this->start('additional-sidebar');
     <ul class="sub">
         <li><a href=<?= $this->Url->build(['controller' => 'clients', 'action' => 'index']) ?>>Clients</a></li>
         <li><a href=<?= $this->Url->build(['controller' => 'employees', 'action' => 'index']) ?>>Employees</a></li>
-        <li><a href=<?= $this->Url->build(['controller' => 'equipment', 'action' => 'index']) ?>>Equipments</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'equipment', 'action' => 'index']) ?>>Equipment</a></li>
         <li><a href=<?= $this->Url->build(['controller' => 'manpower', 'action' => 'index']) ?>>Manpower</a></li>
         <li><a href=<?= $this->Url->build(['controller' => 'materials', 'action' => 'index']) ?>>Materials</a></li>
         <li><a href=<?= $this->Url->build(['controller' => 'suppliers', 'action' => 'index']) ?>>Suppliers</a></li>
@@ -25,10 +25,6 @@ $this->start('additional-sidebar');
         <span>Projects</span>
         <!--span class="caret"> </span-->
     </a>
-    <!--<ul class="sub">
-       <li><a href=<?= $this->Url->build(['controller' => 'Projects', 'action' => 'index']) ?>>View All Projects</a></li>
-       <li><a href=<?= $this->Url->build(['controller' => 'Projects', 'action' => 'index']) ?>>Projects Planning</a></li>
-    </ul>-->
 </li>
 
 <li class="sub-menu">
@@ -43,6 +39,7 @@ $this->start('additional-sidebar');
         <li><a href=<?= $this->Url->build(['controller' => 'manpower-general-inventories', 'action' => 'index']) ?>>Manpower Inventory</a></li>
     </ul>
 </li>
+
 <li class="sub-menu">
     <a href="javascript:;" >
         <i class="fa fa-search"></i>
@@ -55,6 +52,7 @@ $this->start('additional-sidebar');
         <li><a href=<?= $this->Url->build(['controller' => 'track-manpower-schedule', 'action' => 'index']) ?>>Track Manpower</a></li>
     </ul>
 </li>
+
 <li class="sub-menu">
     <a href="javascript:;" >
         <i class="fa fa-cube"></i>
@@ -68,6 +66,7 @@ $this->start('additional-sidebar');
         <li><a href=<?= $this->Url->build(['controller' => 'PurchaseReceiveHeaders', 'action' => 'index']) ?>>Purchase Receives</a></li>
     </ul>
 </li>
+
 <li class="sub-menu">
     <a href="javascript:;" >
         <i class="fa fa-recycle"></i>
@@ -79,6 +78,7 @@ $this->start('additional-sidebar');
         <li><a href=<?= $this->Url->build(['controller' => 'ResourceTransferHeaders']) ?>>Create Resources Transfer</a></li>
     </ul>
 </li>
+
 <li class="sub-menu">
     <a href="Javascript:;" >
         <i class="fa fa-file"></i>
@@ -92,5 +92,6 @@ $this->start('additional-sidebar');
         <li><a href=<?= $this->Url->build(['controller' => 'IncidentReportHeaders', 'action' => 'index']) ?>>Incident Reports</a></li>
     </ul>
 </li>
+
 <?php $this->end(); ?>
 <?= $this->fetch('content'); ?>

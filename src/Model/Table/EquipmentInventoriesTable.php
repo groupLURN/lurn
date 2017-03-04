@@ -49,6 +49,12 @@ class EquipmentInventoriesTable extends Table
             'foreignKey' => 'rental_receive_detail_id',
             'conditions' => ['RentalReceiveDetails.end_date >= CURDATE()']
         ]);
+
+        $this->hasMany('EquipmentTransferDetails', [
+            'foreignKey' => 'equipment_inventory_id',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
+        ]);
     }
 
     /**
@@ -93,6 +99,15 @@ class EquipmentInventoriesTable extends Table
             return $query
                 ->contain(['Equipment'])
                 ->where(['project_id' => $options['project_id']]);
+        return $query;
+    }
+
+    public function findByTaskId(Query $query, array $options)
+    {
+        if(!empty($options['task_id']))
+            return $query
+                ->contain(['Equipment'])
+                ->where(['task_id' => $options['task_id']]);
         return $query;
     }
 

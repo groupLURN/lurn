@@ -21,7 +21,7 @@ class ResourceRequestHeadersController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['ProjectFrom', 'ProjectTo']
+        'contain' => ['ProjectFrom', 'ProjectTo']
         ];
 
         $this->paginate += $this->createFinders($this->request->query);
@@ -57,12 +57,83 @@ class ResourceRequestHeadersController extends AppController
     {
         $resourceRequestHeader = $this->ResourceRequestHeaders->newEntity();
         if ($this->request->is('post')) {
-            $this->transpose($this->request->data, 'equipment');
-            $this->transpose($this->request->data, 'manpower_types');
-            $this->transpose($this->request->data, 'materials');
-            $resourceRequestHeader = $this->ResourceRequestHeaders->patchEntity($resourceRequestHeader, $this->request->data, [
+            $postData = $this->request->data;
+
+            $equipmentData      = $postData['equipment'];
+            $manpowerTypeData   = $postData['manpower_types'];
+            $materialsData      = $postData['materials'];
+
+            $count = count($equipmentData['id']);
+            for ($i=0; $i < $count; $i++) { 
+                $id         = $equipmentData['id'][$i];
+                $quantity   = $equipmentData['_joinData'][$i]['quantity'];
+                if ( $id < 0 || $id == '') {
+                    $this->Flash->error(__('Invalid equipment id.'));
+                    return $this->redirect(['action' => 'add']);
+                }
+                
+                if($quantity == 0 || $quantity == '') {
+                    unset($equipmentData['id'][$i]);
+                    unset($equipmentData['_joinData'][$i]);
+                }else if ($quantity < 0) {
+                    $this->Flash->error(__('Quantity must be at least 1.'));
+                    return $this->redirect(['action' => 'add']);
+                }
+            }
+
+            $count = count($manpowerTypeData['id']);
+            for ($i=0; $i < $count; $i++) { 
+                $id         = $manpowerTypeData['id'][$i];
+                $quantity   = $manpowerTypeData['_joinData'][$i]['quantity'];
+
+                if ( $id < 0 || $id == '') {
+                    $this->Flash->error(__('Invalid manpower type id.'));
+                    return $this->redirect(['action' => 'add']);
+                }
+
+                if ($quantity < 0) {
+                    $this->Flash->error(__('Quantity must be at least 1.'));
+                    return $this->redirect(['action' => 'add']);
+                }
+
+                if($quantity == 0) {
+                    unset($manpowerTypeData['id'][$i]);
+                    unset($manpowerTypeData['_joinData'][$i]);
+                }
+            }
+
+
+            $count = count($materialsData['id']);
+            for ($i=0; $i < $count; $i++) { 
+                $id         = $materialsData['id'][$i];
+                $quantity   = $materialsData['_joinData'][$i]['quantity'];
+
+                if ( $id < 0 || $id == '') {
+                    $this->Flash->error(__('Invalid material id.'));
+                    return $this->redirect(['action' => 'add']);
+                }
+
+                if ($quantity < 0) {
+                    $this->Flash->error(__('Quantity must be at least 1.'));
+                    return $this->redirect(['action' => 'add']);
+                }
+
+                if($quantity == 0) {
+                    unset($materialsData['id'][$i]);
+                    unset($materialsData['_joinData'][$i]);
+                } 
+            }
+
+            $postData['equipment']      = $equipmentData ;
+            $postData['manpower_types'] = $manpowerTypeData;
+            $postData['materials']      = $materialsData;
+
+            $this->transpose($postData, 'equipment');
+            $this->transpose($postData, 'manpower_types');
+            $this->transpose($postData, 'materials');
+            $resourceRequestHeader = $this->ResourceRequestHeaders->patchEntity($resourceRequestHeader, $postData, [
                 'associated' => ['Equipment', 'ManpowerTypes', 'Materials']
-            ]);
+                ]);
 
             if ($this->ResourceRequestHeaders->save($resourceRequestHeader)) {
                 $this->loadModel('Notifications');
@@ -97,11 +168,11 @@ class ResourceRequestHeadersController extends AppController
         }
 
         $projects = $this->ResourceRequestHeaders->ProjectTo->find('list', ['limit' => 200])
-            ->matching('EmployeesJoin.Users', function($query)
-            {
-                return $query->where(['Users.id' => $this->userId]);
-            })
-            ->toArray();
+        ->matching('EmployeesJoin.Users', function($query)
+        {
+            return $query->where(['Users.id' => $this->userId]);
+        })
+        ->toArray();
 
         $materials = TableRegistry::get('Materials')->find('list', ['limit' => 200]);
         $equipment = TableRegistry::get('Equipment')->find('list', ['limit' => 200]);
@@ -121,7 +192,7 @@ class ResourceRequestHeadersController extends AppController
     {
         $resourceRequestHeader = $this->ResourceRequestHeaders->get($id, [
             'contain' => []
-        ]);
+            ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $resourceRequestHeader = $this->ResourceRequestHeaders->patchEntity($resourceRequestHeader, $this->request->data);
             if ($this->ResourceRequestHeaders->save($resourceRequestHeader)) {
@@ -155,146 +226,250 @@ class ResourceRequestHeadersController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 
+    /**
+    * Method for getting milestones from the database
+    *
+    * @return json response
+    */
+    public function getMilestones() {
+        $this->loadModel('Milestones');
+        $milestones     = [];
+        $project_id     = $this->request->query('project_id');
 
-
-/**
-* Method for getting materials from the database
-*
-* @return json response
-*/
-public function getMaterials() {
-    $this->loadModel('MaterialsTasks');
-    $this->loadModel('Tasks');
-
-    $materials  = [];
-
-    $projectId     = $this->request->query('project_id');
-    if ($projectId != null) {
-        $materialsHolder   = array();
-        $tasks              = array();
-        $task_ids           = array();
-
-        $tasks = $this->Tasks->find('byProject', ['project_id' => $projectId]);
-
-        foreach ($tasks as $row) {
-            array_push($task_ids, $row['id']);
+        if ($project_id) {
+            $milestones = $this->Milestones->find('byProjectId', ['project_id' => $project_id]);
         }
 
-        $task_ids = array_unique($task_ids);
+        header('Content-Type: application/json');
+        echo json_encode($milestones);
+        exit();
+    }   
 
+    /**
+    * Method for getting tasks from the database
+    *
+    * @return json response
+    */
+    public function getTasks() {
+        $this->loadModel('Tasks');
+        $tasks  = [];
 
-        foreach ($task_ids as $key => $value) {
+        $project_id     = $this->request->query('project_id');
+        $milestone_id   = $this->request->query('milestone_id');
 
+        if ($project_id != null && $milestone_id != null) {
+            $tasks = $this->Tasks->find('byProjectAndMilestone', ['project_id' => $project_id, 'milestone_id' => $milestone_id]);
+
+        } else  if ($project_id != null) {
+            $tasks = $this->Tasks->find('byProject', ['project_id' => $project_id]);
+        } 
+
+        header('Content-Type: application/json');
+        echo json_encode($tasks);
+        exit();
+    } 
+
+    /**
+    * Method for getting materials from the database
+    *
+    * @return json response
+    */
+    public function getMaterials() {
+        $this->loadModel('Materials');
+        $this->loadModel('Tasks');
+
+        $materialsNeeded   = [];
+        $taskIds           = [];
+
+        $project_id     = $this->request->query('project_id');
+        $milestone_id   = $this->request->query('milestone_id');
+        $task_id        = $this->request->query('task_id');
+
+        if ($task_id != null) {
+            $taskIds = [$task_id];
+
+        } else if ($project_id != null) {
+            $materials_holder   = [];
+            $tasks              = [];
+
+            if($milestone_id != null) {
+                $tasks = $this->Tasks->find('byProjectAndMilestone', ['project_id' => $project_id, 'milestone_id' => $milestone_id]);
+            } else{
+
+                $tasks = $this->Tasks->find('byProject', ['project_id' => $project_id]);
+            }
+
+            foreach ($tasks as $row) {
+                array_push($taskIds, $row['id']);
+            }
+
+            $taskIds = array_unique($taskIds);
+        } 
+
+        foreach ($taskIds as $key => $value) {
             $task_id = (float)$value;
+            $materialsNeededPerTask = $this->Materials->find('byTask', ['task_id' => $task_id])->toArray();
+                         
+            $push = true;
+
+            foreach ($materialsNeededPerTask as $materialsPerTask) {                            
+                foreach ($materialsNeeded as $material) {
+                    if ($material->id == $materialsPerTask->id) {
+                        $material['mt']['quantity'] += $materialsPerTask['mt']['quantity'];
+                        $push = false;
+                    } 
+                }
                 
-            foreach ( $this->MaterialsTasks->find('byTask', ['task_id' => $task_id]) as $row) {
-                $row['name'] = $row->material->name;
-
-                array_push($materialsHolder, $row);
-            }
-        }
-
-        for($i=0; $i < count($materialsHolder); $i++) {
-            if($i > 0) {
-                if(isset($materials[$materialsHolder[$i]->name])) {
-                    $materials[$materialsHolder[$i]->name]+=$materialsHolder[$i]->quantity;
-                } else {
-                    $materials[$materialsHolder[$i]->name] = $materialsHolder[$i]->quantity;
+                if (count($materialsNeeded) == 0 || $push) {
+                    array_push($materialsNeeded, $materialsPerTask);
                 }
-
-            } else {
-                $materials[$materialsHolder[$i]->name] = $materialsHolder[$i]->quantity;
             }
         }
 
-    }     
+        header('Content-Type: application/json');
+        echo json_encode($materialsNeeded);
+        exit();
+    }
 
-    header('Content-Type: application/json');
-    echo json_encode($materials);
-    exit();
-}
+    /**
+    * Method for getting magnpower from the database
+    *
+    * @return json response
+    */
+    public function getManpower() {
+        $this->loadModel('Manpower');
+        $this->loadModel('ManpowerTypesTasks');
+        $this->loadModel('Tasks');
+
+        $manpowerNeeded = [];
+        $tasks          = [];
 
 
-/**
-* Method for getting magnpower from the database
-*
-* @return json response
-*/
-public function getManpower() {
-    $this->loadModel('ManpowerTypesTasks');
-    $this->loadModel('Tasks');
+        $project_id     = $this->request->query('project_id');
+        $milestone_id   = $this->request->query('milestone_id');
+        $task_id        = $this->request->query('task_id');
 
-    $manpower  = [];
+        if ($task_id != null) {
+            $task = $this->Tasks->get($task_id);
+            array_push($tasks, $task);
 
-    $projectId     = $this->request->query('project_id');
-    if ($projectId != null) {
-        $manpowerHolder   = [];
-        $tasks = $this->Tasks->find('byProject', ['project_id' => $projectId]);
+        } else if ($project_id != null) {
+            if($milestone_id != null) {
+                $tasks = $this->Tasks->find('byProjectAndMilestone', ['project_id' => $project_id, 'milestone_id' => $milestone_id]);
+            } else {
+                $tasks = $this->Tasks->find('byProject', ['project_id' => $project_id]);
+            }
+
+        }     
 
         foreach ($tasks as $task) {
-            $tempManpowerTypesTasks = $this->ManpowerTypesTasks->find('byTaskId', ['task_id'=>$task->id])->toArray();
-            $manpowerHolder+= $tempManpowerTypesTasks;
-        }
+            $manpowerNeededPerTask = $this->ManpowerTypesTasks->find('byTaskId', ['task_id'=>$task->id])->toArray();
+                   
+            $push = true;
 
-        for($i=0; $i < count($manpowerHolder); $i++) {
-            if($i > 0) {
-                if(isset($manpower[$manpowerHolder[$i]->manpower_type->title])) {
-                    $manpower[$manpowerHolder[$i]->manpower_type->title]+=$manpowerHolder[$i]->quantity;
-                } else {
-                    $manpower[$manpowerHolder[$i]->manpower_type->title] = $manpowerHolder[$i]->quantity;
+            foreach ($manpowerNeededPerTask as $manpowerPerTask) {                            
+                foreach ($manpowerNeeded as $manpower) {
+                    if ($manpower->manpower_type_id == $manpowerPerTask->manpower_type_id) {
+                        $manpower->quantity += $manpowerPerTask->quantity;
+                        $push = false;
+                    } 
                 }
+                
+                if (count($manpowerNeeded) == 0 || $push) {
+                    array_push($manpowerNeeded, $manpowerPerTask);
+                }
+            }
+         
+           
+        } 
+                    
+        foreach ($manpowerNeeded as $manpower) {
+            $manpowerPerTypeList = $this->Manpower->find()
+                ->contain(['Tasks' => ['Milestones']])
+                ->matching('ManpowerTypes', function($query) use ($manpower)
+                {
+                    return $query->where(['ManpowerTypes.id' => $manpower->manpower_type_id ]);
+                })
+                ->all();            
 
-            } else {
-                $manpower[$manpowerHolder[$i]->manpower_type->title] = $manpowerHolder[$i]->quantity;
+            $generalInventory = 0;
+            $projectInventory = 0;
+            foreach ($manpowerPerTypeList as $manpowerPerType) {
+                if($manpowerPerType->project_id == $project_id
+                    && !$manpowerPerType->has('task')) {
+                    ++$projectInventory;
+                }
+                if(!$manpowerPerType->has('project_id')) {
+                    ++$generalInventory;
+                }
+            }
+            $manpower->general_inventory_quantity = $generalInventory;
+            $manpower->project_inventory_quantity = $projectInventory;
+        }
+        header('Content-Type: application/json');
+        echo json_encode($manpowerNeeded);
+        exit();
+    } 
+
+    /**
+    * Method for getting materials from the database
+    *
+    * @return json response
+    */
+    public function getEquipment() {
+        $this->loadModel('Equipment');
+        $this->loadModel('Tasks');
+
+        $equipmentNeeded            = [];
+        $equipmentNeededPerTask     = [];
+        $taskIds                    = [];
+
+        $project_id     = $this->request->query('project_id');
+        $milestone_id   = $this->request->query('milestone_id');
+        $task_id        = $this->request->query('task_id');
+
+        if ($task_id != null) {
+            $taskIds = [$task_id];
+        } else if ($project_id != null) {
+            $tasks = [];
+
+            if($milestone_id != null) {
+                $tasks = $this->Tasks->find('byProjectAndMilestone', ['project_id' => $project_id, 'milestone_id' => $milestone_id]);
+            } else{
+                $tasks = $this->Tasks->find('byProject', ['project_id' => $project_id]);
+            }
+
+            foreach ($tasks as $row) {
+                array_push($taskIds, $row['id']);
+            }
+
+            $taskIds = array_unique($taskIds);
+        } 
+        
+        foreach ($taskIds as $key => $value) {
+            $task_id = (float)$value;
+            $equipmentNeededPerTask = $this->Equipment->find('byTask', ['task_id' => $task_id])->toArray();
+                         
+            $push = true;
+
+            foreach ($equipmentNeededPerTask as $equipmentPerTask) {                            
+                foreach ($equipmentNeeded as $equipment) {
+                    if ($equipment->id == $equipmentPerTask->id) {
+                        $equipment['et']['quantity'] += $equipmentPerTask['et']['quantity'];
+                        $push = false;
+                    } 
+                }
+                
+                if (count($equipmentNeeded) == 0 || $push) {
+                    array_push($equipmentNeeded, $equipmentPerTask);
+                }
             }
         }
 
-    }     
-
-    header('Content-Type: application/json');
-    echo json_encode($manpower);
-    exit();
-}
-
-/**
-* Method for getting equipment from the database
-*
-* @return json response
-*/
-public function getEquipment() {
-    $this->loadModel('EquipmentTasks');
-    $this->loadModel('Tasks');
-
-    $equipment  = [];
-
-    $projectId     = $this->request->query('project_id');
-    if ($projectId != null) {
-        $equipmentHolder   = [];
-        $tasks = $this->Tasks->find('byProject', ['project_id' => $projectId]);
-
-        foreach ($tasks as $task) {
-            $tempEquipmentTasks = $this->EquipmentTasks->find('byTaskId', ['task_id'=>$task->id])->toArray();
-            $equipmentHolder+= $tempEquipmentTasks;
-        }
+        header('Content-Type: application/json');
+        echo json_encode($equipmentNeeded);
+        exit();
+    }
 
 
-        for($i=0; $i < count($equipmentHolder); $i++) {
-            if($i > 0) {
-                if(isset($equipment[$equipmentHolder[$i]->equipment->name])) {
-                    $equipment[$equipmentHolder[$i]->equipment->name]+=$equipmentHolder[$i]->quantity;
-                } else {
-                    $equipment[$equipmentHolder[$i]->equipment->name] = $equipmentHolder[$i]->quantity;
-                }
-
-            } else {
-                $equipment[$equipmentHolder[$i]->equipment->name] = $equipmentHolder[$i]->quantity;
-            }
-        }
-
-    }     
-
-    header('Content-Type: application/json');
-    echo json_encode($equipment);
-    exit();
-}
 }

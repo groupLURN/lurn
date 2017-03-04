@@ -60,7 +60,8 @@
                             'General Inventory Quantity',
                             'Project Inventory Quantity',
                             'Quantity Needed',
-                            'Quantity'
+                            'Quantity',
+                            ''
                         ],
                         'hasAdd' => false,
                         'id' => 'equipment'
@@ -77,7 +78,8 @@
                             'General Inventory Quantity',
                             'Project Inventory Quantity',
                             'Quantity Needed',
-                            'Quantity'
+                            'Quantity',
+                            ''
                         ],
                         'hasAdd' => false,
                         'id' => 'manpower_types'
@@ -95,7 +97,8 @@
                         'General Inventory Quantity',
                         'Project Inventory Quantity',
                         'Quantity Needed',
-                        'Quantity'
+                        'Quantity',
+                        ''
                     ],
                     'hasAdd' => false,
                     'id' => 'materials'

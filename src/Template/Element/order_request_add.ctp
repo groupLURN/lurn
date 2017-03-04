@@ -2,7 +2,7 @@
 <?php
 
     $defaults = [
-        'tableWidth' => '60%',
+        'tableWidth' => '80%',
         'headers' => [
         ],
         'columns' => [

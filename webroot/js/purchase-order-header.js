@@ -71,6 +71,10 @@ $(function(){
 		updateMaterials();
 	});
 
+	$('#purchase-order-add').on('click', '.remove-material', function() {
+		$(this).closest('tr').remove();
+	});
+
 	function updateSuppliers() {
 		projectId 	=  $('#project-id').val();
 		milestoneId =  $('#milestone-id').val();
@@ -148,6 +152,9 @@ $(function(){
 					+ '<td>'
 					+ '<input type="type" class="number-only" name="purchase_order_details.quantity[' + i + ']"'
 					+ ' value="' + materialQuantity + '"/>' 
+					+ '</td>'
+					+ '<td>'
+					+ '<button class="btn remove-material" type="button">Remove</button>'
 					+ '</td>'
 					+ '</tr>'
 					$('#purchase-order-add').append(

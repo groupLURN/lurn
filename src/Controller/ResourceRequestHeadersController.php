@@ -134,7 +134,7 @@ class ResourceRequestHeadersController extends AppController
             $resourceRequestHeader = $this->ResourceRequestHeaders->patchEntity($resourceRequestHeader, $postData, [
                 'associated' => ['Equipment', 'ManpowerTypes', 'Materials']
                 ]);
-
+            
             if ($this->ResourceRequestHeaders->save($resourceRequestHeader)) {
                 $this->loadModel('Notifications');
                 $this->loadModel('Projects');

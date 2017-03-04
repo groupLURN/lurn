@@ -103,7 +103,7 @@
                         <td><?= h($rentalRequestHeader->number) ?></td>
                         <td><?= $rentalRequestHeader->has('project') ? $this->Html->link($rentalRequestHeader->project->title, ['controller' => 'Projects', 'action' => 'view', $rentalRequestHeader->project->id]) : '' ?></td>
                         <td><?= $rentalRequestHeader->has('supplier') ? $this->Html->link($rentalRequestHeader->supplier->name, ['controller' => 'Suppliers', 'action' => 'view', $rentalRequestHeader->supplier->id]) : '' ?></td>
-                        <td><?= h($rentalRequestHeader->created) ?></td>
+                        <td><?= h(date_format($rentalRequestHeader->created, 'F d, Y')) ?></td>
                         <td class="actions">
                             <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $rentalRequestHeader->id]); ?>
                             <?= $this->dataTablePrintButton(__('Print'), ['action' => 'view', $rentalRequestHeader->id, '_ext' => 'pdf']); ?>

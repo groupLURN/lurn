@@ -71,6 +71,10 @@ $(function(){
 		updateEquipment();
 	});
 
+	$('#rental-request-add').on('click', '.remove-equipment', function() {
+		$(this).closest('tr').remove();
+	});
+
 	function updateSuppliers() {
 		projectId 	=  $('#project-id').val();
 		milestoneId =  $('#milestone-id').val();
@@ -149,6 +153,9 @@ $(function(){
 					+ '</td>'
 					+ '<td>'
 					+ '<input type="text" class="number-only" name="rental_request_details.duration[' + i + ']">'
+					+ '</td>'
+					+ '<td>'
+					+ '<button class="btn remove-equipment" type="button">Remove</button>'
 					+ '</td>'
 					+ '</tr>';
 

@@ -46,7 +46,8 @@
                     'General Inventory Quantity',
                     'Quantity Needed',
                     'Quantity',
-                    'Duration (days)'
+                    'Duration (days)',
+                    ''
                 ],
                 'hasAdd' => false,
                 'id' => 'rental-request-add'
@@ -57,7 +58,7 @@
         <?= $this->Form->button(__('Submit'), [
             'class' => 'btn btn-primary btn-submit',
             'onclick' => "
-            if($('.editable-data-table tr').length <= 1)
+            if($('#rental-request-add tr').length <= 1)
             {
                 alert('There should be at least one rental detail.');
                 event.preventDefault();

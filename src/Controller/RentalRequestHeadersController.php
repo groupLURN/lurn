@@ -60,7 +60,9 @@ class RentalRequestHeadersController extends AppController
         $rentalRequestHeader = $this->RentalRequestHeaders->newEntity();
         if ($this->request->is('post')) {
             $postData = $this->request->data;
+
             $count = count($postData['rental_request_details_quantity']);
+
             for ($i = 0; $i < $count; $i++) {
                 if($postData['rental_request_details_quantity'][$i] == 0
                     || $postData['rental_request_details_quantity'][$i] == ''){
@@ -70,7 +72,12 @@ class RentalRequestHeadersController extends AppController
                 }
             }
 
-            $count = count($postData['rental_request_details_duration']);
+            $count = count($postData['rental_request_details_equipment_id']);
+
+            if ($count === 0) {
+                $this->Flash->error(__('Please enter at least 1 rental request detail.'));
+                return $this->redirect(['action' => 'add']);
+            }
 
             for ($i = 0; $i < $count; $i++) {                
                 if ( $postData['rental_request_details_equipment_id'][$i] < 0

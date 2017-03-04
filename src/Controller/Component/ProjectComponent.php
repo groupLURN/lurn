@@ -152,6 +152,7 @@ class ProjectComponent extends Component
 				if (move_uploaded_file($fileTemp,$fileLocation.$fileNameFull)) {
 					$projectFile = $this->ProjectsFiles->newEntity();
 					$projectFile->project_id = $project->id;
+					$projectFile->file_label = $fileName;
 					$projectFile->file_name = $fileName;
 					$projectFile->file_location = $fileLocation;
 					$projectFile->file_type = $fileType;

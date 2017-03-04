@@ -77,7 +77,12 @@ class PurchaseOrderHeadersController extends AppController
 				}
 			}
 
-	        $count = count($postData['rental_request_details_duration']);
+	        $count = count($postData['purchase_order_details_material_id']);
+
+			if ($count === 0) {
+				$this->Flash->error(__('Please enter at least 1 purchase order detail.'));
+				return $this->redirect(['action' => 'add']);
+			}
 
 	        for ($i = 0; $i < $count; $i++) {  
 	            if ( $postData['purchase_order_details_material_id'][$i] < 0
@@ -93,6 +98,7 @@ class PurchaseOrderHeadersController extends AppController
 	                return $this->redirect(['action' => 'add']);
 	            }
 	        }
+
 
 			$this->transpose($postData , 'purchase_order_details');
 

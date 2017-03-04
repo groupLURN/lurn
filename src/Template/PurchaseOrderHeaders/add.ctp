@@ -46,7 +46,8 @@
                     'Materials',
                     'General Inventory Quantity',
                     'Quantity Needed',
-                    'Quantity'
+                    'Quantity',
+                    ''
                 ],
                 'hasAdd' => false,
                 'id' => 'purchase-order-add'
@@ -56,7 +57,7 @@
         <?= $this->Form->button(__('Submit'), [
             'class' => 'btn btn-primary btn-submit',
             'onclick' => "
-            if($('.editable-data-table tr.data').length <= 1)
+            if($('#purchase-order-add tr').length <= 1)
             {
                 alert('There should be at least one purchase detail.');
                 event.preventDefault();

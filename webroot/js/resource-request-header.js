@@ -70,6 +70,18 @@ $(function(){
 		updateMaterials();
 	});
 
+	$('#equipment').on('click', '.remove', function() {
+		$(this).closest('tr').remove();
+	});
+
+	$('#manpower_types').on('click', '.remove', function() {
+		$(this).closest('tr').remove();
+	});
+
+	$('#materials').on('click', '.remove', function() {
+		$(this).closest('tr').remove();
+	});
+
 	function updateEquipment(){
 		var projectId 	=  $('#from-project-id').val();
 		var milestoneId =  $('#milestone-id').val();
@@ -117,6 +129,9 @@ $(function(){
 					+ '<td>'
 					+ '<input type="text" class="number-only" name="equipment[_joinData][][quantity]" value="' 
 					+ equipmentQuantity + '"/>'
+					+ '</td>'
+					+ '<td>'
+					+ '<button class="btn remove" type="button">Remove</button>'
 					+ '</td>'
 					+ '</tr>';
 
@@ -179,6 +194,9 @@ $(function(){
 					+ '<input type="type" class="number-only" name="manpower_types[_joinData][][quantity]"'
 					+ ' value="' + manpowerTypeQuantity + '"/>' 
 					+ '</td>'
+					+ '<td>'
+					+ '<button class="btn remove" type="button">Remove</button>'
+					+ '</td>'
 					+ '</tr>'
 					$('#manpower_types').append(
 						tableRow	            	
@@ -239,6 +257,9 @@ $(function(){
 					+ '<td>'
 					+ '<input type="type" class="number-only" name="materials[_joinData][][quantity]"'
 					+ ' value="' + materialQuantity + '"/>' 
+					+ '</td>'
+					+ '<td>'
+					+ '<button class="btn remove" type="button">Remove</button>'
 					+ '</td>'
 					+ '</tr>'
 					$('#materials').append(

@@ -20,6 +20,12 @@ class CreateProjectsFiles extends AbstractMigration
             'null' => false,
         ]);
 
+        $table->addColumn('file_label', 'string', [
+            'default' => null,
+            'limit' => 255,
+            'null' => false,
+        ]);
+
         $table->addColumn('file_name', 'string', [
             'default' => null,
             'limit' => 255,

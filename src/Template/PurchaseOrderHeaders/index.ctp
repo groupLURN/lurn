@@ -103,7 +103,7 @@
                         <td><?= h($purchaseOrderHeader->number) ?></td>
                         <td><?= $purchaseOrderHeader->has('project') ? $this->Html->link($purchaseOrderHeader->project->title, ['controller' => 'Projects', 'action' => 'view', $purchaseOrderHeader->project->id]) : '' ?></td>
                         <td><?= $purchaseOrderHeader->has('supplier') ? $this->Html->link($purchaseOrderHeader->supplier->name, ['controller' => 'Suppliers', 'action' => 'view', $purchaseOrderHeader->supplier->id]) : '' ?></td>
-                        <td><?= h($purchaseOrderHeader->created) ?></td>
+                        <td><?= h(date_format($purchaseOrderHeader->created, 'F d, Y')) ?></td>
                         <td class="actions">
                             <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $purchaseOrderHeader->id]); ?>
                             <?= $this->dataTablePrintButton(__('Print'), ['action' => 'view', $purchaseOrderHeader->id, '_ext' => 'pdf']); ?>

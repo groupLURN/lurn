@@ -79,7 +79,7 @@
                                     )
                                 ?> 
                             >
-                                <?= h($file->file_name.'.'.$file->file_type) ?>
+                                <?= h($file->file_label) ?>
                             </a>                 
                             </div>
                         </div>

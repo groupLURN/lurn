@@ -10,6 +10,11 @@ $(function(){
 		var fileBlock = 
 			'<div class="file-block">'
 			+'<div class="row">'
+			+ '<div class="col-sm-12">'
+			+ '<label>File Label</label>'
+			+ '<input name="file-label[]" class="form-control" type="text">'
+			+ '</div>'
+			+ '<br>'
 			+ '<div class="col-sm-10">'
 			+ '<input name="file[]" type="file">'
 			+ '</div>'

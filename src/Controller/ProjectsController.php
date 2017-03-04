@@ -134,7 +134,11 @@ class ProjectsController extends AppController
 					$this->Notifications->save($notification);
 				}
 				
-				$files = $postData['file'];
+				$files = [
+					'files' => $postData['file'],
+					'file_labels' => $postData['file-label']
+				];
+
 				$this->Project->uploadFiles($files, $project);
 
 				$this->Flash->success(__('The project has been saved.'));
@@ -212,12 +216,19 @@ class ProjectsController extends AppController
 					$this->Notifications->save($notification);
 				}
 				
-				$files 			= isset($postData['file']) ? $postData['file'] : [];
-				$uploadedFiles 	= isset($postData['uploaded-file']) ? $postData['uploaded-file'] : [];
+				$files = [
+					'files' => isset($postData['file']) ? $postData['file'] : [],
+					'file_labels' => isset($postData['file-label']) ? $postData['file-label'] : []
+				];
+
+				$uploadedFiles 			= isset($postData['uploaded-file']) ? $postData['uploaded-file'] : [];
+				$uploadedFilesLabels 	= isset($postData['uploaded-file-label']) ? 
+					$postData['uploaded-file-label'] : [];
 				$this->Project->uploadFiles($files, $project, 
 					[
 						'update' => true, 
-						'uploaded_files' => $uploadedFiles
+						'uploaded_files' => $uploadedFiles, 
+						'uploaded_file_labels' => $uploadedFilesLabels
 					]);
 
 				$this->Flash->success(__('The project has been updated.'));

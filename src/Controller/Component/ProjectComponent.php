@@ -37,12 +37,15 @@ class ProjectComponent extends Component
 
 	public function uploadFiles($files = [], $project = null, $options = [])
 	{
-		$originalFilesDb 	= $project->projects_files;
+		$originalFilesDb 	= count($project->projects_files) > 0 ? $project->projects_files : [];
 		if(isset($options['update']) && $options['update'])
 		{
-			$originalFiles 	= isset($options['uploaded_files']) ? $options['uploaded_files'] : [];
+			$originalFiles 			= isset($options['uploaded_files']) 
+				? $options['uploaded_files'] : [];
+			$originalFilesLabels 	= isset($options['uploaded_file_labels']) 
+				? $options['uploaded_file_labels'] : [];
 
-			$deleteFromDb 			= $originalFiles;
+			$deleteFromDb 	= $originalFiles;
 
 			foreach ($deleteFromDb as $key => $value)
 			{	
@@ -76,15 +79,19 @@ class ProjectComponent extends Component
 							$directory = $fileDb->file_location
 								.$fileDb->file_name.'.'
 								.$fileDb->file_type;
+
 							$this->ProjectsFiles->delete($fileDb);
 							unset($fileDb);
 							$this->delete($directory);
+
+							unset($originalFiles[$key]);
+							unset($originalFilesLabels[$key]);
 						}
 					}
 				}
 			}
 
-			foreach ($files as $file)
+			foreach ($files['files'] as $file)
 			{	
 				if ($file['name'] != '') 
 				{
@@ -107,10 +114,58 @@ class ProjectComponent extends Component
 					}
 				}
 			}
+
+			foreach ($originalFilesDb as $fileDb)
+			{	
+				if (count($originalFiles) != 0) 
+				{
+					foreach ($originalFiles as $key => $value)
+					{	
+						$file 		= $value;	
+						$fileLabel 	= $originalFilesLabels[$key];
+						if ($file == $fileDb->id && $fileDb->file_label != $fileLabel)
+						{	
+							$fileDb->file_label = $fileLabel;
+							$this->ProjectsFiles->save($fileDb);
+						}
+					}
+				}
+			}
 		}
 
-		foreach ($files as $file) {
-			if ($file['name'] != '') 
+		debug($files['files']);
+		$duplicateKeys = [];
+		for ($i = 0; $i < count($files['files']); $i++) {
+			$fileInfo 		= pathinfo($files['files'][$i]['name']);
+			$fileName 		= $fileInfo['filename'];
+			$fileNameFull 	= $fileInfo['basename'];
+			for ($j = 0; $j < count($files['files']); $j++) {
+				if ($i < $j) {
+					$fileInfo2 		= pathinfo($files['files'][$j]['name']);
+					$fileName2 		= $fileInfo['filename'];
+					$fileNameFull2 	= $fileInfo['basename'];
+
+					if ($fileNameFull == $fileNameFull2) {
+						array_push($duplicateKeys, $j);
+					}			
+				}
+			}
+
+		}
+
+		foreach ($duplicateKeys as $duplicateKey) {
+			unset($files['files'][$duplicateKey]);
+		}
+
+		$i = 0;
+		foreach ($files['files'] as $file) {
+			if ($file['name'] === '') 
+			{
+				$this->Flash->error(__('One or more of the file inputs has no file to upload.'));
+			} else if ($files['file_labels'][$i] === '') 
+			{
+				$this->Flash->error(__('One or more of the file inputs has no file label.'));
+			}else 
 			{
 				$fileInfo 		= pathinfo($file['name']);
 				$fileName 		= $fileInfo['filename'];
@@ -118,7 +173,7 @@ class ProjectComponent extends Component
 				$fileTemp 		= $file['tmp_name'];
 				$fileType 		= $fileInfo['extension'];
 				$fileLocation	= '';
-
+	
 				switch ($fileType) {
 					case 'bmp':
 					case 'gif':
@@ -142,22 +197,22 @@ class ProjectComponent extends Component
 						$fileLocation	= FileConstants::FILEMISCSTORAGE;
 						break;
 				}
-
+	
 				$fileLocation .= 'projects/'.$project->id.'/';
-
+	
 				if (!file_exists($fileLocation)) {
 					mkdir($fileLocation, 0777, true);
 				}
-
+	
 				if (move_uploaded_file($fileTemp,$fileLocation.$fileNameFull)) {
 					$projectFile = $this->ProjectsFiles->newEntity();
 					$projectFile->project_id = $project->id;
-					$projectFile->file_label = $fileName;
+					$projectFile->file_label = $files['file_labels'][$i];
 					$projectFile->file_name = $fileName;
 					$projectFile->file_location = $fileLocation;
 					$projectFile->file_type = $fileType;
 					$save = true;
-
+	
 					foreach ($originalFilesDb as $fileDb)
 					{	
 						if (count($fileDb->file_name === $fileName) === 0) 
@@ -165,7 +220,7 @@ class ProjectComponent extends Component
 							$save = false;
 						} 
 					}	
-
+	
 					if ($save) 
 					{
 						$this->ProjectsFiles->save($projectFile);
@@ -174,6 +229,7 @@ class ProjectComponent extends Component
 					$this->Flash->error(__($filenameFull.' cannot be uploaded.'));
 				}
 			}
+			++$i;
 		}
 	}
 }

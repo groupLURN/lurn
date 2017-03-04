@@ -181,7 +181,7 @@ class ProjectsTable extends Table
         }
         
         $equipmentInventories = TableRegistry::get('EquipmentInventories')
-            ->find('byTaskId', ['task_id' => $task->id])->toArray();
+            ->find('byProjectId', ['project_id' => $project->id])->toArray();
 
         foreach ($equipmentInventories as $equipmentInventory) {
             $equipmentInventory->project_id = '';

@@ -91,10 +91,22 @@
                     
                         <div class="file-block">
                             <div class="row">
-                                <div class="col-sm-10">
+                                <div class="col-sm-12">
                                     <input type="hidden" name="uploaded-file[]"
-                                        value="<?= h($file->id)?>"/>
-                       
+                                        value="<?= h($file->id)?>"/>                                    
+                                    <?=   
+                                        $this->Form->input('uploaded-file-label[]', [
+                                            'type' => 'text',
+                                            'class' => 'form-control',
+                                            'label' => [
+                                                'text' => 'File Label'
+                                            ],
+                                            'value' => $file->file_label
+                                        ])  
+
+                                    ?> 
+                                </div>
+                                <div class="col-sm-10"> 
                                     <?= h($file->file_name.'.'.$file->file_type)?>                      
                                 </div>
                                 <div class="col-sm-2">

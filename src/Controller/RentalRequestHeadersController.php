@@ -13,7 +13,11 @@ use Cake\ORM\TableRegistry;
  */
 class RentalRequestHeadersController extends AppController
 {
-
+    public function isAuthorized($user)
+    {        
+        return in_array($user['user_type_id'], [0, 2]);
+    }
+    
     /**
      * Index method
      *

@@ -12,7 +12,11 @@ use Cake\ORM\TableRegistry;
  */
 class UsersController extends AppController
 {
-    
+    public function isAuthorized($user)
+    {        
+        return in_array($user['user_type_id'], [0, 4]);
+    }
+
     /**
      * Index method
      *
@@ -130,6 +134,11 @@ class UsersController extends AppController
         if ($this->request->is('post')) {
             $user = $this->Auth->identify();
             if ($user) {
+                $this->loadModel('Employees');
+
+                $employee = $this->Employees->find('byUserId', ['user_id' => $user['id']])->first();
+                $user['employee'] = $employee;
+
                 $this->Auth->setUser($user);
                 return $this->redirect('/dashboard/');
             }

@@ -106,8 +106,11 @@ TOP BAR CONTENT & NOTIFICATIONS
             <!-- sidebar menu start-->
             <ul class="sidebar-menu" id="nav-accordion">
                 <h4 class="centered">
-                    <?=  $this->request->session()->read('Auth.User.username'); ?>
+                    <?=  $username ?>
                 </h4>
+                <h5 class="centered">
+                    <?=  $employeeName ?>
+                </h5>
                 <li>
                     <a href=<?= $this->Url->build(['controller' => 'dashboard/', 'action' => 'index']) ?>>
                         <i class="fa fa-dashboard"></i><span>Dashboard</span><span id="notification-badge" class="badge pull-right"></span>

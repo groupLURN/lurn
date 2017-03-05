@@ -36,6 +36,26 @@ class ManpowerProjectInventoriesController extends AppController
         return parent::beforeFilter($event);
     }
 
+    public function isAuthorized($user)
+    {
+        $action = $this->request->params['action'];
+
+        $userTypeId = $user['employee']['employee_type_id'];
+        $isAdmin = $userTypeId == 0;
+        $isOwner = $userTypeId == 1;
+
+        $projectId = $this->request->params['pass'][0];
+
+        $isUserAssigned = $this->Projects->find()
+        ->matching('EmployeesJoin', function($query) use ($user) {
+            return $query->where(['EmployeesJoin.user_id' => $user['id']]);
+        })
+        ->where(['Projects.id' => $projectId])
+        ->first() !== null;
+        
+        return $isUserAssigned || $isOwner || $isAdmin;
+    }
+
     /**
      * Index method
      *

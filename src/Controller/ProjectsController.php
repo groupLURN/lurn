@@ -16,11 +16,67 @@ class ProjectsController extends AppController
 {
     public function beforeFilter(Event $event)
     {
+        $user = null !== $this->request->session()->read('Auth.User') 
+            ? $this->request->session()->read('Auth.User') : null;
+            
         $this->loadComponent('Project');
         $this->loadModel('ProjectsFiles');
 
+        $assignedProjects = $this->Projects->find('all')->contain(['EmployeesJoin'])->toArray();
+
+        $assignedProjectsId = [];
+        foreach ($assignedProjects as $assignedProject) {
+            foreach ($assignedProject->employees_join as $employee) {
+                if ($employee->id === $user['employee']['id']) {
+                    $assignedProjectsId[] = $assignedProject->id;
+                    break;
+                }
+            }
+       	}
+
+        $this->set('assignedProjects', $assignedProjectsId); 
+
         return parent::beforeFilter($event);
     }
+
+	public function isAuthorized($user)
+	{
+		$action = $this->request->params['action'];
+
+		$isAdmin = $user['employee']['employee_type_id'] == 0;
+		$isOwner = $user['employee']['employee_type_id'] == 1;
+
+		$isProjectManager = $this->Projects->Employees->find()
+		->contain(['Users'])
+		->where(['Users.id' => $user['id']])
+		->matching('EmployeeTypes', function($query){
+			return $query->where(['EmployeeTypes.id' => 2]);
+		})->first() !== null;
+
+		if ($action != 'index') {
+			$projectId = $this->request->params['pass'][0];
+
+			$isUserAssigned = $this->Projects->find()
+			->matching('EmployeesJoin', function($query) use ($user) {
+				return $query->where(['EmployeesJoin.user_id' => $user['id']]);
+			})
+			->where(['Projects.id' => $projectId])
+			->first() !== null;
+		}
+
+		if($action === 'add') 
+		{
+			return $isProjectManager || $isAdmin;
+		} else if (in_array($action, ['edit', 'delete']))
+		{	
+			return ($isUserAssigned && $isProjectManager) || $isOwner || $isAdmin;
+		} else if (in_array($action, ['index', 'view']))
+		{
+			return $isUserAssigned || $isAdmin || $isOwner || $isProjectManager;
+		}
+
+		return parent::isAuthorized($user);
+	}
 
 	/**
 	* Index method
@@ -184,8 +240,6 @@ class ProjectsController extends AppController
 		
 		if ($this->request->is(['patch', 'post', 'put']))
 		{	
-			$loggedInUser 	= $this->Auth->user();
-			$projectManager = $this->Employees->find('byUserId', ['user_id' => $loggedInUser['id']])->toArray();
 			$companyOwner	= $this->Employees->find('byEmployeeTypeId', ['employee_type_id' => 1])->toArray();
 
 			$postData = $this->request->data;
@@ -194,11 +248,8 @@ class ProjectsController extends AppController
 			array_push($postData['employees_join']['_ids'], $postData['project-engineer']);
 			array_push($postData['employees_join']['_ids'], $postData['warehouse-keeper']);
 
-			$project = $this->Projects->patchEntity($project, $postData);		
+			$project = $this->Projects->patchEntity($project, $postData);	
 
-			$project['project_manager_id'] = $projectManager[0]['id'];
-			
-			array_push($project['employees_join'], $projectManager[0]);		
 			array_push($project['employees_join'], $companyOwner[0]);
 
 			if ($this->Projects->save($project)) {
@@ -306,36 +357,6 @@ class ProjectsController extends AppController
 	{
 		return $this->Project->findAll();
 	}
-
-	public function isAuthorized($user)
-	{
-		$action = $this->request->params['action'];
-
-		$isProjectManager = $this->Projects->Employees->find()
-		->contain(['Users'])
-		->where(['Users.id' => $user['id']])
-		->matching('EmployeeTypes', function($query){
-			return $query->where(['EmployeeTypes.title' => 'Project Manager/Project Supervisor']);
-		})->first() !== null;
-
-		if (in_array($action, ['edit', 'add', 'delete']))
-			return $isProjectManager;
-		else if (in_array($action, ['view']))
-		{
-			$projectId = $this->request->params['pass'][0];
-
-			$isUserAssigned = $this->Projects->find()
-			->matching('EmployeesJoin', function($query) use ($user) {
-				return $query->where(['EmployeesJoin.user_id' => $user['id']]);
-			})
-			->where(['Projects.id' => $projectId])
-			->first() !== null;
-
-			return $isUserAssigned || $isProjectManager;
-		}
-
-		return parent::isAuthorized($user);
-	}	
 
 	public function download(){
 		$fileName = $this->request->query('file');

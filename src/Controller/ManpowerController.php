@@ -10,7 +10,11 @@ use App\Controller\AppController;
  */
 class ManpowerController extends AppController
 {
-
+    public function isAuthorized($user)
+    {        
+        return in_array($user['user_type_id'], [0, 4]);
+    }
+    
     /**
      * Index method
      *

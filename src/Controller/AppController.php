@@ -69,8 +69,17 @@ class AppController extends Controller
         if($this->request->params['_ext'] === 'json')
         {
             $this->Auth->config('authenticate', ['Basic' => ['userModel' => 'Users']]);
+
             $this->Auth->config('storage', 'Memory');
             $this->Auth->config('unauthorizedRedirect', false);
+        } else {
+            $user = null !== $this->request->session()->read('Auth.User') 
+                ? $this->request->session()->read('Auth.User') : null;
+
+            $this->set('username', $user['username']);
+            $this->set('employeeName', $user['employee']['name']); 
+            $this->set('employeeType', $user['employee']['employee_type_id']); 
+            $this->set('employeeTypeTitle', $user['employee']['employee_type']['title']); 
         }
         return parent::beforeFilter($event);
     }

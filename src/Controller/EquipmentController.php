@@ -12,6 +12,10 @@ use Cake\ORM\TableRegistry;
  */
 class EquipmentController extends AppController
 {
+    public function isAuthorized($user)
+    {        
+        return in_array($user['user_type_id'], [0, 4]);
+    }
 
     /**
      * Index method
@@ -28,6 +32,12 @@ class EquipmentController extends AppController
         $this->set($this->request->query);
         $this->set('_serialize', ['equipment']);
     }
+
+    public function isAuthorized($user)
+    {        
+        return in_array($user['user_type_id'], [0, 4]);
+    }
+
 
     /**
      * View method

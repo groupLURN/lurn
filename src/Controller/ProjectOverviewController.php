@@ -30,6 +30,31 @@ class ProjectOverviewController extends AppController
         return parent::beforeFilter($event);
     }
 
+    public function isAuthorized($user)
+    {
+        $action = $this->request->params['action'];
+
+        $isAdmin = $user['employee']['employee_type_id'] == 0;
+
+        $isProjectManager = $this->Projects->Employees->find()
+        ->contain(['Users'])
+        ->where(['Users.id' => $user['id']])
+        ->matching('EmployeeTypes', function($query){
+            return $query->where(['EmployeeTypes.id' => 2]);
+        })->first() !== null;
+
+        $projectId = $this->request->params['pass'][0];
+
+        $isUserAssigned = $this->Projects->find()
+        ->matching('EmployeesJoin', function($query) use ($user) {
+            return $query->where(['EmployeesJoin.user_id' => $user['id']]);
+        })
+        ->where(['Projects.id' => $projectId])
+        ->first() !== null;
+        
+        return ($isUserAssigned && $isProjectManager) || $isUserAssigned || $isAdmin;
+    }
+
     /**
      * Index method
      *

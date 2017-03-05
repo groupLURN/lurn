@@ -29,6 +29,11 @@ class ClientsController extends AppController
         $this->set('_serialize', ['clients']);
     }
 
+    public function isAuthorized($user)
+    {        
+        return $user['user_type_id'] === 0;
+    }
+
     /**
      * View method
      *

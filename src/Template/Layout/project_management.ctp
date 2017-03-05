@@ -8,6 +8,9 @@ $this->start('additional-sidebar');
         <span>Project Overview</span>
     </a>
 </li>
+<?php 
+    if (in_array($employeeType, [0, 1, 2])) {
+?>
 <li class="sub-menu">
     <a href="javascript:;" >
         <i class="fa fa-building"></i>
@@ -21,6 +24,12 @@ $this->start('additional-sidebar');
         <li><a href=<?= $this->Url->build(['controller' => 'Tasks', 'action' => 'index', '?' => ['project_id' => $projectId]]) ?>>Tasks</a></li>
     </ul>
 </li>
+<?php 
+    }
+?>
+<?php 
+    if (in_array($employeeType, [0, 1, 2])) {
+?>
 <li class="sub-menu">
     <a href="javascript:;">
         <i class="fa fa-recycle"></i>
@@ -31,6 +40,9 @@ $this->start('additional-sidebar');
         <li><a href=<?= $this->Url->build(['controller' => 'Tasks', 'action' => 'manage', '?' => ['project_id' => $projectId]]) ?>>Task Management</a></li>
     </ul>
 </li>
+<?php 
+    }
+?>
 <li class="sub-menu">
     <a href="javascript:;" >
         <i class="fa fa-database"></i>
@@ -43,6 +55,9 @@ $this->start('additional-sidebar');
         <li><a href=<?= $this->Url->build(['controller' => 'ManpowerProjectInventories', $projectId]) ?>>Manpower Inventory</a></li>
     </ul>
 </li>
+<?php
+    if (in_array($employeeType, [0, 1, 2, 4])) {
+?>
 <li class="sub-menu">
     <a href="javascript:;" >
         <i class="fa fa-file"></i>
@@ -55,7 +70,7 @@ $this->start('additional-sidebar');
         <li><a href=<?= $this->Url->build(['controller' => 'ManpowerProjectInventoryReport', $projectId]) ?>>Manpower Inventory Report</a></li>
     </ul>
 </li>
-<?php if ($isFinished == 1):?>
+<?php if ($isFinished == 1) {?>
 <li class="sub-menu">
     <a href="javascript:;" >
         <i class="fa fa-file"></i>
@@ -69,7 +84,10 @@ $this->start('additional-sidebar');
         <li><a href=<?= $this->Url->build(['controller' => 'ManpowerSummaryReport', $projectId]) ?>>Manpower Summary Report</a></li>
     </ul>
 </li>
-<?php endif;?>
+<?php 
+        }
+    }
+?>
 
 <span id="project-id" style="display:none"><?= $projectId ?></span>
 <?php $this->end(); ?>

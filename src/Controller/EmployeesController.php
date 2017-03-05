@@ -11,6 +11,10 @@ use Cake\ORM\TableRegistry;
  */
 class EmployeesController extends AppController
 {
+    public function isAuthorized($user)
+    {        
+        return $user['user_type_id'] === 0;
+    }
 
     /**
      * Index method

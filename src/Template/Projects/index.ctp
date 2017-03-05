@@ -139,15 +139,21 @@
                         <td><?= h($project->project_phase->name) ?></td>
                         <td><?= h($project->status) ?></td>
                         <td class="actions">
-                            <?= $this->dataTableManageButton(__('Manage'), ['controller' => 'ProjectOverview', 'action' => 'index', $project->id]); ?>
-                            <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $project->id]); ?>
-                            <?= $this->dataTableEditButton(__('Edit'), ['action' => 'edit', $project->id]); ?>
-                            <?= $this->dataTableDeleteButton(__('Delete'),
-                                ['action' => 'delete', $project->id],
-                                __('Are you sure you want to delete {0}?', $project->title)
-                            );
+                            <?php 
+                                if (in_array($project->id, $assignedProjects) && in_array($employeeType, [0, 1, 2]))
+                                {
+                                    echo $this->dataTableManageButton(__('Manage'), ['controller' => 'ProjectOverview', 'action' => 'index', $project->id]);  
+                                }
                             ?>
-
+                            <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $project->id]); ?>
+                            <?php 
+                                if (in_array($project->id, $assignedProjects) && in_array($employeeType, [0, 1, 2]))
+                                {
+                                    echo $this->dataTableEditButton(__('Edit'), ['action' => 'edit', $project->id]); 
+                                    echo $this->dataTableDeleteButton(__('Delete'), ['action' => 'delete', $project->id], __('Are you sure you want to delete {0}?', $project->title)
+                            );
+                                }
+                            ?>
                     </tr>
                 <?php endforeach; ?>
                 </tbody>

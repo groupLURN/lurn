@@ -280,7 +280,7 @@ ul.top-menu > li > .logout {
     background: #424a5d;
 }
 
-#sidebar h4{
+#sidebar h4, #sidebar h5{
 	color: #f2f2f2;
 	font-weight: 700;
 }

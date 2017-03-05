@@ -10,14 +10,10 @@ use App\Controller\AppController;
  */
 class SuppliersController extends AppController
 {
-
-    public $paginate = [
-        'fields' => ['Suppliers.id', 'Suppliers.name', 'Suppliers.contact_number', 'Suppliers.email', 'Suppliers.address'],
-        'limit' => 25,
-        'order' => [
-            'Supplier.name' => 'asc'
-        ]
-    ];
+    public function isAuthorized($user)
+    {        
+        return in_array($user['user_type_id'], [0, 4]);
+    }
 
     /**
      * Index method
@@ -26,6 +22,13 @@ class SuppliersController extends AppController
      */
     public function index()
     {
+        $paginate = [
+            'fields' => ['Suppliers.id', 'Suppliers.name', 'Suppliers.contact_number', 'Suppliers.email', 'Suppliers.address'],
+            'limit' => 25,
+            'order' => [
+                'Supplier.name' => 'asc'
+            ]
+        ];
         $this->paginate += $this->createFinders($this->request->query);
         $this->set('suppliers', $this->paginate($this->Suppliers));
         $this->set($this->request->query);

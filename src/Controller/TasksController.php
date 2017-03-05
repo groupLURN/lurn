@@ -33,6 +33,35 @@ class TasksController extends AppController
         return parent::beforeFilter($event);
     }
 
+    public function isAuthorized($user)
+    {
+        $action = $this->request->params['action'];
+
+        $userTypeId = $user['employee']['employee_type_id'];
+        $isAdmin = $userTypeId == 0;
+        $isOwner = $userTypeId == 1;
+        $isProjectManager = $userTypeId == 2;
+
+        $projectId = $this->request->query('project_id');
+
+        $isUserAssigned = $this->Projects->find()
+        ->matching('EmployeesJoin', function($query) use ($user) {
+            return $query->where(['EmployeesJoin.user_id' => $user['id']]);
+        })
+        ->where(['Projects.id' => $projectId])
+        ->first() !== null;
+        
+        if (in_array($action, ['index', 'edit', 'finish', 'generate-report', 'manage', 'replenish']))
+        {   
+            return ($isUserAssigned && $isProjectManager) || $isOwner || $isAdmin;
+        } else if (in_array($action, ['view', 'view-stock', 'view-finished']))
+        {
+            return $isUserAssigned || $isAdmin || $isOwner || $isProjectManager;
+        }
+
+        return parent::isAuthorized($user);
+    }
+
     /**
      * Index method
      *
@@ -287,31 +316,6 @@ class TasksController extends AppController
         ]);
 
         $this->set('task', $task);
-        $this->set('_serialize', ['task']);
-    }
-
-    /**
-     * Add method
-     *
-     * @return \Cake\Network\Response|void Redirects on successful add, renders view otherwise.
-     */
-    public function add()
-    {
-        $task = $this->Tasks->newEntity();
-        if ($this->request->is('post')) {
-            $task = $this->Tasks->patchEntity($task, $this->request->data);
-            if ($this->Tasks->save($task)) {
-                $this->Flash->success(__('The task has been saved.'));
-                return $this->redirect(['action' => 'index']);
-            } else {
-                $this->Flash->error(__('The task could not be saved. Please, try again.'));
-            }
-        }
-        $milestones = $this->Tasks->Milestones->find('list', ['limit' => 200]);
-        $equipment = $this->Tasks->Equipment->find('list', ['limit' => 200]);
-        $manpower = $this->Tasks->Manpower->find('list', ['limit' => 200]);
-        $materials = $this->Tasks->Materials->find('list', ['limit' => 200]);
-        $this->set(compact('task', 'milestones', 'equipment', 'manpower', 'materials'));
         $this->set('_serialize', ['task']);
     }
 

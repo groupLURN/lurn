@@ -112,7 +112,9 @@ class EmployeesTable extends Table
     public function findByUserId(Query $query, array $options)
     {
         if((int)$options['user_id'] > -1)
-            return $query->where(['user_id' => $options['user_id']]);
+            return $query
+                ->contain(['EmployeeTypes'])
+                ->where(['user_id' => $options['user_id']]);
         else
             return $query;
     }

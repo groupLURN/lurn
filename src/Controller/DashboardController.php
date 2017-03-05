@@ -12,6 +12,30 @@ use Cake\I18n\Time;
  */
 class DashboardController extends AppController
 {
+    public function beforeFilter(Event $event)
+    {
+        $user = null !== $this->request->session()->read('Auth.User') 
+            ? $this->request->session()->read('Auth.User') : null;
+        
+        $this->loadModel('Projects');
+
+        $assignedProjects = $this->Projects->find('all')->contain(['EmployeesJoin'])->toArray();
+
+        $assignedProjectsId = [];
+        foreach ($assignedProjects as $assignedProject) {
+            foreach ($assignedProject->employees_join as $employee) {
+                if ($employee->id === $user['employee']['id']) {
+                    $assignedProjectsId[] = $assignedProject->id;
+                    break;
+                }
+            }
+        }
+
+        $this->set('assignedProjects', $assignedProjectsId); 
+
+        return parent::beforeFilter($event);
+    }
+
 
     /**
      * Index method
@@ -21,8 +45,6 @@ class DashboardController extends AppController
 
     public function index()
     {    	      
-
-        $this->loadModel('Projects');
         $this->loadModel('Notifications');
 
         $this->paginate = [
@@ -30,13 +52,13 @@ class DashboardController extends AppController
         ];
 
         $this->paginate += [
-        'finder' =>
-        array_merge(
-            $this->createFinders($this->request->query)['finder'],
-            [
-            'ByAuthorization' => ['user_id' => $this->Auth->user('id')]
-            ]
-            )
+            'finder' =>
+                array_merge(
+                    $this->createFinders($this->request->query)['finder'],
+                    [
+                        'ByAuthorization' => ['user_id' => $this->Auth->user('id')]
+                    ]
+                )
         ];
 
         $projects = $this->paginate($this->Projects);

@@ -310,20 +310,24 @@ class ProjectsTable extends Table
         $resultSet = TableRegistry::get('employees')->find()
             ->select(['id' => 'Employees.user_id'])
             ->matching('EmployeeTypes', function($query){
-                return $query->where(['EmployeeTypes.title' => 'Project Manager/Project Supervisor']);
+                return $query->where(['EmployeeTypes.id IN' => [0, 1, 2]]);
             });
 
         $projectManagerUserIds = [];
         foreach($resultSet as $entity)
+        {    
             $projectManagerUserIds[] = $entity->id;
+        }
 
         if(in_array($options['user_id'], $projectManagerUserIds))
+        {
             return $query;
-        else
+        } else{
             return $query
                 ->matching('EmployeesJoin', function($query) use ($options) {
                     return $query->where(['EmployeesJoin.user_id' => $options['user_id']]);
                 });
+        }
     }
 
     public function computeProjectStatus($project)

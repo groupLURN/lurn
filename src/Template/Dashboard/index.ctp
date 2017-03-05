@@ -49,7 +49,12 @@ MAIN CONTENT
                             <td><?= h($project->project_phase->name) ?></td>
                             <td><?= h($project->status) ?></td>
                             <td class="actions">
-                                <?= $this->dataTableManageButton(__('Manage'), ['controller' => 'ProjectOverview', 'action' => 'index', $project->id]); ?>
+                                <?php 
+                                    if (in_array($project->id, $assignedProjects) || $employeeType == 0)
+                                    {
+                                        echo $this->dataTableManageButton(__('Manage'), ['controller' => 'ProjectOverview', 'action' => 'index', $project->id]);  
+                                    }
+                                ?>
                                 <?= $this->dataTableViewButton(__('View'), ['controller' => 'Projects', 'action' => 'view', $project->id]); ?>
 
                             </tr>
@@ -90,7 +95,9 @@ MAIN CONTENT
                        <div class="notification <?= $notifications[$i]['unread'] == true ? 'unread':''?>">
                         <a href=<?= $this->Url->build('/').$notifications[$i]['link']  ?>>
 
-                            <p><muted><?= date_format($notifications[$i]['created'], 'F d, Y - g:ia')?></muted><br/>                                 
+                            <p>
+                                <muted><?= date_format($notifications[$i]['created'], 'F d, Y - g:ia')?></muted>
+                                <br/>                                 
                                 <?= $notifications[$i]['message']?>
                             </p>
                         </a>

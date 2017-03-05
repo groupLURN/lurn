@@ -109,7 +109,7 @@ TOP BAR CONTENT & NOTIFICATIONS
                     <?=  $username ?>
                 </h4>
                 <h5 class="centered">
-                    <?=  $employeeName ?>
+                    <?=  $userFullName ?>
                 </h5>
                 <li>
                     <a href=<?= $this->Url->build(['controller' => 'dashboard/', 'action' => 'index']) ?>>

@@ -9,7 +9,7 @@ $this->start('additional-sidebar');
     </a>
 </li>
 <?php 
-    if (in_array($employeeType, [0, 1, 2])) {
+    if (in_array($employeeType, [0, 1, 2], true)) {
 ?>
 <li class="sub-menu">
     <a href="javascript:;" >
@@ -28,7 +28,7 @@ $this->start('additional-sidebar');
     }
 ?>
 <?php 
-    if (in_array($employeeType, [0, 1, 2])) {
+    if (in_array($employeeType, [0, 1, 2], true)) {
 ?>
 <li class="sub-menu">
     <a href="javascript:;">
@@ -42,6 +42,8 @@ $this->start('additional-sidebar');
 </li>
 <?php 
     }
+
+    if ($employeeType !== '') {
 ?>
 <li class="sub-menu">
     <a href="javascript:;" >
@@ -56,7 +58,9 @@ $this->start('additional-sidebar');
     </ul>
 </li>
 <?php
-    if (in_array($employeeType, [0, 1, 2, 4])) {
+    }
+
+    if (in_array($employeeType, [0, 1, 2, 4], true)) {
 ?>
 <li class="sub-menu">
     <a href="javascript:;" >

@@ -101,14 +101,16 @@
                                         </span>
                                     </td>
                                     <td class="actions">
-                                        <?php 
-                                            if(!$task->is_finished){ ?>
-                                                <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $task->id, '?' => ['project_id' => $projectId]])?> 
-                                                <?= $this->dataTableEditButton(__('Assign Resources'), ['action' => 'edit', $task->id, '?' => ['project_id' => $projectId]])?> 
-                                           <?php } else { ?>
-                                                <?= $this->dataTableViewButton(__('View'), ['action' => 'ViewFinished', $task->id, '?' => ['project_id' => $projectId]])?> 
-                                        <?php    }
-                                        ?>
+                                    <?php 
+                                        if(!$task->is_finished){ 
+                                            echo $this->dataTableViewButton(__('View'), 
+                                                ['action' => 'view', $task->id, '?' => ['project_id' => $projectId]]);
+                                            echo $this->dataTableEditButton(__('Assign Resources'), ['action' => 'edit', $task->id, '?' => ['project_id' => $projectId]]);
+                                        } else { 
+                                            echo $this->dataTableViewButton(__('View'), 
+                                                ['action' => 'ViewFinished', $task->id, '?' => ['project_id' => $projectId]]);  
+                                        }
+                                    ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

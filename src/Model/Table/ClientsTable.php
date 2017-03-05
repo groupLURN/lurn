@@ -96,4 +96,13 @@ class ClientsTable extends Table
         return $query->where($query->newExpr()->like('company_name', '%' . $options['company_name'] . '%'));
     }
 
+    public function findByUserId(Query $query, array $options)
+    {
+        if((int)$options['user_id'] > -1)
+            return $query
+                ->where(['user_id' => $options['user_id']]);
+        else
+            return $query;
+    }
+
 }

@@ -24,7 +24,7 @@ class InsertEmployeeTypesData extends AbstractMigration
     public function up()
     {
         $employeeTypes = [
-            'Admin/Company Owner', 'Project Manager/Project Supervisor', 'Project Engineer', 'Warehouse Keeper',
+            'System Administrator', 'Admin/Company Owner', 'Project Manager/Project Supervisor', 'Project Engineer', 'Warehouse Keeper',
             'Skilled Worker'];
 
         $table = $this->table('employee_types');
@@ -35,7 +35,7 @@ class InsertEmployeeTypesData extends AbstractMigration
     public function down()
     {
         $employeeTypes = [
-            'Admin/Company Owner', 'Project Manager/Project Supervisor', 'Project Engineer', 'Warehouse Keeper',
+            'System Administrator', 'Admin/Company Owner', 'Project Manager/Project Supervisor', 'Project Engineer', 'Warehouse Keeper',
             'Skilled Worker'];
 
         $this->execute(

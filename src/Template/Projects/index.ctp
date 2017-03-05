@@ -140,14 +140,18 @@
                         <td><?= h($project->status) ?></td>
                         <td class="actions">
                             <?php 
-                                if (in_array($project->id, $assignedProjects) && in_array($employeeType, [0, 1, 2]))
+                                if (in_array($project->id, $assignedProjects) 
+                                    && $employeeType == 2 
+                                    || in_array($employeeType, [0, 1], true))
                                 {
                                     echo $this->dataTableManageButton(__('Manage'), ['controller' => 'ProjectOverview', 'action' => 'index', $project->id]);  
                                 }
                             ?>
                             <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $project->id]); ?>
                             <?php 
-                                if (in_array($project->id, $assignedProjects) && in_array($employeeType, [0, 1, 2]))
+                                if (in_array($project->id, $assignedProjects) 
+                                    && $employeeType == 2 
+                                    || in_array($employeeType, [0, 1], true))
                                 {
                                     echo $this->dataTableEditButton(__('Edit'), ['action' => 'edit', $project->id]); 
                                     echo $this->dataTableDeleteButton(__('Delete'), ['action' => 'delete', $project->id], __('Are you sure you want to delete {0}?', $project->title)

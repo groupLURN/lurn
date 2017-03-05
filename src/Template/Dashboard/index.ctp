@@ -50,7 +50,9 @@ MAIN CONTENT
                             <td><?= h($project->status) ?></td>
                             <td class="actions">
                                 <?php 
-                                    if (in_array($project->id, $assignedProjects) || $employeeType == 0)
+                                    if (in_array($project->id, $assignedProjects) 
+                                    && $employeeType == 2 
+                                    || in_array($employeeType, [0, 1], true))
                                     {
                                         echo $this->dataTableManageButton(__('Manage'), ['controller' => 'ProjectOverview', 'action' => 'index', $project->id]);  
                                     }

@@ -34,7 +34,9 @@ class ProjectOverviewController extends AppController
     {
         $action = $this->request->params['action'];
 
-        $isAdmin = $user['employee']['employee_type_id'] == 0;
+        $employeeTypeId = isset($user['employee']['employee_type_id'])
+            ? $user['employee']['employee_type_id'] : '';
+        $isAdmin = $employeeTypeId === 0;
 
         $isProjectManager = $this->Projects->Employees->find()
         ->contain(['Users'])
@@ -45,12 +47,22 @@ class ProjectOverviewController extends AppController
 
         $projectId = $this->request->params['pass'][0];
 
-        $isUserAssigned = $this->Projects->find()
-        ->matching('EmployeesJoin', function($query) use ($user) {
-            return $query->where(['EmployeesJoin.user_id' => $user['id']]);
-        })
-        ->where(['Projects.id' => $projectId])
-        ->first() !== null;
+        $isUserAssigned = false;
+        if ($user['user_type_id'] === 2) {                
+            $isUserAssigned = $this->Projects->find()
+            ->matching('EmployeesJoin', function($query) use ($user) {
+                return $query->where(['EmployeesJoin.user_id' => $user['id']]);
+            })
+            ->where(['Projects.id' => $projectId])
+            ->first() !== null;
+        } else {
+            $isUserAssigned = $this->Projects->find()
+            ->where([
+                    'Projects.id' => $projectId, 
+                    'Projects.client_id' => $user['client']['id']
+                ])
+            ->first() !== null;
+        }
         
         return ($isUserAssigned && $isProjectManager) || $isUserAssigned || $isAdmin;
     }
@@ -68,10 +80,58 @@ class ProjectOverviewController extends AppController
 
         $projectPhases = $this->ProjectPhases->find('list')->toArray();
 
+        $this->paginate = [
+            'contain' => [
+                'Tasks' => [
+                    'Equipment', 'ManpowerTypes', 'Materials',
+                    'EquipmentReplenishmentDetails', 'ManpowerTypeReplenishmentDetails', 'MaterialReplenishmentDetails'
+                ]
+            ]
+        ];
+
+        $this->loadModel('Milestones');
+                
+        $this->paginate += [
+            'finder' =>
+                [
+                    'ByProjectId' => [
+                        'project_id' => $projectId
+                    ]
+                ]
+        ];
+        $milestones = $this->paginate($this->Milestones);
+
+        $query = $this->Milestones->find()->where(['project_id' => $projectId]);
+
+        $isFinishedCase = $query->newExpr()->addCase($query->newExpr()->add(['Tasks.is_finished' => 1]), 1, 'integer');
+
+        $resultSet = [];
+
+        if(count($milestones) > 0) {
+            $resultSet = $query
+                ->select(['Milestones.id', 
+                    'finished_tasks' => $query->func()->coalesce([
+                            $query->func()->sum($isFinishedCase), 0
+                        ]), 
+                    'total_tasks' => $query->func()->count('Tasks.id')
+                    ])
+                ->matching('Tasks')
+                ->where(['Milestones.id IN' => $milestones->extract('id')->toArray()])
+                ->group('Milestones.id')
+                ->toArray();
+        }
+
+        $milestonesProgress = [];
+
+        foreach($resultSet as $milestoneProgress) {
+            $milestonesProgress[$milestoneProgress->id] = $milestoneProgress['finished_tasks'] 
+            / $milestoneProgress['total_tasks'] * 100;
+        }
+
         $this->Projects->computeProjectStatus($project);
 
-        $this->set(compact('project', 'projectPhases'));
-        $this->set('_serialize', ['project']);
+        $this->set(compact('project', 'projectPhases', 'milestones', 'milestonesProgress'));
+        $this->set('_serialize', ['project', 'milestones', 'milestonesProgress']);
     }
 
     public function finishProject($projectId = null){

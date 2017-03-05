@@ -24,8 +24,10 @@ class IncidentReportHeadersController extends AppController
     }
 
     public function isAuthorized($user)
-    {        
-        return in_array($user['user_type_id'], [0, 2, 3, 4]);
+    {     
+        $employeeTypeId = isset($user['employee']['employee_type_id'])
+            ? $user['employee']['employee_type_id'] : '';   
+        return in_array($employeeTypeId, [0, 2, 3, 4], true);
     }
 
     /**

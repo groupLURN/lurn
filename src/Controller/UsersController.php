@@ -14,7 +14,14 @@ class UsersController extends AppController
 {
     public function isAuthorized($user)
     {        
-        return in_array($user['user_type_id'], [0, 4]);
+        $action = $this->request->params['action'];
+        if(in_array($action, ['login', 'logout'])) {
+            return parent::isAuthorized($user);
+        }
+
+        $employeeTypeId = isset($user['employee']['employee_type_id'])
+            ? $user['employee']['employee_type_id'] : '';
+        return in_array($employeeTypeId, [0, 4], true);
     }
 
     /**
@@ -134,10 +141,16 @@ class UsersController extends AppController
         if ($this->request->is('post')) {
             $user = $this->Auth->identify();
             if ($user) {
-                $this->loadModel('Employees');
 
-                $employee = $this->Employees->find('byUserId', ['user_id' => $user['id']])->first();
-                $user['employee'] = $employee;
+                if ($user['user_type_id'] == 2) {
+                    $this->loadModel('Employees');
+                    $employee = $this->Employees->find('byUserId', ['user_id' => $user['id']])->first();
+                    $user['employee'] = $employee;
+                } else {
+                    $this->loadModel('Clients');
+                    $client = $this->Clients->find('byUserId', ['user_id' => $user['id']])->first();
+                    $user['client'] = $client;
+                }
 
                 $this->Auth->setUser($user);
                 return $this->redirect('/dashboard/');

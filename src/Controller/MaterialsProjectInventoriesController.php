@@ -40,8 +40,8 @@ class MaterialsProjectInventoriesController extends AppController
         $action = $this->request->params['action'];
 
         $userTypeId = $user['employee']['employee_type_id'];
-        $isAdmin = $userTypeId == 0;
-        $isOwner = $userTypeId == 1;
+        $isAdmin = $userTypeId === 0;
+        $isOwner = $userTypeId === 1;
 
         $projectId = $this->request->params['pass'][0];
 

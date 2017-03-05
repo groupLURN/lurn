@@ -4,7 +4,7 @@ $this->start('additional-sidebar');
 ?>
 
 <?php 
-    if (in_array($employeeType, [0, 4])) {
+    if (in_array($employeeType, [0, 4], true)) {
 ?>
 <li class="sub-menu">
     <a href="javascript:;" >
@@ -40,7 +40,7 @@ $this->start('additional-sidebar');
 </li>
 
 <?php 
-    if (in_array($employeeType, [0, 4])) {
+    if (in_array($employeeType, [0, 4], true)) {
 ?>
 <li class="sub-menu">
     <a href="javascript:;" >
@@ -71,7 +71,7 @@ $this->start('additional-sidebar');
 ?>
 
 <?php 
-    if (in_array($employeeType, [0, 2, 4])) {
+    if (in_array($employeeType, [0, 2, 4], true)) {
 ?>
 <li class="sub-menu">
     <a href="javascript:;" >
@@ -81,22 +81,22 @@ $this->start('additional-sidebar');
     </a>
     <ul class="sub">
         <?php 
-            if (in_array($employeeType, [0, 2])) {
+            if (in_array($employeeType, [0, 2], true)) {
         ?>
         <li><a href=<?= $this->Url->build(['controller' => 'RentalRequestHeaders', 'action' => 'index']) ?>>Rental Requests</a></li>
         <?php 
             }
-            if (in_array($employeeType, [0, 4])) {
+            if (in_array($employeeType, [0, 4], true)) {
         ?>
         <li><a href=<?= $this->Url->build(['controller' => 'RentalReceiveHeaders', 'action' => 'index']) ?>>Rental Receives</a></li>
         <?php 
             }
-            if (in_array($employeeType, [0, 2])) {
+            if (in_array($employeeType, [0, 2], true)) {
         ?>
         <li><a href=<?= $this->Url->build(['controller' => 'PurchaseOrderHeaders', 'action' => 'index']) ?>>Purchase Orders</a></li>
         <?php 
             }
-            if (in_array($employeeType, [0, 4])) {
+            if (in_array($employeeType, [0, 4], true)) {
         ?>
         <li><a href=<?= $this->Url->build(['controller' => 'PurchaseReceiveHeaders', 'action' => 'index']) ?>>Purchase Receives</a></li>
         <?php 
@@ -109,7 +109,7 @@ $this->start('additional-sidebar');
 ?>
 
 <?php 
-    if (in_array($employeeType, [0, 2, 4])) {
+    if (in_array($employeeType, [0, 2, 4], true)) {
 ?>
 <li class="sub-menu">
     <a href="javascript:;" >
@@ -119,12 +119,12 @@ $this->start('additional-sidebar');
     </a>
     <ul class="sub">
         <?php 
-            if (in_array($employeeType, [0, 2])) {
+            if (in_array($employeeType, [0, 2], true)) {
         ?>
         <li><a href=<?= $this->Url->build(['controller' => 'ResourceRequestHeaders']) ?>>Create Resources Request</a></li>
         <?php 
             }
-            if (in_array($employeeType, [0, 4])) {
+            if (in_array($employeeType, [0, 4], true)) {
         ?>
         <li><a href=<?= $this->Url->build(['controller' => 'ResourceTransferHeaders']) ?>>Create Resources Transfer</a></li>
         <?php 
@@ -137,7 +137,7 @@ $this->start('additional-sidebar');
 ?>
 
 <?php 
-    if (in_array($employeeType, [0, 2, 3, 4])) {
+    if (in_array($employeeType, [0, 2, 3, 4], true)) {
 ?>
 <li class="sub-menu">
     <a href="Javascript:;" >
@@ -147,7 +147,7 @@ $this->start('additional-sidebar');
     </a>
     <ul class="sub">
         <?php 
-            if (in_array($employeeType, [0, 4])) {
+            if (in_array($employeeType, [0, 4], true)) {
         ?>
         <li><a href=<?= $this->Url->build(['controller' => 'EquipmentGeneralInventoryReport']) ?>>Equipment Inventory Report</a></li>
         <li><a href=<?= $this->Url->build(['controller' => 'MaterialsGeneralInventoryReport']) ?>>Materials Inventory Report</a></li>

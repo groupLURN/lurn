@@ -23,12 +23,20 @@ class DashboardController extends AppController
 
         $assignedProjectsId = [];
         foreach ($assignedProjects as $assignedProject) {
-            foreach ($assignedProject->employees_join as $employee) {
-                if ($employee->id === $user['employee']['id']) {
+            if ($user['user_type_id'] === 2) {
+                foreach ($assignedProject->employees_join as $employee) {
+                    if ($employee->id === $user['employee']['id']) {
+                        $assignedProjectsId[] = $assignedProject->id;
+                        break;
+                    }
+                }
+            } else {
+                if ($assignedProject->client === $user['client']['id']) {
                     $assignedProjectsId[] = $assignedProject->id;
                     break;
                 }
             }
+                
         }
 
         $this->set('assignedProjects', $assignedProjectsId); 
@@ -56,7 +64,10 @@ class DashboardController extends AppController
                 array_merge(
                     $this->createFinders($this->request->query)['finder'],
                     [
-                        'ByAuthorization' => ['user_id' => $this->Auth->user('id')]
+                        'ByAuthorization' => [
+                            'user_id' => $this->Auth->user('id'),
+                            'user_type_id' => $this->Auth->user('user_type_id')
+                        ]
                     ]
                 )
         ];
@@ -157,9 +168,6 @@ class DashboardController extends AppController
                         array_push($events[$noOfWeeks][$dayOfTheWeek],  true);                
                     }
                 }
-                
-
-                
                 
             }
 

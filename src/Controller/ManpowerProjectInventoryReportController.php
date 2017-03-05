@@ -42,8 +42,8 @@ class ManpowerProjectInventoryReportController extends AppController
         $action = $this->request->params['action'];
 
         $userTypeId = $user['employee']['employee_type_id'];
-        $isAdmin = $userTypeId == 0;
-        $isOwner = $userTypeId == 1;
+        $isAdmin = $userTypeId === 0;
+        $isOwner = $userTypeId === 1;
         $isProjectManager = $userTypeId == 2;
         $isWarehouseEngineer = $userTypeId == 4;
 

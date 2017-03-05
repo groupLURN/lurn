@@ -76,10 +76,26 @@ class AppController extends Controller
             $user = null !== $this->request->session()->read('Auth.User') 
                 ? $this->request->session()->read('Auth.User') : null;
 
+            $userFullName = '';
+            if ($user['user_type_id'] == 2) {
+                $userFullName = $user['employee']['name'];
+            } else {
+                $userFullName = $user['client']['company_name'];
+            }
+
+            $userTypeId = $user['user_type_id'];
+
+            $employeeType = isset($user['employee']['employee_type_id']) 
+                ? $user['employee']['employee_type_id'] : '';
+            $employeeTypeTitle = isset($user['employee']['employee_type']['title']) 
+                ? $user['employee']['employee_type']['title'] : '';
+
             $this->set('username', $user['username']);
-            $this->set('employeeName', $user['employee']['name']); 
-            $this->set('employeeType', $user['employee']['employee_type_id']); 
-            $this->set('employeeTypeTitle', $user['employee']['employee_type']['title']); 
+            $this->set('userFullName', $userFullName); 
+            $this->set('userTypeId', $userTypeId); 
+
+            $this->set('employeeType', $employeeType); 
+            $this->set('employeeTypeTitle', $employeeTypeTitle); 
         }
         return parent::beforeFilter($event);
     }
@@ -100,7 +116,7 @@ class AppController extends Controller
     }
 
     public function paginate($object = null, array $settings = [])
-    {
+    {   
         if(!empty($this->paginate['finder']) && is_array($this->paginate['finder']))
         {
             foreach($this->paginate['finder'] as $finder => $options)
@@ -109,7 +125,7 @@ class AppController extends Controller
                     $query = $object->find($finder, $options);
                 else
                     $query = $query->find($finder, $options);
-            }
+            }   
             
             $object = $query;
             unset($this->paginate['finder']);

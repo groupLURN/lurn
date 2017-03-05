@@ -37,19 +37,30 @@ class TasksController extends AppController
     {
         $action = $this->request->params['action'];
 
-        $userTypeId = $user['employee']['employee_type_id'];
-        $isAdmin = $userTypeId == 0;
-        $isOwner = $userTypeId == 1;
-        $isProjectManager = $userTypeId == 2;
+        $userTypeId = isset($user['employee']['employee_type_id'])
+            ? $user['employee']['employee_type_id'] : '';
+        $isAdmin = $userTypeId === 0;
+        $isOwner = $userTypeId === 1;
+        $isProjectManager = $userTypeId === 2;
 
         $projectId = $this->request->query('project_id');
 
-        $isUserAssigned = $this->Projects->find()
-        ->matching('EmployeesJoin', function($query) use ($user) {
-            return $query->where(['EmployeesJoin.user_id' => $user['id']]);
-        })
-        ->where(['Projects.id' => $projectId])
-        ->first() !== null;
+        $isUserAssigned = false;
+        if ($user['user_type_id'] === 2) {                
+            $isUserAssigned = $this->Projects->find()
+            ->matching('EmployeesJoin', function($query) use ($user) {
+                return $query->where(['EmployeesJoin.user_id' => $user['id']]);
+            })
+            ->where(['Projects.id' => $projectId])
+            ->first() !== null;
+        } else {
+            $isUserAssigned = $this->Projects->find()
+            ->where([
+                    'Projects.id' => $projectId, 
+                    'Projects.client_id' => $user['client']['id']
+                ])
+            ->first() !== null;
+        }
         
         if (in_array($action, ['index', 'edit', 'finish', 'generate-report', 'manage', 'replenish']))
         {   

@@ -26,13 +26,21 @@ class ProjectsController extends AppController
 
         $assignedProjectsId = [];
         foreach ($assignedProjects as $assignedProject) {
-            foreach ($assignedProject->employees_join as $employee) {
-                if ($employee->id === $user['employee']['id']) {
+            if ($user['user_type_id'] === 2) {
+                foreach ($assignedProject->employees_join as $employee) {
+                    if ($employee->id === $user['employee']['id']) {
+                        $assignedProjectsId[] = $assignedProject->id;
+                        break;
+                    }
+                }
+            } else {
+                if ($assignedProject->client === $user['client']['id']) {
                     $assignedProjectsId[] = $assignedProject->id;
                     break;
                 }
             }
-       	}
+                
+        }
 
         $this->set('assignedProjects', $assignedProjectsId); 
 
@@ -43,8 +51,10 @@ class ProjectsController extends AppController
 	{
 		$action = $this->request->params['action'];
 
-		$isAdmin = $user['employee']['employee_type_id'] == 0;
-		$isOwner = $user['employee']['employee_type_id'] == 1;
+		$employeeTypeId = isset($user['employee']['employee_type_id'])
+			? $user['employee']['employee_type_id'] : '';
+		$isAdmin = $employeeTypeId === 0;
+		$isOwner = $employeeTypeId === 1;
 
 		$isProjectManager = $this->Projects->Employees->find()
 		->contain(['Users'])
@@ -53,15 +63,26 @@ class ProjectsController extends AppController
 			return $query->where(['EmployeeTypes.id' => 2]);
 		})->first() !== null;
 
+		$isUserAssigned = false;
+
 		if ($action != 'index') {
 			$projectId = $this->request->params['pass'][0];
 
-			$isUserAssigned = $this->Projects->find()
-			->matching('EmployeesJoin', function($query) use ($user) {
-				return $query->where(['EmployeesJoin.user_id' => $user['id']]);
-			})
-			->where(['Projects.id' => $projectId])
-			->first() !== null;
+            if ($user['user_type_id'] === 2) {                
+				$isUserAssigned = $this->Projects->find()
+				->matching('EmployeesJoin', function($query) use ($user) {
+					return $query->where(['EmployeesJoin.user_id' => $user['id']]);
+				})
+				->where(['Projects.id' => $projectId])
+				->first() !== null;
+            } else {
+                $isUserAssigned = $this->Projects->find()
+				->where([
+						'Projects.id' => $projectId, 
+						'Projects.client_id' => $user['client']['id']
+					])
+				->first() !== null;
+            }
 		}
 
 		if($action === 'add') 
@@ -70,7 +91,7 @@ class ProjectsController extends AppController
 		} else if (in_array($action, ['edit', 'delete']))
 		{	
 			return ($isUserAssigned && $isProjectManager) || $isOwner || $isAdmin;
-		} else if (in_array($action, ['index', 'view']))
+		} else if (in_array($action, ['view']))
 		{
 			return $isUserAssigned || $isAdmin || $isOwner || $isProjectManager;
 		}
@@ -90,13 +111,16 @@ class ProjectsController extends AppController
 		];
 
 		$this->paginate += [
-		'finder' =>
-		array_merge(
-			$this->createFinders($this->request->query)['finder'],
-			[
-			'ByAuthorization' => ['user_id' => $this->Auth->user('id')]
-			]
-			)
+			'finder' =>
+				array_merge(
+						$this->createFinders($this->request->query)['finder'],
+						[
+							'ByAuthorization' => [
+								'user_id' => $this->Auth->user('id'),
+                            	'user_type_id' => $this->Auth->user('user_type_id')
+							]
+						]
+					)
 		];
 
 		$projects = $this->paginate($this->Projects);
@@ -138,10 +162,59 @@ class ProjectsController extends AppController
 	public function view($id = null)
 	{
 		$project = $this->Projects->find('byId', ['project_id' => $id])->first();
+        $this->paginate = [
+            'contain' => [
+                'Tasks' => [
+                    'Equipment', 'ManpowerTypes', 'Materials',
+                    'EquipmentReplenishmentDetails', 'ManpowerTypeReplenishmentDetails', 'MaterialReplenishmentDetails'
+                ]
+            ]
+        ];
+
+        $this->loadModel('Milestones');
+        
+        $this->paginate += [
+			'finder' =>				
+                [
+                    'ByProjectId' => [
+                        'project_id' => $id
+                    ]
+                ]
+		];
+		
+        $milestones = $this->paginate($this->Milestones);
+
+        $query = $this->Milestones->find();
+
+        $isFinishedCase = $query->newExpr()->addCase($query->newExpr()->add(['Tasks.is_finished' => 1]), 1, 'integer');
+
+        $resultSet = [];
+
+        if(count($milestones) > 0) {
+            $resultSet = $query
+                ->select(['Milestones.id', 
+                    'finished_tasks' => $query->func()->coalesce([
+                            $query->func()->sum($isFinishedCase), 0
+                        ]), 
+                    'total_tasks' => $query->func()->count('Tasks.id')
+                    ])
+                ->matching('Tasks')
+                ->where(['Milestones.id IN' => $milestones->extract('id')->toArray()])
+                ->group('Milestones.id')
+                ->toArray();
+        }
+
+        $milestonesProgress = [];
+
+        foreach($resultSet as $milestoneProgress) {
+            $milestonesProgress[$milestoneProgress->id] = $milestoneProgress['finished_tasks'] 
+            / $milestoneProgress['total_tasks'] * 100;
+        }
 
 		$this->Projects->computeProjectStatus($project);
-		$this->set('project', $project);
-		$this->set('_serialize', ['project']);
+
+        $this->set(compact('project', 'milestones', 'milestonesProgress'));
+		$this->set('_serialize', ['project', 'milestones', 'milestonesProgress']);
 	}
 
 	/**
@@ -292,7 +365,7 @@ class ProjectsController extends AppController
 		$projectEngineer = '';
 		$warehouseKeeper = '';
 
-		$clients = $this->Projects->find('list', ['limit' => 200]);
+		$clients = $this->Clients->find('list', ['limit' => 200]);
 
 		$currentEmployeesJoin = [];
 		foreach($project->employees_join as $employee){

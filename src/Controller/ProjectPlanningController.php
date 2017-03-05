@@ -17,9 +17,9 @@ class ProjectPlanningController extends ProjectOverviewController
         $action = $this->request->params['action'];
 
         $userTypeId = $user['employee']['employee_type_id'];
-        $isAdmin = $userTypeId == 0;
-        $isOwner = $userTypeId == 1;
-        $isProjectManager = $userTypeId == 2;
+        $isAdmin = $userTypeId === 0;
+        $isOwner = $userTypeId === 1;
+        $isProjectManager = $userTypeId === 2;
 
         $projectId = $this->request->params['pass'][0];
 

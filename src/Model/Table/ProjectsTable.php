@@ -322,10 +322,15 @@ class ProjectsTable extends Table
         if(in_array($options['user_id'], $projectManagerUserIds))
         {
             return $query;
-        } else{
+        } else if ($options['user_type_id'] === 2) {
             return $query
                 ->matching('EmployeesJoin', function($query) use ($options) {
                     return $query->where(['EmployeesJoin.user_id' => $options['user_id']]);
+                });
+        } else{
+            return $query
+                ->matching('Clients', function($query) use ($options) {
+                    return $query->where(['Clients.user_id' => $options['user_id']]);
                 });
         }
     }

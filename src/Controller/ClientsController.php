@@ -30,8 +30,10 @@ class ClientsController extends AppController
     }
 
     public function isAuthorized($user)
-    {        
-        return $user['user_type_id'] === 0;
+    {
+        $employeeTypeId = isset($user['employee']['employee_type_id'])
+            ? $user['employee']['employee_type_id'] : '';     
+        return $employeeTypeId  === 0;
     }
 
     /**

@@ -73,32 +73,32 @@ class PurchaseOrderHeadersController extends AppController
 
 		if ($this->request->is('post')) {
 			$postData = $this->request->data;
-			$count = count($postData['purchase_order_details_quantity']);
+			$count = count($postData['purchase_order_details']['quantity']);
 
 			for ($i = 0; $i < $count; $i++) {
-				if($postData['purchase_order_details_quantity'][$i] == 0
-	                || $postData['purchase_order_details_quantity'][$i] == ''){
-					unset($postData['purchase_order_details_material_id'][$i]);
-					unset($postData['purchase_order_details_quantity'][$i]);
+				if($postData['purchase_order_details']['quantity'][$i] == 0
+	                || $postData['purchase_order_details']['quantity'][$i] == ''){
+					unset($postData['purchase_order_details']['material_id'][$i]);
+					unset($postData['purchase_order_details']['quantity'][$i]);
 				}
 			}
 
-	        $count = count($postData['purchase_order_details_material_id']);
+	        $count = count($postData['purchase_order_details']['material_id']);
 
 			if ($count === 0) {
 				$this->Flash->error(__('Please enter at least 1 purchase order detail.'));
 				return $this->redirect(['action' => 'add']);
 			}
 
-	        for ($i = 0; $i < $count; $i++) {  
-	            if ( $postData['purchase_order_details_material_id'][$i] < 0
-	                || $postData['purchase_order_details_material_id'][$i] == '') {
+	        foreach ($postData['purchase_order_details']['material_id'] as $key => $value) {  
+	            if ( $postData['purchase_order_details']['material_id'][$key] < 0
+	                || $postData['purchase_order_details']['material_id'][$key] == '') {
 
 	                $this->Flash->error(__('Invalid material id.'));
 	                return $this->redirect(['action' => 'add']);	                
 	            }
 
-	            if ( $postData['purchase_order_details_quantity'][$i] < 1) {
+	            if ( $postData['purchase_order_details']['quantity'][$key] < 1) {
 
 	                $this->Flash->error(__('Quantity must be at least 1.'));
 	                return $this->redirect(['action' => 'add']);

@@ -139,7 +139,7 @@ $(function(){
 					+ '<td>'
 					+ '</td>'
 					+ '<td>'
-					+ '<input type="hidden" name="purchase_order_details.material_id[' + i + ']"' 
+					+ '<input type="hidden" name="purchase_order_details[material_id][]"' 
 					+ ' value="' + materialId + '"/>' 
 					+  materialName
 					+ '</td>'
@@ -150,7 +150,7 @@ $(function(){
 					+ materialQuantityNeeded
 					+ '</td>'
 					+ '<td>'
-					+ '<input type="type" class="number-only" name="purchase_order_details.quantity[' + i + ']"'
+					+ '<input type="type" class="number-only" name="purchase_order_details[quantity][]"'
 					+ ' value="' + materialQuantity + '"/>' 
 					+ '</td>'
 					+ '<td>'

@@ -67,40 +67,40 @@ class RentalRequestHeadersController extends AppController
         if ($this->request->is('post')) {
             $postData = $this->request->data;
 
-            $count = count($postData['rental_request_details_quantity']);
+            $count = count($postData['rental_request_details']['quantity']);
 
             for ($i = 0; $i < $count; $i++) {
-                if($postData['rental_request_details_quantity'][$i] == 0
-                    || $postData['rental_request_details_quantity'][$i] == ''){
-                    unset($postData['rental_request_details_equipment_id'][$i]);
-                    unset($postData['rental_request_details_quantity'][$i]);
-                    unset($postData['rental_request_details_duration'][$i]);
+                if($postData['rental_request_details']['quantity'][$i] == 0
+                    || $postData['rental_request_details']['quantity'][$i] == ''){
+                    unset($postData['rental_request_details']['equipment_id'][$i]);
+                    unset($postData['rental_request_details']['quantity'][$i]);
+                    unset($postData['rental_request_details']['duration'][$i]);
                 }
             }
 
-            $count = count($postData['rental_request_details_equipment_id']);
+            $count = count($postData['rental_request_details']['equipment_id']);
 
             if ($count === 0) {
                 $this->Flash->error(__('Please enter at least 1 rental request detail.'));
                 return $this->redirect(['action' => 'add']);
             }
 
-            for ($i = 0; $i < $count; $i++) {                
-                if ( $postData['rental_request_details_equipment_id'][$i] < 0
-                    || $postData['rental_request_details_equipment_id'][$i] == '') {
+            foreach ($postData['rental_request_details']['equipment_id'] as $key => $value) {                
+                if ( $postData['rental_request_details']['equipment_id'][$key] < 0
+                    || $postData['rental_request_details']['equipment_id'][$key] == '') {
 
                     $this->Flash->error(__('Invalid equipment id.'));
                     return $this->redirect(['action' => 'add']);
                 }
 
-                if ( $postData['rental_request_details_quantity'][$i] < 1) {
+                if ( $postData['rental_request_details']['quantity'][$key] < 1) {
 
                     $this->Flash->error(__('Quantity must be at least 1.'));
                     return $this->redirect(['action' => 'add']);
                 }
 
-                if ( $postData['rental_request_details_duration'][$i] < 1
-                    || $postData['rental_request_details_duration'][$i] == '') {
+                if ( $postData['rental_request_details']['duration'][$key] < 1
+                    || $postData['rental_request_details']['duration'][$key] == '') {
 
                     $this->Flash->error(__('Duration must be at least 1 day and must not be blank.'));
                     return $this->redirect(['action' => 'add']);

@@ -137,7 +137,7 @@ $(function(){
 
 					var tableRow = '<tr>'
 					+ '<td>'
-					+ '<input type="hidden" name="rental_request_details.equipment_id[' + i + ']"'
+					+ '<input type="hidden" name="rental_request_details[equipment_id][]"'
 					+ 'value="' + equipmentId + '">'
 					+ equipmentName
 					+ '</td>'
@@ -148,11 +148,11 @@ $(function(){
 					+ equipmentQuantityNeeded
 					+ '</td>'
 					+ '<td>'
-					+ '<input type="text" class="number-only" name="rental_request_details.quantity[' + i + ']"'
+					+ '<input type="text" class="number-only" name="rental_request_details[quantity][]"'
 					+ 'value="' + equipmentQuantity + '">'
 					+ '</td>'
 					+ '<td>'
-					+ '<input type="text" class="number-only" name="rental_request_details.duration[' + i + ']">'
+					+ '<input type="text" class="number-only" name="rental_request_details[duration][]">'
 					+ '</td>'
 					+ '<td>'
 					+ '<button class="btn remove-equipment" type="button">Remove</button>'

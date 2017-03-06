@@ -30,8 +30,9 @@ class EquipmentSummaryReportController extends AppController
         $this->set('isFinished', $project->is_finished );
 
         $this->set('projectId', $projectId);
-        
-
+        return parent::beforeFilter($event);
+    }
+    
     public function isAuthorized($user)
     {
         $action = $this->request->params['action'];

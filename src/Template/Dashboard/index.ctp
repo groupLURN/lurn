@@ -81,7 +81,7 @@ MAIN CONTENT
                 <h3>NOTIFICATIONS</h3>
                 <div id="notifications"  class="scroll-wrapper">
                     <?php 
-                    $max = count($notifications) > 30 ? 30 : count($notifications);
+                    $max = count($notifications) > 15 ? 15 : count($notifications);
                     //$max = count($notifications);
                     if($max == 0) {
                         ?>
@@ -94,7 +94,7 @@ MAIN CONTENT
                     }
                     for ($i=0; $i < $max; $i++) { 
                        ?>
-                       <div class="notification <?= $notifications[$i]['unread'] == true ? 'unread':''?>">
+                    <div class="notification <?= $notifications[$i]['unread'] == true ? 'unread':''?>">
                         <a href=<?= $this->Url->build('/').$notifications[$i]['link']  ?>>
 
                             <p>
@@ -105,64 +105,69 @@ MAIN CONTENT
                         </a>
                     </div>
                     <?php   
-                }
-                ?>
-            </div>
+                    }
+                    ?>
+                    <h5 class="centered">               
+                        <a href=<?= $this->Url->build(['controller' => 'Notifications', 'action' => 'index']) ?>>
+                            See All
+                        </a>
+                    </h5>
+                </div>
 
-            <!-- CALENDAR-->
-            <a href=<?= $this->Url->build(['controller' => 'events', 'action' => 'index']) ?>>
-              <div class="panel green-panel ">
-                 <div class="panel-body">
-                     <table id="calendar">
-                        <tr>
-                            <th colspan="7" class="month-year"><?= $calendar['month']?> <?= $calendar['year']?></th>
-                        </tr>  
-                        <tr>
-                            <?php foreach ($calendar['dayNames'] as $day): ?>
-                               <th class="day-name"><?= $day?></th>
-                           <?php endforeach;?>
-                       </tr>   
-                       <?php for ($week=0; $week < $calendar['noOfWeeks']; $week++){?>
-                       <tr>
-                        <?php for ($day=0; $day < 7; $day++){?>
-                        <td class="
-                        <?php 
+                <!-- CALENDAR-->
+                <a href=<?= $this->Url->build(['controller' => 'Events', 'action' => 'index']) ?>>
+                    <div class="panel green-panel ">
+                        <div class="panel-body">
+                            <table id="calendar">
+                                <tr>
+                                <th colspan="7" class="month-year"><?= $calendar['month']?> <?= $calendar['year']?></th>
+                                </tr>  
+                                <tr>
+                                    <?php foreach ($calendar['dayNames'] as $day): ?>
+                                       <th class="day-name"><?= $day?></th>
+                                   <?php endforeach;?>
+                                </tr>   
+                                <?php for ($week=0; $week < $calendar['noOfWeeks']; $week++){?>
+                                <tr>
+                                    <?php for ($day=0; $day < 7; $day++){?>
+                                    <td class="
+                                    <?php 
 
-                        if (isset($calendar['days'][$week][$day]) && $calendar['currentDay'] == $calendar['days'][$week][$day]) {
-                            echo 'current';
-                        }
+                                    if (isset($calendar['days'][$week][$day]) && $calendar['currentDay'] == $calendar['days'][$week][$day]) {
+                                        echo 'current';
+                                    }
 
-                        if (isset($calendar['events'][$week][$day])) {
-                            if(isset($calendar['days'][$week][$day]) && $calendar['currentDay'] == $calendar['days'][$week][$day]){
-                                echo '-';
-                            } else {
-                                echo ' ';
-                            }
-                            echo 'event';
-                        }
+                                    if (isset($calendar['events'][$week][$day])) {
+                                        if(isset($calendar['days'][$week][$day]) && $calendar['currentDay'] == $calendar['days'][$week][$day]){
+                                            echo '-';
+                                        } else {
+                                            echo ' ';
+                                        }
+                                        echo 'event';
+                                    }
 
-                        if (isset($calendar['days'][$week][$day])) {
-                            echo ' day'; 
-                        }
+                                    if (isset($calendar['days'][$week][$day])) {
+                                        echo ' day'; 
+                                    }
 
-                        ?>  ">
-                        <?php 
-                        if (isset($calendar['days'][$week][$day])) {
-                            echo $calendar['days'][$week][$day]; 
-                        }
+                                    ?>  ">
+                                    <?php 
+                                    if (isset($calendar['days'][$week][$day])) {
+                                        echo $calendar['days'][$week][$day]; 
+                                    }
 
-                        ?>                                            
-                    </td>     
-                    <?php }?>  
-                </tr>
-                <?php }?>
-            </table>
+                                    ?>                                            
+                                    </td>     
+                                    <?php }?>  
+                                </tr>
+                                <?php }?>
+                            </table>
+                        </div>
+                    </div><!-- / calendar -->
+                </a>
+            </div><!-- /col-lg-3 -->
         </div>
-    </div><!-- / calendar -->
-</a>
-</div><!-- /col-lg-3 -->
-</div>
-</section>
+    </section>
 </section>
 
 <!--main content end-->

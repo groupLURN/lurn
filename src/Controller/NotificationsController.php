@@ -10,7 +10,28 @@ use App\Controller\AppController;
  */
 class NotificationsController extends AppController
 {
+    /**
+     * Index method
+     *
+     * @return \Cake\Network\Response|null
+     */
+    public function index()
+    {        
+        $this->paginate = [
+            'limit' => 15,
+            'finder' =>
+                array_merge( 
+                    [
+                        'ByUserId' => [
+                                'user_id' => $this->Auth->user('id'),
+                            ]
+                    ]
+                )
+        ];
 
+        $this->set('notifications', $this->paginate($this->Notifications));
+        $this->set('_serialize', ['notifications']);
+    }      
 
     /**
     * Method for getting new unread notifications from the database

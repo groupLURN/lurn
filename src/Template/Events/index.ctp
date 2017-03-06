@@ -86,71 +86,72 @@ MAIN CONTENT
 
                                         ?>
                                         >
-                                        <span>
-                                        <?php 
-                                            if (isset($calendar['days'][$week][$day])) {
-                                                echo $calendar['days'][$week][$day]; 
-                                            }
+                                        <div>
+                                            <span>
+                                            <?php 
+                                                if (isset($calendar['days'][$week][$day])) {
+                                                    echo $calendar['days'][$week][$day]; 
+                                                }
 
-                                        ?>
-                                        </span>
-                                        <?php
-                                            if (isset($calendar['updates'][$week][$day])) {
-                                            	foreach ($calendar['updates'][$week][$day] as $key => $value) {
-                                            		if($key==0){
-                                		?>
-	                                                <br>
-	                                                <ul class="updates no-padding">
-                                            			<li>Updates:</li>
-                                					<?php 
-                                            			} 
-                                            		?>
-                                            		<li>
-                                                    <a href=<?= ($this->Url->build(['controller' => 'tasks', 'action' => 'view/'.$calendar['updatedTaskIds'][$week][$day][$key], 'project_id' => $calendar['updatedProjectIds'][$week][$day][$key] ]))?>>
-                                                    - <?= $value ?>
-                                                    </a>
-                                                    </li>
+                                            ?>
+                                            </span>
+                                            <?php
+                                                if (isset($calendar['updates'][$week][$day])) {
+                                                	foreach ($calendar['updates'][$week][$day] as $key => $value) {
+                                                		if($key==0){
+                                    		?>
+    	                                                <br>
+    	                                                <ul class="updates no-padding">
+                                                			<li>Updates:</li>
+                                    					<?php 
+                                                			} 
+                                                		?>
+                                                		<li>
+                                                        <a href=<?= ($this->Url->build(['controller' => 'tasks', 'action' => 'view/'.$calendar['updatedTaskIds'][$week][$day][$key], 'project_id' => $calendar['updatedProjectIds'][$week][$day][$key] ]))?>>
+                                                        <?= $value ?>
+                                                        </a>
+                                                        </li>
 
-                                            		<?php
-                                            		if($key==count($calendar['updates'][$week][$day])-1){
+                                                		<?php
+                                                		if($key==count($calendar['updates'][$week][$day])-1){
 
-                                        			?>
-                                            			</ul>
-                                        			 <?php
-                                            		}
-                                            	}
-                                            }
+                                            			?>
+                                                			</ul>
+                                            			 <?php
+                                                		}
+                                                	}
+                                                }
 
-                                        ?>  
-                                        <?php
-                                            if (isset($calendar['dueProjects'][$week][$day])) {
-                                            	foreach ($calendar['dueProjects'][$week][$day] as $key => $value) {
-                                            		if($key==0){
-                                            		?>
-	                                                <br>
-	                                                <ul class="due-projects no-padding">
-                                            			<li>Due Projects:</li>
-                                            		<?php 
-                                            			} 
-                                            		?>
-                                            		<li>
-                                                    <a href=<?= ($this->Url->build(['controller' => 'projects', 'action' => 'view/'.$calendar['dueProjectIds'][$week][$day][$key] ]))?>>
-                                                    - <?= h($value) ?>
-                                                    </a>
-                                                    </li>
+                                            ?>  
+                                            <?php
+                                                if (isset($calendar['dueProjects'][$week][$day])) {
+                                                	foreach ($calendar['dueProjects'][$week][$day] as $key => $value) {
+                                                		if($key==0){
+                                                		?>
+    	                                                <br>
+    	                                                <ul class="due-projects no-padding">
+                                                			<li>Due Projects:</li>
+                                                		<?php 
+                                                			} 
+                                                		?>
+                                                		<li>
+                                                        <a href=<?= ($this->Url->build(['controller' => 'projects', 'action' => 'view/'.$calendar['dueProjectIds'][$week][$day][$key] ]))?>>
+                                                        <?= $value ?>
+                                                        </a>
+                                                        </li>
 
-                                            		<?php
-                                            		if($key==count($calendar['dueProjects'][$week][$day])-1){
+                                                		<?php
+                                                		if($key==count($calendar['dueProjects'][$week][$day])-1){
 
-                                        			?>
-                                            			</ul>
-                                        			 <?php
-                                            		}
-                                            	}
-                                            }
+                                            			?>
+                                                			</ul>
+                                            			 <?php
+                                                		}
+                                                	}
+                                                }
 
-                                        ?>  
-
+                                            ?>  
+                                        </div>
                                     </td>     
                                 <?php }?>  
                             </tr>

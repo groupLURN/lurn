@@ -64,7 +64,8 @@ class EventsController extends AppController
                         $dueProjectIds[$noOfWeeks][$dayOfTheWeek] = [];
                     }
 
-                    array_push($dueProjects[$noOfWeeks][$dayOfTheWeek], $project->title);
+                    $projectTitle = ' - '.$project->title;
+                    array_push($dueProjects[$noOfWeeks][$dayOfTheWeek], $projectTitle);
                     array_push($dueProjectIds[$noOfWeeks][$dayOfTheWeek], $project->id);
                 }
 
@@ -88,7 +89,7 @@ class EventsController extends AppController
                                 $updatedTaskIds[$noOfWeeks][$dayOfTheWeek] = [];
                             }
 
-                            $update = $project->title.'<ul class="milestone"><li>&gt;&gt; '.$latestMilestone->title.'</li></ul>';
+                            $update = ' - '.$project->title.'<br>&nbsp;&nbsp;+  '.$latestMilestone->title;
                             array_push($updates[$noOfWeeks][$dayOfTheWeek],  $update);
                             array_push($updatedProjectIds[$noOfWeeks][$dayOfTheWeek],  $project->id); 
                             array_push($updatedTaskIds[$noOfWeeks][$dayOfTheWeek],  $project['updatedTasks'][$i]['id']);             
@@ -111,7 +112,8 @@ class EventsController extends AppController
         $calendar['year']               = $tempYear;
         $calendar['month']              = date('F', strtotime($tempDate));
         $calendar['month-number']       = $tempMonth;
-        $calendar['dayNames']           = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        $calendar['dayNames']           = 
+            ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         $calendar['noOfWeeks']          = $noOfWeeks;
         $calendar['days']               = $days;        
         $calendar['dueProjects']        = $dueProjects;
@@ -119,7 +121,7 @@ class EventsController extends AppController
         $calendar['updates']            = $updates;
         $calendar['updatedProjectIds']  = $updatedProjectIds;
         $calendar['updatedTaskIds']     = $updatedTaskIds;
-        $calendar['currentDay']         = date('d');
+        $calendar['currentDay']         = date('Y') === $tempYear && date('n') === $tempMonth? date('d') : '';
 
         $this->set('calendar', $calendar);  
 

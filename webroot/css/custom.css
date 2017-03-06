@@ -292,11 +292,15 @@ hr.style-five:after { /* Not really supposed to work, but does */
     overflow: hidden;
 }
 
+#event-calendar .day div{
+    height: 100px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
 
 #event-calendar ul{
     font-size: 1.25rem;
 }
-
 
 #event-calendar ul>li>ul{
     padding-left: 1rem;
@@ -307,16 +311,21 @@ hr.style-five:after { /* Not really supposed to work, but does */
     margin-bottom: 2rem;
 }
 
-#notifications .unread{
+#notifications-all {
+    max-height: 50vh;
+    margin-bottom: 2rem;
+}
+
+#notifications .unread, #notifications-all .unread {
     border: 1px solid red;
 }
 
-#notifications .notification {
+#notifications .notification, #notifications-all .notification {
     margin: 1rem 0;
     padding: 1rem;
 }
 
-#notifications .notification p{
+#notifications .notification p, #notifications-all .notification p {
     color: #000;
 }
 

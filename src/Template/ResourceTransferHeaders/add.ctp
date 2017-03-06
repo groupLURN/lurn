@@ -69,21 +69,23 @@
                     call_user_func(function($equipmentInventories) use ($request_detail)
                     {
                         $list = [];
-                        foreach($equipmentInventories as $equipmentInventory)
+                        foreach($equipmentInventories as $equipmentInventory){
                             if(
                                 $equipmentInventory->rental_receive_detail_id === null ||
                                 $equipmentInventory->rental_receive_detail_id !== null &&
                                 $equipmentInventory->has('rental_receive_detail')
-                            )
+                            ) {
                             $list[$equipmentInventory->id] =
                                 (
-                                    !$equipmentInventory->has('rental_receive_detail')? 'In-House':
+                                    !$equipmentInventory->has('rental_receive_detail') ? 'In-House':
                                     'Rental ' . $equipmentInventory->rental_receive_detail->rental_receive_header_id
                                 ) . ' / ' . $equipmentInventory->id . ' - ' . $request_detail->equipment->name;
+                            }
+                        }
                         return $list;
                     }, $request_detail->equipment['equipment_general_inventories'])
             ];
-        }, isset($selectedResourceRequestHeader->equipment_request_details)? $selectedResourceRequestHeader->equipment_request_details: [])
+        }, isset($selectedResourceRequestHeader->equipment_request_details) ? $selectedResourceRequestHeader->equipment_request_details: [])
     ]) ?>
 
     <?= $this->element('paned_multi_select', [

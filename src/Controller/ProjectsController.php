@@ -91,7 +91,7 @@ class ProjectsController extends AppController
 		} else if (in_array($action, ['edit', 'delete']))
 		{	
 			return ($isUserAssigned && $isProjectManager) || $isOwner || $isAdmin;
-		} else if (in_array($action, ['view']))
+		} else if (in_array($action, ['view', 'download']))
 		{
 			return $isUserAssigned || $isAdmin || $isOwner || $isProjectManager;
 		}

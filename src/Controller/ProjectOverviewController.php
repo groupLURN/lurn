@@ -37,6 +37,7 @@ class ProjectOverviewController extends AppController
         $employeeTypeId = isset($user['employee']['employee_type_id'])
             ? $user['employee']['employee_type_id'] : '';
         $isAdmin = $employeeTypeId === 0;
+        $isOwner = $employeeTypeId === 1;
 
         $isProjectManager = $this->Projects->Employees->find()
         ->contain(['Users'])
@@ -64,7 +65,7 @@ class ProjectOverviewController extends AppController
             ->first() !== null;
         }
         
-        return ($isUserAssigned && $isProjectManager) || $isUserAssigned || $isAdmin;
+        return ($isUserAssigned && $isProjectManager) || $isOwner || $isAdmin;
     }
 
     /**
@@ -168,6 +169,30 @@ class ProjectOverviewController extends AppController
                     $notification->user_id = $employee['user_id'];
                     $notification->project_id = $project->id;
                     $this->Notifications->save($notification);
+                }
+
+                $this->loadModel('EquipmentInventories');
+                $equipmentInventories = $this->EquipmentInventories->find()
+                    ->where([
+                        'project_id' => $projectId
+                    ])
+                    ->toArray();
+                foreach($equipmentInventories as $equipmentInventory)
+                {
+                    $equipmentInventory->project_id = null;
+                    $this->EquipmentInventories->save($equipmentInventory, ['atomic' => false]);
+                }
+
+                $this->loadModel('Manpower');
+                $manpower = $this->Manpower->find()
+                    ->where([
+                        'project_id' => $projectId
+                    ])
+                    ->toArray();
+                foreach($manpower as $manpower_)
+                {
+                    $manpower_->project_id = null;
+                    $this->Manpower->save($manpower_, ['atomic' => false]);
                 }
 
                 $this->Flash->success(__('The project has been marked as finished.'));

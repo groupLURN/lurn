@@ -203,6 +203,9 @@ class TasksController extends AppController
 
         $this->Tasks->computeForTaskReplenishment($task);
 
+        debug($task);
+        die();
+
         $this->set('task', $task);
         $this->set('_serialize', ['task']);
     }
@@ -295,7 +298,7 @@ class TasksController extends AppController
                     $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'tasks', 
                         'action' => 'view-finished/'.$task->id.'?project_id='.$project->id ], false));
                     $notification->link = $link;
-                    $notification->message = $task->title.' has been completed.';
+                    $notification->message = 'The task <b>'.$task->title.'</b> has been completed.';
                     $notification->user_id = $employee['user_id'];
                     $notification->project_id = $project->id;
                     $this->Notifications->save($notification);

@@ -65,9 +65,9 @@ class ResourceRequestHeadersController extends AppController
         if ($this->request->is('post')) {
             $postData = $this->request->data;
 
-            $equipmentData      = $postData['equipment'];
-            $manpowerTypeData   = $postData['manpower_types'];
-            $materialsData      = $postData['materials'];
+            $equipmentData      = isset($postData['equipment']) ? $postData['equipment'] : [];
+            $manpowerTypeData   = isset($postData['manpower_types']) ? $postData['manpower_types'] : [];
+            $materialsData      = isset($postData['materials']) ? $postData['materials'] : [];
 
             $count = count($equipmentData['id']);
             for ($i=0; $i < $count; $i++) { 
@@ -172,13 +172,22 @@ class ResourceRequestHeadersController extends AppController
                 $this->Flash->error(__('The resource request header could not be saved. Please, try again.'));
             }
         }
+        
+        $user = $this->Auth->user();
+        $employeeTypeId = $user['employee']['employee_type_id'];
 
-        $projects = $this->ResourceRequestHeaders->ProjectTo->find('list', ['limit' => 200])
-        ->matching('EmployeesJoin.Users', function($query)
-        {
-            return $query->where(['Users.id' => $this->userId]);
-        })
-        ->toArray();
+        $projects = [];
+        if ($employeeTypeId === 0) {
+            $projects = $this->ResourceRequestHeaders->ProjectTo->find('list', ['limit' => 200])
+                ->toArray();
+        } else {
+            $projects = $this->ResourceRequestHeaders->ProjectTo->find('list', ['limit' => 200])
+            ->matching('EmployeesJoin.Users', function($query)
+            {
+                return $query->where(['Users.id' => $this->Auth->user('id')]);
+            })
+            ->toArray();
+        }
 
         $materials = TableRegistry::get('Materials')->find('list', ['limit' => 200]);
         $equipment = TableRegistry::get('Equipment')->find('list', ['limit' => 200]);

@@ -214,6 +214,9 @@
 </div>
 
 
+<?php
+    if (in_array($employeeType, [0, 1, 2], true))  {
+?>
 <div id="finish-project" class="modal fade" role="dialog">
   <div class="modal-content">
         <div class="modal-header">
@@ -243,6 +246,7 @@
                     'label' => [ 
                         'class' => 'mt'
                     ],
+                    'default' => $project->project_phase->id,
                     'options' => $projectPhases
                 ]);?>
         </div>
@@ -253,4 +257,7 @@
     </div>
 </div>
 
+<?php 
+    }
+?>
 

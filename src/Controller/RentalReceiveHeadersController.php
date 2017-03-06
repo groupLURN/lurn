@@ -144,8 +144,9 @@ class RentalReceiveHeadersController extends AppController
         });
 
         $rentalRequestHeaders = [];
-        foreach($incompleteRequests as $incompleteRequest)
+        foreach($incompleteRequests as $incompleteRequest) {
             $rentalRequestHeaders[$incompleteRequest->id] = $incompleteRequest->id;
+        }
 
         $this->set(compact('rentalReceiveHeader', 'rentalRequestHeaders', 'equipment'));
         $this->set('_serialize', ['rentalReceiveHeader', 'rentalRequestHeaders', 'equipment']);

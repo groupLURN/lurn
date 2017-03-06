@@ -210,8 +210,17 @@ class ProjectsTable extends Table
     public function findById(Query $query, array $options)
     {
         if($options['project_id'] > 0)
-            return $query->contain(['Clients', 'Milestones' => ['Tasks'], 'Employees',  
-                'EmployeesJoin' => ['EmployeeTypes'], 'ProjectPhases', 'ProjectsFiles'])
+            return $query
+                ->contain(
+                    [
+                        'Clients', 
+                        'Milestones' => ['Tasks'], 
+                        'Employees',  
+                        'EmployeesJoin' => ['EmployeeTypes'], 
+                        'ProjectPhases', 
+                        'ProjectsFiles'
+                    ]
+                )
                 ->where(['Projects.id' => $options['project_id']]);
         return $query;
     }

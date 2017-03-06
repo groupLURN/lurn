@@ -232,8 +232,12 @@ class ResourceRequestHeadersTable extends Table
         $resourceRequestHeaders = $this
             ->find()
             ->contain([
-                'EquipmentRequestDetails' => ['Equipment' => [
-                    'EquipmentGeneralInventories' => ['RentalReceiveDetails']]
+                'EquipmentRequestDetails' => [
+                    'Equipment' => [
+                        'EquipmentGeneralInventories' => [
+                            'RentalReceiveDetails' 
+                        ]
+                    ]
                 ],
                 'ManpowerRequestDetails' => ['ManpowerTypes' => ['ManpowerGeneralInventories']],
                 'MaterialRequestDetails' => ['Materials' => ['MaterialsGeneralInventories']],
@@ -245,8 +249,10 @@ class ResourceRequestHeadersTable extends Table
             ])
             ->toArray();
 
-        foreach($resourceRequestHeaders as $resourceRequestHeader)
+
+        foreach($resourceRequestHeaders as $resourceRequestHeader) {
             $this->computeQuantityRemaining($resourceRequestHeader);
+        }
 
         $collection = new Collection($resourceRequestHeaders);
         $incompleteRequests = $collection->filter(function ($request, $key) {

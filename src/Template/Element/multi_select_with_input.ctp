@@ -28,7 +28,7 @@ for ($i = 0; $i < count($namespaces); $i++)
             <?= $this->Form->input($resource.'-list', [
                 'label' => false,
                 'type' => 'select',
-                'data-placeholder' => 'No ' . $resource,
+                'data-placeholder' => 'No ' . __($resource),
                 'class' => 'chosen resource form-control',
                 'options' => $options
             ]) ?>

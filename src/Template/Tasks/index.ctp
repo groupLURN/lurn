@@ -105,6 +105,7 @@
                                         if(!$task->is_finished){ 
                                             echo $this->dataTableViewButton(__('View'), 
                                                 ['action' => 'view', $task->id, '?' => ['project_id' => $projectId]]);
+                                            echo h(' ');
                                             echo $this->dataTableEditButton(__('Assign Resources'), ['action' => 'edit', $task->id, '?' => ['project_id' => $projectId]]);
                                         } else { 
                                             echo $this->dataTableViewButton(__('View'), 

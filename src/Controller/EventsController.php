@@ -89,7 +89,7 @@ class EventsController extends AppController
                                 $updatedTaskIds[$noOfWeeks][$dayOfTheWeek] = [];
                             }
 
-                            $update = ' - '.$project->title.'<br>&nbsp;&nbsp;+  '.$latestMilestone->title;
+                            $update = ' - '.$project->title.'<br>&nbsp;&nbsp;&nbsp;&nbsp;+  '.$latestMilestone->title;
                             array_push($updates[$noOfWeeks][$dayOfTheWeek],  $update);
                             array_push($updatedProjectIds[$noOfWeeks][$dayOfTheWeek],  $project->id); 
                             array_push($updatedTaskIds[$noOfWeeks][$dayOfTheWeek],  $project['updatedTasks'][$i]['id']);             

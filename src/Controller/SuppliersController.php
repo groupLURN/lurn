@@ -31,7 +31,9 @@ class SuppliersController extends AppController
                 'Supplier.name' => 'asc'
             ]
         ];
+
         $this->paginate += $this->createFinders($this->request->query);
+
         $this->set($this->request->query);
         $this->set('suppliers', $this->paginate($this->Suppliers));
         $this->set('_serialize', ['suppliers']);
@@ -76,8 +78,14 @@ class SuppliersController extends AppController
                 $this->Flash->error(__('The supplier could not be saved. Please, try again.'));
             }
         }
-        $this->set(compact('supplier'));
-        $this->set('_serialize', ['supplier']);
+        $this->loadModel('Materials');
+        $this->loadModel('Equipment');
+
+        $materials = $this->Materials->find('list')->toArray();
+        $equipment = $this->Equipment->find('list')->toArray();
+
+        $this->set(compact('supplier', 'materials', 'equipment'));
+        $this->set('_serialize', ['supplier', 'materials', 'equipment']);
     }
 
     /**

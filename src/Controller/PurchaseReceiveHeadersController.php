@@ -15,14 +15,9 @@ class PurchaseReceiveHeadersController extends AppController
 {
     public function isAuthorized($user)
     {        
-        $action = $this->request->params['action'];
         $employeeTypeId = isset($user['employee']['employee_type_id'])
             ? $user['employee']['employee_type_id'] : '';
-
-        if ($action === 'view') {
-            return in_array($employeeTypeId, [0, 2, 4], true);
-        }
-        
+            
         return in_array($employeeTypeId, [0, 4], true);
     }
     

@@ -15,14 +15,30 @@ table {
     padding-left: 10px;
     text-align: left;
 }
+
 .text-right {
     padding-right: 10px;
     text-align: right;
 }
 
-
 .float-right {
     float: right;
+}
+
+.border-bottom {
+    border-bottom: 1px solid black;
+}
+
+.purchase-order {
+    border-collapse: collapse;
+    table-layout:fixed;
+    padding: 0px;
+}
+
+.purchase-order td, .purchase-order th{
+    font-size: .75em !important;
+    height: .8em;
+    padding: 0px;
 }
 
 .body table {

@@ -28,6 +28,30 @@ class SuppliersTable extends Table
 		$this->displayField('name');
 		$this->primaryKey('id');
 
+        $this->hasMany('MaterialsSuppliers', [
+            'className' => 'MaterialsSuppliers',
+            'foreignKey' => 'supplier_id'
+        ]);
+
+        $this->hasMany('EquipmentSuppliers', [
+            'className' => 'EquipmentSuppliers',
+            'foreignKey' => 'supplier_id'
+        ]);
+
+        $this->belongsToMany('Materials', [
+            'className' => 'Materials',
+            'foreignKey' => 'supplier_id',
+            'targetForeignKey' => 'material_id',
+            'joinTable' => 'materials_suppliers'
+        ]);
+
+        $this->belongsToMany('Equipment', [
+            'className' => 'Equipment',
+            'foreignKey' => 'supplier_id',
+            'targetForeignKey' => 'equipment_id',
+            'joinTable' => 'equipment_suppliers'
+        ]);
+
 		$this->addBehavior('Timestamp');
 
 	}

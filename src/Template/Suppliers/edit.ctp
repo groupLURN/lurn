@@ -8,23 +8,48 @@
             echo $this->Form->input('name', [
                 'class' => 'form-control'
             ]);
+
             echo $this->Form->input('contact_number', [
                 'class' => 'form-control',
                 'label' => [
                     'class' => 'mt'
                 ]
             ]);
+
             echo $this->Form->input('email', [
                 'class' => 'form-control',
                 'label' => [
                     'class' => 'mt'
                 ]
             ]);
+
             echo $this->Form->input('address', [
                 'class' => 'form-control',
                 'label' => [
                     'class' => 'mt'
                 ]
+            ]);
+            
+            echo $this->Form->input('equipment', [
+                'class' => 'form-control chosen',
+                'data-placeholder' => '-Add Equipment-',
+                'default' => $supplier->equipment,
+                'label' => [
+                    'class' => 'mt'
+                ],
+                'multiple' => true,
+                'options' => $equipment
+            ]);
+
+            echo $this->Form->input('materials', [
+                'class' => 'form-control chosen',
+                'data-placeholder' => '-Add Materials-',
+                'default' => $supplier->materials,
+                'label' => [
+                    'class' => 'mt'
+                ],
+                'multiple' => true,
+                'options' => $materials
             ]);
             ?>
         </fieldset>

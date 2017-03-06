@@ -74,7 +74,7 @@ class ResourceRequestHeadersController extends AppController
             $manpowerTypeData   = isset($postData['manpower_types']) ? $postData['manpower_types'] : [];
             $materialsData      = isset($postData['materials']) ? $postData['materials'] : [];
 
-            $count = count($equipmentData['id']);
+            $count = isset($equipmentData['id']) ? count($equipmentData['id']) : 0;
             for ($i=0; $i < $count; $i++) { 
                 $id         = $equipmentData['id'][$i];
                 $quantity   = $equipmentData['_joinData'][$i]['quantity'];
@@ -92,7 +92,7 @@ class ResourceRequestHeadersController extends AppController
                 }
             }
 
-            $count = count($manpowerTypeData['id']);
+            $count = isset($manpowerTypeData['id']) ? count($manpowerTypeData['id']) : 0;
             for ($i=0; $i < $count; $i++) { 
                 $id         = $manpowerTypeData['id'][$i];
                 $quantity   = $manpowerTypeData['_joinData'][$i]['quantity'];
@@ -114,7 +114,7 @@ class ResourceRequestHeadersController extends AppController
             }
 
 
-            $count = count($materialsData['id']);
+            $count = isset($materialsData['id']) ? count($materialsData['id']) : 0;
             for ($i=0; $i < $count; $i++) { 
                 $id         = $materialsData['id'][$i];
                 $quantity   = $materialsData['_joinData'][$i]['quantity'];

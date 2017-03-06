@@ -160,8 +160,8 @@ $(function(){
 				var manpowerTypes = data;
 
 				for(var i=0; i < manpowerTypes.length; i++) {
-					var manpowerTypeId = manpowerTypes[i].id;
-					var manpowerTypeName = manpowerTypes[i].manpower_type.title;
+					var manpowerTypeId 					= manpowerTypes[i].manpower_type_id;
+					var manpowerTypeName 				= manpowerTypes[i].manpower_type.title;
 					var manpowerTypeGeneralInventory 	= parseInt(manpowerTypes[i].general_inventory_quantity);
 					var manpowerTypeProjectInventory 	= parseInt(manpowerTypes[i].project_inventory_quantity);
 					var manpowerTypeQuantityNeeded 		= parseInt(manpowerTypes[i].quantity);

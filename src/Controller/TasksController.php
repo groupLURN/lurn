@@ -203,9 +203,6 @@ class TasksController extends AppController
 
         $this->Tasks->computeForTaskReplenishment($task);
 
-        debug($task);
-        die();
-
         $this->set('task', $task);
         $this->set('_serialize', ['task']);
     }

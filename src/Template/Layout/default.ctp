@@ -121,12 +121,12 @@ $this->start('additional-sidebar');
         <?php 
             if (in_array($employeeType, [0, 2], true)) {
         ?>
-        <li><a href=<?= $this->Url->build(['controller' => 'ResourceRequestHeaders']) ?>>Create Resources Request</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'ResourceRequestHeaders', 'action' => 'index']) ?>>Create Resources Request</a></li>
         <?php 
             }
             if (in_array($employeeType, [0, 4], true)) {
         ?>
-        <li><a href=<?= $this->Url->build(['controller' => 'ResourceTransferHeaders']) ?>>Create Resources Transfer</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'ResourceTransferHeaders', 'action' => 'index']) ?>>Create Resources Transfer</a></li>
         <?php 
             }
         ?>
@@ -149,9 +149,9 @@ $this->start('additional-sidebar');
         <?php 
             if (in_array($employeeType, [0, 4], true)) {
         ?>
-        <li><a href=<?= $this->Url->build(['controller' => 'EquipmentGeneralInventoryReport']) ?>>Equipment Inventory Report</a></li>
-        <li><a href=<?= $this->Url->build(['controller' => 'MaterialsGeneralInventoryReport']) ?>>Materials Inventory Report</a></li>
-        <li><a href=<?= $this->Url->build(['controller' => 'ManpowerGeneralInventoryReport']) ?>>Manpower Inventory Report</a></li> 
+        <li><a href=<?= $this->Url->build(['controller' => 'EquipmentGeneralInventoryReport', 'action' => 'index']) ?>>Equipment Inventory Report</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'MaterialsGeneralInventoryReport', 'action' => 'index']) ?>>Materials Inventory Report</a></li>
+        <li><a href=<?= $this->Url->build(['controller' => 'ManpowerGeneralInventoryReport', 'action' => 'index']) ?>>Manpower Inventory Report</a></li> 
         <?php 
             }
         ?>    

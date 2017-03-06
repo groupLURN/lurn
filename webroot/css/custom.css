@@ -330,10 +330,21 @@ hr.style-five:after { /* Not really supposed to work, but does */
 }
 
 #notification-badge {
-    background-color: #ffd777;
+    background-color: #FF7A77;
     color: #797979;
     display: none;
     margin-right: 1rem;
+}
+
+#project-status-badge {
+    border-radius: 50%;
+    behavior: url(PIE.htc); 
+
+    background-color: #DE4F4B;
+    color: #f2f2f2;
+    display: inline-block;
+    text-align: center;
+    width: 26px;
 }
 
 th.rotate {

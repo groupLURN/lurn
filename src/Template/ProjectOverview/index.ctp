@@ -32,7 +32,12 @@
     }
 ?>
 <div class="projects view large-9 medium-8 columns content">
-    <h3><?= h($project->title) ?></h3>
+    <h3>
+        <span id="project-status-badge">
+            <?= $project->status === 'Delayed' ? '!' : '' ?>
+        </span>
+        <?= h($project->title) ?>        
+    </h3>
     <table class="vertical-table table table-striped">
         <tr>
             <th><?= __('Title') ?></th>

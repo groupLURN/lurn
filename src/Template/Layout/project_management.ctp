@@ -26,8 +26,7 @@ $this->start('additional-sidebar');
 </li>
 <?php 
     }
-?>
-<?php 
+     
     if (in_array($employeeType, [0, 1, 2], true)) {
 ?>
 <li class="sub-menu">

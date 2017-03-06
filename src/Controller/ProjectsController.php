@@ -65,7 +65,7 @@ class ProjectsController extends AppController
 
 		$isUserAssigned = false;
 
-		if ($action != 'index') {
+		if (!in_array($action, ['index', 'add'])) {
 			$projectId = $this->request->params['pass'][0];
 
             if ($user['user_type_id'] === 2) {                

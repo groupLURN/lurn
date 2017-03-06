@@ -330,7 +330,7 @@ hr.style-five:after { /* Not really supposed to work, but does */
 }
 
 #notification-badge {
-    background-color: #FF7A77;
+    background-color: #ffd777;
     color: #797979;
     display: none;
     margin-right: 1rem;

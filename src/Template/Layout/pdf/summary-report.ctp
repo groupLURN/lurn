@@ -60,16 +60,23 @@ $this->Html->css('pdf', ['block' => true, 'fullBase' => true]);
 <br>
 <br>
 <br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 <div class="footer">
     <div>
-        <h2><i>Authorized By:</i></h2>
+        <h3>Authorized By:</h3>
         <div class="signatory">
             <div>________________________________________</div>
-            <div><i class="text">Signature over printed name</i><div>
+            <div>Signature over printed name<div>
         </div>
         <div class="signatory">
             <div>________________________________________</div>
-            <div><i class="text">Position in the company</i></div>
+            <div>Position in the Company</div>
         </div>
     </div>
 </div>

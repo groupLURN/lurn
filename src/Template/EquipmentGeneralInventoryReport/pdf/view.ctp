@@ -1,6 +1,6 @@
 <?= $this->assign('title', 'General Equipment Inventory Report') ?>
 <?php if (sizeOf($equipment) > 0): ?>
-<table cellspacing="0" class="table table-striped report">
+<table cellspacing="0" class="report text-center">
     <thead>
         <tr>
             <th><?= __('Name') ?></th>

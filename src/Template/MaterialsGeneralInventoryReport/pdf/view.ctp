@@ -1,10 +1,10 @@
 <?= $this->assign('title', 'General Materials Inventory Report') ?>
 <?php if (sizeOf($materials) > 0): ?>
-<table cellspacing="0" class="table table-striped report">
+<table cellspacing="0" class="report text-center">
     <thead>
         <tr>
             <th><?= __('Name') ?></th>
-            <th><?= __('Unit Measure') ?></th>
+            <th><?= __('Unit') ?></th>
             <th><?= __('Available Quantity') ?></th>
             <th><?= __('Unavailable Quantity')?></th>
             <th><?= __('Total Quantity') ?></th>

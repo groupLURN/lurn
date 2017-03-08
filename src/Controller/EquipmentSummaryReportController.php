@@ -144,6 +144,7 @@ class EquipmentSummaryReportController extends AppController
         $this->viewBuilder()->options([
             'pdfConfig' => [
                 'orientation' => 'landscape',
+                'pageSize' => 'Letter',
                 'filename' => 'General_materials_Inventory_Report_' . $currentDate . '.pdf',
                 'download' => $download
             ]           

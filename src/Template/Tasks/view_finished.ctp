@@ -3,10 +3,10 @@
 <div class="row mt">
     <div class="col-xs-12">
         <?= $this->Form->button('<i class="fa fa-save"></i> Save as PDF', 
-            array('onclick' => "location.href='" . $this->Url->build('/tasks/generate-report/'.$task->id.'/1.pdf?project_id=').$projectId."'",
+            array('onclick' => "location.href='" . $this->Url->build('/tasks/generate-report/'.$task->id.'/1?project_id=').$projectId."'",
             'class' => 'btn btn-primary')); ?>
         <?= $this->Form->button('<i class="fa fa-print"></i> Print', 
-            array('onclick' => "location.href='" . $this->Url->build('/tasks/generate-report/'.$task->id.'/0.pdf?project_id=').$projectId."'",
+            array('onclick' => "location.href='" . $this->Url->build('/tasks/generate-report/'.$task->id.'/0?project_id=').$projectId."'",
             'class' => 'btn btn-warning')); ?>
     </div>
 </div>

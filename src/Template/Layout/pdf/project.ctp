@@ -26,7 +26,7 @@ $this->Html->css('pdf', ['block' => true, 'fullBase' => true]);
 <body>
 <div class="horizontal-header">
     <?= $this->Html->image('logo.jpg', array('fullBase' => true)) ?>
-    <span>J. I. Espino Construction</span>
+    <span>J.I. Espino Construction</span>
 </div>
 
 <hr>
@@ -45,7 +45,7 @@ $this->Html->css('pdf', ['block' => true, 'fullBase' => true]);
 
 <div class="horizontal-header">
     <?= $this->Html->image('logo.jpg', array('fullBase' => true)) ?>
-    <span>J. I. Espino Construction</span>
+    <span>J.I. Espino Construction</span>
 </div>
 
 <hr>
@@ -94,7 +94,7 @@ $this->Html->css('pdf', ['block' => true, 'fullBase' => true]);
     <br>
     <table class="signatory text-center">
         <tr>
-            <th class="text-left" style="width: 150px;">Prepared by:</th>
+            <th class="text-left" style="width: 150px;">Noted by:</th>
             <td>________________________________</td>
         </tr>
         <tr>

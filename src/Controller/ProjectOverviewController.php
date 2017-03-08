@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Controller\AppController;
 use Cake\Routing\Router;
 use Cake\Event\Event;
+use DateTime;
 
 /**
  * ProjectPlanning Controller
@@ -233,6 +234,39 @@ class ProjectOverviewController extends AppController
                 $this->Flash->error(__('The project could not change phase.'));
             }
         }
+    }
+
+    public function generateCertificate($projectId, $download = null){
+        $this->viewBuilder()->layout('certificate');
+
+        $project = $this->Projects->find('byId', ['project_id' => $projectId])->first();
+
+        if($project->is_finished == 0) {
+            $this->Flash->error(__('The project must finished to create a certificate of completion.'));
+            return $this->redirect(['action' => 'index', $projectId]);
+        }
+
+        $guarantee = $project->modified->modify('+12 months')->modify('-1 day');
+
+        $project->guarantee = $guarantee;
+
+        $this->set('project', $project);
+
+        if ($download == 1){
+            $download = true;
+        }else{
+            $download = false;
+        }
+
+        $this->viewBuilder()->options([
+            'pdfConfig' => [
+                'orientation' => 'portrait',
+                'pageSize' => 'Letter',
+                'filename' => 'Certificate_of_Completion (' . $project->title . ').pdf',
+                'download' => $download
+            ]           
+        ])->template('pdf'); 
+
     }
 
     private function isProjectDone(){

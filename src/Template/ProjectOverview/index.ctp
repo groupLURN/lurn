@@ -24,6 +24,17 @@
         <?= $this->Form->end() ?>
     <?php 
         }
+
+        if ($project->is_finished == 1) {
+    ?> 
+        <?= $this->Form->button('<i class="fa fa-save"></i> Save Certificate of Completion', 
+            array('onclick' => "location.href='" . $this->Url->build('/project-overview/generate-certificate/'.$projectId.'/1.pdf'). "'",
+            'class' => 'btn btn-primary')); ?>
+        <?= $this->Form->button('<i class="fa fa-print"></i> Print Certificate of Completion', 
+            array('onclick' => "location.href='" . $this->Url->build('/project-overview/generate-certificate/'.$projectId.'/0.pdf'). "'",
+            'class' => 'btn btn-warning')); ?>
+    <?php 
+        }
     ?>
 
     </div>
@@ -33,7 +44,9 @@
 ?>
 <div class="projects view large-9 medium-8 columns content">
     <h3>
-        <span id="project-status-badge">
+        <span id="project-status-badge" class="
+            <?= $project->status !== 'Delayed' ? 'hidden' : '' ?>
+        ">
             <?= $project->status === 'Delayed' ? '!' : '' ?>
         </span>
         <?= h($project->title) ?>        

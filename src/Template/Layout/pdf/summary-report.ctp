@@ -53,6 +53,9 @@ $this->Html->css('pdf', ['block' => true, 'fullBase' => true]);
     </h3>
     <br>
 </div>
+
+<hr>
+
 <br>
 <br>
 <br>
@@ -63,22 +66,56 @@ $this->Html->css('pdf', ['block' => true, 'fullBase' => true]);
 <br>
 <br>
 <br>
-<br>
-<br>
-<br>
-<br>
-<div class="footer">
-    <div>
-        <h3>Authorized By:</h3>
-        <div class="signatory">
-            <div>________________________________________</div>
-            <div>Signature over printed name<div>
-        </div>
-        <div class="signatory">
-            <div>________________________________________</div>
-            <div>Position in the Company</div>
-        </div>
-    </div>
+
+<div>
+    <table class="signatory text-center">
+        <tr>
+            <th class="text-left" style="width: 150px;">Prepared by:</th>
+            <td>________________________________</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>Signature over printed name</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>________________________________</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>Position in the company</td>
+        </tr>
+    </table>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <table class="signatory text-center">
+        <tr>
+            <th class="text-left" style="width: 150px;">Noted by:</th>
+            <td>________________________________</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>Signature over printed name</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>________________________________</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>Position in the company</td>
+        </tr>
+    </table>
 </div>
 
 </body>

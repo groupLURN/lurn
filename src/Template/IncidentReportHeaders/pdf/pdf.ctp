@@ -1,7 +1,5 @@
 <?= $this->assign('title', 'Incident Report') ?>
 
-<?= $this->Html->image('logo.jpg', array('class' => 'float-right')) ?>
-
 <h3>Project Details</h3>
 <table class="table report text-left incident-report">
     <tr>
@@ -65,7 +63,7 @@
 
 <div class="header">
     <?= $this->Html->image('logo.jpg', array('fullBase' => true)) ?>
-    <span>J. I. Espino Construction</span>
+    <span>J.I. Espino Construction</span>
 </div>
 
 <hr>

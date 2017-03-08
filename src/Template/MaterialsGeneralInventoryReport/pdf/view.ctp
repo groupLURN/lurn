@@ -20,7 +20,7 @@
             <td><?= $this->Number->format($material->total_quantity) ?></td>
         </tr>
         <?php endforeach; ?>
-</tbody>
+    </tbody>
 </table>
 <?php else: ?>
 <p>No data available.</p>

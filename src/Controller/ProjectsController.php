@@ -238,8 +238,8 @@ class ProjectsController extends AppController
 			$postData = $this->request->data;
 
 			$postData['employees_join']['_ids'] = [];
-			array_push($postData['employees_join']['_ids'], $postData['project-engineer']);
-			array_push($postData['employees_join']['_ids'], $postData['warehouse-keeper']);
+			array_push($postData['employees_join']['_ids'], $postData['project_engineer']);
+			array_push($postData['employees_join']['_ids'], $postData['warehouse_keeper']);
 
 			$project = $this->Projects->patchEntity($project, $postData);		
 
@@ -260,6 +260,13 @@ class ProjectsController extends AppController
 					$notification->message = 'You have been added to the <b>'.$project->title.'</b> project.';
 					$notification->user_id = $employee['user_id'];
 					$notification->project_id = $project->id;
+
+					if (in_array($employee['employee_type_id'], [0, 1, 2])) {						
+						$notification->message .= ' You can now create a gantt chart for this project.';
+					} else {
+						$notification->message .= ' You can now create a gantt chart for this project.';
+					}
+
 					$this->Notifications->save($notification);
 				}
 				
@@ -270,11 +277,12 @@ class ProjectsController extends AppController
 
 				$this->Project->uploadFiles($files, $project);
 
-				$this->Flash->success(__('The project has been saved.'));
+				$this->Flash->success(__('The project has been created.'
+					.' You can now create a gantt chart for this project.'));
 				return $this->redirect(['action' => 'index']);
 
 			} else {
-				$this->Flash->error(__('The project could not be saved. Please, try again.'));
+				$this->Flash->error(__('The project could not be created. Please, try again.'));
 			}
 
 		}
@@ -318,8 +326,9 @@ class ProjectsController extends AppController
 			$postData = $this->request->data;
 
 			$postData['employees_join']['_ids'] = [];
-			array_push($postData['employees_join']['_ids'], $postData['project-engineer']);
-			array_push($postData['employees_join']['_ids'], $postData['warehouse-keeper']);
+			array_push($postData['employees_join']['_ids'], $postData['project_engineer']);
+			array_push($postData['employees_join']['_ids'], $postData['project_manager_id']);
+			array_push($postData['employees_join']['_ids'], $postData['warehouse_keeper']);
 
 			$project = $this->Projects->patchEntity($project, $postData);	
 

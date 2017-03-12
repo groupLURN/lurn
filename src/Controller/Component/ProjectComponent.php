@@ -38,6 +38,32 @@ class ProjectComponent extends Component
 	public function uploadFiles($files = [], $project = null, $options = [])
 	{
 		$originalFilesDb 	= count($project->projects_files) > 0 ? $project->projects_files : [];
+
+
+
+		$duplicateKeys = [];
+		for ($i = 0; $i < count($files['files']); $i++) {
+			$fileInfo 		= pathinfo($files['files'][$i]['name']);
+			$fileName 		= $fileInfo['filename'];
+			$fileNameFull 	= $fileInfo['basename'];
+			for ($j = 0; $j < count($files['files']); $j++) {
+				if ($i < $j) {
+					$fileInfo2 		= pathinfo($files['files'][$j]['name']);
+					$fileName2 		= $fileInfo2['filename'];
+					$fileNameFull2 	= $fileInfo2['basename'];
+
+					if ($fileNameFull == $fileNameFull2) {
+						array_push($duplicateKeys, $j);
+					}			
+				}
+			}
+
+		}
+
+		foreach ($duplicateKeys as $duplicateKey) {
+			unset($files['files'][$duplicateKey]);
+		}
+
 		if(isset($options['update']) && $options['update'])
 		{
 			$originalFiles 			= isset($options['uploaded_files']) 
@@ -46,18 +72,6 @@ class ProjectComponent extends Component
 				? $options['uploaded_file_labels'] : [];
 
 			$deleteFromDb 	= $originalFiles;
-
-			foreach ($deleteFromDb as $key => $value)
-			{	
-				$file = $value;	
-				foreach ($originalFilesDb as $fileDb)
-				{					
-					if ($file == $fileDb->id)
-					{	
-						unset($deleteFromDb[$key]);
-					}
-				}	
-			}
 
 			foreach ($originalFilesDb as $fileDb)
 			{	
@@ -73,8 +87,8 @@ class ProjectComponent extends Component
 				{
 					foreach ($deleteFromDb as $key => $value)
 					{	
-						$file = $value;			
-						if ($file == $fileDb->id)
+						$fileId = $value;
+						if (!in_array($fileDb->id, $deleteFromDb))
 						{	
 							$directory = $fileDb->file_location
 								.$fileDb->file_name.'.'
@@ -108,6 +122,8 @@ class ProjectComponent extends Component
 							$directory = $fileDb->file_location
 								.$fileDb->file_name.'.'
 								.$fileDb->file_type;
+
+							$this->ProjectsFiles->delete($fileDb);
 							unset($fileDb);
 							$this->delete($directory);
 						}
@@ -131,30 +147,6 @@ class ProjectComponent extends Component
 					}
 				}
 			}
-		}
-
-		debug($files['files']);
-		$duplicateKeys = [];
-		for ($i = 0; $i < count($files['files']); $i++) {
-			$fileInfo 		= pathinfo($files['files'][$i]['name']);
-			$fileName 		= $fileInfo['filename'];
-			$fileNameFull 	= $fileInfo['basename'];
-			for ($j = 0; $j < count($files['files']); $j++) {
-				if ($i < $j) {
-					$fileInfo2 		= pathinfo($files['files'][$j]['name']);
-					$fileName2 		= $fileInfo['filename'];
-					$fileNameFull2 	= $fileInfo['basename'];
-
-					if ($fileNameFull == $fileNameFull2) {
-						array_push($duplicateKeys, $j);
-					}			
-				}
-			}
-
-		}
-
-		foreach ($duplicateKeys as $duplicateKey) {
-			unset($files['files'][$duplicateKey]);
 		}
 
 		$i = 0;

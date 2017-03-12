@@ -63,7 +63,7 @@
             <h4>Core Team Assignment</h4>
 
             <?php
-                echo $this->Form->input('project-engineer', [
+                echo $this->Form->input('project_engineer', [
                     'class' => 'form-control',
                     'default' => $projectEngineer,
                     'label' => [
@@ -72,7 +72,7 @@
                     'options' => [''=>'-Add a Project Engineer-']+$projectEngineers
                 ]);
 
-                echo $this->Form->input('warehouse-keeper', [
+                echo $this->Form->input('warehouse_keeper', [
                     'class' => 'form-control',
                     'default' => $warehouseKeeper,
                     'label' => [

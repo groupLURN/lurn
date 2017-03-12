@@ -81,6 +81,7 @@
                                     rawurldecode(
                                         $this->Url->build([
                                             'action' => 'download',
+                                            $project->id,
                                             'file' => $file->file_location.$file->file_name.'.'.$file->file_type
                                         ])
                                     )

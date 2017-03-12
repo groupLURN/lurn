@@ -1,6 +1,6 @@
 <?= $this->assign('title', 'General Manpower Inventory Report') ?>
 <?php if (sizeOf($manpower) > 0): ?>
-<table cellspacing="0" class="table table-striped report">
+<table cellspacing="0" class="report text-center">
     <thead>
         <tr>
             <th><?= __('Manpower Type') ?></th>

@@ -287,6 +287,7 @@ class IncidentReportHeadersController extends AppController
         $this->viewBuilder()->options([
             'pdfConfig' => [
                 'orientation' => 'portrait',
+                'pageSize' => 'Letter',
                 'filename' => 'Incident_Report_' . $currentDate . '.pdf',
                 'download' => $download
             ]           

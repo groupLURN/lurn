@@ -24,61 +24,92 @@ $this->Html->css('pdf', ['block' => true, 'fullBase' => true]);
 </head>
 
 <body>
-
-<div class="header">
-    <?= $this->Html->image('logo.jpg', array('fullBase' => true, 'class' => 'float-right')) ?>
-    <h3 class="text-left">
-        <?php foreach ($projects as $project): ?>
-        <?= $project->title ?><br>
-        <?= $project->client_name ?><br>
-        <?= $this->fetch('title') ?><br>
-        J.I. Espino Construction<br>
-        <?= $project->manager_name ?><br>
-        <?= $project->location ?>
-        <?php endforeach; ?>
-    </h3>
-    <br>
-    <h3 class="text-left">* As of <?= $currentDate ?></h3>
-    <br>
+<div class="horizontal-header">
+    <?= $this->Html->image('logo.jpg', array('fullBase' => true)) ?>
+    <span>J.I. Espino Construction</span>
 </div>
 
+<hr>
+
 <div class="page-break body">
+    <h3 class="text-left">* As of <?= $currentDate ?></h3>
+    <?php foreach ($projects as $project): ?>
+        <?= $project->title ?><br>
+        <?= $project->client->company_name ?><br>
+        <?= $project->employee->name?><br>
+        <?= $project->location ?>  
+        <h3 align="center"><?= $this->fetch('title') ?></h3>
+    <?php endforeach; ?>
     <?= $this->fetch('content'); ?>
 </div>
 
-<div class="header">
-    <?= $this->Html->image('logo.jpg', array('fullBase' => true, 'class' => 'float-right')) ?>
-    <h3 class="text-left">
-        <?php foreach ($projects as $project): ?>
-        <?= $project->title ?><br>
-        <?= $project->client_name ?><br>
-        <?= $this->fetch('title') ?><br>
-        J.I. Espino Construction<br>
-        <?= $project->manager_name ?><br>
-        <?= $project->location ?>
-        <?php endforeach; ?>
-    </h3>
-</div>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<div class="footer">
-    <div>
-        <h2><i>Authorized By:</i></h2>
-        <div class="signatory">
-            <div>________________________________________</div>
-            <div><i class="text">Signature over printed name</i><div>
-        </div>
-        <div class="signatory">
-            <div>________________________________________</div>
-            <div><i class="text">Position in the company</i></div>
-        </div>
-    </div>
+<div class="horizontal-header">
+    <?= $this->Html->image('logo.jpg', array('fullBase' => true)) ?>
+    <span>J.I. Espino Construction</span>
 </div>
 
+<hr>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<div>
+    <table class="signatory text-center">
+        <tr>
+            <th class="text-left" style="width: 150px;">Prepared by:</th>
+            <td>________________________________</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>Signature over printed name</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>________________________________</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>Position in the company</td>
+        </tr>
+    </table>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <table class="signatory text-center">
+        <tr>
+            <th class="text-left" style="width: 150px;">Noted by:</th>
+            <td>________________________________</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>Signature over printed name</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>________________________________</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>Position in the company</td>
+        </tr>
+    </table>
+</div>
 </body>
 </html>

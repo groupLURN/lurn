@@ -26,8 +26,8 @@ $this->Html->css('pdf', ['block' => true, 'fullBase' => true]);
 <body>
 
 <div class="header">
-    <h1>J.I. Espino Construction</h1>
-    <h2>Unit K-3 Emerald Green Building Cv Star Avenue Las Pinas Metro Manila</h2>
+    <?= $this->Html->image('logo.jpg', array('fullBase' => true)) ?>
+    <span>J.I. Espino Construction</span>
 </div>
 
 <hr>
@@ -36,18 +36,69 @@ $this->Html->css('pdf', ['block' => true, 'fullBase' => true]);
     <?= $this->fetch('content'); ?>
 </div>
 
-<div class="footer">
-    <div>
-        <h2><i>Authorized By:</i></h2>
-        <div class="signatory">
-            <div>________________________________________</div>
-            <div><i class="text">Signature over printed name</i><div>
-        </div>
-        <div class="signatory">
-            <div>________________________________________</div>
-            <div><i class="text">Position in the company</i></div>
-        </div>
-    </div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div>
+    <table class="signatory text-center">
+        <tr>
+            <th class="text-left" style="width: 150px;">Prepared by:</th>
+            <td>________________________________</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>Signature over printed name</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>________________________________</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>Position in the company</td>
+        </tr>
+    </table>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <table class="signatory text-center">
+        <tr>
+            <th class="text-left" style="width: 150px;">Noted by:</th>
+            <td>________________________________</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>Signature over printed name</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>________________________________</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>Position in the company</td>
+        </tr>
+    </table>
 </div>
 
 </body>

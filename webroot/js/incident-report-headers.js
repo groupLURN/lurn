@@ -487,48 +487,53 @@ $(function(){
 			);
 	}
 
-	window.onload = function() {
+	function populateEditData() {
+		setTimeout(function() { 
+			var incidentReportData = jQuery.parseJSON($('#incident-report-data').text());
 
-		var incidentReportData = jQuery.parseJSON($('#incident-report-data').text());
+			if(Object.keys(incidentReportData).length){
+				$('#task option[value="' + incidentReportData.task + '"]').prop('selected', true);
+				$('#task').trigger('chosen:updated');
 
-		if(Object.keys(incidentReportData).length){
-			$('#task option[value="' + incidentReportData.task + '"]').prop('selected', true);
-			$('#task').trigger('chosen:updated');
+				updatePersonList();
 
-			updatePersonList();
+				if(incidentReportData.type == 'los') {
+					updateItemList();
+				}
+				setTimeout(function() { 
 
-			if(incidentReportData.type == 'los') {
-				updateItemList();
+					for (var i = 0; i < incidentReportData.persons_involved.length; i++) {
+						var person 				= incidentReportData.persons_involved[i];
+						var personId 			= person.occupation + '-' + person.id;
+						var personSummary 		= person.injured_summary;
+						
+						$('#person-list option[value="' + personId + '"]').prop('disabled', true);
+
+						appendInvolved(personId, person.name, personSummary, incidentReportData.type);
+					}
+					$('#person-list').trigger('chosen:updated');
+
+				}, 1000);
+
+				setTimeout(function() { 
+
+					for (var i = 0; i < incidentReportData.items_lost.length; i++) {
+						var item = incidentReportData.items_lost[i];
+						var itemId = item.name;
+						$('#item-list option[value="' + itemId + '"]').prop('disabled', true);
+
+
+						appendItem(itemId, itemId, item.quantity);
+					}
+					$('#item-list').trigger('chosen:updated');
+
+				}, 1000);
 			}
-			setTimeout(function() { 
-
-				for (var i = 0; i < incidentReportData.persons_involved.length; i++) {
-					var person 				= incidentReportData.persons_involved[i];
-					var personId 			= person.occupation + '-' + person.id;
-					var personSummary 		= person.injured_summary;
-					
-					$('#person-list option[value="' + personId + '"]').prop('disabled', true);
-
-					appendInvolved(personId, person.name, personSummary, incidentReportData.type);
-				}
-				$('#person-list').trigger('chosen:updated');
-
-			}, 1000);
-
-			setTimeout(function() { 
-
-				for (var i = 0; i < incidentReportData.items_lost.length; i++) {
-					var item = incidentReportData.items_lost[i];
-					var itemId = item.name;
-					$('#item-list option[value="' + itemId + '"]').prop('disabled', true);
-
-
-					appendItem(itemId, itemId, item.quantity);
-				}
-				$('#item-list').trigger('chosen:updated');
-
-			}, 1000);
-		}
-
+		}, 1000);
 	}
+
+	window.addEventListener ? 
+	window.addEventListener("load", populateEditData(), false) : 
+	window.attachEvent && window.attachEvent("onload", populateEditData());
+
 });

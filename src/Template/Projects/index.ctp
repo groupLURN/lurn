@@ -137,7 +137,13 @@
                             </div>
                         </td>
                         <td><?= h($project->project_phase->name) ?></td>
-                        <td><?= h($project->status) ?></td>
+                        <td>
+                            <span 
+                                <?= $project->status === 'Delayed' ? 'class="task-status overdue"' : '' ?>    
+                            >
+                                <?= h($project->status) ?>
+                            </span>    
+                        </td>
                         <td class="actions">
                             <?php 
                                 if (in_array($project->id, $assignedProjects) 

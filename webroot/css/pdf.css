@@ -1,9 +1,28 @@
-div.header {
-    text-align: center;
+body {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
 }
 
 table {
+    border-collapse: collapse;
     margin: 0 auto;
+    padding: 0;
+}
+
+td, th {
+    border-collapse: collapse;
+    font-size: 12px;
+    margin: 0;
+    padding: 0;
+}
+
+p {
+    text-indent: 50px;
+    font-size: 16px;
+}
+
+.inline-block {
+    display: inline-block;
 }
 
 .text {
@@ -21,6 +40,14 @@ table {
     text-align: right;
 }
 
+.text-center {
+    text-align: center;
+}
+
+.float-left {
+    float: left;
+}
+
 .float-right {
     float: right;
 }
@@ -29,73 +56,44 @@ table {
     border-bottom: 1px solid black;
 }
 
-.purchase-order {
-    border-collapse: collapse;
-    table-layout:fixed;
-    padding: 0px;
+.header, .horizontal-header {
+    height: 130px;
+    position: relative;
 }
 
-.purchase-order td, .purchase-order th{
-    font-size: .75em !important;
-    height: .8em;
-    padding: 0px;
+.header img{
+    position: absolute;
+    left: 190px;
 }
 
-.body table {
-    width: 100%;
+.header span{
+    font-size: 35px;
+    font-weight: bold;
+    position: absolute;
+    left: 335px;
+    top: 45px;
 }
 
-.body td, .body th {
-    padding: 10px 0;
-    font-size: 18px;
+.horizontal-header img{
+    position: absolute;
+    left: 350px;
 }
 
-.report td, .report th {
-    padding: 3px 3px;
-    font-size: 18px;
-} 
-
-.incident-report th {
-    width: 30%;
+.horizontal-header span{
+    font-size: 35px;
+    font-weight: bold;
+    position: absolute;
+    left: 495px;
+    top: 45px;
 }
-
 
 .signatory {
-    padding: 24px 0;
+    display: inline-block;
 }
 
 .footer {
     margin-top: 100px;
     text-align: center;
-}
-
-.summary-report, .summary-report th, .summary-report td {
-  border: 1px solid black;
-  border-spacing: 0;
-  border-collapse: collapse;
-  font-size: 12px;
-}
-
-
-th.rotate {
-  /* Something you can count on */
-  height: 140px !important;
-  white-space: nowrap;
-}
- 
-th.rotate > div {
-  transform: rotate(270deg) 
-    translate(-65px, 7px);
-  -ms-transform: rotate(270deg)
-    translate(-65px, 7px);
-  -moz-transform: rotate(270deg)
-    translate(-65px, 7px);
-  -webkit-transform: rotate(270deg)
-    translate(-65px, 7px);
-  -o-transform: rotate(270deg)
-    translate(-65px, 7px);
-
-  width: 2px;
 }
 
 .page-break {
@@ -104,5 +102,76 @@ th.rotate > div {
     border :1px solid transparent;
     page-break-after: always;
 }
+
+.body table {
+    width: 100%;
+}
+
+.body td, .body th {
+    padding: 10px 0;
+}
+
+.report td, .report th {
+    font-size: 12px;
+    padding: 3px 3px;
+} 
+
+.incident-report th {
+    width: 30%;
+}
+
+.summary-report, .summary-report th, .summary-report td {
+    border: 1px solid black;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+
+th.rotate {
+    /* Something you can count on */
+    height: 140px !important;
+    white-space: nowrap;
+}
+
+th.rotate > div {
+    transform: rotate(270deg) 
+    translate(-65px, 7px);
+    -ms-transform: rotate(270deg)
+    translate(-65px, 7px);
+    -moz-transform: rotate(270deg)
+    translate(-65px, 7px);
+    -webkit-transform: rotate(270deg)
+    translate(-65px, 7px);
+    -o-transform: rotate(270deg)
+    translate(-65px, 7px);
+
+    width: 2px;
+}
+
+.purchase-order {
+    border-collapse: collapse;
+    border-spacing: 0px;
+    table-layout: fixed;
+}
+
+.purchase-order td, .purchase-order th{
+    height: 10px;
+    padding: 0px;
+}
+
+.purchase-order-details {
+    border: 1px solid black;
+    border-collapse: collapse;
+    border-spacing: 0px;
+    padding: 0px;
+    table-layout: fixed;
+}
+
+.purchase-order-details td, .purchase-order-details th{
+    border: 1px solid black;
+    height: 10px;
+    padding: 0px;
+}
+
 
 

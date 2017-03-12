@@ -249,6 +249,7 @@ class TasksController extends AppController
         $this->viewBuilder()->options([
             'pdfConfig' => [
                 'orientation' => 'landscape',
+                'pageSize' => 'Letter',
                 'filename' => 'Task_Accomplishment_Report_' . $currentDate . '.pdf',
                 'download' => $download
             ]           

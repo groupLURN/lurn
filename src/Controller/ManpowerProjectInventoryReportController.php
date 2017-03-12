@@ -135,6 +135,7 @@ class ManpowerProjectInventoryReportController extends AppController
         $this->viewBuilder()->options([
             'pdfConfig' => [
                 'orientation' => 'landscape',
+                'pageSize' => 'Letter',
                 'filename' => 'Project_Manpower_Inventory_Report_' . $currentDate . '.pdf',
                 'download' => $download
             ]           

@@ -5,9 +5,11 @@ $(function(){
 	$('#injured-details').hide();
 	$('#items-lost-details').hide();
 
-	initialize();
+	window.addEventListener ? 
+	window.addEventListener("load", initialize(), false) : 
+	window.attachEvent && window.attachEvent("onload", initialize());
 
-	$('#project-id').chosen().change(function() {
+	$('#project-id').change(function() {
 		var projectId 		= $('#project-id').val();
 		var projectName		= $('#project-id option:selected').text();
 		var projectEngineer = $('#project-id option:selected').data('project-engineer');
@@ -38,7 +40,7 @@ $(function(){
 		}
 	});	
 	
-	$('#task').chosen().change(function() {
+	$('#task').change(function() {
 		var taskId 			= $('#task').val();	
 		var taskName 		= $('#task option:selected').text();	
 		var oldTaskId 		= $('#task').data('old-task');	
@@ -69,7 +71,7 @@ $(function(){
 		displayProperInput();
 	});
 
-	$('#person-list').chosen().change(function(){	
+	$('#person-list').change(function(){	
 		var $context		= $('#person-list option:selected');
 		var selectedIndex	= $($context).index();
 		var type     		= $('#type').val();        	
@@ -213,6 +215,11 @@ $(function(){
 
 		$('#project-engineer').val(projectEngineer);
 		$('#project-location').val(location);
+	
+		var action = window.location.pathname.split("/").pop();
+		if (action == 'edit') {
+			populateEditData();
+		}
 
 		displayProperInput();
 
@@ -307,7 +314,7 @@ $(function(){
 					+ tasks[i].title 
 					+ '</option>';
 					$('#task option:last-child').after(
-						option	            	
+						option
 						);
 				}
 
@@ -318,6 +325,7 @@ $(function(){
 	}
 
 	function updateItemList(){
+		var projectId 	= $('#project-id').val();
 		var taskId 		= $('#task').val();	
 		var type		= $('#type').val();
 
@@ -327,7 +335,7 @@ $(function(){
 
 			$.ajax({ 
 				type: 'GET', 
-				url: link+'incident-report-headers/get-items/?task_id='+taskId, 
+				url: link+'incident-report-headers/get-items/?project_id='+projectId+'&task_id='+taskId, 
 				data: { get_param: 'value' }, 
 				success: function (data) { 
 					var items = data;
@@ -532,8 +540,5 @@ $(function(){
 		}, 1000);
 	}
 
-	window.addEventListener ? 
-	window.addEventListener("load", populateEditData(), false) : 
-	window.attachEvent && window.attachEvent("onload", populateEditData());
 
 });

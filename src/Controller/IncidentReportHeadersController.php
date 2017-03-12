@@ -18,22 +18,19 @@ class IncidentReportHeadersController extends AppController
 {
 
     public function beforeFilter(Event $event)
-    {   
-        if(empty($this->request->params['pass'])) {
+    {  
+        if(!isset($this->request->query['project_id']))
             return $this->redirect(['controller' => 'dashboard']);
-        }
 
         $this->loadModel('Projects');
         $this->viewBuilder()->layout('project_management');
-        $projectId = (int) $this->request->params['pass'][0];
+        $projectId = (int) $this->request->query['project_id'];
         
         $this->set('projectId', $projectId);
         
         $project = $this->Projects->find('byId', ['project_id' => $projectId])->first();
-        
-        $this->set('isFinished', $project->is_finished );
 
-        $this->set('projectId', $projectId);
+        $this->set('isFinished', $project->is_finished );
         return parent::beforeFilter($event);
     }
 
@@ -52,8 +49,17 @@ class IncidentReportHeadersController extends AppController
     public function index($id = null)
     {
         $this->loadComponent('IncidentReport', []);
+
+        $projectId = (int) $this->request->query['project_id'];
+        
         $this->paginate = [
-            'contain' => ['Projects']
+            'contain' => ['Projects'],
+            'finder' =>
+                [
+                    'ByProjectId' => [
+                        'project_id' => $projectId
+                    ]
+                ]
         ];
 
         $incidentReportHeaders = $this->paginate($this->IncidentReportHeaders);
@@ -137,7 +143,9 @@ class IncidentReportHeadersController extends AppController
                     }
 
                     $this->Flash->success(__('The incident report has been saved.'));
-                    return $this->redirect(['action' => 'index']);
+
+                    $projectId = (int) $this->request->query['project_id'];
+                    return $this->redirect(['action' => 'index', '?' => ['project_id' => $projectId]]);
                 } else {
                     $this->Flash->error(__('The incident report could not be saved. Please, try again.'));
                 }
@@ -168,9 +176,18 @@ class IncidentReportHeadersController extends AppController
 
         $incidentReportHeader   = $this->IncidentReport->prepareIncidentReportView($id);
 
+        $projectId = (int) $this->request->query['project_id'];
+
         if(is_int($incidentReportHeader) && $incidentReportHeader == DatabaseConstants::RECORDNOTFOUND) {
             $this->Flash->error(__('The record was not found.'));
-            return $this->redirect(['action' => 'index']);
+
+            return $this->redirect(['action' => 'index', '?' => ['project_id' => $projectId]]);
+        }
+
+        if ($projectId != $incidentReportHeader->project_id) {
+            $this->Flash->error(__('The incident report was not assiged to that project.'));
+
+            return $this->redirect(['action' => 'index', '?' => ['project_id' => $projectId]]);
         }
 
         $projects = $this->IncidentReport->initializeProjectsList($incidentReportHeader->project_id);        
@@ -235,7 +252,7 @@ class IncidentReportHeadersController extends AppController
 
                     $this->Flash->success(__('The incident report header has been updated.'));
 
-                    return $this->redirect(['action' => 'index']);
+                    return $this->redirect(['action' => 'index', '?' => ['project_id' => $projectId]]);
                 } else {
                     $this->Flash->error(__('The incident report header could not be updated. Please, try again.'));
                 }
@@ -261,6 +278,14 @@ class IncidentReportHeadersController extends AppController
         $incidentReportHeader = $this->IncidentReportHeaders->get($id, [
             'contain' => ['IncidentReportDetails']
             ]);
+
+        $projectId = (int) $this->request->query['project_id'];
+
+        if ($projectId != $incidentReportHeader->project_id) {
+            $this->Flash->error(__('The incident report was not assiged to that project.'));
+
+            return $this->redirect(['action' => 'index', '?' => ['project_id' => $projectId]]);
+        }
         
         $incidentReportDetails = $incidentReportHeader['incident_report_details'];
         $valid = $this->IncidentReport->deleteIncidentReportDetails($incidentReportDetails);
@@ -271,7 +296,7 @@ class IncidentReportHeadersController extends AppController
             $this->Flash->error(__('The incident report could not be deleted. Please, try again.'));
         }
 
-        return $this->redirect(['action' => 'index']);
+        return $this->redirect(['action' => 'index', '?' => ['project_id' => $projectId]]);
     }
 
     /**
@@ -289,6 +314,15 @@ class IncidentReportHeadersController extends AppController
         $currentDate = sprintf('%02d', $currentDate->month) . sprintf('%02d', $currentDate->day) . $currentDate->year;
 
         $incidentReportHeader = $this->IncidentReport->prepareIncidentReportView($id);
+
+        $projectId = (int) $this->request->query['project_id'];
+
+        if ($projectId != $incidentReportHeader->project_id) {
+            $this->Flash->error(__('The incident report was not assiged to that project.'));
+
+            return $this->redirect(['action' => 'index', '?' => ['project_id' => $projectId]]);
+        }
+
         $this->set('incidentReport', $incidentReportHeader);
         $this->set('_serialize', ['incidentReport']);
 

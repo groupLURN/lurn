@@ -95,7 +95,21 @@ class IncidentReportHeadersTable extends Table
     {
         if($options['id'] > 0)
             return $query        
-                ->where(['IncidentReportHeaders.id' => $options['id']])
+                ->where(['id' => $options['id']])
+                ->contain(['Projects' => [
+                    'EmployeesJoin' => [
+                        'EmployeeTypes'
+                    ]
+                ], 
+                'IncidentReportDetails']);
+        return $query;
+    }
+
+    public function findByProjectId(Query $query, array $options)
+    {
+        if($options['project_id'] > 0)
+            return $query        
+                ->where(['project_id' => $options['project_id']])
                 ->contain(['Projects' => [
                     'EmployeesJoin' => [
                         'EmployeeTypes'

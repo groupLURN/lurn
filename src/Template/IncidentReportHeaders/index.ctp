@@ -2,7 +2,7 @@
 <?= $this->assign('title', 'Incident Reports') ?>
 <div class="row mt">
     <div class="col-xs-12">
-        <?= $this->newButton(__('Create Incident Report'), ['action' => 'add']); ?>
+        <?= $this->newButton(__('Create Incident Report'), ['action' => 'add','?' => ['project_id' => $projectId]]); ?>
     </div>
 </div>
 <div class="row mt">
@@ -29,10 +29,10 @@
                         <td><?= h($incidentReportHeader->type_full) ?></td>
                         <td><?= h(date_format($incidentReportHeader->date,"F d, Y"))?></td>
                         <td class="actions">
-                            <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $incidentReportHeader->id]); ?>
-                            <?= $this->dataTableEditButton(__('Edit'), ['action' => 'edit', $incidentReportHeader->id]); ?>
+                            <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $incidentReportHeader->id,'?' => ['project_id' => $projectId]]); ?>
+                            <?= $this->dataTableEditButton(__('Edit'), ['action' => 'edit', $incidentReportHeader->id,'?' => ['project_id' => $projectId]]); ?>
                             <?= $this->dataTableDeleteButton(__('Delete'),
-                                ['action' => 'delete', $incidentReportHeader->id],
+                                ['action' => 'delete', $incidentReportHeader->id, '?' => ['project_id' => $projectId]],
                                 __('Are you sure you want to delete invident report {0}?', $incidentReportHeader->id)
                             );
                             ?>

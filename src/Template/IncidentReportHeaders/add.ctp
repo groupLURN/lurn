@@ -15,7 +15,7 @@
 						'text' => 'Project'
 					],
 					'default' => $projectId,
-					'options' => [''=>'-Select A Project-' ]
+					'options' => [''=>'-Select A Project-' ]+$projects
 				]);
 
 				echo $this->Form->input('project-location', [

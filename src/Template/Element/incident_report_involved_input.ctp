@@ -81,7 +81,7 @@ extract($defaults, EXTR_SKIP);
                     'class' => 'mt',
                     'text' => 'Summary of the injury caused by the incident (parts of the body and severity)'
                 ],
-                'name' => null,
+                'name' => false,
                 'type' => 'textarea'
             ]);
         ?>

@@ -119,7 +119,8 @@ class IncidentReportComponent extends Component
 
         array_push($incidentReportDetails, $locationDetail);
 
-        $personsInvolved = array_values($postData['involved-id']);
+        $personsInvolved = isset($postData['involved-id']) ? array_values($postData['involved-id'])
+        	: [];
 
         for($i = 0; $i < count($personsInvolved); $i++) {
             $incidentReportDetail = $this->IncidentReportDetails->newEntity();
@@ -145,7 +146,9 @@ class IncidentReportComponent extends Component
                 array_push($incidentReportDetails, $incidentReportDetail);
             }
         } else {
-            $injuredSummaries = array_values($postData['injured-summary']);
+            $injuredSummaries = isset($postData['injured-summary']) 
+            	? array_values($postData['injured-summary']) : [];
+            	
             for($i = 0; $i < count($injuredSummaries); $i++) {
                 $incidentReportDetail = $this->IncidentReportDetails->newEntity();
 

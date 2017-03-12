@@ -58,7 +58,7 @@
                     'Materials',
                     'Quantity Ordered',
                     'Quantity Remaining',
-                    'Quantity Receive',
+                    'Quantity Received',
                 ],
                 'columns' => [
                     $this->Form->input('purchase_receive_details.purchase_order_detail_id[]', [

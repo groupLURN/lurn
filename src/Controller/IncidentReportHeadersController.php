@@ -19,7 +19,21 @@ class IncidentReportHeadersController extends AppController
 
     public function beforeFilter(Event $event)
     {   
-        $this->viewBuilder()->layout('default');
+        if(empty($this->request->params['pass'])) {
+            return $this->redirect(['controller' => 'dashboard']);
+        }
+
+        $this->loadModel('Projects');
+        $this->viewBuilder()->layout('project_management');
+        $projectId = (int) $this->request->params['pass'][0];
+        
+        $this->set('projectId', $projectId);
+        
+        $project = $this->Projects->find('byId', ['project_id' => $projectId])->first();
+        
+        $this->set('isFinished', $project->is_finished );
+
+        $this->set('projectId', $projectId);
         return parent::beforeFilter($event);
     }
 

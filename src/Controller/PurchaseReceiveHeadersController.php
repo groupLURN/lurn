@@ -109,7 +109,7 @@ class PurchaseReceiveHeadersController extends AppController
                 $this->Flash->success(__('The purchase receive number ' . $purchaseReceiveHeader->number . ' has been saved.'));
                 return $this->redirect(['action' => 'index']);
             } else {
-                $this->Flash->error(__('The purchase receive header could not be saved. Please, try again.'));
+                $this->Flash->error(__('The purchase receive number could not be saved. Please, try again.'));
             }
         }
         $materials = TableRegistry::get('Materials')->find('list')->toArray();

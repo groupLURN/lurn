@@ -106,8 +106,10 @@
                         <td><?= $this->Html->link($rentalReceiveHeader->_matchingData['RentalRequestHeaders']['number'], ['controller' => 'RentalRequestHeaders', 'action' => 'view', $rentalReceiveHeader->_matchingData['RentalRequestHeaders']['id']])?></td>
                         <td><?= $rentalReceiveHeader->_matchingData['Projects']['id']? $this->Html->link($rentalReceiveHeader->_matchingData['Projects']['title'], ['controller' => 'RentalReceiveHeaders', 'action' => 'view', $rentalReceiveHeader->_matchingData['Projects']['id']]): '' ?></td>
                         <td><?= $this->Html->link($rentalReceiveHeader->_matchingData['Suppliers']['name'], ['controller' => 'RentalReceiveHeaders', 'action' => 'view', $this->Html->link($rentalReceiveHeader->_matchingData['Suppliers']['id'])]) ?></td>
-                        <td><?= h($rentalReceiveHeader->receive_date) ?></td>
-                        <td><?= h($rentalReceiveHeader->created) ?></td>
+                        <td><?= h(isset($rentalReceiveHeader->receive_date) 
+                            ? date_format($rentalReceiveHeader->receive_date, 'F d, Y') : '') ?></td>
+                        <td><?= h(isset($rentalReceiveHeader->created) 
+                            ? date_format($rentalReceiveHeader->created, 'F d, Y') : '') ?></td>
                         <td class="actions">
                             <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $rentalReceiveHeader->id]); ?>
                         </td>

@@ -155,7 +155,6 @@ $this->start('additional-sidebar');
         <?php 
             }
         ?>    
-        <li><a href=<?= $this->Url->build(['controller' => 'IncidentReportHeaders', 'action' => 'index']) ?>>Incident Reports</a></li>
     </ul>
 </li>
 <?php 

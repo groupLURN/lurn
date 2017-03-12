@@ -106,8 +106,10 @@
                         <td><?= $this->Html->link($purchaseReceiveHeader->_matchingData['PurchaseOrderHeaders']['id'], ['controller' => 'PurchaseOrderHeaders', 'action' => 'view', $purchaseReceiveHeader->_matchingData['PurchaseOrderHeaders']['id']])?></td>
                         <td><?= $purchaseReceiveHeader->_matchingData['Projects']['id']? $this->Html->link($purchaseReceiveHeader->_matchingData['Projects']['title'], ['controller' => 'PurchaseReceiveHeaders', 'action' => 'view', $purchaseReceiveHeader->_matchingData['Projects']['id']]): '' ?></td>
                         <td><?= $this->Html->link($purchaseReceiveHeader->_matchingData['Suppliers']['name'], ['controller' => 'PurchaseReceiveHeaders', 'action' => 'view', $this->Html->link($purchaseReceiveHeader->_matchingData['Suppliers']['id'])]) ?></td>
-                        <td><?= h($purchaseReceiveHeader->receive_date) ?></td>
-                        <td><?= h($purchaseReceiveHeader->created) ?></td>
+                        <td><?= h(isset($purchaseReceiveHeader->received_date) 
+                            ? date_format($purchaseReceiveHeader->received_date, 'F d, Y') : '') ?></td>
+                        <td><?= h(isset($purchaseReceiveHeader->created) 
+                            ? date_format($purchaseReceiveHeader->created, 'F d, Y') : '') ?></td>
                         <td class="actions">
                             <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $purchaseReceiveHeader->id]); ?>
                         </td>

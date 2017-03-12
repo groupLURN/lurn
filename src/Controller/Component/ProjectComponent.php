@@ -38,9 +38,7 @@ class ProjectComponent extends Component
 	public function uploadFiles($files = [], $project = null, $options = [])
 	{
 		$originalFilesDb 	= count($project->projects_files) > 0 ? $project->projects_files : [];
-
-
-
+		
 		$duplicateKeys = [];
 		for ($i = 0; $i < count($files['files']); $i++) {
 			$fileInfo 		= pathinfo($files['files'][$i]['name']);

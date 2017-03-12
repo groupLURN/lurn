@@ -60,7 +60,7 @@
                     'Quantity Requested',
                     'Duration (days)',
                     'Quantity Remaining',
-                    'Quantity Receive',
+                    'Quantity Received',
                 ],
                 'columns' => [
                     $this->Form->input('rental_receive_details.rental_request_detail_id[]', [

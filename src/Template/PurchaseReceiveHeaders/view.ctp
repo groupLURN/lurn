@@ -22,11 +22,11 @@
         </tr>
         <tr>
             <th><?= __('Date Ordered') ?></th>
-            <td><?= h($purchaseReceiveHeader->purchase_receive_details[0]->purchase_order_detail->purchase_order_header->created) ?></td>
+            <td><?= h(date_format($purchaseReceiveHeader->purchase_receive_details[0]->purchase_order_detail->purchase_order_header->created, 'F d, Y')) ?></td>
         </tr>
         <tr>
             <th><?= __('Date Received') ?></th>
-            <td><?= h($purchaseReceiveHeader->received_date) ?></td>
+            <td><?= h(date_format($purchaseReceiveHeader->received_date, 'F d, Y')) ?></td>
         </tr>
     </table>
     <div class="related">

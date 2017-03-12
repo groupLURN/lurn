@@ -14,7 +14,8 @@
 						'class' => 'mt',
 						'text' => 'Project'
 					],
-					'options' => [''=>'-Select A Project-' ]+$projects
+					'default' => $projectId,
+					'options' => [''=>'-Select A Project-' ]
 				]);
 
 				echo $this->Form->input('project-location', [

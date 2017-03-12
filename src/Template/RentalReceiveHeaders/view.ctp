@@ -22,11 +22,11 @@
         </tr>
         <tr>
             <th><?= __('Date Requested') ?></th>
-            <td><?= h($rentalReceiveHeader->rental_receive_details[0]->rental_request_detail->rental_request_header->created) ?></td>
+            <td><?= h(date_format($rentalReceiveHeader->rental_receive_details[0]->rental_request_detail->rental_request_header->created, 'F d, Y')) ?></td>
         </tr>
         <tr>
             <th><?= __('Date Received') ?></th>
-            <td><?= h($rentalReceiveHeader->receive_date) ?></td>
+            <td><?= h(date_format($rentalReceiveHeader->receive_date, 'F d, Y')) ?></td>
         </tr>
     </table>
     <div class="related">

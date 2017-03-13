@@ -1,5 +1,6 @@
 <?= $this->Flash->render() ?>
 <?= $this->assign('title', 'Summary Report') ?>
+<?= $this->Html->script('tasks.js', ['block' => 'script-end']); ?>
 <div class="row mt">
     <div class="col-xs-12">
 

@@ -62,10 +62,10 @@ class TasksController extends AppController
             ->first() !== null;
         }
         
-        if (in_array($action, ['index', 'edit', 'finish', 'generate-report', 'manage', 'replenish']))
+        if (in_array($action, ['index', 'edit', 'finish', 'manage', 'replenish']))
         {   
             return ($isUserAssigned && $isProjectManager) || $isOwner || $isAdmin;
-        } else if (in_array($action, ['view', 'view-stock', 'view-finished']))
+        } else if (in_array($action, ['generate-report', 'view', 'view-stock', 'view-finished']))
         {
             return $isUserAssigned || $isAdmin || $isOwner || $isProjectManager;
         }

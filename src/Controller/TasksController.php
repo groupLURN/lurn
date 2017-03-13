@@ -65,7 +65,7 @@ class TasksController extends AppController
         if (in_array($action, ['index', 'edit', 'finish', 'manage', 'replenish']))
         {   
             return ($isUserAssigned && $isProjectManager) || $isOwner || $isAdmin;
-        } else if (in_array($action, ['generate-report', 'view', 'view-stock', 'view-finished']))
+        } else if (in_array($action, ['generateReport', 'view', 'viewStock', 'viewFinished']))
         {
             return $isUserAssigned || $isAdmin || $isOwner || $isProjectManager;
         }

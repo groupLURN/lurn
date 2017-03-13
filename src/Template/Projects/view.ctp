@@ -103,7 +103,6 @@
         </div>
         <div class="row mt">
             <div class="col-xs-12">
-                <h4>Tasks</h4>
                 <table class="table table-striped table-advance table-hover">
                     <thead>
                     <tr>

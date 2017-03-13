@@ -4,7 +4,6 @@ $(function(){
 	$(document).on("click", ".day", function () {
 		var day 		= $(this).data("day");
 		var updates 	= $(this).data("updates");
-		var updatesIds 	= $(this).data("updates-id");
 		var dueProjects = $(this).data("due-projects");
 		var dueProjectsIds = $(this).data("due-projects-id");
 
@@ -15,8 +14,7 @@ $(function(){
 			$(".modal-body .modal-updates").show(); 
 			$(".modal-body .modal-updates-list li").remove();  
 			for(var i = 0;i < updates.length;i++) {	
-				var link = baseLink+"tasks/view/"+updatesIds[i];
-				$(".modal-body .modal-updates-list").append("<li><a href=\"" + link + "\">" + updates[i] + "</a></li>");  
+				$(".modal-body .modal-updates-list").append("<li>" + updates[i] + "</li>");  
 			}
 		} else {
 			$(".modal-body .modal-updates").hide(); 

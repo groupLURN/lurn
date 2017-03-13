@@ -122,7 +122,7 @@ MAIN CONTENT
 
                 <!-- CALENDAR-->
                 <a href=<?= $this->Url->build(['controller' => 'Events', 'action' => 'index']) ?>>
-                    <div class="panel green-panel ">
+                    <div class="panel violet-panel ">
                         <div class="panel-body">
                             <table id="calendar">
                                 <tr>

@@ -25,7 +25,7 @@ MAIN CONTENT
                     <button class="btn btn-primary" type="submit">Change Date</button>                
                     </form>
                 </div>
-                <div class="panel green-panel mt">
+                <div class="panel violet-panel mt">
         			<table id="event-calendar">
                         <tr>
                             <th colspan="7" class="month-year"><?= $calendar['month']?> <?= $calendar['year']?></th>
@@ -107,9 +107,7 @@ MAIN CONTENT
                                                 			} 
                                                 		?>
                                                 		<li>
-                                                        <a href=<?= ($this->Url->build(['controller' => 'tasks', 'action' => 'view/'.$calendar['updatedTaskIds'][$week][$day][$key], 'project_id' => $calendar['updatedProjectIds'][$week][$day][$key] ]))?>>
                                                         <?= $value ?>
-                                                        </a>
                                                         </li>
 
                                                 		<?php

@@ -135,6 +135,7 @@ TOP BAR CONTENT & NOTIFICATIONS
     <section id="main-content">
         <section class="wrapper">
             <?= $this->Flash->render('auth') ?>
+            <?= $this->Flash->render() ?>
             <?= $this->fetch('content'); ?>
         </section>
     </section>

@@ -1095,10 +1095,33 @@ PANELS CONFIGURATIONS
 	font-weight: 700;
 }
 
+/*Violet Panel*/
+.violet-panel {
+    text-align: center;
+    background: #424a5d;
+}
+.violet-panel .violet-header {
+    background: #43b1a9;
+    padding: 3px;
+    margin-bottom: 15px;
+}
+.violet-panel h5 {
+    color: white;
+    font-weight: 200;
+    margin-top: 10px;
+}
+.violet-panel h3 {
+    color: white;
+    font-weight: 100;
+}
+.violet-panel p {
+    color: white;
+}
+
 /*Green Panel*/
 .green-panel {
 	text-align: center;
-	background: #424a5d;
+	background: #68dff0;
 }
 .green-panel .green-header {
 	background: #43b1a9;

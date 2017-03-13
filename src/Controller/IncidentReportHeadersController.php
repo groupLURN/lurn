@@ -64,12 +64,12 @@ class IncidentReportHeadersController extends AppController
             ->first() !== null;
         }
 
-        if (in_array($action, ['add', 'delete', 'edit','get-items', 'get-persons', 'get-tasks']))
+        if (in_array($action, ['add', 'delete', 'edit','getItems', 'getPersons', 'getTasks']))
         {   
             return ($isUserAssigned && ($isProjectManager|| $isWarehouseKeeper)) 
                 || $isOwner 
                 || $isAdmin;
-        } else if (in_array($action, ['index', 'view', 'generate-report']))
+        } else if (in_array($action, ['index', 'view', 'generateReport']))
         {
             return $isUserAssigned || $isAdmin || $isOwner;
         }

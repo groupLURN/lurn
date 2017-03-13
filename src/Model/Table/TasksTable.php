@@ -219,8 +219,7 @@ class TasksTable extends Table
                         'conditions' => ['m.project_id' => (int)$options['project_id'],
                             'm.id = milestone_id']
                     ]
-                ])
-                ;
+                ]);
         else
             return $query;
     }

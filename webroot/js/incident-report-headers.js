@@ -215,9 +215,9 @@ $(function(){
 
 		$('#project-engineer').val(projectEngineer);
 		$('#project-location').val(location);
-	
-		var action = window.location.pathname.split("/").pop();
-		if (action == 'edit') {
+		
+		var pathNameArray = window.location.pathname.split("/");
+		if ($.inArray('edit', pathNameArray)) {
 			populateEditData();
 		}
 

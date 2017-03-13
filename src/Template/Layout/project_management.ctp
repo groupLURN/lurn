@@ -61,6 +61,12 @@ $this->start('additional-sidebar');
 
     if (in_array($employeeType, [0, 1, 2, 4], true)) {
 ?>
+<li>
+    <a href=<?= $this->Url->build(['controller' => 'IncidentReportHeaders', 'action' => 'index', '?' => ['project_id' => $projectId]]) ?>>
+        <i class="fa fa-file"></i>
+        Incident Reports
+    </a>
+</li>
 <li class="sub-menu">
     <a href="javascript:;" >
         <i class="fa fa-file"></i>
@@ -72,12 +78,6 @@ $this->start('additional-sidebar');
         <li><a href=<?= $this->Url->build(['controller' => 'MaterialsProjectInventoryReport', $projectId]) ?>>Materials Inventory Report</a></li>
         <li><a href=<?= $this->Url->build(['controller' => 'ManpowerProjectInventoryReport', $projectId]) ?>>Manpower Inventory Report</a></li>
     </ul>
-</li>
-<li>
-    <a href=<?= $this->Url->build(['controller' => 'IncidentReportHeaders', 'action' => 'index', '?' => ['project_id' => $projectId]]) ?>>
-        <i class="fa fa-file"></i>
-        Incident Reports
-    </a>
 </li>
 <?php if ($isFinished == 1) {?>
 <li class="sub-menu">

@@ -17,7 +17,7 @@
 						'class' => 'mt',
 						'text' => 'Project'
 					],
-					'default' => $projectId
+					'default' => $projectId,
 					'options' => [''=>'-Select A Project-']+$projects
 				]);
 

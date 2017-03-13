@@ -1,10 +1,16 @@
 <?= $this->Flash->render() ?>
 <?= $this->assign('title', 'Incident Reports') ?>
+<?php
+    if (in_array($employeeType, [0, 1, 2, 4], true)) {
+?>
 <div class="row mt">
     <div class="col-xs-12">
-        <?= $this->newButton(__('Create Incident Report'), ['action' => 'add','?' => ['project_id' => $projectId]]); ?>
+        <?= $this->newButton(__('Create Incident Report'), ['action' => 'add', '?' => ['project_id' => $projectId]]); ?>
     </div>
 </div>
+<?php
+    }
+?>
 <div class="row mt">
     <div class="col-xs-12">
         <div class="content-panel">
@@ -30,11 +36,16 @@
                         <td><?= h(date_format($incidentReportHeader->date,"F d, Y"))?></td>
                         <td class="actions">
                             <?= $this->dataTableViewButton(__('View'), ['action' => 'view', $incidentReportHeader->id,'?' => ['project_id' => $projectId]]); ?>
-                            <?= $this->dataTableEditButton(__('Edit'), ['action' => 'edit', $incidentReportHeader->id,'?' => ['project_id' => $projectId]]); ?>
-                            <?= $this->dataTableDeleteButton(__('Delete'),
-                                ['action' => 'delete', $incidentReportHeader->id, '?' => ['project_id' => $projectId]],
-                                __('Are you sure you want to delete invident report {0}?', $incidentReportHeader->id)
-                            );
+
+                            <?php
+                                if (in_array($employeeType, [0, 1, 2, 4], true)) {
+                                    echo $this->dataTableEditButton(__('Edit'), ['action' => 'edit', $incidentReportHeader->id,'?' => ['project_id' => $projectId]]); 
+                                    echo ' ';
+                                    echo $this->dataTableDeleteButton(__('Delete'),
+                                        ['action' => 'delete', $incidentReportHeader->id, '?' => ['project_id' => $projectId]],
+                                        __('Are you sure you want to delete invident report {0}?', $incidentReportHeader->id)
+                                    );
+                                }
                             ?>
                         </td>
                     </tr>

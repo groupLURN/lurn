@@ -63,7 +63,6 @@
         if (isset($end_date))
             $endParam = '&end_date=' . $end_date;
         ?>
-
         <?= $this->Form->button('<i class="fa fa-save"></i> Save as PDF', 
             array('onclick' => "location.href='" . $this->Url->build('/equipment-project-inventory-report/view/'.$projectId.'/1.pdf?' . $startParam . $endParam) . "'", 'class' => 'btn btn-primary')); ?>
         <?= $this->Form->button('<i class="fa fa-print"></i> Print', 

@@ -5,9 +5,13 @@
 	<div class="col-md-12">
 
         <?= $this->Form->button('<i class="fa fa-save"></i> Save as PDF', 
-            array('onclick' => "location.href='" . $this->Url->build(['action' => 'generate-report', $incidentReport->id, '1.pdf'])."'", 'class' => 'btn btn-primary')); ?>
+            ['onclick' => "location.href='" 
+            . $this->Url->build(['action' => 'generate-report', $incidentReport->id, '1.pdf', '?' => ['project_id' => $projectId]])
+            . "'", 'class' => 'btn btn-primary']); ?>
         <?= $this->Form->button('<i class="fa fa-print"></i> Print', 
-            array('onclick' => "location.href='" . $this->Url->build(['action' => 'generate-report', $incidentReport->id, '0.pdf'])."'", 'class' => 'btn btn-warning')); ?>
+            ['onclick' => "location.href='" 
+            . $this->Url->build(['action' => 'generate-report', $incidentReport->id, '0.pdf', '?' => ['project_id' => $projectId]])
+            . "'", 'class' => 'btn btn-warning']); ?>
 		<h4>Incident Report</h4>
 		<h5 class="mt">Project Details</h5>
 		<table class="vertical-table table table-striped incident-report">

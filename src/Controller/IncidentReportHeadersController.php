@@ -35,10 +35,46 @@ class IncidentReportHeadersController extends AppController
     }
 
     public function isAuthorized($user)
-    {     
-        $employeeTypeId = isset($user['employee']['employee_type_id'])
-            ? $user['employee']['employee_type_id'] : '';   
-        return in_array($employeeTypeId, [0, 2, 3, 4], true);
+    {  
+        $action = $this->request->params['action'];
+
+        $userTypeId = isset($user['employee']['employee_type_id'])
+            ? $user['employee']['employee_type_id'] : '';
+        $isAdmin = $userTypeId === 0;
+        $isOwner = $userTypeId === 1;
+        $isProjectManager = $userTypeId === 2;
+        $isWarehouseKeeper = $userTypeId === 4;
+
+        $projectId = $this->request->query('project_id');
+
+        $isUserAssigned = false;
+        if ($user['user_type_id'] === 2) {                
+            $isUserAssigned = $this->Projects->find()
+            ->matching('EmployeesJoin', function($query) use ($user) {
+                return $query->where(['EmployeesJoin.user_id' => $user['id']]);
+            })
+            ->where(['Projects.id' => $projectId])
+            ->first() !== null;
+        } else {
+            $isUserAssigned = $this->Projects->find()
+            ->where([
+                    'Projects.id' => $projectId, 
+                    'Projects.client_id' => $user['client']['id']
+                ])
+            ->first() !== null;
+        }
+
+        if (in_array($action, ['add', 'delete', 'edit','get-items', 'get-persons', 'get-tasks']))
+        {   
+            return ($isUserAssigned && ($isProjectManager|| $isWarehouseKeeper)) 
+                || $isOwner 
+                || $isAdmin;
+        } else if (in_array($action, ['index', 'view', 'generate-report']))
+        {
+            return $isUserAssigned || $isAdmin || $isOwner;
+        }
+
+        return parent::isAuthorized($user);
     }
 
     /**
@@ -339,16 +375,15 @@ class IncidentReportHeadersController extends AppController
                 'filename' => 'Incident_Report_' . $currentDate . '.pdf',
                 'download' => $download
             ]           
-        ])->template('pdf'); 
-
-
+        ])->template('pdf');
     }
      /**
     * Method for getting all the employees and manpower assigned to a project
     *
     * @return json response
     */
-     public function getPersons() {
+    public function getPersons() 
+    {
         $this->loadModel('Projects');
         $this->loadModel('Manpower');
 
@@ -398,7 +433,8 @@ class IncidentReportHeadersController extends AppController
     *
     * @return json response
     */
-    public function getTasks() {
+    public function getTasks() 
+    {
         $this->loadModel('Tasks');
         $tasks  = array();
 
@@ -413,14 +449,13 @@ class IncidentReportHeadersController extends AppController
         exit();
     }   
 
-
-
     /**
     * Method for getting materials and equipment from the database
     *
     * @return json response
     */
-    public function getItems() {
+    public function getItems() 
+    {
         $this->loadModel('EquipmentTasks');
         $this->loadModel('MaterialsTasks');
         $this->loadModel('Tasks');

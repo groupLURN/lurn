@@ -95,7 +95,7 @@ class IncidentReportHeadersTable extends Table
     {
         if($options['id'] > 0)
             return $query        
-                ->where(['id' => $options['id']])
+                ->where(['IncidentReportHeaders.id' => $options['id']])
                 ->contain(['Projects' => [
                     'EmployeesJoin' => [
                         'EmployeeTypes'
@@ -109,7 +109,7 @@ class IncidentReportHeadersTable extends Table
     {
         if($options['project_id'] > 0)
             return $query        
-                ->where(['project_id' => $options['project_id']])
+                ->where(['IncidentReportHeaders.project_id' => $options['project_id']])
                 ->contain(['Projects' => [
                     'EmployeesJoin' => [
                         'EmployeeTypes'

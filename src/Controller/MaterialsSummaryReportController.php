@@ -1,7 +1,6 @@
 <?php
 namespace App\Controller;
 
-use App\Controller\AppController;
 use Cake\Event\Event;
 use Cake\I18n\Time;
 
@@ -9,51 +8,8 @@ use Cake\I18n\Time;
  * MaterialsSummaryReportController Controller
  *
  */
-class MaterialsSummaryReportController extends AppController
+class MaterialsSummaryReportController extends SummaryReportController
 {
-
-    public function beforeFilter(Event $event)
-    {
-        if(empty($this->request->params['pass'])){
-            return $this->redirect(['controller' => 'dashboard']);
-        }
-
-        $this->loadModel('Projects');
-        $this->viewBuilder()->layout('project_management');
-        $projectId = (int) $this->request->params['pass'][0];
-        
-        $this->set('projectId', $projectId);
-        
-        $project = $this->Projects->find('byId', ['project_id' => $projectId])->first();
-        
-        $this->set('isFinished', $project->is_finished );
-
-        $this->set('projectId', $projectId);
-        return parent::beforeFilter($event);
-    }
-
-    public function isAuthorized($user)
-    {
-        $action = $this->request->params['action'];
-
-        $userTypeId = $user['employee']['employee_type_id'];
-        $isAdmin = $userTypeId === 0;
-        $isOwner = $userTypeId === 1;
-        $isProjectManager = $userTypeId === 2;
-        $isWarehouseEngineer = $userTypeId === 4;
-
-        $projectId = $this->request->params['pass'][0];
-
-        $isUserAssigned = $this->Projects->find()
-        ->matching('EmployeesJoin', function($query) use ($user) {
-            return $query->where(['EmployeesJoin.user_id' => $user['id']]);
-        })
-        ->where(['Projects.id' => $projectId])
-        ->first() !== null;
-        
-        return ($isUserAssigned &&  $isProjectManager || $isWarehouseEngineer) || $isOwner || $isAdmin;
-    }
-    
     /**
      * Index method
      *
@@ -66,10 +22,6 @@ class MaterialsSummaryReportController extends AppController
         $this->loadModel('MaterialsTasks');
 
         $project = $this->Projects->find('byId', ['project_id'=>$id])->first();
-
-        if($project->is_finished == 0) {
-            return $this->redirect(['controller' => 'dashboard']);
-        }
         
         $materials = [];
         $materialsInventories = $this->MaterialsTaskInventories->find('byProjectId', ['project_id'=>$id])->toArray();
@@ -105,9 +57,6 @@ class MaterialsSummaryReportController extends AppController
         $this->loadModel('MaterialsTasks');
 
         $project = $this->Projects->find('byId', ['project_id'=>$id])->first();
-        if($project->is_finished == 0) {
-            return $this->redirect(['controller' => 'dashboard']);
-        }
         
         $materials = [];
         $materialsInventories = $this->MaterialsTaskInventories->find('byProjectId', ['project_id'=>$id])->toArray();

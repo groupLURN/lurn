@@ -2,11 +2,15 @@
 <?= $this->assign('title', 'Materials Summary Report') ?>
 <div class="row mt">
     <div class="col-xs-12">
-
         <?= $this->Form->button('<i class="fa fa-save"></i> Save as PDF', 
-            array('onclick' => "location.href='" . $this->Url->build('/materials-summary-report/view/'.$project->id.'/1.pdf')."'", 'class' => 'btn btn-primary')); ?>
+            ['onclick' => "location.href='" 
+                . $this->Url->build(['action' => 'view', $project->id, '1.pdf'])
+                . "'", 'class' => 'btn btn-primary']); ?>
         <?= $this->Form->button('<i class="fa fa-print"></i> Print', 
-            array('onclick' => "location.href='" . $this->Url->build('/materials-summary-report/view/'.$project->id.'/0.pdf')."'", 'class' => 'btn btn-warning')); ?>
+            ['onclick' => "location.href='"
+                . $this->Url->build(['action' => 'view', $project->id, '0.pdf'])
+                . "'", 'class' => 'btn btn-warning']); ?>
+    </div>
     </div>
 </div>
 <div class="row mt">
@@ -65,15 +69,30 @@
                                 $taskDuration = date_diff($date1,$date2);
 
 
-                                $duration += $taskDuration->d;
+                                $duration += $taskDuration->days;
                             }
 
                             echo $duration;
                         ?>
                         </td>
                         <td class="text-center"><?= date_format($milestone->start_date,"F d, Y") ?></td>
-                        <td class="text-center"><?= date_format($milestone->end_date > $milestone->modified ? $milestone->end_date : $milestone->modified,"F d, Y")  ?></td>
-                        <td></td>
+                        <td class="text-center">
+                            <?php
+                            $endDate = null;
+
+                            foreach ($milestone->tasks as $task){
+
+                                if($endDate !== null || $task->end_date > $task->modified){
+                                    $endDate = new DateTime($task->end_date);
+                                } else {
+                                    $endDate = new DateTime($task->modified);
+                                }
+                            }
+
+                            echo date_format($endDate,"F d, Y");
+                            ?>
+                        </td>
+                        <td class="text-center" colspan=<?= count($manpowerTypes)?>></td>
                     </tr>
 
                     <?php 
@@ -96,14 +115,14 @@
 
                                 $duration = date_diff($date1,$date2);
 
-                                echo $duration->d;
+                                echo $duration->days;
                             ?>
                             </td>
                             <td class="text-center"><?= date_format($task->start_date,"F d, Y") ?></td>
                             <td class="text-center"><?= date_format($task->end_date > $task->modified ? $task->end_date : $task->modified,"F d, Y")  ?></td>
                             <td></td>
                             <?php foreach ($materials as $key => $value) { ?>
-                                <td class="text-center"><?= isset($task->materials[$key]->quantity)? $task->materials[$key]->quantity : '' ?></th>
+                                <td class="text-center"><?= isset($task->materials[$key]->quantity)? $task->materials[$key]->quantity : '' ?></td>
                             <?php }?>
                         </tr>
                     <?php 

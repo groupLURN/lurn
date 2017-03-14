@@ -26,7 +26,12 @@ class SummaryReportController extends AppController
         $this->set('projectId', $projectId);
         
         $project = $this->Projects->find('byId', ['project_id' => $projectId])->first();
-        
+
+        if($project->is_finished == 0) {
+            $this->Flash->error(__('The project is not yet finished. Please, try again once the project is done.'));
+            return $this->redirect(['controller' => 'dashboard']);
+        }
+
         $this->set('isFinished', $project->is_finished );
 
         $this->set('projectId', $projectId);
@@ -67,12 +72,10 @@ class SummaryReportController extends AppController
         $this->loadModel('EquipmentTasks');
         $this->loadModel('MaterialsTaskInventories');
         $this->loadModel('MaterialsTasks');
-        $this->loadModel('Manpower');
+        $this->loadModel('ManpowerTypes');
+        $this->loadModel('ManpowerTypesTasks');
 
         $project = $this->Projects->find('byId', ['project_id'=>$id])->first();
-        if($project->is_finished == 0) {
-            return $this->redirect(['controller' => 'dashboard']);
-        }
 
         $equipment = [];
         $equipmentInventories = $this->EquipmentInventories->find('byProjectId', ['project_id'=>$id])->toArray();
@@ -80,11 +83,8 @@ class SummaryReportController extends AppController
         $materials = [];
         $materialsInventories = $this->MaterialsTaskInventories->find('byProjectId', ['project_id'=>$id])->toArray();
         
-        $manpower = [];
-        $manpowerList = $this->Manpower->find('all')->toArray();
-
-        $skilledWorkers = 0;
-        $laborers = 0;
+        $manpowerTypes      = $this->ManpowerTypes->find('all')->toArray();
+        $manpowerTypesTasks = $this->ManpowerTypesTasks->find('all')->toArray();
 
         foreach ($equipmentInventories as $equipmentInventory) {
             $tempEquipment = $equipmentInventory->equipment;
@@ -118,22 +118,21 @@ class SummaryReportController extends AppController
 
                 // set manpower per task
                 $tempManpowerList = [];
-                foreach ($manpowerList as $tempManpower) {
-                    if($task->id === $tempManpower->task_id){
-                        $tempManpowerList[$tempManpower->name] = $tempManpower;
-                        $manpower[$tempManpower->name] = $tempManpower;
+                foreach ($manpowerTypesTasks as $manpowerTypesTask) {
+                    if($task->id === $manpowerTypesTask->task_id){
+                        foreach ($manpowerTypes as $manpowerType) {        
+                            if ($manpowerType->id === $manpowerTypesTask->manpower_type_id) {
+                                if (!isset($tempManpowerList[$manpowerType->title])) {
+                                    $tempManpowerList[$manpowerType->title] = 0;
+                                }
 
-                        if($tempManpower->manpower_type_id == 1){
-                            $skilledWorkers++;
-                        } else {
-                            $laborers++;
+                                $tempManpowerList[$manpowerType->title] += $manpowerTypesTask->quantity;
+                            }                    
                         }
                     }
                 }
 
-                $manpower['skilledWorkers'] = $skilledWorkers;
-                $manpower['laborers']       = $laborers;
-                $task['manpower']           = $tempManpowerList;
+                $task['manpower'] = $tempManpowerList;
             }            
         }
 
@@ -144,7 +143,7 @@ class SummaryReportController extends AppController
         $this->set(compact('project'));
         $this->set(compact('equipment'));
         $this->set(compact('materials'));
-        $this->set(compact('manpower'));
+        $this->set(compact('manpowerTypes'));
     }
 
     public function view($id = null, $download = null)
@@ -155,13 +154,10 @@ class SummaryReportController extends AppController
         $this->loadModel('EquipmentTasks');
         $this->loadModel('MaterialsTaskInventories');
         $this->loadModel('MaterialsTasks');
-        $this->loadModel('Manpower');
-
+        $this->loadModel('ManpowerTypes');
+        $this->loadModel('ManpowerTypesTasks');
 
         $project = $this->Projects->find('byId', ['project_id'=>$id])->first();
-        if($project->is_finished == 0) {
-            return $this->redirect(['controller' => 'dashboard']);
-        }
         
         $equipment = [];
         $equipmentInventories = $this->EquipmentInventories->find('byProjectId', ['project_id'=>$id])->toArray();
@@ -169,11 +165,8 @@ class SummaryReportController extends AppController
         $materials = [];
         $materialsInventories = $this->MaterialsTaskInventories->find('byProjectId', ['project_id'=>$id])->toArray();
         
-        $manpower = [];
-        $manpowerList = $this->Manpower->find('all')->toArray();
-
-        $skilledWorkers = 0;
-        $laborers = 0;
+        $manpowerTypes      = $this->ManpowerTypes->find('all')->toArray();
+        $manpowerTypesTasks = $this->ManpowerTypesTasks->find('all')->toArray();
 
         foreach ($equipmentInventories as $equipmentInventory) {
             $tempEquipment = $equipmentInventory->equipment;
@@ -207,22 +200,21 @@ class SummaryReportController extends AppController
 
                 // set manpower per task
                 $tempManpowerList = [];
-                foreach ($manpowerList as $tempManpower) {
-                    if($task->id === $tempManpower->task_id){
-                        $tempManpowerList[$tempManpower->name] = $tempManpower;
-                        $manpower[$tempManpower->name] = $tempManpower;
+                foreach ($manpowerTypesTasks as $manpowerTypesTask) {
+                    if($task->id === $manpowerTypesTask->task_id){
+                        foreach ($manpowerTypes as $manpowerType) {        
+                            if ($manpowerType->id === $manpowerTypesTask->manpower_type_id) {
+                                if (!isset($tempManpowerList[$manpowerType->title])) {
+                                    $tempManpowerList[$manpowerType->title] = 0;
+                                }
 
-                        if($tempManpower->manpower_type_id == 1){
-                            $skilledWorkers++;
-                        } else {
-                            $laborers++;
+                                $tempManpowerList[$manpowerType->title] += $manpowerTypesTask->quantity;
+                            }                    
                         }
                     }
                 }
 
-                $manpower['skilledWorkers'] = $skilledWorkers;
-                $manpower['laborers']       = $laborers;
-                $task['manpower']           = $tempManpowerList;
+                $task['manpower'] = $tempManpowerList;
             }            
         }
 
@@ -233,7 +225,7 @@ class SummaryReportController extends AppController
         $this->set(compact('project'));
         $this->set(compact('equipment'));
         $this->set(compact('materials'));
-        $this->set(compact('manpower'));
+        $this->set(compact('manpowerTypes'));
 
         $currentDate = Time::now();
         $currentDate = $currentDate->month . "/" . $currentDate->day . "/" . $currentDate->year;

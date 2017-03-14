@@ -2,13 +2,8 @@
 
 <table class="table report summary-report">
     <tr>
-        <th class="text-center" colspan="6"></th>
-        <th class="text-center" colspan=<?= count($manpower)-2?>><?= __('Manpower')?></th>
-    </tr>
-    <tr>
-        <th class="text-center" colspan="6"></th>
-        <th class="text-center" colspan=<?= $manpower['skilledWorkers']?>><?= __('Skilled Workers')?></th>
-        <th class="text-center" colspan=<?= $manpower['laborers']?>><?= __('Laborers')?></th>
+        <th class="text-center" colspan="5"></th>
+        <th class="text-center" colspan=<?= count($manpowerTypes)?>><?= __('Manpower')?></th>
     </tr>
     <tr>
         <th class="text-center"></th>
@@ -16,37 +11,18 @@
         <th class="text-center"><?= __('Duration (Days)') ?></th>
         <th class="text-center"><?= __('Start Date') ?></th>
         <th class="text-center"><?= __('Finish Date')?></th>
-        <th class="text-center rotate"><div><span><?= __('Name')?></span></div></th>
-        <?php foreach ($manpower as $person) { 
-            if(isset($person->name)){
-                if($person->manpower_type_id === 1){
-            ?>
-
-            <th class="rotate"><div><span><?= $person->name?></span></div></th>
-        <?php 
-                }
-            }
-        }?>
-        <?php foreach ($manpower as $person) { 
-            if(isset($person->name)){
-                if($person->manpower_type_id === 2){
-            ?>
-
-            <th class="rotate"><div><span><?= $person->name?></span></div></th>
-        <?php 
-                }
-            }
-        }?>
+        <th class="text-center"><?= __('Skilled Workers')?></th>
+        <th class="text-center"><?= __('Laborers')?></th>
     </tr>
     <?php 
-        $milestoneIndex = 'A';
-        foreach ($project->milestones as $milestone){
-    ?>
+    $milestoneIndex = 'A';
+    foreach ($project->milestones as $milestone){
+        ?>
         <tr>
             <td class="text-left"><?= $milestoneIndex ?></td>
             <td class="text-left"><?= $milestone->title ?></td>
             <td class="text-center">
-            <?php
+                <?php
                 $duration = 0;
 
                 foreach ($milestone->tasks as $task){                                
@@ -62,27 +38,41 @@
                     $taskDuration = date_diff($date1,$date2);
 
 
-                    $duration += $taskDuration->d;
+                    $duration += $taskDuration->days;
                 }
 
                 echo $duration;
-            ?>
+                ?>
             </td>
             <td class="text-center"><?= date_format($milestone->start_date,"F d, Y") ?></td>
-            <td class="text-center"><?= date_format($milestone->end_date > $milestone->modified ? $milestone->end_date : $milestone->modified,"F d, Y")  ?></td>
-            <td></td>
-        	<td class="text-center" colspan=<?= count($manpower)-2?>></td>
+            <td class="text-center">
+                <?php
+                $endDate = null;
+
+                foreach ($milestone->tasks as $task){
+
+                    if($endDate !== null || $task->end_date > $task->modified){
+                        $endDate = new DateTime($task->end_date);
+                    } else {
+                        $endDate = new DateTime($task->modified);
+                    }
+                }
+
+                echo date_format($endDate,"F d, Y");
+                ?>
+            </td>
+            <td class="text-center" colspan=<?= count($manpowerTypes)?>></td>
         </tr>
 
         <?php 
-            $taskIndex = 1;
-            foreach ($milestone->tasks as $task){
+        $taskIndex = 1;
+        foreach ($milestone->tasks as $task){
             ?>
             <tr>
                 <td class="text-right"><?= $taskIndex ?></td>
                 <td class="text-left"><?= $task->title ?></td>
                 <td class="text-center">
-                <?php
+                    <?php
                     $date1 = null;
 
                     $date2 = $task->start_date;
@@ -94,26 +84,27 @@
 
                     $duration = date_diff($date1,$date2);
 
-                    echo $duration->d;
-                ?>
+                    echo $duration->days;
+                    ?>
                 </td>
                 <td class="text-center"><?= date_format($task->start_date,"F d, Y") ?></td>
                 <td class="text-center"><?= date_format($task->end_date > $task->modified ? $task->end_date : $task->modified,"F d, Y")  ?></td>
-                <td></td>
-                <?php foreach ($manpower as $key => $value) { 
-                    if($key != 'laborers' && $key != 'skilledWorkers'){
-                ?>
-                    <td class="text-center"><?= isset($task->manpower[$key])? '&times;' : '' ?></th>
                 <?php 
-                    }
-                }?>
+                foreach ($manpowerTypes as $manpowerType) { 
+                    ?>
+                    <td class="text-center">
+                    <?= isset($task->manpower[$manpowerType->title]) ? $task->manpower[$manpowerType->title] : '&nbsp;' ?>
+                    </td>
+                    <?php 
+                }
+                ?>
             </tr>
-        <?php 
+            <?php 
 
             $taskIndex++;
-            }
-
-            $milestoneIndex++;
         }
+
+        $milestoneIndex++;
+    }
     ?>
 </table>

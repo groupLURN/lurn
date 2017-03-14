@@ -9,8 +9,8 @@ $this->Html->meta('icon', null, ['block' => true]);
 
 // User-defined CSS
 $this->Html->css('pdf', ['block' => true, 'fullBase' => true]);
-?>
 
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,33 +25,19 @@ $this->Html->css('pdf', ['block' => true, 'fullBase' => true]);
 
 <body>
 
-<div class="header">
-    <?= $this->Html->image('logo.jpg', array('fullBase' => true, 'class' => 'float-right')) ?>
-    <h3 class="text-left">
-        <?= h($project->title) ?><br>
-        <?= h($project->client->company_name) ?><br>
-        J.I. Espino Construction<br>
-        <?= h($project->employee->name) ?><br>
-        <?= h($project->location) ?><br>
-    </h3>
-    <br>
+<div class="horizontal-header">
+    <?= $this->Html->image('logo.jpg', array('fullBase' => true)) ?>
+    <span>J.I. Espino Construction</span>
 </div>
 
 <div class="page-break body">
+    <h3 align="center"><?= $this->fetch('title') ?></h3>
     <?= $this->fetch('content'); ?>
 </div>
 
-
-<div class="header">
-    <?= $this->Html->image('logo.jpg', array('fullBase' => true, 'class' => 'float-right')) ?>
-    <h3 class="text-left">
-        <?= h($project->title) ?><br>
-        <?= h($project->client->company_name) ?><br>
-        J.I. Espino Construction<br>
-        <?= h($project->employee->name) ?><br>
-        <?= h($project->location) ?><br>
-    </h3>
-    <br>
+<div class="horizontal-header">
+    <?= $this->Html->image('logo.jpg', array('fullBase' => true)) ?>
+    <span>J.I. Espino Construction</span>
 </div>
 
 <hr>

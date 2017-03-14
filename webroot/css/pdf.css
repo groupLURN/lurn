@@ -96,6 +96,11 @@ p {
     text-align: center;
 }
 
+.reset-paragraph, .reset-paragraph p {
+    text-indent: 0px;
+    font-size: 12px;
+}
+
 .page-break {
     clear: both;
     display: block;

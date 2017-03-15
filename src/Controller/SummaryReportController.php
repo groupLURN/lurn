@@ -27,10 +27,10 @@ class SummaryReportController extends AppController
         
         $project = $this->Projects->find('byId', ['project_id' => $projectId])->first();
 
-        // if($project->is_finished == 0) {
-        //     $this->Flash->error(__('The project is not yet finished. Please, try again once the project is done.'));
-        //     return $this->redirect(['controller' => 'dashboard']);
-        // }
+        if($project->is_finished == 0) {
+            $this->Flash->error(__('The project is not yet finished. Please, try again once the project is done.'));
+            return $this->redirect(['controller' => 'dashboard']);
+        }
 
         $this->set('isFinished', $project->is_finished );
 

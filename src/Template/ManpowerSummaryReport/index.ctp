@@ -29,8 +29,11 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th class="text-center" colspan="5"></th>
-                        <th class="text-center" colspan=<?= count($manpowerTypes)?>><?= __('Manpower')?></th>
+                        <th class="text-center" colspan="6"></th>
+                        <th class="text-center" colspan=<?= count($manpower['skilledWorkers']) + count($manpower['laborers'])?>>
+                        <?= __('Manpower')?>
+                            
+                        </th>
                     </tr>
                     <tr>
                         <th class="text-center"></th>
@@ -38,8 +41,27 @@
                         <th class="text-center"><?= __('Duration (Days)') ?></th>
                         <th class="text-center"><?= __('Start Date') ?></th>
                         <th class="text-center"><?= __('Finish Date')?></th>
-                        <th class="text-center"><?= __('Skilled Workers')?></th>
-                        <th class="text-center"><?= __('Laborers')?></th>
+                        <th class="rotate"><div><span>Name</span></div></th>
+                        <?php foreach ($manpower['skilledWorkers'] as $person) { 
+                            if(isset($person->name)){
+                                if($person->manpower_type_id === 1){
+                            ?>
+
+                            <th class="rotate"><div><span><?= $person->name?></span></div></th>
+                        <?php 
+                                }
+                            }
+                        }?>
+                        <?php foreach ($manpower['laborers'] as $person) { 
+                            if(isset($person->name)){
+                                if($person->manpower_type_id === 2){
+                            ?>
+
+                            <th class="rotate"><div><span><?= $person->name?></span></div></th>
+                        <?php 
+                                }
+                            }
+                        }?>
                     </tr>
                 </thead>
                 <tbody>
@@ -75,23 +97,23 @@
                             </td>
                             <td class="text-center"><?= date_format($milestone->start_date,"F d, Y") ?></td>
                             <td class="text-center">
+                                <?php
+                                $endDate = null;
 
-                <?php
-                $endDate = null;
+                                foreach ($milestone->tasks as $task){
 
-                foreach ($milestone->tasks as $task){
+                                    if($endDate !== null || $task->end_date > $task->modified){
+                                        $endDate = new DateTime($task->end_date);
+                                    } else {
+                                        $endDate = new DateTime($task->modified);
+                                    }
+                                }
 
-                    if($endDate !== null || $task->end_date > $task->modified){
-                        $endDate = new DateTime($task->end_date);
-                    } else {
-                        $endDate = new DateTime($task->modified);
-                    }
-                }
-
-                echo date_format($endDate,"F d, Y");
-                ?>
+                                echo date_format($endDate,"F d, Y");
+                                ?>
                             </td>
-                            <td class="text-center" colspan=<?= count($manpowerTypes)?>></td>
+                            <td></td>
+                            <td class="text-center" colspan=<?= count($manpower['skilledWorkers']) + count($manpower['laborers']) ?>></td>
                         </tr>
 
                         <?php 
@@ -119,14 +141,42 @@
                                 </td>
                                 <td class="text-center"><?= date_format($task->start_date,"F d, Y") ?></td>
                                 <td class="text-center"><?= date_format($task->end_date > $task->modified ? $task->end_date : $task->modified,"F d, Y")  ?></td>
+
+                                <td></td>
                                 <?php 
-                                foreach ($manpowerTypes as $manpowerType) { 
+                                    foreach ($manpower['skilledWorkers'] as $person) {
+                                ?>
+                                    <td>
+                                    <?php     
+                                        $mark = ' ';                               
+                                        foreach ($task->manpower_per_task as $manpowerPerTask) {
+                                            if ($person->id === $manpowerPerTask->id) {
+                                                $mark = '&times;';
+                                                break;
+                                            }
+                                        }
+                                        echo $mark;
                                     ?>
-                                    <td class="text-center">
-                                        <?= isset($task->manpower[$manpowerType->title]) ? $task->manpower[$manpowerType->title] : '' ?>
                                     </td>
-                                    <?php 
-                                }
+                                <?php
+                                    }
+
+                                    foreach ($manpower['laborers'] as $person) { 
+                                ?>
+                                    <td>
+                                    <?php     
+                                        $mark = ' ';                               
+                                        foreach ($task->manpower_per_task as $manpowerPerTask) {
+                                            if ($person->id === $manpowerPerTask->id) {
+                                                $mark = '&times;';
+                                                break;
+                                            }
+                                        }
+                                        echo $mark;
+                                    ?>
+                                    </td>
+                                <?php
+                                    }
                                 ?>
                             </tr>
                             <?php 

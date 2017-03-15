@@ -69,13 +69,9 @@ class TasksTable extends Table
         $this->hasMany('EquipmentInventories', [
             'foreignKey' => 'task_id'
         ]);
-        $this->hasMany('Manpower', [
-            'foreignKey' => 'task_id',
-        ]);
+
         $this->hasMany('MaterialsTaskInventories', [
             'foreignKey' => 'task_id',
-            'dependent' => true,
-            'cascadeCallbacks' => true,
         ]);
 
         // Resources Needed
@@ -84,15 +80,24 @@ class TasksTable extends Table
             'targetForeignKey' => 'equipment_id',
             'joinTable' => 'equipment_tasks'
         ]);
+
         $this->belongsToMany('ManpowerTypes', [
             'foreignKey' => 'task_id',
             'targetForeignKey' => 'manpower_type_id',
             'joinTable' => 'manpower_types_tasks'
         ]);
+
         $this->belongsToMany('Materials', [
             'foreignKey' => 'task_id',
             'targetForeignKey' => 'material_id',
             'joinTable' => 'materials_tasks'
+        ]);
+
+        $this->belongsToMany('ManpowerPerTask', [
+            'className'     => 'Manpower',
+            'foreignKey'    => 'task_id',
+            'targetForeignKey' => 'manpower_id',
+            'joinTable'     => 'manpower_tasks',
         ]);
 
         // Record of Replenishment
@@ -107,6 +112,13 @@ class TasksTable extends Table
             'dependent' => true,
             'cascadeCallbacks' => true,
         ]);
+
+        $this->hasMany('ManpowerTasks', [
+            'foreignKey' => 'task_id',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
+        ]);
+
         $this->hasMany('MaterialReplenishmentDetails', [
             'foreignKey' => 'task_id',
             'dependent' => true,
@@ -469,7 +481,17 @@ class TasksTable extends Table
                     {
                         $entity = $manpowerInventories[$i];
                         $entity->task_id = $task->id;
+
+
                         TableRegistry::get('Manpower')->save($entity, ['atomic' => false]);
+
+                        $manpowerTask = TableRegistry::get('ManpowerTasks')->newEntity([
+                            'task_id' => $task->id,
+                            'manpower_id' => $entity->id,
+                        ]);
+
+                        TableRegistry::get('ManpowerTasks')->save($manpowerTask, ['atomic' => false]);
+
                         $quantityTransferred++;
                     }
 

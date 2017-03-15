@@ -31,7 +31,15 @@ $this->Html->css('pdf', ['block' => true, 'fullBase' => true]);
 </div>
 
 <div class="page-break body">
-    <h3 align="center"><?= $this->fetch('title') ?></h3>
+    <?php if (!isset($summary)): ?>
+    <h3>
+    <?= $project->title ?><br>
+    <?= $project->client->company_name ?><br>
+    <?= $project->employee->name?><br>
+    <?= $project->location ?>
+    </h3>
+    <?php  endif; ?>
+    <h3 align="center"><?= $this->fetch('title') ?></h3>    
     <?= $this->fetch('content'); ?>
 </div>
 

@@ -214,7 +214,7 @@ class ProjectsTable extends Table
                 ->contain(
                     [
                         'Clients', 
-                        'Milestones' => ['Tasks'], 
+                        'Milestones' => ['Tasks' => ['ManpowerPerTask']], 
                         'Employees',  
                         'EmployeesJoin' => ['EmployeeTypes'], 
                         'ProjectPhases', 
@@ -275,7 +275,7 @@ class ProjectsTable extends Table
     }
 
     public function findAllWithTasks(Query $query, array $options){
-        return $query->contain(['Clients', 'Milestones' => ['Tasks'], 'Employees',  'EmployeesJoin' => [
+        return $query->contain(['Clients', 'Milestones' => ['Tasks' => ['ManpowerPerTask']], 'Employees',  'EmployeesJoin' => [
         'EmployeeTypes'
         ]]);
         

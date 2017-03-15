@@ -270,52 +270,106 @@
                  Manpower
              </h4>
              <br>
-             <table class="table table-bordered">
-                <tr>
-                    <th class="text-center" colspan="2"></th>
-                    <th class="text-center" colspan=<?= count($manpowerTypes)?>><?= __('Manpower')?></th>
-                </tr>
-                <tr>
-                    <th class="text-center"></th>
-                    <th class="text-center"><?= __('Activity Description') ?></th>
-                    <th class="text-center"><?= __('Skilled Workers')?></th>
-                    <th class="text-center"><?= __('Laborers')?></th>
-                </tr>
-                <?php 
-                $milestoneIndex = 'A';
-                foreach ($project->milestones as $milestone){
-                    ?>
+            <table class="table table-bordered">
+                <thead>
                     <tr>
-                        <td class="text-left"><?= $milestoneIndex ?></td>
-                        <td class="text-left"><?= $milestone->title ?></td>
-                        <td class="text-center" colspan=<?= count($manpowerTypes)?>></td>
+                        <th class="text-center" colspan="3"></th>
+                        <th class="text-center" colspan=<?= count($manpower['skilledWorkers']) + count($manpower['laborers'])?>>
+                        <?= __('Manpower')?>
+                            
+                        </th>
                     </tr>
+                    <tr>
+                        <th class="text-center"></th>
+                        <th class="text-center"><?= __('Activity Description') ?></th>
+                        <th class="rotate"><div><span>Name</span></div></th>
+                        <?php foreach ($manpower['skilledWorkers'] as $person) { 
+                            if(isset($person->name)){
+                                if($person->manpower_type_id === 1){
+                            ?>
 
+                            <th class="rotate"><div><span><?= $person->name?></span></div></th>
+                        <?php 
+                                }
+                            }
+                        }?>
+                        <?php foreach ($manpower['laborers'] as $person) { 
+                            if(isset($person->name)){
+                                if($person->manpower_type_id === 2){
+                            ?>
+
+                            <th class="rotate"><div><span><?= $person->name?></span></div></th>
+                        <?php 
+                                }
+                            }
+                        }?>
+                    </tr>
+                </thead>
+                <tbody>
                     <?php 
-                    $taskIndex = 1;
-                    foreach ($milestone->tasks as $task){
+                    $milestoneIndex = 'A';
+                    foreach ($project->milestones as $milestone){
                         ?>
                         <tr>
-                            <td class="text-right"><?= $taskIndex ?></td>
-                            <td class="text-left"><?= $task->title ?></td>
-                            <?php 
-                            foreach ($manpowerTypes as $manpowerType) { 
-                                ?>
-                                <td class="text-center">
-                                    <?= isset($task->manpower[$manpowerType->title]) ? $task->manpower[$manpowerType->title] : '&nbsp;' ?>
-                                </td>
-                                <?php 
-                            }
-                            ?>
+                            <td class="text-left"><?= $milestoneIndex ?></td>
+                            <td class="text-left"><?= $milestone->title ?></td>
+                            <td></td>
+                            <td class="text-center" colspan=<?= count($manpower['skilledWorkers']) + count($manpower['laborers']) ?>></td>
                         </tr>
+
                         <?php 
+                        $taskIndex = 1;
+                        foreach ($milestone->tasks as $task){
+                            ?>
+                            <tr>
+                                <td class="text-right"><?= $taskIndex ?></td>
+                                <td class="text-left"><?= $task->title ?></td>
+                                <td></td>
+                                <?php 
+                                    foreach ($manpower['skilledWorkers'] as $person) {
+                                ?>
+                                    <td>
+                                    <?php     
+                                        $mark = ' ';                               
+                                        foreach ($task->manpower_per_task as $manpowerPerTask) {
+                                            if ($person->id === $manpowerPerTask->id) {
+                                                $mark = '&times;';
+                                                break;
+                                            }
+                                        }
+                                        echo $mark;
+                                    ?>
+                                    </td>
+                                <?php
+                                    }
 
-                        $taskIndex++;
+                                    foreach ($manpower['laborers'] as $person) { 
+                                ?>
+                                    <td>
+                                    <?php     
+                                        $mark = ' ';                               
+                                        foreach ($task->manpower_per_task as $manpowerPerTask) {
+                                            if ($person->id === $manpowerPerTask->id) {
+                                                $mark = '&times;';
+                                                break;
+                                            }
+                                        }
+                                        echo $mark;
+                                    ?>
+                                    </td>
+                                <?php
+                                    }
+                                ?>
+                            </tr>
+                            <?php 
+
+                            $taskIndex++;
+                        }
+
+                        $milestoneIndex++;
                     }
-
-                    $milestoneIndex++;
-                }
-                ?>
+                    ?>
+                </tbody>
             </table>
         </div><!-- /content-panel -->
     </div><!-- /col-xs-12 -->

@@ -79,7 +79,7 @@ $this->start('additional-sidebar');
         <li><a href=<?= $this->Url->build(['controller' => 'ManpowerProjectInventoryReport', $projectId]) ?>>Manpower Inventory Report</a></li>
     </ul>
 </li>
-<?php if ($isFinished == 1) {?>
+<?php if ($isFinished == 0) {?>
 <li class="sub-menu">
     <a href="javascript:;" >
         <i class="fa fa-file"></i>

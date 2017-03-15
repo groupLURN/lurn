@@ -17,78 +17,53 @@ class  ManpowerSummaryReportController extends SummaryReportController
      */
     public function index($id = null)
     {        
-        $this->loadModel('Projects');
-        $this->loadModel('ManpowerTypes');
-        $this->loadModel('ManpowerTypesTasks');
 
         $project = $this->Projects->find('byId', ['project_id'=>$id])->first();
 
-        $manpowerTypes       = $this->ManpowerTypes->find('all')->toArray();
-        $manpowerTypesTasks = $this->ManpowerTypesTasks->find('all')->toArray();
-
+        $manpower = [];
+        $manpower['skilledWorkers'] = [];
+        $manpower['laborers'] = [];
 
         foreach ($project->milestones as $milestone){
             foreach ($milestone->tasks as $task){    
-                $tempManpowerList = [];
-                foreach ($manpowerTypesTasks as $manpowerTypesTask) {
-                    if($task->id === $manpowerTypesTask->task_id){
-                        foreach ($manpowerTypes as $manpowerType) {        
-                            if ($manpowerType->id === $manpowerTypesTask->manpower_type_id) {
-                                if (!isset($tempManpowerList[$manpowerType->title])) {
-                                    $tempManpowerList[$manpowerType->title] = 0;
-                                }
-
-                                $tempManpowerList[$manpowerType->title] += $manpowerTypesTask->quantity;
-                            }                    
-                        }
+                foreach ($task->manpower_per_task as $tempManpower) {
+                    if($tempManpower->manpower_type_id == 1){
+                        $manpower['skilledWorkers'][$tempManpower->id] = $tempManpower;
+                    } else {
+                        $manpower['laborers'][$tempManpower->id] = $tempManpower;
                     }
                 }
-
-                $task['manpower'] = $tempManpowerList;
             }
         }
 
         $this->set(compact('project'));
-        $this->set(compact('manpowerTypes'));
+        $this->set(compact('manpower'));
     }
 
     public function view($id = null, $download = null)
     {
         $this->viewBuilder()->layout('summary-report');
-        
-        $this->loadModel('Projects');
-        $this->loadModel('ManpowerTypes');
-        $this->loadModel('ManpowerTypesTasks');
 
         $project = $this->Projects->find('byId', ['project_id'=>$id])->first();
 
-        $manpowerTypes       = $this->ManpowerTypes->find('all')->toArray();
-        $manpowerTypesTasks = $this->ManpowerTypesTasks->find('all')->toArray();
-
+        $manpower = [];
+        $manpower['skilledWorkers'] = [];
+        $manpower['laborers'] = [];
 
         foreach ($project->milestones as $milestone){
             foreach ($milestone->tasks as $task){    
-                $tempManpowerList = [];
-                foreach ($manpowerTypesTasks as $manpowerTypesTask) {
-                    if($task->id === $manpowerTypesTask->task_id){
-                        foreach ($manpowerTypes as $manpowerType) {        
-                            if ($manpowerType->id === $manpowerTypesTask->manpower_type_id) {
-                                if (!isset($tempManpowerList[$manpowerType->title])) {
-                                    $tempManpowerList[$manpowerType->title] = 0;
-                                }
-
-                                $tempManpowerList[$manpowerType->title] += $manpowerTypesTask->quantity;
-                            }                    
-                        }
+                foreach ($task->manpower_per_task as $tempManpower) {
+                    if($tempManpower->manpower_type_id == 1){
+                        $manpower['skilledWorkers'][$tempManpower->id] = $tempManpower;
+                    } else {
+                        $manpower['laborers'][$tempManpower->id] = $tempManpower;
                     }
                 }
-
-                $task['manpower'] = $tempManpowerList;
             }
         }
 
         $this->set(compact('project'));
-        $this->set(compact('manpowerTypes'));
+        $this->set(compact('manpower'));
 
         $currentDate = Time::now();
         $currentDate = $currentDate->month . "/" . $currentDate->day . "/" . $currentDate->year;

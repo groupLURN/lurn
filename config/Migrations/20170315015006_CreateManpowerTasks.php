@@ -3,9 +3,6 @@ use Migrations\AbstractMigration;
 
 class CreateManpowerTasks extends AbstractMigration
 {
-
-    public $autoId = false;
-
     /**
      * Change Method.
      *
@@ -26,18 +23,17 @@ class CreateManpowerTasks extends AbstractMigration
             'limit' => 255,
             'null' => false,
         ]);
+		
         $table->addColumn('created', 'datetime', [
             'default' => null,
             'null' => false,
         ]);
+		
         $table->addColumn('modified', 'datetime', [
             'default' => null,
             'null' => false,
         ]);
-        $table->addPrimaryKey([
-            'manpower_id',
-            'task_id',
-        ]);
+		
         $table->addForeignKey('manpower_id', 'manpower');
         $table->addForeignKey('task_id', 'tasks');
 

@@ -254,31 +254,40 @@ class ProjectsController extends AppController
 
 				foreach ($project['employees_join'] as $employee) {
 					$notification = $this->Notifications->newEntity();
-					$link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'projects', 
-						'action' => 'view/'.$project->id ], false));
-					$notification->link = $link;
 					$notification->message = 'You have been added to the <b>'.$project->title.'</b> project.';
+					
+					$link = '';
+
+					if (in_array($employee['employee_type_id'], [0, 1, 2])) {						
+						$notification->message .= ' You may now create the gantt chart for this project.';
+						$link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'project-overview', 
+							'action' => 'index/'.$project->id ], false));
+					} else {
+						$notification->message .= ' You may now view the project details.';
+						$link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'projects', 
+							'action' => 'view/'.$project->id ], false));						
+					}
+
+					$notification->link = $link;					
 					$notification->user_id = $employee['user_id'];
 					$notification->project_id = $project->id;
 
-					if (in_array($employee['employee_type_id'], [0, 1, 2])) {						
-						$notification->message .= ' You can now create a gantt chart for this project.';
-					} else {
-						$notification->message .= ' You can now create a gantt chart for this project.';
-					}
-
 					$this->Notifications->save($notification);
 				}
-				
-				$files = [
-					'files' => $postData['file'],
-					'file_labels' => $postData['file-label']
-				];
 
-				$this->Project->uploadFiles($files, $project);
+				if (isset($postData['file']) && isset($postData['file-label'])) {
+				
+					$files = [
+						'files' => $postData['file'],
+						'file_labels' => $postData['file-label']
+					];
+
+					$this->Project->uploadFiles($files, $project);
+
+				}
 
 				$this->Flash->success(__('The project has been created.'
-					.' You can now create a gantt chart for this project.'));
+					.' You may now create the gantt chart for this project.'));
 				return $this->redirect(['action' => 'index']);
 
 			} else {

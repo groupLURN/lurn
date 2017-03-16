@@ -3,7 +3,9 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
+use Cake\Routing\Router;
 use DateTime;
 
 /**
@@ -12,6 +14,26 @@ use DateTime;
  */
 class ProjectPlanningController extends ProjectOverviewController
 {
+    public function beforeFilter(Event $event)
+    {
+        if(empty($this->request->params['pass'])) {
+            return $this->redirect(['controller' => 'dashboard']);
+        }
+
+        $this->loadModel('Projects');
+        $this->viewBuilder()->layout('project_management');
+        $projectId = (int) $this->request->params['pass'][0];
+        
+        $this->set('projectId', $projectId);
+        
+        $project = $this->Projects->find('byId', ['project_id' => $projectId])->first();
+
+        $this->set('isFinished', $project->is_finished );
+
+        $this->set('projectId', $projectId);
+        return parent::beforeFilter($event);
+    }
+
     public function isAuthorized($user)
     {
         $action = $this->request->params['action'];
@@ -72,7 +94,28 @@ class ProjectPlanningController extends ProjectOverviewController
             );
 
             if ($isSuccessful) {
-                $this->Flash->success(__('The gantt chart has been saved.'));
+        
+                $project = $this->Projects->find('byId', ['project_id' => $id])->first();
+
+                $this->loadModel('Notifications');
+
+                foreach ($project['employees_join'] as $employee) {
+
+                    if (in_array($employee['employee_type_id'], [0, 1, 2])) { 
+                        $notification = $this->Notifications->newEntity();
+                        $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'project-overview', 
+                            'action' => 'index/'.$project->id ], false));           
+                        $notification->link = $link;
+                        $notification->message = 'The gantt chart for the <b>'.$project->title.'</b> project has been saved.'
+                            . ' You may now assign resources.';
+                        $notification->user_id = $employee['user_id'];
+                        $notification->project_id = $project->id;   
+
+                        $this->Notifications->save($notification);                   
+                    }
+                }
+
+                $this->Flash->success(__('The gantt chart has been saved. You may now assign resources.'));
                 return $this->redirect(['action' => 'createGanttChart', $id]);
             } else {
                 $this->Flash->error(__('The gantt chart could not be saved. Please, try again.'));

@@ -12,8 +12,7 @@ use Cake\I18n\Time;
  */
 class DashboardController extends AppController
 {
-    public function beforeFilter(Event $event)
-    {
+    public function beforeFilter(Event $event) {
         $user = null !== $this->request->session()->read('Auth.User') 
             ? $this->request->session()->read('Auth.User') : null;
         
@@ -51,8 +50,7 @@ class DashboardController extends AppController
      * @return void
      */
 
-    public function index()
-    {    	      
+    public function index () {    	      
         $this->loadModel('Notifications');
 
         $this->paginate = [
@@ -113,8 +111,7 @@ class DashboardController extends AppController
         $this->set('_serialize', ['projects']);
 
     }
-    public function view($id = null)
-    {         
+    public function view($id = null) {         
         $project = $this->Projects->find('byId', ['project_id' => $id])->first();
         $this->Projects->computeProjectStatus($project);
         $this->set('project', $project);
@@ -123,8 +120,7 @@ class DashboardController extends AppController
 
 
 
-    public function afterFilter(Event $event)
-    {   
+    public function afterFilter(Event $event) {   
         $this->markNotificationsAsRead();
         return parent::afterFilter($event);
     }

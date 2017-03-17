@@ -18,11 +18,7 @@ class PurchaseOrderHeadersController extends AppController
         $employeeTypeId = isset($user['employee']['employee_type_id'])
             ? $user['employee']['employee_type_id'] : '';
 
-        if ($action === 'view') {
-            return in_array($employeeTypeId, [0, 2, 4], true);
-        }
-        
-        return in_array($employeeTypeId, [0, 2], true);
+        return in_array($employeeTypeId, [0, 4], true);
     }
     
     /**
@@ -125,23 +121,17 @@ class PurchaseOrderHeadersController extends AppController
 
 	                $project = $this->Projects->find('byId', ['project_id' => $purchaseOrderHeader->project_id])->first();
 
-	                array_push($employees, $project->employee);
-	                for ($i=0; $i < count($project->employees_join); $i++) { 
-	                    $employeeType = $project->employees_join[$i]->employee_type_id;
-	                    if($employeeType == 1 || $employeeType == 4) {
-	                        array_push($employees, $project->employees_join[$i]);
-	                    }
-	                }
-
-	                foreach ($employees as $employee) {
-	                    $notification = $this->Notifications->newEntity();
-	                    $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'purchase-order-headers', 'action' => 'view/'. $purchaseOrderHeader->id ], false));
-	                    $notification->link = $link;
-	                    $notification->message = '<b>'.$project->title.'</b> has made a purchase order. Click to see the order.';
-	                    $notification->user_id = $employee['user_id'];
-	                    $notification->project_id = $purchaseOrderHeader->project_id;
-	                    $this->Notifications->save($notification);
-	                }
+	                foreach ($project->employees_join as $employee) {
+	                    if($employeeType == 4) {
+		                    $notification = $this->Notifications->newEntity();
+		                    $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'purchase-order-headers', 'action' => 'view/'. $purchaseOrderHeader->id ], false));
+		                    $notification->link = $link;
+		                    $notification->message = 'A purchase order has been made for <b>'.$project->title.'</b>. Click to see the order.';
+		                    $notification->user_id = $employee['user_id'];
+		                    $notification->project_id = $purchaseOrderHeader->project_id;
+		                    $this->Notifications->save($notification);
+		                }
+		            }
 
 				$this->Flash->success(__('The purchase order number ' . $purchaseOrderHeader->number . ' has been saved.'));
 				return $this->redirect(['action' => 'index']);
@@ -158,52 +148,6 @@ class PurchaseOrderHeadersController extends AppController
 		$this->set(compact('purchaseOrderHeader', 'projects', 'milestones', 'tasks', 'suppliers', 'materials'));
 		$this->set('_serialize', ['purchaseOrderHeader', 'projects', 'suppliers', 'materials']);
 	}
-
-	/**
-	* Edit method
-	*
-	* @param string|null $id Purchase Order Header id.
-	* @return \Cake\Network\Response|void Redirects on successful edit, renders view otherwise.
-	* @throws \Cake\Network\Exception\NotFoundException When record not found.
-	*/
-	public function edit($id = null)
-	{
-		$purchaseOrderHeader = $this->PurchaseOrderHeaders->get($id, [
-			'contain' => []
-			]);
-		if ($this->request->is(['patch', 'post', 'put'])) {
-			$purchaseOrderHeader = $this->PurchaseOrderHeaders->patchEntity($purchaseOrderHeader, $this->request->data);
-			if ($this->PurchaseOrderHeaders->save($purchaseOrderHeader)) {
-				$this->Flash->success(__('The purchase order header has been saved.'));
-				return $this->redirect(['action' => 'index']);
-			} else {
-				$this->Flash->error(__('The purchase order header could not be saved. Please, try again.'));
-			}
-		}
-		$projects = $this->PurchaseOrderHeaders->Projects->find('list', ['limit' => 200]);
-		$suppliers = $this->PurchaseOrderHeaders->Suppliers->find('list', ['limit' => 200]);
-		$this->set(compact('purchaseOrderHeader', 'projects', 'suppliers'));
-		$this->set('_serialize', ['purchaseOrderHeader']);
-	}
-
-	/**
-	* Delete method
-	*
-	* @param string|null $id Purchase Order Header id.
-	* @return \Cake\Network\Response|null Redirects to index.
-	* @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-	*/
-	public function delete($id = null)
-	{
-		$this->request->allowMethod(['post', 'delete']);
-		$purchaseOrderHeader = $this->PurchaseOrderHeaders->get($id);
-		if ($this->PurchaseOrderHeaders->delete($purchaseOrderHeader)) {
-			$this->Flash->success(__('The purchase order header has been deleted.'));
-		} else {
-			$this->Flash->error(__('The purchase order header could not be deleted. Please, try again.'));
-		}
-		return $this->redirect(['action' => 'index']);
-	} 
 
 	/**
 	* Method for getting milestones from the database

@@ -277,31 +277,26 @@ class TasksController extends AppController
             if ($this->Tasks->returnToProjectInventory($task, $this->request->data['materials']) &&
                 $this->Tasks->save($task))
             {   
-                $this->loadModel('Notifications');
                 $this->loadModel('Projects');
-                $employees = [];
 
                 $project = $this->Projects->find('byId', ['project_id' => $task->milestone->project_id])->first();
 
-                array_push($employees, $project->employee);
-                for ($i=0; $i < count($project->employees_join); $i++) { 
-                    $employeeType = $project->employees_join[$i]->employee_type_id;
-                    if($employeeType == 1 || $employeeType == 3) {
-                        array_push($employees, $project->employees_join[$i]);
+                $this->loadModel('Notifications');
+
+                foreach ($project['employees_join'] as $employee) {
+
+                    if (in_array($employee['employee_type_id'], [0, 1, 2, 3])) {  
+                        $notification = $this->Notifications->newEntity();
+                        $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'tasks', 
+                            'action' => 'view-finished/'.$task->id.'?project_id='.$project->id ], false));
+                        $notification->link = $link;
+                        $notification->message = 'The task <b>'.$task->title.'</b> has been completed.';
+                        $notification->user_id = $employee['user_id'];
+                        $notification->project_id = $project->id;
+                        $this->Notifications->save($notification);            
                     }
                 }
 
-                foreach ($employees as $employee) {
-                    $notification = $this->Notifications->newEntity();
-                    $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'tasks', 
-                        'action' => 'view-finished/'.$task->id.'?project_id='.$project->id ], false));
-                    $notification->link = $link;
-                    $notification->message = 'The task <b>'.$task->title.'</b> has been completed.';
-                    $notification->user_id = $employee['user_id'];
-                    $notification->project_id = $project->id;
-                    $this->Notifications->save($notification);
-                }
-                
                 $this->Flash->success(__('The task has been marked finished!'));
                 $projectId = (int) $this->request->query['project_id'];
                 return $this->redirect(['action' => 'manage', '?' => ['project_id' => $projectId]]);
@@ -357,6 +352,28 @@ class TasksController extends AppController
             $task->dirty('materials', true);
 
             if ($this->Tasks->save($task)) {
+
+                $this->loadModel('Projects');
+
+                $project = $this->Projects->find('byId', ['project_id' => $task->milestone->project_id])->first();
+
+                $this->loadModel('Notifications');
+
+                foreach ($project['employees_join'] as $employee) {
+
+                    if (in_array($employee['employee_type_id'], [0, 1, 2, 3])) {  
+                        $notification = $this->Notifications->newEntity();
+                        $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'tasks', 
+                            'action' => 'view-stock/'.$task->id.'?project_id='.$project->id ], false));
+                        $notification->link = $link;
+                        $notification->message = 'The task <b>'.$task->title.'</b> has been updated.'
+                            . ' You may now create resource transfer requests.';
+                        $notification->user_id = $employee['user_id'];
+                        $notification->project_id = $project->id;
+                        $this->Notifications->save($notification);            
+                    }
+                }
+
                 $this->Flash->success(__('The task has been saved.'));
                 $projectId = (int) $this->request->query['project_id'];
                 return $this->redirect(['action' => 'index', '?' => ['project_id' => $projectId]]);

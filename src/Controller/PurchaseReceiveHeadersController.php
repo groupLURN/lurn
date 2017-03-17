@@ -88,22 +88,17 @@ class PurchaseReceiveHeadersController extends AppController
 
                 $project = $this->Projects->find('byId', ['project_id' => $projectId])->first();
 
-                array_push($employees, $project->employee);
-                for ($i=0; $i < count($project->employees_join); $i++) { 
-                    $employeeType = $project->employees_join[$i]->employee_type_id;
-                    if($employeeType == 1 || $employeeType == 4) {
-                        array_push($employees, $project->employees_join[$i]);
+                foreach ($project->employees_join as $employee) {
+                    if($employeeType == 4) {
+                        $notification = $this->Notifications->newEntity();
+                        $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'purchase-receive-headers', 'action' => 'view/'. $purchaseReceiveHeader->id ], false));
+                        $notification->link = $link;
+                        $notification->message = '<b>'.$project->title.'\'s</b> purchase order has been received.'
+                            . ' You may now transfer resources';
+                        $notification->user_id = $employee['user_id'];
+                        $notification->project_id = $purchaseReceiveHeader->project_id;
+                        $this->Notifications->save($notification);
                     }
-                }
-
-                foreach ($employees as $employee) {
-                    $notification = $this->Notifications->newEntity();
-                    $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'purchase-receive-headers', 'action' => 'view/'. $purchaseReceiveHeader->id ], false));
-                    $notification->link = $link;
-                    $notification->message = '<b>'.$project->title.'\'s</b> purchase order has been received. Click to see the purchase receive.';
-                    $notification->user_id = $employee['user_id'];
-                    $notification->project_id = $purchaseReceiveHeader->project_id;
-                    $this->Notifications->save($notification);
                 }
 
                 $this->Flash->success(__('The purchase receive number ' . $purchaseReceiveHeader->number . ' has been saved.'));
@@ -140,31 +135,6 @@ class PurchaseReceiveHeadersController extends AppController
 
         $this->set(compact('purchaseReceiveHeader', 'purchaseOrderHeaders', 'materials'));
         $this->set('_serialize', ['purchaseReceiveHeader', 'purchaseOrderHeaders', 'materials']);
-    }
-
-    /**
-     * Edit method
-     *
-     * @param string|null $id Purchase Receive Header id.
-     * @return \Cake\Network\Response|void Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
-    public function edit($id = null)
-    {
-        $purchaseReceiveHeader = $this->PurchaseReceiveHeaders->get($id, [
-            'contain' => []
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $purchaseReceiveHeader = $this->PurchaseReceiveHeaders->patchEntity($purchaseReceiveHeader, $this->request->data);
-            if ($this->PurchaseReceiveHeaders->save($purchaseReceiveHeader)) {
-                $this->Flash->success(__('The purchase receive header has been saved.'));
-                return $this->redirect(['action' => 'index']);
-            } else {
-                $this->Flash->error(__('The purchase receive header could not be saved. Please, try again.'));
-            }
-        }
-        $this->set(compact('purchaseReceiveHeader'));
-        $this->set('_serialize', ['purchaseReceiveHeader']);
     }
 
     /**

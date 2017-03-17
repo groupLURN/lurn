@@ -73,26 +73,21 @@ class ResourceTransferHeadersController extends AppController
             if ($this->ResourceTransferHeaders->save($resourceTransferHeader)) {
                 $this->loadModel('Notifications');
                 $this->loadModel('Projects');
-                $employees = [];
 
                 $project = $this->Projects->find('byId', ['project_id' => $resourceTransferHeader->to_project_id])->first();
 
-                array_push($employees, $project->employee);
-                for ($i=0; $i < count($project->employees_join); $i++) { 
-                    $employeeType = $project->employees_join[$i]->employee_type_id;
-                    if($employeeType == 1 || $employeeType == 4) {
-                        array_push($employees, $project->employees_join[$i]);
+                foreach ($project['employees_join'] as $employee) {
+                    if (in_array($employee['employee_type_id'], [0, 1, 2])) {  
+                        $notification = $this->Notifications->newEntity();
+                        $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'project-overview', 
+                            'action' => 'index/'.$project->id ], false));      
+                        $notification->link = $link;
+                        $notification->message = 'The resources requested were transferred to the <b>'
+                            . $project->title . '</b> project. You may now replenish the resources assigned to the tasks.';
+                        $notification->user_id = $employee['user_id'];
+                        $notification->project_id = $resourceTransferHeader->to_project_id;
+                        $this->Notifications->save($notification);
                     }
-                }
-
-                foreach ($employees as $employee) {
-                    $notification = $this->Notifications->newEntity();
-                    $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'resource-transfer-headers', 'action' => 'view/'. $resourceTransferHeader->id ], false));
-                    $notification->link = $link;
-                    $notification->message = 'Resources has been transferred from the general inventory to <b>'.$project->title.'</b>.';
-                    $notification->user_id = $employee['user_id'];
-                    $notification->project_id = $resourceTransferHeader->to_project_id;
-                    $this->Notifications->save($notification);
                 }
 
 

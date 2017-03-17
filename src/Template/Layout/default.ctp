@@ -71,7 +71,7 @@ $this->start('additional-sidebar');
 ?>
 
 <?php 
-    if (in_array($employeeType, [0, 2, 4], true)) {
+    if (in_array($employeeType, [0, 4], true)) {
 ?>
 <li class="sub-menu">
     <a href="javascript:;" >
@@ -80,28 +80,10 @@ $this->start('additional-sidebar');
         <span class="caret"> </span>
     </a>
     <ul class="sub">
-        <?php 
-            if (in_array($employeeType, [0, 2], true)) {
-        ?>
         <li><a href=<?= $this->Url->build(['controller' => 'RentalRequestHeaders', 'action' => 'index']) ?>>Rental Requests</a></li>
-        <?php 
-            }
-            if (in_array($employeeType, [0, 4], true)) {
-        ?>
         <li><a href=<?= $this->Url->build(['controller' => 'RentalReceiveHeaders', 'action' => 'index']) ?>>Rental Receives</a></li>
-        <?php 
-            }
-            if (in_array($employeeType, [0, 2], true)) {
-        ?>
         <li><a href=<?= $this->Url->build(['controller' => 'PurchaseOrderHeaders', 'action' => 'index']) ?>>Purchase Orders</a></li>
-        <?php 
-            }
-            if (in_array($employeeType, [0, 4], true)) {
-        ?>
         <li><a href=<?= $this->Url->build(['controller' => 'PurchaseReceiveHeaders', 'action' => 'index']) ?>>Purchase Receives</a></li>
-        <?php 
-            }
-        ?>
     </ul>
 </li>
 <?php 

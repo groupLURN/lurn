@@ -18,12 +18,8 @@ class RentalRequestHeadersController extends AppController
         $action = $this->request->params['action'];
         $employeeTypeId = isset($user['employee']['employee_type_id'])
             ? $user['employee']['employee_type_id'] : '';
-
-        if ($action === 'view') {
-            return in_array($employeeTypeId, [0, 2, 4], true);
-        }
-
-        return in_array($employeeTypeId, [0, 2], true);
+            
+        return in_array($employeeTypeId, [0, 4], true);
     }
     
     /**
@@ -125,24 +121,18 @@ class RentalRequestHeadersController extends AppController
                 $employees = [];
 
                 $project = $this->Projects->find('byId', ['project_id' => $rentalRequestHeader->project_id])->first();
-
-                array_push($employees, $project->employee);
-                for ($i=0; $i < count($project->employees_join); $i++) { 
-                    $employeeType = $project->employees_join[$i]->employee_type_id;
-                    if($employeeType == 1 || $employeeType == 4) {
-                        array_push($employees, $project->employees_join[$i]);
+                
+                foreach ($project->employees_join as $employee) {
+                    if($employeeType == 4) {
+                        $notification = $this->Notifications->newEntity();
+                        $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'rental-request-headers', 'action' => 'view/'. $rentalRequestHeader->id ], false));
+                        $notification->link = $link;
+                        $notification->message = '<b>'.$project->title.'</b> has made a rental request. Click to see the request.';
+                        $notification->user_id = $employee['user_id'];
+                        $notification->project_id = $rentalRequestHeader->project_id;
+                        $this->Notifications->save($notification);
                     }
-                }
-
-                foreach ($employees as $employee) {
-                    $notification = $this->Notifications->newEntity();
-                    $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'rental-request-headers', 'action' => 'view/'. $rentalRequestHeader->id ], false));
-                    $notification->link = $link;
-                    $notification->message = '<b>'.$project->title.'</b> has made a rental request. Click to see the request.';
-                    $notification->user_id = $employee['user_id'];
-                    $notification->project_id = $rentalRequestHeader->project_id;
-                    $this->Notifications->save($notification);
-                }
+                }               
 
                 $this->Flash->success(__('The rental request number ' . $rentalRequestHeader->number . ' has been saved.'));
                 $this->redirect(['action' => 'index']);

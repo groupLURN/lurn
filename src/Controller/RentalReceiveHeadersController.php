@@ -18,6 +18,7 @@ class RentalReceiveHeadersController extends AppController
     {        
         $employeeTypeId = isset($user['employee']['employee_type_id'])
             ? $user['employee']['employee_type_id'] : '';
+            
         return in_array($employeeTypeId, [0, 4], true);
     }
     
@@ -96,22 +97,17 @@ class RentalReceiveHeadersController extends AppController
 
                 $project = $this->Projects->find('byId', ['project_id' => $projectId])->first();
 
-                array_push($employees, $project->employee);
-                for ($i=0; $i < count($project->employees_join); $i++) { 
-                    $employeeType = $project->employees_join[$i]->employee_type_id;
-                    if($employeeType == 1 || $employeeType == 4) {
-                        array_push($employees, $project->employees_join[$i]);
+                foreach ($project->employees_join as $employee) {
+                    if($employeeType == 4) {
+                        $notification = $this->Notifications->newEntity();
+                        $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'rental-receive-headers', 'action' => 'view/'. $rentalReceiveHeader->id ], false));
+                        $notification->link = $link;
+                        $notification->message = '<b>'.$project->title.'\'s</b> has rental request has been received.'
+                            . ' You may now transfer resources.';
+                        $notification->user_id = $employee['user_id'];
+                        $notification->project_id = $rentalReceiveHeader->project_id;
+                        $this->Notifications->save($notification);
                     }
-                }
-
-                foreach ($employees as $employee) {
-                    $notification = $this->Notifications->newEntity();
-                    $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'rental-receive-headers', 'action' => 'view/'. $rentalReceiveHeader->id ], false));
-                    $notification->link = $link;
-                    $notification->message = '<b>'.$project->title.'\'s</b> has rental request has been received. Click to see the rental receive.';
-                    $notification->user_id = $employee['user_id'];
-                    $notification->project_id = $rentalReceiveHeader->project_id;
-                    $this->Notifications->save($notification);
                 }
 
 
@@ -150,32 +146,6 @@ class RentalReceiveHeadersController extends AppController
 
         $this->set(compact('rentalReceiveHeader', 'rentalRequestHeaders', 'equipment'));
         $this->set('_serialize', ['rentalReceiveHeader', 'rentalRequestHeaders', 'equipment']);
-    }
-
-    /**
-     * Edit method
-     *
-     * @param string|null $id Rental Receive Header id.
-     * @return \Cake\Network\Response|void Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
-    public function edit($id = null)
-    {
-        $rentalReceiveHeader = $this->RentalReceiveHeaders->get($id, [
-            'contain' => []
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $rentalReceiveHeader = $this->RentalReceiveHeaders->patchEntity($rentalReceiveHeader, $this->request->data);
-            if ($this->RentalReceiveHeaders->save($rentalReceiveHeader)) {
-                $this->Flash->success(__('The rental receive header has been saved.'));
-                return $this->redirect(['action' => 'index']);
-            } else {
-                $this->Flash->error(__('The rental receive header could not be saved. Please, try again.'));
-            }
-        }
-        $rentalRequestHeaders = $this->RentalReceiveHeaders->RentalRequestHeaders->find('list');
-        $this->set(compact('rentalReceiveHeader', 'rentalRequestHeaders'));
-        $this->set('_serialize', ['rentalReceiveHeader']);
     }
 
     /**

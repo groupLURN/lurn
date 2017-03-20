@@ -16,8 +16,6 @@ use Cake\I18n\Time;
  */
 class MaterialsProjectInventoryReportController extends AppController
 {
-    private $_projectId = null;
-
     public function beforeFilter(Event $event)
     {
         if(empty($this->request->params['pass'])) {
@@ -33,8 +31,8 @@ class MaterialsProjectInventoryReportController extends AppController
         $project = $this->Projects->find('byId', ['project_id' => $projectId])->first();
 
         $this->set('isFinished', $project->is_finished );
-
-        $this->set('projectId', $projectId);
+        $this->set('project', $project);
+        return parent::beforeFilter($event);
     }
 
     public function isAuthorized($user)

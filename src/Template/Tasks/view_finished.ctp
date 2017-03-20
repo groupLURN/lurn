@@ -1,5 +1,74 @@
 <?= $this->Html->script('tasks.js', ['block' => 'script-end']); ?>
 <?= $this->Flash->render() ?>
+<!-- start of tabs -->
+<div class="row mt">
+    <div class="col-xs-12">
+        <h3>
+            <!--
+                <span id="project-status-badge" class="
+                    <?= $project->status !== 'Delayed' ? 'hidden' : '' ?>
+                ">
+                    <?= $project->status === 'Delayed' ? '!' : '' ?>
+                </span>
+            -->
+            <?= h($project->title) ?>        
+        </h3>
+        <ul class="nav nav-tabs mt">
+            <li>
+                <a href=<?= $this->Url->build(['controller' => 'ProjectOverview', $projectId])?>>
+                    <i class="fa fa-book"></i>
+                    <span>Project Overview</span>
+                </a>      
+            </li>
+            <li>
+                <a href=<?= $this->Url->build(['controller' => 'events', 'action' => 'project-calendar', $projectId])?>>
+                    <i class="fa fa-calendar"></i>
+                    <span>Events Calendar</span>
+                </a>
+            </li>
+            <?php 
+                if (in_array($employeeType, [0, 1, 2, 3], true)) {
+            ?>
+            <li>
+                <a href=<?= $this->Url->build(['controller' => 'ProjectPlanning', 'action' => 'CreateGanttChart', $projectId])?>>
+                    <i class="fa fa-building"></i>
+                    <span>Project Planning</span>
+                </a>
+            </li>
+            <li class="active">
+                <a href=<?= $this->Url->build(['controller' => 'Tasks', 'action' => 'manage', '?' => ['project_id' => $projectId]]) ?>>
+                    <i class="fa fa-recycle"></i>
+                    <span>Project Implementation</span>
+                </a>
+            </li>
+            <?php 
+                }
+
+                if ($employeeType !== '') {
+            ?>
+            <li>
+                <a href=<?= $this->Url->build(['controller' => 'EquipmentProjectInventories', $projectId]) ?>>
+                    <i class="fa fa-database"></i>
+                    <span>Project Inventories</span>
+                </a>
+            <?php
+                }
+
+                if (in_array($employeeType, [0, 1, 2, 4], true)) {
+            ?>
+            <li>
+                <a href=<?= $this->Url->build(['controller' => 'IncidentReportHeaders', 'action' => 'index', '?' => ['project_id' => $projectId]]) ?>>
+                    <i class="fa fa-file"></i>
+                    <span>Reports</span>
+                </a>
+            </li>
+            <?php 
+                }
+            ?>
+        </ul>
+    </div>
+</div>
+<!-- end of tabs -->
 <div class="row mt">
     <div class="col-xs-12">
         <?= $this->Form->button('<i class="fa fa-save"></i> Save as PDF', 
@@ -12,11 +81,10 @@
                 . "'", 'class' => 'btn btn-warning']); ?>
     </div>
 </div>
-<div class="row mt">
-
+<div class="row">
     <div class="col-md-12">
+        <h3><?= $task->title?></h3>
         <fieldset>
-            <legend><h3></i> <?= $task->title?></h3></legend>
         <?php
             echo $this->Form->input('start_date', [
                 'type' => 'text',
@@ -38,7 +106,7 @@
         ?>
         <div class="row mt">
             <div class="col-xs-12">
-                <legend><h4><i class="fa fa-angle-right"></i> <?= __('Equipment Consumption') ?></h4></legend>
+                <h4><?= __('Equipment Consumption') ?></h4>
                 <?php if (!empty($task->equipment)): ?>
                     <table cellpadding="0" cellspacing="0" class="table table-striped">
                         <tr>
@@ -61,7 +129,7 @@
                 <?php else: ?>
                     <p>No data available.</p>
                 <?php endif; ?>
-                <legend><h4><i class="fa fa-angle-right"></i> <?= __('Manpower Consumption') ?></h4></legend>
+                <h4><?= __('Manpower Consumption') ?></h4>
                 <?php if (!empty($task->manpower_types)): ?>
                     <table cellpadding="0" cellspacing="0" class="table table-striped">
                         <tr>
@@ -84,7 +152,7 @@
                 <?php else: ?>
                     <p>No data available.</p>
                 <?php endif; ?>
-                <legend><h4><i class="fa fa-angle-right"></i> <?= __('Materials Consumption') ?></h4></legend>
+                <h4><?= __('Materials Consumption') ?></h4>
                 <?php if (!empty($task->materials)): ?>
                     <table cellpadding="0" cellspacing="0" class="table table-striped">
                         <tr>

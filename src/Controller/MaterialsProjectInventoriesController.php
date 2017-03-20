@@ -13,8 +13,6 @@ use Cake\ORM\TableRegistry;
  */
 class MaterialsProjectInventoriesController extends AppController
 {
-    private $_projectId = null;
-
     public function beforeFilter(Event $event)
     {
         if(empty($this->request->params['pass'])) {
@@ -31,7 +29,8 @@ class MaterialsProjectInventoriesController extends AppController
 
         $this->set('isFinished', $project->is_finished );
 
-        $this->set('projectId', $projectId);
+        $this->set('project', $project);
+
         return parent::beforeFilter($event);
     }
 

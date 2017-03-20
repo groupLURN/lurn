@@ -31,7 +31,8 @@ class EquipmentProjectInventoriesController extends AppController
 
         $this->set('isFinished', $project->is_finished );
 
-        $this->set('projectId', $projectId);
+        $this->set('project', $project);
+
         return parent::beforeFilter($event);
     }
 
@@ -176,87 +177,5 @@ class EquipmentProjectInventoriesController extends AppController
 
         $this->set(compact('unavailableInHouseEquipment', 'unavailableRentedEquipment', 'availableRentedEquipmentByRental', 'summary'));
         $this->set('_serialize', ['unavailableInHouseEquipment', 'unavailableRentedEquipment', 'availableRentedEquipmentByRental', 'summary']);
-    }
-
-    /**
-     * Add method
-     *
-     * @return \Cake\Network\Response|void Redirects on successful add, renders view otherwise.
-     */
-    public function add()
-    {
-        $equipmentProjectInventory = $this->EquipmentProjectInventories->newEntity();
-        if ($this->request->is('post')) {
-            $equipmentProjectInventory = $this->EquipmentProjectInventories->patchEntity($equipmentProjectInventory, $this->request->data);
-            if ($this->EquipmentProjectInventories->save($equipmentProjectInventory)) {
-                $this->Flash->success(__('The equipment project inventory has been saved.'));
-                return $this->redirect(['action' => 'index']);
-            } else {
-                $this->Flash->error(__('The equipment project inventory could not be saved. Please, try again.'));
-            }
-        }
-        $equipment = $this->EquipmentProjectInventories->Equipment->find('list', ['limit' => 200]);
-        $projects = $this->EquipmentProjectInventories->Projects->find('list', ['limit' => 200]);
-        $this->set(compact('equipmentProjectInventory', 'equipment', 'projects'));
-        $this->set('_serialize', ['equipmentProjectInventory']);
-    }
-
-    /**
-     * Edit method
-     *
-     * @param string|null $id Project id.
-     * @return \Cake\Network\Response|void Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
-    public function edit($id = null)
-    {
-        $equipmentId = $this->request->query['equipment_id'];
-        try
-        {
-            $equipmentProjectInventory = $this->EquipmentProjectInventories->get([
-                'equipment_id' => $equipmentId,
-                'project_id' => $id
-            ]);
-        }
-        catch(RecordNotFoundException $e)
-        {
-            $equipmentProjectInventory = $this->EquipmentProjectInventories->newEntity([
-                'equipment_id' => $equipmentId,
-                'project_id' => $id,
-                'quantity' => 0
-            ]);
-        }
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $equipmentProjectInventory = $this->EquipmentProjectInventories->patchEntity($equipmentProjectInventory, $this->request->data);
-            if ($this->EquipmentProjectInventories->save($equipmentProjectInventory)) {
-                $this->Flash->success(__('The equipment project inventory has been saved.'));
-                return $this->redirect(['action' => 'index', '?' => ['project_id' => $id]]);
-            } else {
-                $this->Flash->error(__('The equipment project inventory could not be saved. Please, try again.'));
-            }
-        }
-        $equipment = $this->EquipmentProjectInventories->Equipment->find('list', ['limit' => 200]);
-        $projects = $this->EquipmentProjectInventories->Projects->find('list', ['limit' => 200]);
-        $this->set(compact('equipmentProjectInventory', 'equipment', 'projects'));
-        $this->set('_serialize', ['equipmentProjectInventory']);
-    }
-
-    /**
-     * Delete method
-     *
-     * @param string|null $id Project id.
-     * @return \Cake\Network\Response|null Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function delete($id = null)
-    {
-        $this->request->allowMethod(['post', 'delete']);
-        $equipmentProjectInventory = $this->EquipmentProjectInventories->get($id);
-        if ($this->EquipmentProjectInventories->delete($equipmentProjectInventory)) {
-            $this->Flash->success(__('The equipment project inventory has been deleted.'));
-        } else {
-            $this->Flash->error(__('The equipment project inventory could not be deleted. Please, try again.'));
-        }
-        return $this->redirect(['action' => 'index']);
     }
 }

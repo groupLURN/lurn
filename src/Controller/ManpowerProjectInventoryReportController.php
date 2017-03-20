@@ -33,7 +33,7 @@ class ManpowerProjectInventoryReportController extends AppController
 
         $this->set('isFinished', $project->is_finished );
 
-        $this->set('projectId', $projectId);
+        $this->set('project', $project);
         return parent::beforeFilter($event);
     }
 

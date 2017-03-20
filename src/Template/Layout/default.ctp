@@ -2,6 +2,11 @@
 $this->extend('/Layout/base');
 $this->start('additional-sidebar');
 ?>
+<li class="sub-menu">
+    <a href=<?= $this->Url->build(['controller' => 'events', 'action' => 'index']) ?>>
+        <i class="fa fa-calendar"></i><span>Events Calendar</span>
+    </a>
+</li>
 
 <?php 
     if (in_array($employeeType, [0, 4], true)) {

@@ -17,7 +17,7 @@ class EventsController extends AppController
         $action = $this->request->params['action'];
 
         $this->loadModel('Projects');
-        if ($action === 'project-calendar')
+        if ($action === 'projectCalendar')
         {
             if(empty($this->request->params['pass'])) {
                 return $this->redirect(['controller' => 'dashboard']);
@@ -30,8 +30,7 @@ class EventsController extends AppController
             $project = $this->Projects->find('byId', ['project_id' => $projectId])->first();
             
             $this->set('isFinished', $project->is_finished );
-
-            $this->set('projectId', $projectId);
+            $this->set('project', $project);
         }
         return parent::beforeFilter($event);
     }
@@ -343,7 +342,6 @@ class EventsController extends AppController
         $calendar['currentDay']         = date('Y') === $tempYear && date('n') === $tempMonth? date('d') : '';
 
         $this->set('calendar', $calendar);  
-        $this->viewBuilder()->template('index');
 
     }
 

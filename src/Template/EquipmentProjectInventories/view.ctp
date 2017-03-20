@@ -1,7 +1,104 @@
 <?= $this->Html->script('tasks.js', ['block' => 'script-end']); ?>
 <?= $this->assign('title', 'Equipment Project Inventory') ?>
+<!-- start of tabs -->
+<div class="row mt">
+    <div class="col-xs-12">
+        <h3>
+            <!--
+                <span id="project-status-badge" class="
+                    <?= $project->status !== 'Delayed' ? 'hidden' : '' ?>
+                ">
+                    <?= $project->status === 'Delayed' ? '!' : '' ?>
+                </span>
+            -->
+            <?= h($project->title) ?>        
+        </h3>
+        <ul class="nav nav-tabs mt">
+            <li>
+                <a href=<?= $this->Url->build(['controller' => 'ProjectOverview', $projectId])?>>
+                    <i class="fa fa-book"></i>
+                    <span>Project Overview</span>
+                </a>      
+            </li>
+            <li>
+                <a href=<?= $this->Url->build(['controller' => 'events', 'action' => 'project-calendar', $projectId])?>>
+                    <i class="fa fa-calendar"></i>
+                    <span>Events Calendar</span>
+                </a>
+            </li>
+            <?php 
+                if (in_array($employeeType, [0, 1, 2, 3], true)) {
+            ?>
+            <li>
+                <a href=<?= $this->Url->build(['controller' => 'ProjectPlanning', 'action' => 'CreateGanttChart', $projectId])?>>
+                    <i class="fa fa-building"></i>
+                    <span>Project Planning</span>
+                </a>
+            </li>
+            <li>
+                <a href=<?= $this->Url->build(['controller' => 'Tasks', 'action' => 'manage', '?' => ['project_id' => $projectId]]) ?>>
+                    <i class="fa fa-recycle"></i>
+                    <span>Project Implementation</span>
+                </a>
+            </li>
+            <?php 
+                }
+
+                if ($employeeType !== '') {
+            ?>
+            <li class="active">
+                <a href=<?= $this->Url->build(['controller' => 'EquipmentProjectInventories', $projectId]) ?>>
+                    <i class="fa fa-database"></i>
+                    <span>Project Inventories</span>
+                </a>
+            <?php
+                }
+
+                if (in_array($employeeType, [0, 1, 2, 4], true)) {
+            ?>
+            <li>
+                <a href=<?= $this->Url->build(['controller' => 'IncidentReportHeaders', 'action' => 'index', '?' => ['project_id' => $projectId]]) ?>>
+                    <i class="fa fa-file"></i>
+                    <span>Reports</span>
+                </a>
+            </li>
+            <?php 
+                }
+            ?>
+        </ul>
+    </div>
+    <div class="col-xs-12 mt">
+        <!-- start of sub tabs -->
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a href=<?= $this->Url->build(['controller' => 'EquipmentProjectInventories', 'action' => 'index', $projectId]) ?>>
+                    <span>
+                    Equipment Inventory
+                    </span>
+                    </a>
+                </li>
+                <li>
+                    <a href=<?= $this->Url->build(['controller' => 'MaterialsProjectInventories', 'action' => 'index', $projectId]) ?>>
+                    <span>
+                    Materials Inventory
+                    </span>
+                    </a>
+                </li>
+                <li>
+                    <a href=<?= $this->Url->build(['controller' => 'ManpowerProjectInventories', 'action' => 'index', $projectId]) ?>>
+                    <span>
+                    Manpower Inventory
+                    </span>
+                    </a>
+                </li>
+            </ul>
+
+        <!-- end of sub tabs -->
+    </div>
+</div>
+<!-- end of tabs -->
 <div class="equipment view large-9 medium-8 columns content">
-    <h3><?= h($summary->name) ?></h3>
+    <h3><?= h($summary->equipment->name) ?></h3>
     <table class="vertical-table table table-striped">
         <tr>
             <th><?= __('Equipment Name') ?></th>
@@ -32,7 +129,7 @@
 
 <div class="related">
     <?php if (!$availableRentedEquipmentByRental->isEmpty()): ?>
-        <h3><?= __('Track Available Rental Equipment') ?></h3>
+        <h4><?= __('Track Available Rental Equipment') ?></h4>
         <table class="table table-striped table-advance table-hover">
             <thead>
             <tr>
@@ -60,7 +157,7 @@
 
 <div class="related">
     <?php if (!empty($unavailableInHouseEquipment)): ?>
-        <h3><?= __('Track Unavailable In-house Equipment') ?></h3>
+        <h4><?= __('Track Unavailable In-house Equipment') ?></h4>
         <table cellpadding="0" cellspacing="0" class="table table-striped">
             <tr>
                 <th><?= h('Milestone') ?></th>
@@ -90,7 +187,7 @@
 
 <div class="related">
     <?php if (!empty($unavailableRentedEquipment)): ?>
-        <h3><?= __('Track Unavailable Rental Equipment') ?></h3>
+        <h4><?= __('Track Unavailable Rental Equipment') ?></h4>
         <table cellpadding="0" cellspacing="0" class="table table-striped">
             <tr>
                 <th></th>
@@ -153,7 +250,7 @@
 
 <div class="related">
     <?php if (!empty($inHouseEquipment)): ?>
-        <h3><?= __('Track Equipment') ?></h3>
+        <h4><?= __('Track Equipment') ?></h4>
         <table cellpadding="0" cellspacing="0" class="table table-striped">
             <tr>
                 <th><?= h('Milestone') ?></th>

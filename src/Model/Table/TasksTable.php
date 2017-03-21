@@ -544,18 +544,19 @@ class TasksTable extends Table
                         ])
                         ->first();
 
-                    if ($materialInventory === null) {
+                    if ($materialInventory === null || $materialInventory->quantity === 0) {
                         ++$result['no_inventory'];
                         continue;
                     }
 
                     $projectInventoryEmpty = false;
 
-                    if ($materialInventory->quantity < $resource['_joinData']['quantity_remaining'])
+                    if ($materialInventory->quantity < $resource['_joinData']['quantity_remaining']){
                         $quantityTransferred = $materialInventory->quantity;
-                    else {
+                    } else {
                         $quantityTransferred = $resource['_joinData']['quantity_remaining'];
                     }
+
 
                     if ($quantityTransferred === 0) {
                         ++$result['no_transfer'];

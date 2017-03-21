@@ -12,7 +12,7 @@ $this->start('additional-sidebar');
     if (in_array($employeeType, [0, 4], true)) {
 ?>
 <li class="sub-menu">
-    <a href="javascript:;" >
+    <a href="#" >
         <i class="fa fa-desktop"></i>       
         <span><?= __('Project Team & Assets')?> 
         <span class="caret"> </span>
@@ -48,7 +48,7 @@ $this->start('additional-sidebar');
     if (in_array($employeeType, [0, 4], true)) {
 ?>
 <li class="sub-menu">
-    <a href="javascript:;" >
+    <a href="#" >
         <i class="fa fa-archive"></i>
         <span>General Inventories</span>
         <span class="caret"> </span>
@@ -60,7 +60,7 @@ $this->start('additional-sidebar');
     </ul>
 </li>
 <li class="sub-menu">
-    <a href="javascript:;" >
+    <a href="#" >
         <i class="fa fa-search"></i>
         <span>Track Resources Schedule</span>
         <span class="caret"> </span>
@@ -79,7 +79,7 @@ $this->start('additional-sidebar');
     if (in_array($employeeType, [0, 4], true)) {
 ?>
 <li class="sub-menu">
-    <a href="javascript:;" >
+    <a href="#" >
         <i class="fa fa-cube"></i>
         <span>Replenishments</span>
         <span class="caret"> </span>
@@ -99,7 +99,7 @@ $this->start('additional-sidebar');
     if (in_array($employeeType, [0, 2, 4], true)) {
 ?>
 <li class="sub-menu">
-    <a href="javascript:;" >
+    <a href="#" >
         <i class="fa fa-recycle"></i>
         <span>Resources Management</span>
         <span class="caret"> </span>
@@ -124,12 +124,12 @@ $this->start('additional-sidebar');
 ?>
 
 <?php 
-    if (in_array($employeeType, [0, 2, 3, 4], true)) {
+    if (in_array($employeeType, [0, 4], true)) {
 ?>
 <li class="sub-menu">
-    <a href="Javascript:;" >
+    <a href="#" >
         <i class="fa fa-file"></i>
-        <span>Reports</span>
+        <span>General Reports</span>
         <span class="caret"> </span>
     </a>
     <ul class="sub">

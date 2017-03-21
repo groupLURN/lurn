@@ -14,7 +14,7 @@ MAIN CONTENT
         	<div class="col-lg-12 main-chart">     
         		<!-- CALENDAR-->
                 <div class="centered">
-                    <form method="get" accept-charset="utf-8" action="/projects/lurn/events">                
+                    <form method="get" accept-charset="utf-8">                
                     <label class="mt" for="year">Year</label>
                     <input name="year" class="form-control calendar-input" 
                         max="2099" min="1990" step="1" id="year" value="<?= $calendar['year']?>" type="number">

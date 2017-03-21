@@ -84,14 +84,14 @@ $this->Html->script('gantt-chart', ['block' => 'script-end']);
     <div class="col-xs-12 mt">
         <!-- start of sub tabs -->
         <ul class="nav nav-tabs">
-            <li>
+            <li class="active">
                 <a href=<?= $this->Url->build(['controller' => 'ProjectPlanning', 'action' => 'CreateGanttChart', $projectId]) ?>>
                     <span>
                     Gantt Chart
                     </span>
                 </a>
             </li>
-            <li class="active">
+            <li>
                 <a href=<?= $this->Url->build(['controller' => 'Tasks', 'action' => 'index', '?' => ['project_id' => $projectId]]) ?>>
                     <span>
                     Tasks

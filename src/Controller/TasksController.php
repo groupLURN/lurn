@@ -184,10 +184,11 @@ class TasksController extends AppController
 
         $this->Tasks->computeForTaskReplenishment($task);
 
-        if($this->Tasks->replenish($task))
+        if($this->Tasks->replenish($task)) {
             $this->Flash->success(__('The Task ' . $task->title . ' has been replenished.'));
-        else
-            $this->Flash->error(__('The Task ' . $task->title . '  cannot be replenished. Please, try again.'));
+        } else {
+            $this->Flash->error(__('The Task ' . $task->title . '  cannot be replenished. Transfer resources to the project first.'));
+        }
 
         $projectId = (int) $this->request->query['project_id'];
         return $this->redirect(['action' => 'manage', '?' => ['project_id' => $projectId]]);

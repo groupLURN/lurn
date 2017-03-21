@@ -54,7 +54,7 @@ $this->Html->css('pdf', ['block' => true, 'fullBase' => true]);
     <table class="signatory text-center">
         <tr>
             <th class="text-left" style="width: 150px;">Prepared by:</th>
-            <td>________________________________</td>
+            <td><?=  $userFullName ?></td>
         </tr>
         <tr>
             <td>&nbsp;</td>
@@ -62,7 +62,7 @@ $this->Html->css('pdf', ['block' => true, 'fullBase' => true]);
         </tr>
         <tr>
             <td>&nbsp;</td>
-            <td>________________________________</td>
+            <td><?=  $employeeTypeTitle ?>/td>
         </tr>
         <tr>
             <td>&nbsp;</td>

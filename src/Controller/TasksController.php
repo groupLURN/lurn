@@ -184,13 +184,61 @@ class TasksController extends AppController
 
         $this->Tasks->computeForTaskReplenishment($task);
 
-        if($this->Tasks->replenish($task)) {
-            $this->Flash->success(__('The Task ' . $task->title . ' has been replenished.'));
-        } else {
-            $this->Flash->error(__('The Task ' . $task->title . '  cannot be replenished. Transfer resources to the project first.'));
+        $this->loadModel('Projects');
+
+        $project = $this->Projects->find('byId', ['project_id' => $task->milestone->project_id])->first();
+
+        $this->loadModel('Notifications');
+
+        $message = '';
+
+        $result = $this->Tasks->replenish($task);
+
+        if($result['success'] !== 0 && $result['no_inventory'] === 0 && $result['no_transfer'] === 0) { 
+            $message = 'The resources of the ' . $task->title . ' task has been replenished.';
+            $this->Flash->success(__($message));
+        } else if($result['success'] === 0 && $result['no_inventory'] !== 0 && $result['no_transfer'] === 0) {
+            $message = 'The resources of the ' . $task->title . ' task cannot be replenished. Transfer resources to the project first.';
+            $this->Flash->error(__($message));
+        } else if($result['success'] === 0 && $result['no_inventory'] === 0 && $result['no_transfer'] !== 0) { 
+            $message = 'The resources of the ' . $task->title . ' task cannot be replenished. All of the resources were transferred already.';
+            $this->Flash->success(__($message));
+        } else if($result['success'] !== 0 && $result['no_inventory'] !== 0 && $result['no_transfer'] === 0) { 
+            $message = 'Some of the resources of the ' . $task->title . ' task has been replenished.'
+                . ' However, some resources are not yet transferred to the project.';
+            $this->Flash->success(__($message));
+        } else if($result['success'] === 0 && $result['no_inventory'] !== 0 && $result['no_transfer'] !== 0) { 
+            $message = 'The resources of the ' . $task->title . ' task cannot be replenished.'
+                . ' Some resources were transferred already. However, some resources are not yet transferred to the project.';
+            $this->Flash->error(__($message));
+        } else if($result['success'] !== 0 && $result['no_inventory'] === 0 && $result['no_transfer'] !== 0) { 
+            $message = 'The resources of the ' . $task->title . ' task has been replenished.'
+                . ' Some resources were transferred already.';
+            $this->Flash->success(__($message));
+        } else if($result['success'] !== 0 && $result['no_inventory'] !== 0 && $result['no_transfer'] !== 0) { 
+            $message = 'Some of the resources of the ' . $task->title . ' task has been replenished.'
+                . ' Some resources were transferred already. However, some resources are not yet transferred to the project.';
+            $this->Flash->success(__($message));
+        } else if($result['success'] === 0 && $result['no_inventory'] === 0 && $result['no_transfer'] === 0) { 
+            $message = 'There are no resources assigned to the ' . $task->title . ' task. Assign resources first.';
+            $this->Flash->error(__($message));
         }
 
-        $projectId = (int) $this->request->query['project_id'];
+        $projectId = (int) $this->request->query['project_id']; 
+
+        foreach ($project['employees_join'] as $employee) {
+
+            if (in_array($employee['employee_type_id'], [0, 1, 2, 3])) {  
+                $notification = $this->Notifications->newEntity();
+                $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'tasks', 
+                    'action' => 'view-stock/', $task->id, '?' => ['project_id' => $projectId]], false));
+                $notification->link = $link;
+                $notification->message = $message;
+                $notification->user_id = $employee['user_id'];
+                $notification->project_id = $project->id;
+                $this->Notifications->save($notification);            
+            }
+        }
         return $this->redirect(['action' => 'manage', '?' => ['project_id' => $projectId]]);
     }
 
@@ -290,8 +338,8 @@ class TasksController extends AppController
                     if (in_array($employee['employee_type_id'], [0, 1, 2, 3])) {  
                         $notification = $this->Notifications->newEntity();
                         $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'tasks', 
-                            'action' => 'view-finished/'.$task->id.'?project_id='.$project->id ], false));
-                        $notification->link = $link;
+                            'action' => 'view-finished/'.$task->id], false));
+                        $notification->link = $link.'?project_id='.$project->id ;
                         $notification->message = 'The task <b>'.$task->title.'</b> has been completed.';
                         $notification->user_id = $employee['user_id'];
                         $notification->project_id = $project->id;
@@ -339,7 +387,12 @@ class TasksController extends AppController
     {
         if ($this->request->is(['patch', 'post', 'put'])) {
 
-            $task = $this->Tasks->get($taskId);
+            $task = $this->Tasks->get($taskId, 
+                [
+                    'contain' => [
+                        'Milestones' => ['Projects']
+                    ]
+                ]);
 
             $this->transpose($this->request->data, 'equipment');
             $this->transpose($this->request->data, 'manpower_types');
@@ -366,8 +419,8 @@ class TasksController extends AppController
                     if (in_array($employee['employee_type_id'], [0, 1, 2, 3])) {  
                         $notification = $this->Notifications->newEntity();
                         $link =  str_replace(Router::url('/', false), "", Router::url(['controller' => 'tasks', 
-                            'action' => 'view-stock/'.$task->id.'?project_id='.$project->id ], false));
-                        $notification->link = $link;
+                            'action' => 'view-stock/'.$task->id], false));
+                        $notification->link = $link.'?project_id='.$project->id;
                         $notification->message = 'The task <b>'.$task->title.'</b> has been updated.'
                             . ' You may now create resource transfer requests.';
                         $notification->user_id = $employee['user_id'];

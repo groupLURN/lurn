@@ -95,8 +95,11 @@ class DashboardController extends AppController
 
         $projectStatuses = $this->Projects->getProjectStatusList();  
 
-        $notifications = $this->Notifications->find('byUserId', ['user_id' => $this->request->session()->read('Auth.User.id')])->toArray();
-
+        $notifications = $this->Notifications->find('all', [
+            'conditions' => ['user_id' => $this->request->session()->read('Auth.User.id')],
+            'limit' => 15
+        ])->toArray();
+        
         $projects = $this->getProjectUpdates($projects);
 
         $calendar = $this->populateCalendar($projects);
